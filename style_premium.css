@@ -600,6 +600,18 @@ section {
   display: inline-flex; /* For aligning icon and text */
   align-items: center;
 }
+
+/* === PASTE THE MISSING RULE HERE === */
+/* Style for the icon INSIDE the main contact button (WhatsApp) */
+.contact-cta i {
+    margin-right: 12px;        /* Space between icon and text */
+    font-size: 1.8em;        /* <<< ADJUST THIS VALUE TO CHANGE SIZE */
+    vertical-align: middle;  /* Helps align icon with text vertically */
+}
+/* =================================== */
+
+
+
 /* NOVO - Para os ícones no contact-details */
 .contact-details i {
     color: var(--color-green-dill); /* Mantém a cor verde */
