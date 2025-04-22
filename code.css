@@ -1,0 +1,462 @@
+/* ===== GLOBAL STYLES & VARIABLES ===== */
+:root {
+  --bg-white: #ffffff;
+  --bg-navy: #0a192f; /* Darker Navy for contrast */
+  --bg-green: #64ffda; /* Minty Green - adjust if a Dill Green hex is defined */
+  --bg-light-green: #e6fff9; /* Very light green for accents/backgrounds */
+  --text-black: #333333;
+  --text-navy: #0a192f;
+  --text-dark-green: #004d40; /* Dark Dill Green for text */
+  --text-light: #ccd6f6; /* Light text for dark backgrounds */
+  --text-medium: #8892b0; /* Medium emphasis text on dark bg */
+  --accent-coral: #ff7f50;
+  --accent-yellow: #ffd700; /* Using Gold as Butter Yellow example */
+
+  --font-primary: 'Poppins', sans-serif; /* Example font, fallback to sans-serif */
+  --font-secondary: sans-serif; /* Ensure legible fallback */
+
+  --content-max-width: 1100px;
+  --section-padding-desktop: 80px 0;
+  --section-padding-mobile: 60px 0;
+  --border-radius: 4px;
+}
+
+/* Basic Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth; /* For smooth scrolling on internal links */
+}
+
+body {
+  font-family: var(--font-secondary); /* Start with basic sans-serif */
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-black);
+  background-color: var(--bg-white);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-primary); /* Use primary font for headings if defined */
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: var(--text-navy); /* Default heading color on light bg */
+}
+
+h1 {
+  font-size: 2.8rem; /* Larger on desktop */
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: 2.2rem;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+h3 {
+  font-size: 1.5rem;
+  color: var(--text-dark-green);
+}
+
+p {
+  margin-bottom: 15px;
+}
+
+a {
+  text-decoration: none;
+  color: var(--accent-coral);
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--accent-yellow);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.container {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 0 20px; /* Side padding for content */
+}
+
+section {
+  padding: var(--section-padding-mobile);
+}
+
+/* ===== BUTTON STYLES ===== */
+.button {
+  display: inline-block;
+  padding: 12px 28px;
+  border-radius: var(--border-radius);
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-family: var(--font-primary);
+}
+
+.button-primary {
+  background-color: var(--accent-coral);
+  color: var(--bg-white);
+  border: 2px solid var(--accent-coral);
+}
+
+.button-primary:hover {
+  background-color: var(--accent-yellow);
+  border-color: var(--accent-yellow);
+  color: var(--text-navy);
+  transform: translateY(-2px);
+}
+
+.button-secondary {
+    background-color: transparent;
+    color: var(--accent-coral);
+    border: 2px solid var(--accent-coral);
+}
+
+.button-secondary:hover {
+    background-color: var(--accent-coral);
+    color: var(--bg-white);
+}
+
+.large-button {
+    padding: 15px 40px;
+    font-size: 1.1rem;
+}
+
+/* Placeholder for Icons (replace with actual icons later - Font Awesome, SVGs) */
+.icon {
+    display: inline-block;
+    margin-right: 8px;
+    font-style: normal;
+    color: var(--accent-coral); /* Example styling */
+    font-weight: bold;
+}
+
+/* ===== HEADER ===== */
+.site-header {
+  background-color: var(--bg-white);
+  padding: 15px 0;
+  border-bottom: 1px solid #eee;
+  position: sticky; /* Make header sticky */
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.site-header .container {
+    display: flex;
+    justify-content: space-between; /* Aligns logo to left, potential nav to right */
+    align-items: center;
+}
+
+.logo {
+  height: 40px; /* Adjust size as needed */
+  width: auto;
+}
+
+/* ===== HERO SECTION ===== */
+.hero-section {
+  /* background: linear-gradient(to bottom, var(--bg-green), var(--bg-white)); Subtle gradient */
+  background-color: var(--bg-light-green); /* Solid light green */
+  padding: var(--section-padding-mobile);
+  text-align: center;
+}
+
+.hero-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+.hero-text h1 {
+    color: var(--text-navy);
+}
+
+.hero-text p {
+    font-size: 1.1rem;
+    color: var(--text-dark-green);
+    margin-bottom: 30px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.tutor-photo {
+    max-width: 250px;
+    border-radius: 50%; /* Make photo circular */
+    border: 5px solid var(--bg-white);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+
+/* ===== VALUE PROPOSITION SECTION ===== */
+.value-prop-section {
+    background-color: var(--bg-white);
+}
+
+.value-points {
+    display: grid;
+    grid-template-columns: 1fr; /* Mobile: single column */
+    gap: 30px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.value-point {
+    display: flex;
+    align-items: center;
+    text-align: left;
+    background-color: #f9f9f9; /* Slight background differentiation */
+    padding: 15px;
+    border-radius: var(--border-radius);
+    border-left: 4px solid var(--bg-green); /* Accent border */
+}
+
+.value-point .icon {
+    font-size: 1.5rem; /* Adjust icon size */
+    margin-right: 15px;
+    color: var(--bg-green);
+}
+
+/* ===== ABOUT SECTION ===== */
+.about-section {
+    background-color: var(--bg-navy);
+    color: var(--text-light);
+    padding: var(--section-padding-mobile);
+}
+
+.about-section h2 {
+    color: var(--bg-green); /* Use accent green for heading on dark */
+}
+
+.about-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    text-align: center;
+}
+
+.tutor-photo-about {
+    max-width: 200px; /* Slightly smaller or different style */
+    border-radius: var(--border-radius);
+    border: 3px solid var(--bg-green);
+}
+
+.about-text {
+    max-width: 700px;
+}
+.about-text p {
+    color: var(--text-medium); /* Subtler text color on dark */
+    text-align: left; /* Better readability for paragraph */
+}
+
+/* ===== SERVICES & PRICING SECTION ===== */
+.services-section {
+    background-color: var(--bg-white);
+    padding: var(--section-padding-mobile);
+}
+
+.service-options {
+    display: grid;
+    grid-template-columns: 1fr; /* Mobile: single column */
+    gap: 30px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.service-option {
+    border: 1px solid #ddd;
+    border-radius: var(--border-radius);
+    padding: 30px;
+    text-align: center;
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Push button down */
+    min-height: 250px; /* Ensure consistent height */
+}
+.service-option h3{
+    color: var(--text-navy);
+}
+
+.service-option .description {
+    color: var(--text-medium);
+    margin-bottom: 20px;
+    flex-grow: 1; /* Allow description to take up space */
+}
+
+.service-option .price {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-dark-green);
+    margin-bottom: 25px;
+    /* background-color: var(--accent-yellow); /* Example highlight */
+    /* padding: 5px 10px; */
+    /* display: inline-block; */
+    /* border-radius: var(--border-radius); */
+}
+.service-option .price-detail {
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--text-medium);
+}
+
+/* ===== TESTIMONIALS SECTION ===== */
+.testimonials-section {
+    background-color: var(--bg-light-green); /* Light green background */
+    padding: var(--section-padding-mobile);
+}
+.testimonials-section h2{
+    color: var(--text-navy);
+}
+
+.testimonial-quotes {
+    display: grid;
+    grid-template-columns: 1fr; /* Mobile: single column */
+    gap: 30px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.testimonial-quote {
+    background-color: var(--bg-white);
+    border-left: 5px solid var(--accent-coral);
+    padding: 25px;
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.testimonial-quote p {
+    font-style: italic;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+.testimonial-quote cite {
+    font-weight: 700;
+    color: var(--text-dark-green);
+    font-style: normal;
+}
+
+/* ===== CONTACT SECTION ===== */
+.contact-section {
+    background-color: var(--bg-navy);
+    color: var(--text-light);
+    padding: var(--section-padding-mobile);
+    text-align: center;
+}
+
+.contact-section h2 {
+    color: var(--bg-green);
+}
+
+.contact-section .button {
+    margin-bottom: 40px;
+}
+
+.contact-details p {
+    margin-bottom: 10px;
+    color: var(--text-medium);
+}
+
+.contact-details a {
+    color: var(--bg-green); /* Accent links on dark bg */
+    font-weight: bold;
+}
+
+.contact-details a:hover {
+    color: var(--accent-yellow);
+}
+.contact-details .icon {
+    color: var(--bg-green);
+}
+
+
+/* ===== FOOTER ===== */
+.site-footer {
+    background-color: #f8f8f8; /* Very light gray */
+    color: var(--text-medium);
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 0; /* No extra margin needed as last section has padding */
+    border-top: 1px solid #eee;
+}
+
+
+/* ===== RESPONSIVENESS (Media Queries) ===== */
+
+/* Tablet View */
+@media (min-width: 768px) {
+    h1 { font-size: 3.2rem; }
+    h2 { font-size: 2.5rem; }
+    section { padding: var(--section-padding-desktop); }
+
+    .hero-content {
+        flex-direction: row; /* Side-by-side layout */
+        text-align: left;
+        gap: 50px;
+    }
+     .hero-text{
+         flex: 1; /* Take available space */
+     }
+     .hero-image {
+         flex-shrink: 0; /* Prevent image from shrinking too much */
+     }
+
+     .tutor-photo { max-width: 300px; }
+
+
+    .value-points {
+        grid-template-columns: repeat(2, 1fr); /* Two columns */
+        gap: 30px;
+    }
+
+    .about-content {
+       flex-direction: row;
+       text-align: left;
+       gap: 60px;
+    }
+    .about-image {
+        flex-shrink: 0;
+    }
+    .about-text {
+         flex: 1;
+    }
+    .about-text p {
+       text-align: left;
+    }
+
+    .service-options {
+        grid-template-columns: repeat(2, 1fr); /* Two columns */
+    }
+
+    .testimonial-quotes {
+         grid-template-columns: repeat(2, 1fr); /* Two columns */
+    }
+
+}
+
+/* Desktop View */
+@media (min-width: 1024px) {
+    h1 { font-size: 3.8rem; }
+    .hero-text p { font-size: 1.2rem; }
+    .tutor-photo { max-width: 350px; }
+    /* Potentially add more columns for value points if needed (e.g., 3 columns) */
+    /* .value-points { grid-template-columns: repeat(3, 1fr); } */
+}
