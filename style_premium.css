@@ -600,9 +600,13 @@ section {
   display: inline-flex; /* For aligning icon and text */
   align-items: center;
 }
-.contact-cta .icon-placeholder {
-  margin-right: 12px; /* Space between icon and text */
-  font-size: 1.2em; /* Slightly larger icon placeholder */
+/* NOVO - Para os ícones no contact-details */
+.contact-details i {
+    color: var(--color-green-dill); /* Mantém a cor verde */
+    margin-right: 10px;         /* Mantém o espaçamento */
+    width: 20px;                /* Adiciona largura fixa para melhor alinhamento */
+    text-align: center;         /* Centraliza o ícone no espaço fixo */
+    display: inline-block;      /* Necessário para width/text-align funcionar */
 }
 
 .contact-details p {
