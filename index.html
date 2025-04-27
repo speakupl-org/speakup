@@ -4,27 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Speak Up - Sua Fluência em Inglês de Alto Nível</title>
-    <!-- Link to the CSS stylesheet -->
+    <!-- Ensure style_premium.css is in the SAME folder as index.html -->
     <link rel="stylesheet" href="style_premium.css">
-    <!-- Google Font Import (Example: Inter) -->
+    <!-- Google Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
-    <!-- Add Font Awesome for Icons (Requires setup or use SVGs) -->
-     <!-- ... other head elements ... -->
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <!-- ... -->
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> -->
+    <!-- AOS Library CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 </head>
 <body>
 
     <header class="site-header">
         <div class="container header-container">
-            <!-- Refined Logo Placement -->
-            <img src="images/logocorte.jpeg" alt="Speak Up Logo" class="logo">
-            <!-- Navigation could potentially go here, hidden on mobile -->
+            <!-- Ensure logo.svg is inside an 'images' folder next to index.html -->
+            <img src="images/logo.svg" alt="Speak Up Logo" class="logo">
              <nav class="site-nav">
                  <a href="#services">Suas Aulas</a>
+                 <a href="#how-it-works">Como Funciona</a>
                  <a href="#about">Professor</a>
                  <a href="#contact" class="button button-secondary button-small">Contato</a>
              </nav>
@@ -36,81 +35,89 @@
         <!-- ===== Hero Section ===== -->
         <section id="hero" class="hero-section">
             <div class="container hero-content">
-                <div class="hero-text">
-                    <!-- Use a heavier font weight or slightly larger size for emphasis -->
+                <div class="hero-text" data-aos="fade-right" data-aos-duration="800">
                     <h1 class="hero-headline">Speak Up.<br>Sua Fluência em Inglês de Alto Nível.</h1>
                     <p class="hero-subheadline">Converse com confiança em qualquer situação, com aulas online personalizadas e focadas em você.</p>
                     <a href="#services" class="button button-primary button-large">Descubra Suas Aulas</a>
                 </div>
-                <div class="hero-image-container">
-                    <!-- Premium Tutor Photo -->
+                <div class="hero-image-container" data-aos="fade-left" data-aos-duration="800" data-aos-delay="200">
+                    <!-- Ensure this image path is correct -->
                     <img src="images/20230512_105453.jpg" alt="Professor da Speak Up - Felipe" class="tutor-photo-hero">
-                    <!-- Optional: Abstract decorative element -->
                     <div class="hero-graphic-element"></div>
                 </div>
             </div>
-             <!-- Optional subtle scroll indicator -->
             <div class="scroll-indicator">
                 <a href="#value-prop"><span></span></a>
             </div>
         </section>
 
-<!-- ===== Value Proposition Section ===== -->
-<section id="value-prop" class="value-prop-section">
-    <div class="container">
-        <h2 class="section-title">Por que a Speak Up é Diferente?</h2>
-        <div class="value-points">
-
-            <!-- Point 1: Conversation -->
-            <div class="value-point">
-                <div class="value-icon">
-                    <i class="fa-solid fa-comments"></i> <!-- Icon for Conversation -->
+        <!-- ===== Value Proposition Section ===== -->
+        <section id="value-prop" class="value-prop-section">
+            <div class="container">
+                <h2 class="section-title" data-aos="fade-up" data-aos-duration="600">Por que a Speak Up é Diferente?</h2>
+                <div class="value-points">
+                    <div class="value-point" data-aos="fade-up" data-aos-duration="600">
+                        <div class="value-icon"> <i class="fa-solid fa-comments"></i> </div>
+                        <h3>Foco Real na Conversação</h3>
+                        <p>Aulas desenhadas para destravar sua fala em situações práticas e relevantes para seus objetivos.</p>
+                    </div>
+                    <div class="value-point" data-aos="fade-up" data-aos-duration="600" data-aos-delay="100">
+                        <div class="value-icon"> <i class="fa-solid fa-user-check"></i> </div>
+                        <h3>Feedback Personalizado e Contínuo</h3>
+                        <p>Análise detalhada do seu progresso e orientação precisa para acelerar sua fluência.</p>
+                    </div>
+                    <div class="value-point" data-aos="fade-up" data-aos-duration="600" data-aos-delay="200">
+                         <div class="value-icon"> <i class="fa-solid fa-globe"></i> </div>
+                        <h3>Experiência Internacional Aplicada</h3>
+                        <p>Vivência de 3 anos na Europa (Portugal/Holanda) que traz uma perspectiva global ao seu aprendizado.</p>
+                    </div>
+                     <div class="value-point" data-aos="fade-up" data-aos-duration="600" data-aos-delay="300">
+                         <div class="value-icon"> <i class="fa-solid fa-seedling"></i> </div>
+                        <h3>Ambiente Seguro para Crescer</h3>
+                        <p>Um espaço encorajador e confortável onde você se sente à vontade para praticar e evoluir.</p>
+                    </div>
                 </div>
-                <h3>Foco Real na Conversação</h3>
-                <p>Aulas desenhadas para destravar sua fala em situações práticas e relevantes para seus objetivos.</p>
             </div>
+        </section>
 
-            <!-- Point 2: Feedback -->
-            <div class="value-point">
-                <div class="value-icon">
-                     <i class="fa-solid fa-user-check"></i> <!-- Icon for Feedback -->
-                </div>
-                <h3>Feedback Personalizado e Contínuo</h3>
-                <p>Análise detalhada do seu progresso e orientação precisa para acelerar sua fluência.</p>
-            </div>
-
-            <!-- Point 3: International Experience -->
-            <div class="value-point">
-                 <div class="value-icon">
-                     <i class="fa-solid fa-globe"></i> <!-- Icon for World Experience -->
+        <!-- ===== How It Works Section (NEW) ===== -->
+        <section id="how-it-works" class="how-it-works-section">
+             <div class="container">
+                 <h2 class="section-title" data-aos="fade-up" data-aos-duration="600">Seu Caminho para a Fluência.</h2>
+                 <div class="steps-grid">
+                     <div class="step-item" data-aos="fade-up" data-aos-duration="600" data-aos-delay="100">
+                         <div class="step-icon"><i class="fa-solid fa-paper-plane"></i></div>
+                         <h4>1. Contato Inicial</h4>
+                         <p>Envie uma mensagem rápida via WhatsApp ou email para conversarmos.</p>
+                     </div>
+                     <div class="step-item" data-aos="fade-up" data-aos-duration="600" data-aos-delay="200">
+                         <div class="step-icon"><i class="fa-solid fa-calendar-check"></i></div>
+                         <h4>2. Agendamento</h4>
+                         <p>Marcamos uma aula experimental ou bate-papo para entender seus objetivos.</p>
+                     </div>
+                     <div class="step-item" data-aos="fade-up" data-aos-duration="600" data-aos-delay="300">
+                          <div class="step-icon"><i class="fa-solid fa-clipboard-list"></i></div>
+                         <h4>3. Plano Personalizado</h4>
+                         <p>Desenvolvemos um plano focado nas suas necessidades e ritmo.</p>
+                     </div>
+                     <div class="step-item" data-aos="fade-up" data-aos-duration="600" data-aos-delay="400">
+                          <div class="step-icon"><i class="fa-solid fa-rocket"></i></div>
+                         <h4>4. Aulas Práticas</h4>
+                         <p>Iniciamos suas aulas focadas em conversação e confiança!</p>
+                     </div>
                  </div>
-                <h3>Experiência Internacional Aplicada</h3>
-                <p>Vivência de 3 anos na Europa (Portugal/Holanda) que traz uma perspectiva global ao seu aprendizado.</p>
-            </div>
-
-            <!-- Point 4: Safe Environment / Growth -->
-             <div class="value-point">
-                 <div class="value-icon">
-                     <i class="fa-solid fa-seedling"></i> <!-- Icon for Growth/Safety -->
-                 </div>
-                <h3>Ambiente Seguro para Crescer</h3>
-                <p>Um espaço encorajador e confortável onde você se sente à vontade para praticar e evoluir.</p>
-            </div>
-
-        </div> <!-- end .value-points -->
-    </div> <!-- end .container -->
-</section> <!-- end #value-prop -->
+             </div>
+         </section>
 
         <!-- ===== About Section ===== -->
         <section id="about" class="about-section">
             <div class="container about-content">
-                <div class="about-image">
-                    <!-- Different pose or larger photo -->
+                <div class="about-image" data-aos="fade-right" data-aos-duration="800" data-aos-offset="200">
+                     <!-- Ensure this image path is correct -->
                     <img src="images/WhatsApp Image 2025-04-22 at 11.43.29.jpeg" alt="Conheça Seu Professor - Felipe Miranda" class="tutor-photo-about">
                 </div>
-                <div class="about-text">
+                <div class="about-text" data-aos="fade-left" data-aos-duration="800" data-aos-offset="200">
                     <h2 class="section-title-offset">Conheça Seu Professor.</h2>
-                     <!-- Placeholder Name -->
                     <h3>Felipe Miranda</h3>
                     <p>
                         Minha paixão é conectar pessoas através da comunicação. Como especialista em inglês (nível C1/C2 comprovado), minha missão é ajudar brasileiros a conquistar a fluência real. Meus 3 anos de vivência e trabalho entre Portugal e Holanda me deram uma visão única das necessidades práticas do idioma no cenário internacional.
@@ -118,61 +125,48 @@
                     <p>
                         Na Speak Up, aplico essa experiência diretamente, focando na comunicação autêntica e na confiança que você precisa para se destacar. Vamos juntos transformar seu inglês?
                     </p>
-                    <!-- Optional: Link to LinkedIn -->
                    <a href="https://www.linkedin.com/in/felipe-angelo-715144199/" target="_blank" rel="noopener noreferrer" class="text-link"><i class="fa-brands fa-linkedin"></i> Conecte-se no LinkedIn</a>
                  </div>
-
             </div>
         </section>
 
         <!-- ===== Services & Investment Section ===== -->
         <section id="services" class="services-section">
             <div class="container">
-                <h2 class="section-title">Escolha Sua Jornada.</h2>
+                <h2 class="section-title" data-aos="fade-up" data-aos-duration="600">Escolha Sua Jornada.</h2>
                 <div class="service-options">
-                  <!-- Premium Card Design -->
-        <!-- Container for the service options -->
-        <div class="service-options">
-
-            <!-- Option 1: Group Classes -->
-            <div class="service-option">
-                <div class="service-icon"><i class="fa-solid fa-users"></i></div>
-                <h3>Aulas em Grupo</h3>
-                <p class="description">Ideal para interação dinâmica e prática acessível.</p>
-                <p class="price">R$ 30 <span class="price-detail">/ pessoa / hora</span></p>
-                <a href="https://calendar.app.google/zHmyaw7gYY5zsEVT8" class="button button-secondary">Quero Saber Mais</a>
+                    <div class="service-option" data-aos="zoom-in-up" data-aos-duration="600">
+                        <div class="service-icon"><i class="fa-solid fa-users"></i></div>
+                        <h3>Aulas em Grupo</h3>
+                        <p class="description">Ideal para interação dinâmica e prática acessível.</p>
+                        <p class="price">R$ 30 <span class="price-detail">/ pessoa / hora</span></p>
+                        <a href="https://calendar.app.google/zHmyaw7gYY5zsEVT8" class="button button-secondary">Quero Saber Mais</a>
+                    </div>
+                    <div class="service-option individual-highlight" data-aos="zoom-in-up" data-aos-duration="600" data-aos-delay="100">
+                        <div class="service-icon"><i class="fa-solid fa-user"></i></div>
+                        <h3>Aulas Individuais</h3>
+                        <p class="description">Máximo foco e personalização total para seus objetivos.</p>
+                        <p class="price">R$ 50 <span class="price-detail">/ hora</span></p>
+                        <a href="https://calendar.app.google/zHmyaw7gYY5zsEVT8" class="button button-primary">Quero Aula Individual</a>
+                    </div>
+                </div>
             </div>
-
-            <!-- Option 2: Individual Classes (Highlighted) -->
-            <div class="service-option individual-highlight">
-                <div class="service-icon"><i class="fa-solid fa-user"></i></div>
-                <h3>Aulas Individuais</h3>
-                <p class="description">Máximo foco e personalização total para seus objetivos.</p>
-                <p class="price">R$ 50 <span class="price-detail">/ hora</span></p>
-                <a href="https://calendar.app.google/zHmyaw7gYY5zsEVT8" class="button button-primary">Quero Aula Individual</a>
-            </div>
-
-        </div> <!-- Closing tag for service-options -->
-
-    </div> <!-- Closing tag for container (likely needed above this block) -->
-</section> <!-- Closing tag for services-section (likely needed above this block) -->
+        </section>
 
         <!-- ===== Testimonials Section ===== -->
         <section id="testimonials" class="testimonials-section">
             <div class="container">
-                <h2 class="section-title">Resultados Que Falam Por Si.</h2>
+                <h2 class="section-title" data-aos="fade-up" data-aos-duration="600">Resultados Que Falam Por Si.</h2>
                 <div class="testimonial-quotes">
-                    <blockquote class="testimonial-quote">
-                        <p>"O método aplicado ajuda a vermos o que o aluno precisa entender mais do que somente decorar.
-E sempre voltando ao ponto de erro do aluno. 
-E a aula acaba fluindo naturalmente e nem sentimos ter passado 1 hora de aula."</p>
-                        <cite>– H. Marks</cite> <!-- Use Initials or First Name + Initial -->
+                    <blockquote class="testimonial-quote" data-aos="fade-up" data-aos-duration="600">
+                        <p>"O método aplicado ajuda a vermos o que o aluno precisa entender mais do que somente decorar. E sempre voltando ao ponto de erro do aluno. E a aula acaba fluindo naturalmente e nem sentimos ter passado 1 hora de aula."</p>
+                        <cite>– H. Marks</cite>
                     </blockquote>
-                    <blockquote class="testimonial-quote">
+                    <blockquote class="testimonial-quote" data-aos="fade-up" data-aos-duration="600" data-aos-delay="100">
                         <p>"Em pouco tempo minha confiança para reuniões em inglês aumentou exponencialmente. O feedback é constante e muito preciso. Recomendo a Speak Up sem hesitar!"</p>
                         <cite>– M. Andrade</cite>
                     </blockquote>
-                     <blockquote class="testimonial-quote">
+                     <blockquote class="testimonial-quote" data-aos="fade-up" data-aos-duration="600" data-aos-delay="200">
                         <p>"A abordagem focada na prática e a paciência do professor criam um ambiente perfeito para aprender. Me sinto muito mais seguro para usar o inglês no dia a dia."</p>
                         <cite>– J. Santos</cite>
                     </blockquote>
@@ -182,44 +176,53 @@ E a aula acaba fluindo naturalmente e nem sentimos ter passado 1 hora de aula."<
 
         <!-- ===== Contact Section ===== -->
         <section id="contact" class="contact-section">
-            <div class="container">
+            <div class="container" data-aos="fade-up" data-aos-duration="800">
                 <h2 class="section-title">Pronto para Falar com Confiança?</h2>
                 <p class="contact-subtitle">Envie uma mensagem e agende sua aula experimental.</p>
-                <!-- Prominent WhatsApp Button -->
- 
                <a href="https://wa.me/33678663850" target="_blank" rel="noopener noreferrer" class="button button-primary button-large contact-cta">
-                   <i class="fa-brands fa-whatsapp"></i> <!-- WhatsApp Icon -->
+                   <i class="fa-brands fa-whatsapp"></i>
                    Enviar Mensagem Rápida
                 </a>
                 <div class="contact-details">
-                    <p>
-                        <i class="fa-solid fa-envelope"></i> <!-- Email Icon -->
-                        <a href="mailto:lfangelomiranda@gmail.com">lfangelomiranda@gmail.com</a>
-                    </p>
-                     <p>
-                         <i class="fa-brands fa-linkedin"></i> <!-- LinkedIn Icon -->
-                         <a href="https://www.linkedin.com/in/felipe-angelo-715144199/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-                     </p>
-                     <p>
-                         <i class="fa-brands fa-instagram"></i> <!-- Instagram Icon -->
-                         <a href="https://www.instagram.com/felipeangelo.m/" target="_blank" rel="noopener noreferrer">@felipeangelo.m</a> <!-- Ou use seu @ aqui -->
-                     </p>
-                     <!-- Não se esqueça de colocar seu número real de WhatsApp no link acima -->
+                     <a href="mailto:lfangelomiranda@gmail.com" aria-label="Enviar email para lfangelomiranda@gmail.com">
+                        <i class="fa-solid fa-envelope"></i>
+                        <span>lfangelomiranda@gmail.com</span>
+                    </a>
+                    <a href="https://www.linkedin.com/in/felipe-angelo-715144199/" target="_blank" rel="noopener noreferrer" aria-label="Perfil de Felipe Miranda no LinkedIn">
+                        <i class="fa-brands fa-linkedin"></i>
+                        <span>LinkedIn</span>
+                    </a>
+                    <a href="https://www.instagram.com/felipeangelo.m/" target="_blank" rel="noopener noreferrer" aria-label="Perfil de Felipe Angelo no Instagram">
+                        <i class="fa-brands fa-instagram"></i>
+                        <span>@felipeangelo.m</span>
+                    </a>
                 </div>
+            </div>
+        </section>
 
     </main>
 
     <footer class="site-footer">
         <div class="container footer-content">
             <p>© 2025 Speak Up. Todos os direitos reservados.</p>
-            <!-- Optional: Repeat minimal nav or social links -->
             <div class="footer-links">
                  <a href="#hero">Início</a>
                  <a href="mailto:lfangelomiranda@gmail.com">Email</a>
-                 <!-- <a href="#privacy-policy">Política de Privacidade</a> -->
             </div>
         </div>
     </footer>
+
+    <!-- AOS Library JS - MUST be after your content -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+      // Initialize AOS
+      AOS.init({
+        once: true, // Only animate elements once
+        offset: 50, // Trigger animation slightly before element is visible
+        duration: 700, // Animation duration
+        easing: 'ease-in-out', // Animation timing function
+      });
+    </script>
 
 </body>
 </html>
