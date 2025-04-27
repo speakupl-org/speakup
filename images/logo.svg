@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+
+  <!-- Outer speech-bubble arcs -->
+  <path
+    d="
+      M157.7,277.2
+      A120,120 0 0,1 334.9,115.1
+    "
+    fill="none"
+    stroke="#217E8D"
+    stroke-width="24"
+    stroke-linecap="round"
+  />
+
+  <path
+    d="
+      M334.9,115.1
+      A120,120 0 0,1 356.6,164.8
+    "
+    fill="none"
+    stroke="#112234"
+    stroke-width="24"
+    stroke-linecap="round"
+  />
+
+  <path
+    d="
+      M356.6,164.8
+      A120,120 0 0,1 285.0,244.0
+    "
+    fill="none"
+    stroke="#EEA824"
+    stroke-width="24"
+    stroke-linecap="round"
+  />
+
+  <!-- Tail of speech bubble -->
+  <path
+    d="
+      M285.0,244.0
+      L240.0,267.0
+      L253.0,223.0
+    "
+    fill="none"
+    stroke="#217E8D"
+    stroke-width="24"
+    stroke-linejoin="round"
+    stroke-linecap="round"
+  />
+
+  <!-- Inner “sound-wave” marks -->
+  <path
+    d="M300,200 a15,25 0 0,1 0,50"
+    fill="none"
+    stroke="#112234"
+    stroke-width="20"
+    stroke-linecap="round"
+  />
+  <path
+    d="M330,180 a15,40 0 0,1 0,80"
+    fill="none"
+    stroke="#112234"
+    stroke-width="20"
+    stroke-linecap="round"
+  />
+
+  <!-- Text “Speak Up” -->
+  <text
+    x="50%" y="430"
+    text-anchor="middle"
+    font-family="Montserrat, Arial, sans-serif"
+    font-weight="600"
+    font-size="72"
+    fill="#112234"
+  >Speak Up</text>
+
+</svg>
