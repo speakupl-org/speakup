@@ -1,43 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="500pt" height="500pt"
+  viewBox="0 0 300 300"
+  preserveAspectRatio="xMidYMid meet">
 
-  <!-- Teal Arc -->
-  <path
-     d="M 157.7,277.2 A 120,120 0 0 1 334.9,115.1"
-     style="fill:none; stroke:#217E8D; stroke-width:24; stroke-linecap:round;"
-  />
-  <!-- Navy Arc -->
-  <path
-     d="M 334.9,115.1 A 120,120 0 0 1 356.6,164.8"
-     style="fill:none; stroke:#112234; stroke-width:24; stroke-linecap:round;"
-  />
-  <!-- Yellow Arc -->
-  <path
-     d="M 356.6,164.8 A 120,120 0 0 1 285.0,244.0"
-     style="fill:none; stroke:#EEA824; stroke-width:24; stroke-linecap:round;"
-  />
+  <!-- Outer bubble rim as three colored strokes -->
+  <g transform="translate(0,300) scale(0.1,-0.1)"
+     fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Teal arc -->
+    <path
+      d="M1277 2311 c-183 -60 -306 -229 -307 -421 0 -70 24 -162 56 -217 24 -41 24 -46 14 -125 -24 -196 -16 -204 125 -128 l95 51 52 -16 c28 -8 82 -15 119 -15 59 0 68 3 74 20 3 11 4 28 1 38 -5 13 1 17 25 19 16 1 43 11 58 23 16 11 34 20 39 20 6 0 26 18 45 40 l34 40 24 -19 24 -20 -30 -26 c-39 -32 -166 -97 -180 -91 -6 2 -17 -5 -24 -16 -12 -20 -11 -21 17 -15 44 9 133 54 174 87 93 77 158 224 158 359 0 98 -19 163 -71 240 -46 70 -70 87 -98 72 -33 -18 -32 -39 5 -88 92 -121 104 -270 31 -406 -38 -73 -118 -147 -183 -170 -62 -22 -157 -22 -238 0 l-63 16 -67 -37 c-41 -23 -66 -32 -66 -24 0 7 5 45 11 83 10 69 10 71 -26 141 -64 124 -58 242 16 354 87 129 250 187 409 146 66 -17 93 -8 88 32 -5 43 -62 65 -182 69 -80 2 -113 -1 -159 -16z"
+      stroke="#217E8D" stroke-width="24"
+    />
+    <!-- Dark-blue arc -->
+    <path
+      d="m1552 2288 c59 -17 60 -56 1 -42 -166 38 -307 4 -404 -98 -69 -73 -100 -140 -108 -236 -7 -81 -3 -98 46 -195 23 -45 24 -55 18 -142 -5 -67 -4 -95 4 -96 6 -1 17 -2 24 -3 6 -1 36 13 65 30 53 31 54 32 105 18 46 -12 118 -22 170 -23 9 -1 17 -7 17 -15 0 -25 -58 -29 -150 -11 l-87 18 -87 -46 c-47 -26 -93 -47 -101 -47 -17 0 -18 9 -4 110 14 105 13 117 -21 187 -17 34 -33 83 -35 110 -3 26 -8 55 -10 64 -10 30 15 151 43 208 54 110 177 203 293 221 62 10 167 4 221 -12z"
+      stroke="#112234" stroke-width="24"
+    />
+    <!-- Orange arc -->
+    <path
+      d="m1764 2145 c15 -19 39 -60 53 -91 49 -108 30 -297 -39 -397 -16 -22 -23 -25 -34 -16 -12 10 -11 17 7 45 56 92 74 218 44 321 -9 31 -34 83 -56 115 -34 50 -37 58 -21 58 11 0 32 -16 46 -35z"
+      stroke="#EEA824" stroke-width="24"
+    />
+    <!-- Bubble tail -->
+    <path
+      d="M2850 2440 L2400 2670 L2530 2230"
+      stroke="#217E8D" stroke-width="24"
+    />
+    <!-- Inner “sound-wave” marks -->
+    <path d="M3000 2000 a150 250 0 0 1 0 500"
+      stroke="#112234" stroke-width="200"
+    />
+    <path d="M3300 1800 a150 400 0 0 1 0 800"
+      stroke="#112234" stroke-width="200"
+    />
+  </g>
 
-  <!-- Tail of speech bubble -->
-  <path
-     d="M 285.0,244.0 L 240.0,267.0 L 253.0,223.0"
-     style="fill:none; stroke:#217E8D; stroke-width:24; stroke-linejoin:round; stroke-linecap:round;"
-  />
-
-  <!-- Inner “sound-wave” marks -->
-  <path
-     d="M 300,200 a 15,25 0 0 1 0,50"
-     style="fill:none; stroke:#112234; stroke-width:20; stroke-linecap:round;"
-  />
-  <path
-     d="M 330,180 a 15,40 0 0 1 0,80"
-     style="fill:none; stroke:#112234; stroke-width:20; stroke-linecap:round;"
-  />
-
-  <!-- Text “Speak Up” -->
+  <!-- “Speak Up” text -->
   <text
-    x="50%" y="430" text-anchor="middle"
-    style="font-family:Inter, Montserrat, Arial, sans-serif; font-weight:700; font-size:72px; fill:#112234;">
-      Speak Up
-  </text>
-
+    x="50%" y="90%" text-anchor="middle"
+    font-family="Montserrat, Arial, sans-serif" font-weight="600"
+    font-size="72" fill="#112234"
+  >Speak Up</text>
 </svg>
