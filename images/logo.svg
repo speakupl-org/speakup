@@ -1,56 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Removed width/height attributes, using viewBox for scaling -->
 <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
 
-  <!-- Define colors based on your second SVG -->
-  <defs>
-      <style>
-          .logo-teal { stroke: #217E8D; fill: #217E8D; }
-          .logo-navy { stroke: #112234; fill: #112234; }
-          .logo-yellow { stroke: #EEA824; fill: #EEA824; }
-          .logo-text { fill: #112234; } /* Navy text color */
-      </style>
-  </defs>
-
-  <!-- Outer speech-bubble rim using simpler paths and classes -->
+  <!-- Outer speech-bubble rim using presentation attributes -->
   <!-- Teal Arc -->
    <path
       d="M 157.7,277.2 A 120,120 0 0 1 334.9,115.1"
-      fill="none" class="logo-teal" stroke-width="24" stroke-linecap="round"
+      fill="none"
+      stroke="#217E8D"
+      stroke-width="24"
+      stroke-linecap="round"
    />
-   <!-- Navy Arc (Adjusted endpoint from teal end to a midpoint) -->
+   <!-- Navy Arc (Adjusted) -->
    <path
-       d="M 334.9,115.1 A 120,120 0 0 1 360,145" /* Approximate endpoint */
-       fill="none" class="logo-navy" stroke-width="24" stroke-linecap="round"
+       d="M 334.9,115.1 A 120,120 0 0 1 360,145"
+       fill="none"
+       stroke="#112234"
+       stroke-width="24"
+       stroke-linecap="round"
    />
-   <!-- Yellow Arc (Adjusted startpoint to match Navy end, keep original end) -->
+   <!-- Yellow Arc (Adjusted) -->
    <path
-      d="M 360,145 A 120,120 0 0 1 285.0,244.0" /* Approximate startpoint */
-      fill="none" class="logo-yellow" stroke-width="24" stroke-linecap="round"
+      d="M 360,145 A 120,120 0 0 1 285.0,244.0"
+      fill="none"
+      stroke="#EEA824"
+      stroke-width="24"
+      stroke-linecap="round"
    />
 
    <!-- Tail of speech bubble -->
    <path
       d="M 285.0,244.0 L 240.0,267.0 L 253.0,223.0"
-      fill="none" class="logo-teal" stroke-width="24" stroke-linejoin="round" stroke-linecap="round"
+      fill="none"
+      stroke="#217E8D"
+      stroke-width="24"
+      stroke-linejoin="round"
+      stroke-linecap="round"
    />
 
    <!-- Inner “sound-wave” marks -->
    <path
       d="M 300,200 a 15,25 0 0 1 0,50"
-      fill="none" class="logo-navy" stroke-width="20" stroke-linecap="round"
+      fill="none"
+      stroke="#112234"
+      stroke-width="20"
+      stroke-linecap="round"
    />
    <path
       d="M 330,180 a 15,40 0 0 1 0,80"
-      fill="none" class="logo-navy" stroke-width="20" stroke-linecap="round"
+      fill="none"
+      stroke="#112234"
+      stroke-width="20"
+      stroke-linecap="round"
    />
 
   <!-- Text “Speak Up” -->
   <text
     x="50%" y="430" text-anchor="middle"
-    font-family="Inter, Montserrat, Arial, sans-serif" /* Added Inter */
-    font-weight="700" /* Adjusted weight */
-    font-size="72" class="logo-text">
+    font-family="Inter, Montserrat, Arial, sans-serif"
+    font-weight="700"
+    font-size="72"
+    fill="#112234"> <!-- Text color -->
       Speak Up
   </text>
 
