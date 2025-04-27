@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg version="1.0" xmlns="http://www.w3.org/2000/svg"  
-     width="400pt" height="400pt" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid meet">
+     width="400pt" height="400pt" viewBox="0 0 300 300" preserveAspectRatio="xMidYMid meet">
 
   <!-- Outer bubble rim split into three colored arcs -->
   <g transform="translate(0,300) scale(0.1,-0.1)" stroke="none">
