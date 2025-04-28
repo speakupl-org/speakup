@@ -110,7 +110,7 @@ section { padding: var(--section-padding-mobile); position: relative; }
 }
 .site-header.scrolled { box-shadow: 0 4px 10px rgba(17, 34, 52, 0.05); }
 .header-container { display: flex; justify-content: space-between; align-items: center; }
-.logo { height: 100px; width: auto; transition: transform var(--hover-transition-speed) ease; }
+.logo { height: 130px; width: auto; transition: transform var(--hover-transition-speed) ease; }
 .logo:hover { transform: scale(1.05); }
 .site-nav { display: none; }
 .site-nav a {
