@@ -112,7 +112,7 @@ section { padding: var(--section-padding-mobile); position: relative; }
 .header-container { display: flex; justify-content: space-between; align-items: center; }
 /* Size for the JPEG logo */
 .logo {
-  height: 50px; /* Still 50px */
+  height: 130px; /* Still 50px */
   width: auto;
   transition: transform var(--hover-transition-speed) ease;
 }
