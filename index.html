@@ -15,6 +15,8 @@
     <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
     <!-- SwiperJS CSS -->
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <!-- AOS CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <!-- Link to your Custom CSS stylesheet -->
     <link rel="stylesheet" href="style_premium.css">
 </head>
@@ -41,16 +43,22 @@
         <section id="hero" class="hero-section">
              <div class="container hero-content">
                 <div class="hero-text">
-                    <h1 class="hero-headline">Speak Up.<br>Sua Fluência em Inglês de Alto Nível.</h1>
-                    <p class="hero-subheadline">Converse com confiança em qualquer situação, com aulas online personalizadas e focadas em você.</p>
-                    <a href="#services" class="button button-primary button-large">Descubra Suas Aulas</a>
+                    {/* Subtle drop-down for headline */}
+                    <h1 class="hero-headline" data-aos="fade-down">Speak Up.<br>Sua Fluência em Inglês de Alto Nível.</h1>
+                    {/* Fade in slightly later */}
+                    <p class="hero-subheadline" data-aos="fade-down" data-aos-delay="150">Converse com confiança em qualquer situação, com aulas online personalizadas e focadas em você.</p>
+                    {/* Fade up for the button, drawing attention */}
+                    <a href="#services" class="button button-primary button-large" data-aos="fade-up" data-aos-delay="300">Descubra Suas Aulas</a>
                 </div>
-                <div class="hero-image-container">
+                {/* Slide image in from the right */}
+                <div class="hero-image-container" data-aos="fade-left" data-aos-delay="100">
                     <img src="images/20230512_105453.jpg" alt="Professor da Speak Up - Felipe" class="tutor-photo-hero">
-                    <div class="hero-graphic-element"></div>
+                    {/* Graphic element zooms in */}
+                    <div class="hero-graphic-element" data-aos="zoom-in" data-aos-delay="400"></div>
                 </div>
             </div>
-            <div class="scroll-indicator">
+             {/* Scroll indicator fades in last */}
+            <div class="scroll-indicator" data-aos="fade-in" data-aos-delay="600">
                 <a href="#value-prop"><span></span></a>
             </div>
         </section>
@@ -58,25 +66,27 @@
         <!-- ===== Value Proposition Section ===== -->
         <section id="value-prop" class="value-prop-section">
             <div class="container">
-                <h2 class="section-title">Por que a Speak Up é Diferente?</h2>
+                <h2 class="section-title" data-aos="fade-up">Por que a Speak Up é Diferente?</h2>
                 <div class="value-points">
-                     <div class="value-point">
-                        <div class="value-icon"> <i class="fa-solid fa-comments"></i> </div>
+                     {/* Staggered fade-up for the points */}
+                     <div class="value-point" data-aos="fade-up" data-aos-delay="100">
+                        {/* Icon zooms slightly */}
+                        <div class="value-icon" data-aos="zoom-in" data-aos-delay="150"> <i class="fa-solid fa-comments"></i> </div>
                         <h3>Foco Real na Conversação</h3>
                         <p>Aulas desenhadas para destravar sua fala em situações práticas e relevantes para seus objetivos.</p>
                     </div>
-                    <div class="value-point">
-                        <div class="value-icon"> <i class="fa-solid fa-user-check"></i> </div>
+                    <div class="value-point" data-aos="fade-up" data-aos-delay="200">
+                        <div class="value-icon" data-aos="zoom-in" data-aos-delay="250"> <i class="fa-solid fa-user-check"></i> </div>
                         <h3>Feedback Personalizado e Contínuo</h3>
                         <p>Análise detalhada do seu progresso e orientação precisa para acelerar sua fluência.</p>
                     </div>
-                    <div class="value-point">
-                         <div class="value-icon"> <i class="fa-solid fa-globe"></i> </div>
+                    <div class="value-point" data-aos="fade-up" data-aos-delay="300">
+                         <div class="value-icon" data-aos="zoom-in" data-aos-delay="350"> <i class="fa-solid fa-globe"></i> </div>
                         <h3>Experiência Internacional Aplicada</h3>
                         <p>Vivência de 3 anos na Europa (Portugal/Holanda) que traz uma perspectiva global ao seu aprendizado.</p>
                     </div>
-                     <div class="value-point">
-                         <div class="value-icon"> <i class="fa-solid fa-seedling"></i> </div>
+                     <div class="value-point" data-aos="fade-up" data-aos-delay="400">
+                         <div class="value-icon" data-aos="zoom-in" data-aos-delay="450"> <i class="fa-solid fa-seedling"></i> </div>
                         <h3>Ambiente Seguro para Crescer</h3>
                         <p>Um espaço encorajador e confortável onde você se sente à vontade para praticar e evoluir.</p>
                     </div>
@@ -87,14 +97,15 @@
         <!-- ===== About Section ===== -->
         <section id="about" class="about-section">
              <div class="container about-content">
-                <div class="about-image">
+                {/* Slide video in from the left */}
+                <div class="about-image" data-aos="fade-right">
                     <div class="about-video-container">
-                        <!-- === REPLACE IFRAME SRC === -->
-                        <iframe src="https://www.youtube-nocookie.com/embed/PCoyTwltu5g?si=OC058qLDK5jD0C9K&amp" title="Video sobre Speak Up e Professor Felipe" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                        <iframe src="https://www.youtube-nocookie.com/embed/PCoyTwltu5g?si=OC058qLDK5jD0C9K&" title="Video sobre Speak Up e Professor Felipe" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                     </div>
                      <p style="font-size: 0.8rem; text-align: center; color: var(--color-gray-medium); margin-top: 10px;">(Video Introdução)</p>
                 </div>
-                <div class="about-text">
+                {/* Slide text in from the right, slightly delayed */}
+                <div class="about-text" data-aos="fade-left" data-aos-delay="150">
                     <h2 class="section-title-offset">Conheça Seu Professor.</h2>
                     <h3>Felipe Miranda</h3>
                     <p>
@@ -103,7 +114,8 @@
                     <p>
                         Na Speak Up, aplico essa experiência diretamente, focando na comunicação autêntica e na confiança que você precisa para se destacar. Assista ao vídeo para saber mais e vamos juntos transformar seu inglês?
                     </p>
-                   <a href="https://www.linkedin.com/in/felipe-angelo-715144199/" target="_blank" rel="noopener noreferrer" class="text-link"><i class="fa-brands fa-linkedin"></i> Conecte-se no LinkedIn</a>
+                   {/* Link fades in last */}
+                   <a href="https://www.linkedin.com/in/felipe-angelo-715144199/" target="_blank" rel="noopener noreferrer" class="text-link" data-aos="fade-in" data-aos-delay="300"><i class="fa-brands fa-linkedin"></i> Conecte-se no LinkedIn</a>
                  </div>
             </div>
         </section>
@@ -111,16 +123,18 @@
         <!-- ===== Services & Investment Section ===== -->
         <section id="services" class="services-section">
             <div class="container">
-                <h2 class="section-title">Escolha Sua Jornada.</h2>
+                <h2 class="section-title" data-aos="fade-up">Escolha Sua Jornada.</h2>
                 <div class="service-options">
-                    <div class="service-option">
+                     {/* Subtle zoom-in for cards */}
+                    <div class="service-option" data-aos="zoom-in-up" data-aos-delay="100">
                         <div class="service-icon"><i class="fa-solid fa-users"></i></div>
                         <h3>Aulas em Grupo</h3>
                         <p class="description">Ideal para interação dinâmica e prática acessível.</p>
                         <p class="price">R$ 30 <span class="price-detail">/ pessoa / hora</span></p>
                         <a href="#detalhes-grupo" class="button button-secondary">Quero Saber Mais</a>
                     </div>
-                    <div class="service-option individual-highlight">
+                    {/* Highlighted card zooms slightly more or faster */}
+                    <div class="service-option individual-highlight" data-aos="zoom-in-up" data-aos-delay="200">
                         <div class="service-icon"><i class="fa-solid fa-user"></i></div>
                         <h3>Aulas Individuais</h3>
                         <p class="description">Máximo foco e personalização total para seus objetivos.</p>
@@ -134,17 +148,18 @@
         <!-- ===== Static Testimonials Section ===== -->
         <section id="testimonials" class="testimonials-section">
              <div class="container">
-                <h2 class="section-title">Resultados Que Falam Por Si.</h2>
+                <h2 class="section-title" data-aos="fade-up">Resultados Que Falam Por Si.</h2>
                 <div class="testimonial-quotes">
-                   <blockquote class="testimonial-quote">
+                   {/* Staggered fade-up for quotes */}
+                   <blockquote class="testimonial-quote" data-aos="fade-up" data-aos-delay="100">
                         <p>"O método aplicado ajuda a vermos o que o aluno precisa entender mais do que somente decorar. E sempre voltando ao ponto de erro do aluno. E a aula acaba fluindo naturalmente e nem sentimos ter passado 1 hora de aula."</p>
                         <cite>– H. Marks</cite>
                     </blockquote>
-                    <blockquote class="testimonial-quote">
+                    <blockquote class="testimonial-quote" data-aos="fade-up" data-aos-delay="200">
                         <p>"Em pouco tempo minha confiança para reuniões em inglês aumentou exponencialmente. O feedback é constante e muito preciso. Recomendo a Speak Up sem hesitar!"</p>
                         <cite>– M. Andrade</cite>
                     </blockquote>
-                     <blockquote class="testimonial-quote">
+                     <blockquote class="testimonial-quote" data-aos="fade-up" data-aos-delay="300">
                         <p>"A abordagem focada na prática e a paciência do professor criam um ambiente perfeito para aprender. Me sinto muito mais seguro para usar o inglês no dia a dia."</p>
                         <cite>– J. Santos</cite>
                     </blockquote>
@@ -157,50 +172,45 @@
         <!-- ===== NEW: Video Testimonials Section ===== -->
         <section id="video-testimonials" class="video-testimonials-section">
             <div class="container">
-                <h2 class="section-title">O Que Nossos Alunos Dizem</h2>
+                <h2 class="section-title" data-aos="fade-up">O Que Nossos Alunos Dizem</h2>
 
-                <!-- Swiper -->
-                <div class="swiper video-testimonial-swiper">
+                {/* Fade the entire Swiper container */}
+                <div class="swiper video-testimonial-swiper" data-aos="fade-up" data-aos-delay="150">
                     <div class="swiper-wrapper">
 
-                        <!-- Slide 1 -->
+                        {/* Slides themselves don't need AOS as Swiper handles transitions */}
                         <div class="swiper-slide">
                             <div class="testimonial-video-card">
                                 <div class="testimonial-video-embed-container">
-                                    <!-- === REPLACE VIDEO ID === -->
                                     <iframe src="https://www.youtube.com/embed/VIDEO_ID_1" title="Depoimento Aluno 1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                                 </div>
                                 <div class="testimonial-video-card-content">
-                                    <h4>Deuselene Angelo</h4> <!-- REPLACE -->
-                                    <p>"Sempre achei que conversação não fosse para mim"</p> <!-- REPLACE -->
+                                    <h4>Deuselene Angelo</h4>
+                                    <p>"Sempre achei que conversação não fosse para mim"</p>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Slide 2 -->
                         <div class="swiper-slide">
                             <div class="testimonial-video-card">
                                 <div class="testimonial-video-embed-container">
-                                     <!-- === REPLACE VIDEO ID === -->
                                     <iframe src="https://www.youtube.com/embed/VIDEO_ID_2" title="Depoimento Aluno 2" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                                 </div>
                                 <div class="testimonial-video-card-content">
-                                     <h4>Eliana Dark</h4> <!-- REPLACE -->
-                                     <p>"Dianyzinha adora as aulas"</p> <!-- REPLACE -->
+                                     <h4>Eliana Dark</h4>
+                                     <p>"Dianyzinha adora as aulas"</p>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Slide 3 (Optional) -->
                         <div class="swiper-slide">
                              <div class="testimonial-video-card">
                                 <div class="testimonial-video-embed-container">
-                                    <!-- === REPLACE VIDEO ID === -->
                                     <iframe src="https://www.youtube.com/embed/VIDEO_ID_3" title="Depoimento Aluno 3" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                                 </div>
                                 <div class="testimonial-video-card-content">
-                                    <h4>Henrique Marks</h4> <!-- REPLACE -->
-                                    <p>"Minha jornada com a speak up"</p> <!-- REPLACE -->
+                                    <h4>Henrique Marks</h4>
+                                    <p>"Minha jornada com a speak up"</p>
                                 </div>
                             </div>
                         </div>
@@ -209,7 +219,6 @@
                     </div>
                     <!-- Add Pagination -->
                     <div class="swiper-pagination"></div>
-
                     <!-- Add Navigation -->
                     <div class="swiper-button-prev"></div>
                     <div class="swiper-button-next"></div>
@@ -222,14 +231,15 @@
         <!-- ===== Group Details Section ===== -->
         <section id="detalhes-grupo" style="padding: 80px 0; background-color: var(--color-gray-light);">
              <div class="container">
-                <h2 class="section-title" style="margin-bottom: 2rem;">Comunicação Real em Grupo</h2>
-                 <p style="max-width: 700px; margin-left: auto; margin-right: auto; text-align: center; margin-bottom: 1.5rem;">
+                <h2 class="section-title" style="margin-bottom: 2rem;" data-aos="fade-up">Comunicação Real em Grupo</h2>
+                 {/* Fade paragraphs sequentially */}
+                 <p style="max-width: 700px; margin-left: auto; margin-right: auto; text-align: center; margin-bottom: 1.5rem;" data-aos="fade-up" data-aos-delay="100">
                     Imagine aprender inglês enquanto colabora com colegas para alcançar um objetivo comum, usando o idioma de forma natural e significativa. É assim que funcionam nossas aulas em grupo! Criamos um ambiente dinâmico onde a comunicação é a chave.
                  </p>
-                 <p style="max-width: 700px; margin-left: auto; margin-right: auto; text-align: center; margin-bottom: 3rem;">
+                 <p style="max-width: 700px; margin-left: auto; margin-right: auto; text-align: center; margin-bottom: 3rem;" data-aos="fade-up" data-aos-delay="200">
                     Cada aula gira em torno de uma meta comunicativa concreta: pode ser organizar um projeto, entender instruções complexas ou expressar e defender opiniões sobre um tema interessante. Você aprenderá e praticará a linguagem necessária – vocabulário, expressões, estruturas gramaticais – diretamente no contexto em que ela é usada. É a forma mais eficaz de desenvolver fluência prática e confiança para interagir em inglês fora da sala de aula. Tudo isso com a vantagem de turmas pequenas e interação constante.
                  </p>
-                <div style="text-align: center;">
+                <div style="text-align: center;" data-aos="fade-up" data-aos-delay="300">
                     <a href="https://calendly.com/lspeak-up/30min" target="_blank" rel="noopener noreferrer" class="button button-primary">Agendar Consulta para Grupo</a>
                 </div>
             </div>
@@ -239,13 +249,15 @@
         <!-- ===== Contact Section ===== -->
         <section id="contact" class="contact-section">
              <div class="container">
-                <h2 class="section-title">Pronto para Falar com Confiança?</h2>
-                <p class="contact-subtitle">Envie uma mensagem para discutirmos seus objetivos.</p>
-               <a href="https://wa.me/33678663850" target="_blank" rel="noopener noreferrer" class="button button-primary button-large contact-cta">
+                <h2 class="section-title" data-aos="fade-up">Pronto para Falar com Confiança?</h2>
+                <p class="contact-subtitle" data-aos="fade-up" data-aos-delay="100">Envie uma mensagem para discutirmos seus objetivos.</p>
+               {/* Zoom in the main CTA for emphasis */}
+               <a href="https://wa.me/33678663850" target="_blank" rel="noopener noreferrer" class="button button-primary button-large contact-cta" data-aos="zoom-in" data-aos-delay="250">
                    <i class="fa-brands fa-whatsapp"></i>
                    Enviar Mensagem Rápida (WhatsApp)
                 </a>
-                <div class="contact-details">
+                {/* Fade the contact details in */}
+                <div class="contact-details" data-aos="fade-up" data-aos-delay="400">
                     <a href="mailto:lfangelomiranda@gmail.com" aria-label="Enviar email">
                         <i class="fa-solid fa-envelope"></i>
                         <span>lfangelomiranda@gmail.com</span>
@@ -279,17 +291,29 @@
     <script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
     <!-- Swiper JS -->
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <!-- AOS JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
 
     <!-- == Custom Scripts == -->
     <script>
         window.onload = function() {
 
+            // 0. Initialize AOS (Added)
+            AOS.init({
+                duration: 700, // Duration of animation (subtle)
+                once: true, // Whether animation should happen only once - while scrolling down
+                offset: 100, // Offset (in px) from the original trigger point
+                easing: 'ease-in-out', // Default easing
+            });
+
+
             // 1. Initialize Calendly Widget
             Calendly.initBadgeWidget({
                 url: 'https://calendly.com/lspeak-up/30min',
                 text: 'Agende Sua Consulta Aqui!', // Customize as needed
-                color: 'var(--color-logo-yellow)', // Use hex '#EEA824' if variable doesn't work
-                textColor: 'var(--color-navy-deep)', // Use hex '#112234' if variable doesn't work
+                color: '#EEA824', // Use hex fallback as CSS var might not load in time
+                textColor: '#112234', // Use hex fallback
             });
 
             // 2. Initialize Mobile Menu Toggle
@@ -301,7 +325,7 @@
                     const icon = menuToggle.querySelector('i');
                     if (icon) {
                          icon.classList.toggle('fa-bars');
-                         icon.classList.toggle('fa-times'); // Make sure fa-times is available in FA v6
+                         icon.classList.toggle('fa-times');
                     }
                 });
             }
@@ -313,22 +337,17 @@
             }
 
             // 4. Initialize Video Testimonial Swiper
-            // Ensure Swiper class exists before initializing
             if (document.querySelector('.video-testimonial-swiper')) {
                  const testimonialSwiper = new Swiper('.video-testimonial-swiper', {
-                    // Mobile First Config
                     slidesPerView: 1,
                     spaceBetween: 30,
-                    loop: true, // Consider removing if you only have 2-3 videos
+                    loop: true, // Kept loop, adjust if needed
                     grabCursor: true,
-                    // Responsive breakpoints
                     breakpoints: {
-                        // >= Tablet
                         768: {
                             slidesPerView: 2,
                             spaceBetween: 40
                         },
-                        // >= Desktop
                         1024: {
                             slidesPerView: 3,
                             spaceBetween: 50
@@ -344,6 +363,9 @@
                     },
                 });
             }
+
+            // Optional: Refresh AOS after Swiper init if layout shifts significantly (usually not needed for fade)
+            // setTimeout(() => { AOS.refresh(); }, 500);
 
         }; // End window.onload
     </script>
