@@ -223,25 +223,32 @@ section {
   background-color: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  padding: 5px 0; /* Adjusted Padding */
+  padding: 8px 0; /* Adjusted padding for 70px logo compromise */
   border-bottom: 1px solid #eef2f4;
   position: sticky;
   top: 0;
   z-index: 1000;
   transition: box-shadow var(--transition-speed) ease;
+  display: flex;
+  align-items: center; /* Align items vertically in the header */
 }
 .site-header.scrolled {
   box-shadow: 0 4px 10px rgba(17, 34, 52, 0.05);
 }
 .header-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   width: 100%;
+   max-width: var(--content-max-width);
+   margin: 0 auto;
+   padding: 0 25px; /* Keep side padding here */
 }
 .logo {
-  height: 80px; /* Adjusted Height */
+  height: 70px; /* Logo visual height */
   width: auto;
   transition: transform var(--hover-transition-speed) ease;
+  flex-shrink: 0; /* Prevent logo from shrinking */
 }
 .logo:hover {
   transform: scale(1.05);
@@ -259,7 +266,7 @@ section {
   position: relative;
   padding-bottom: 5px;
 }
-.site-nav a::after {
+.site-nav a::after { /* Desktop underline effect */
   content: '';
   position: absolute;
   width: 0;
@@ -287,7 +294,7 @@ section {
     font-size: 1.6rem;
     cursor: pointer;
     padding: 5px;
-    margin-left: 15px;
+    margin-left: 15px; /* Space between nav/button */
     z-index: 1001;
 }
 
@@ -608,18 +615,87 @@ section {
 
 
 /* ===== VIDEO TESTIMONIALS SECTION (Swiper) ===== */
-/* ... (Keep existing styles for .video-testimonials-section, .video-testimonial-swiper, .testimonial-video-card etc.) ... */
+.video-testimonials-section {
+  background-color: var(--color-gray-light);
+  padding: var(--section-padding-mobile);
+  overflow: hidden; /* Prevent potential swiper overflow */
+}
+.video-testimonials-section .section-title {
+    margin-bottom: 3rem;
+}
+.video-testimonials-section .section-title::after {
+    background-color: var(--color-logo-yellow);
+}
 
-/* Swiper Navigation/Pagination Styling (REVISED PREMIUM BUTTONS) */
+/* Swiper Container adjustments */
+.video-testimonial-swiper {
+     padding-bottom: 60px; /* Increased space for larger dots + space */
+     /* Ensure Swiper container itself can be navigated by arrows */
+     position: relative; /* Needed for absolute positioning of buttons */
+     /* Add side padding IF arrows are positioned inside */
+     /* padding-left: 50px; padding-right: 50px; */
+}
 
-/* --- Pagination Dots --- */
+/* Individual Slide Card Styling */
+.testimonial-video-card {
+    background-color: var(--color-white);
+    border-radius: var(--border-radius);
+    box-shadow: 0 5px 20px rgba(17, 34, 52, 0.08);
+    overflow: hidden;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* For consistent height */
+}
+
+.testimonial-video-embed-container {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 */
+    height: 0;
+    background: #000;
+    width: 100%;
+}
+
+.testimonial-video-embed-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+.testimonial-video-card-content {
+    padding: 25px;
+    flex-grow: 1;
+}
+.testimonial-video-card-content h4 {
+    color: var(--color-navy-deep);
+    margin-bottom: 10px;
+    font-size: 1.25rem;
+}
+.testimonial-video-card-content p {
+    font-size: 1rem;
+    color: var(--color-gray-dark);
+    margin-bottom: 0;
+    font-style: italic;
+    line-height: 1.6;
+}
+
+/* Swiper Pagination Styling */
+.video-testimonial-swiper .swiper-pagination {
+  bottom: 10px !important; /* Position pagination lower */
+  /* Ensure clicks pass through if needed */
+  /* pointer-events: none; /* Only if using custom clickable elements */
+}
 .video-testimonial-swiper .swiper-pagination-bullet {
     background-color: var(--color-gray-medium);
     opacity: 0.6;
-    transition: all var(--hover-transition-speed) ease; /* Smooth transition */
-    width: 10px;
-    height: 10px;
-    /* Add hover effect */
+    transition: all var(--hover-transition-speed) ease;
+    width: 11px; /* Slightly larger dots */
+    height: 11px;
+    margin: 0 5px !important; /* Adjust spacing */
+    /* pointer-events: auto; Allow clicks on bullets */
 }
 .video-testimonial-swiper .swiper-pagination-bullet:hover {
      opacity: 0.8;
@@ -628,78 +704,71 @@ section {
 .video-testimonial-swiper .swiper-pagination-bullet-active {
     background-color: var(--color-logo-teal);
     opacity: 1;
-     transform: scale(1.2); /* Make active dot slightly larger */
+     transform: scale(1.2);
 }
 
-/* --- Premium Navigation Arrows --- */
+/* Premium Swiper Navigation Buttons */
 .video-testimonial-swiper .swiper-button-next,
 .video-testimonial-swiper .swiper-button-prev {
-    /* Shape & Size */
-    width: 44px;  /* Button size */
+    width: 44px;
     height: 44px;
-    border-radius: 50%; /* Make it circular */
+    border-radius: 50%;
+    background-color: var(--color-logo-teal);
+    color: var(--color-white);
+    box-shadow: 0 3px 8px rgba(17, 34, 52, 0.15);
+    transition: all var(--hover-transition-speed) ease;
 
-    /* Background & Color */
-    background-color: var(--color-logo-teal); /* Use teal as base */
-    color: var(--color-white); /* Arrow icon color */
+    /* Ensure buttons are correctly positioned vertically */
+    /* Swiper defaults usually work, but explicitly set if needed */
+    top: 50%;
+    margin-top: -22px; /* Half of height to center vertically */
 
-    /* Effects & Transitions */
-    box-shadow: 0 3px 8px rgba(17, 34, 52, 0.15); /* Subtle shadow */
-    transition: all var(--hover-transition-speed) ease; /* Smooth transitions */
+    /* --- Remove default positioning --- */
+    right: auto; /* Reset default */
+    left: auto;  /* Reset default */
 
-    /* Positioning (Adjust if needed) */
-    /* top: 50%; transform: translateY(-50%); Swiper default */
-    /* Example: move slightly outside the container edges */
-     right: -10px; /* Adjust value for next button */
-     left: auto;  /* Reset left for next button */
-     /* You might need 'overflow: visible;' on '.video-testimonial-swiper' */
-     /* Swiper default positioning usually works well inside container though */
+    /* --- Position them: Choose one method --- */
+    /* Method 1: Slightly Inside Container (Requires padding on .swiper) */
+     /* left: 15px;  for prev */
+     /* right: 15px; for next */
+
+    /* Method 2: Outside Container (Requires overflow:visible on .swiper maybe) */
+    /* Adjust values as needed */
+     left: -20px; /* Prev button pushes outside */
+    /* Ensure button Z-index is high enough if needed */
+     z-index: 10;
+}
+.video-testimonial-swiper .swiper-button-next {
+     right: -20px; /* Next button pushes outside */
+     left: auto;
 }
 
-.video-testimonial-swiper .swiper-button-prev {
-     left: -10px; /* Adjust value for prev button */
-     right: auto; /* Reset right for prev button */
-}
 
-
-/* Style the actual arrow icon inside the button */
+/* Style arrow icons */
 .video-testimonial-swiper .swiper-button-next::after,
 .video-testimonial-swiper .swiper-button-prev::after {
-   font-size: 1rem; /* Size of the arrow character */
-   font-weight: 900; /* Make arrow bolder */
-   /* Swiper usually centers these pseudo-elements */
+   font-size: 0.9rem; /* Arrow size */
+   font-weight: 900;
 }
 
-/* Hover & Focus States */
+/* Hover & Focus states */
 .video-testimonial-swiper .swiper-button-next:hover,
 .video-testimonial-swiper .swiper-button-prev:hover,
-.video-testimonial-swiper .swiper-button-next:focus, /* Add focus state */
+.video-testimonial-swiper .swiper-button-next:focus,
 .video-testimonial-swiper .swiper-button-prev:focus {
-    background-color: var(--color-navy-deep); /* Dark blue on hover/focus */
-    color: var(--color-logo-yellow); /* Yellow arrow on hover/focus */
-    box-shadow: 0 5px 12px rgba(17, 34, 52, 0.25); /* Slightly stronger shadow */
-    transform: scale(1.05); /* Slight zoom effect */
-    outline: none; /* Remove default browser outline for focus */
+    background-color: var(--color-navy-deep);
+    color: var(--color-logo-yellow);
+    box-shadow: 0 5px 12px rgba(17, 34, 52, 0.25);
+    transform: scale(1.05);
+    outline: none;
 }
-/* Add a visible focus style for accessibility if outline removed */
 .video-testimonial-swiper .swiper-button-next:focus-visible,
 .video-testimonial-swiper .swiper-button-prev:focus-visible {
-    box-shadow: 0 0 0 3px var(--color-logo-teal), 0 5px 12px rgba(17, 34, 52, 0.25); /* Teal ring + shadow */
+    box-shadow: 0 0 0 3px var(--color-logo-teal), 0 5px 12px rgba(17, 34, 52, 0.25);
 }
 
 
-/* Hide arrows on mobile (optional, uncomment if needed) */
-/* @media (max-width: 767px) {
-     .video-testimonial-swiper .swiper-button-next,
-     .video-testimonial-swiper .swiper-button-prev {
-         display: none;
-     }
-     .video-testimonial-swiper {
-        padding-bottom: 40px;
-     }
-} */
-
-/* ... (Group Details, Contact, Footer, Existing Media Queries) ... */
+/* ===== GROUP DETAILS SECTION ===== */
 #detalhes-grupo {
    padding: 80px 0;
    background-color: var(--color-gray-light);
@@ -839,7 +908,7 @@ section {
 
   .service-options { grid-template-columns: repeat(2, 1fr); gap: 40px; }
 
-  .testimonial-quotes { grid-template-columns: repeat(2, 1fr); gap: 40px; } /* Static quotes layout */
+  .testimonial-quotes { grid-template-columns: repeat(2, 1fr); gap: 40px; }
 
   .contact-details { gap: 30px 50px; padding: 0 25px; }
 
@@ -910,13 +979,27 @@ section {
     .site-nav a.button-secondary.button-small{ padding: 12px 20px; }
 
     /* Optionally hide swiper arrows on mobile */
-    .video-testimonial-swiper .swiper-button-next,
-    .video-testimonial-swiper .swiper-button-prev {
-       /* display: none; */ /* Uncomment to hide */
-    }
-    .video-testimonial-swiper {
-       padding-bottom: 40px; /* Adjust if arrows are hidden */
-    }
+     .video-testimonial-swiper .swiper-button-next,
+     .video-testimonial-swiper .swiper-button-prev {
+         /* Change position to be more inside or hide completely */
+          left: 5px; /* Example: bring prev closer */
+         /* Adjust size if needed */
+          width: 38px;
+          height: 38px;
+          margin-top: -19px; /* Re-center vertically */
+     }
+     .video-testimonial-swiper .swiper-button-next {
+          right: 5px; /* Example: bring next closer */
+          left: auto;
+     }
+     .video-testimonial-swiper .swiper-button-next::after,
+     .video-testimonial-swiper .swiper-button-prev::after {
+        font-size: 0.8rem; /* Smaller arrow */
+     }
+
+     .video-testimonial-swiper {
+        padding-bottom: 50px; /* Ensure dots are visible */
+     }
 }
 
 /* ==========================================================================
