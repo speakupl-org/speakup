@@ -223,7 +223,7 @@ section {
   background-color: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  padding: 10px 0; /* Adjusted Padding */
+  padding: 5px 0; /* Adjusted Padding */
   border-bottom: 1px solid #eef2f4;
   position: sticky;
   top: 0;
@@ -239,7 +239,7 @@ section {
   align-items: center;
 }
 .logo {
-  height: 50px; /* Adjusted Height */
+  height: 80px; /* Adjusted Height */
   width: auto;
   transition: transform var(--hover-transition-speed) ease;
 }
