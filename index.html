@@ -42,17 +42,18 @@
         <!-- ===== Hero Section ===== -->
         <section id="hero" class="hero-section">
              <div class="container hero-content">
-                 {/* Animate hero text block and image container */}
-                <div class="hero-text" data-aos="fade-right">
+                 {/* REMOVED AOS from immediate children for instant visibility */}
+                <div class="hero-text">
                     <h1 class="hero-headline">Speak Up.<br>Sua Fluência em Inglês de Alto Nível.</h1>
                     <p class="hero-subheadline">Converse com confiança em qualquer situação, com aulas online personalizadas e focadas em você.</p>
                     <a href="#services" class="button button-primary button-large">Descubra Suas Aulas</a>
                 </div>
-                <div class="hero-image-container" data-aos="fade-left" data-aos-delay="100">
+                <div class="hero-image-container">
                     <img src="images/20230512_105453.jpg" alt="Professor da Speak Up - Felipe" class="tutor-photo-hero">
                     <div class="hero-graphic-element"></div>
                 </div>
             </div>
+             {/* Kept subtle fade on scroll indicator as it's lower */}
             <div class="scroll-indicator" data-aos="fade-in" data-aos-delay="400">
                 <a href="#value-prop"><span></span></a>
             </div>
@@ -62,7 +63,6 @@
         <section id="value-prop" class="value-prop-section">
             <div class="container">
                 <h2 class="section-title" data-aos="fade-up">Por que a Speak Up é Diferente?</h2>
-                 {/* Stagger animation for value point cards */}
                 <div class="value-points">
                      <div class="value-point" data-aos="fade-up" data-aos-delay="0">
                         <div class="value-icon"> <i class="fa-solid fa-comments"></i> </div>
@@ -90,10 +90,10 @@
 
         <!-- ===== About Section ===== -->
         <section id="about" class="about-section">
-             {/* Animate the entire content block gently */}
              <div class="container about-content" data-aos="fade-in" data-aos-duration="1000">
                 <div class="about-image">
                     <div class="about-video-container">
+                        {/* REMEMBER TO REPLACE THIS SRC */}
                         <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Video sobre Speak Up e Professor Felipe" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                     </div>
                      <p style="font-size: 0.8rem; text-align: center; color: var(--color-gray-medium); margin-top: 10px;">(Video Introdução)</p>
@@ -139,7 +139,6 @@
         <section id="testimonials" class="testimonials-section">
              <div class="container">
                 <h2 class="section-title" data-aos="fade-up">Resultados Que Falam Por Si.</h2>
-                 {/* Stagger fade for quote blocks */}
                 <div class="testimonial-quotes">
                    <blockquote class="testimonial-quote" data-aos="fade-up" data-aos-delay="0">
                         <p>"O método aplicado ajuda a vermos o que o aluno precisa entender mais do que somente decorar. E sempre voltando ao ponto de erro do aluno. E a aula acaba fluindo naturalmente e nem sentimos ter passado 1 hora de aula."</p>
@@ -158,43 +157,44 @@
         </section>
 
         <!-- ===== Video Testimonials Section ===== -->
-         {/* Animate section appearance, not the slider itself */}
         <section id="video-testimonials" class="video-testimonials-section" data-aos="fade-in" data-aos-duration="1000">
             <div class="container">
                 <h2 class="section-title" data-aos="fade-up">O Que Nossos Alunos Dizem (Vídeos)</h2>
                 <div class="swiper video-testimonial-swiper">
                     <div class="swiper-wrapper">
-                        {/* No AOS on slides */}
                         <div class="swiper-slide">
                             <div class="testimonial-video-card">
                                 <div class="testimonial-video-embed-container">
+                                     {/* REPLACE VIDEO ID */}
                                     <iframe src="https://www.youtube.com/embed/VIDEO_ID_1" title="Depoimento Aluno 1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                                 </div>
                                 <div class="testimonial-video-card-content">
-                                    <h4>Nome Aluno 1</h4>
-                                    <p>"Citação curta do aluno 1 sobre a experiência..."</p>
+                                    <h4>Nome Aluno 1</h4> {/* REPLACE */}
+                                    <p>"Citação curta do aluno 1..."</p> {/* REPLACE */}
                                 </div>
                             </div>
                         </div>
                         <div class="swiper-slide">
-                            <div class="testimonial-video-card">
+                           <div class="testimonial-video-card">
                                 <div class="testimonial-video-embed-container">
+                                     {/* REPLACE VIDEO ID */}
                                     <iframe src="https://www.youtube.com/embed/VIDEO_ID_2" title="Depoimento Aluno 2" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                                 </div>
                                 <div class="testimonial-video-card-content">
-                                     <h4>Nome Aluno 2</h4>
-                                     <p>"Outra citação ótima do aluno 2 aqui."</p>
+                                     <h4>Nome Aluno 2</h4> {/* REPLACE */}
+                                     <p>"Outra citação ótima do aluno 2..."</p> {/* REPLACE */}
                                 </div>
                             </div>
                         </div>
                         <div class="swiper-slide">
                              <div class="testimonial-video-card">
                                 <div class="testimonial-video-embed-container">
+                                    {/* REPLACE VIDEO ID */}
                                     <iframe src="https://www.youtube.com/embed/VIDEO_ID_3" title="Depoimento Aluno 3" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                                 </div>
                                 <div class="testimonial-video-card-content">
-                                    <h4>Nome Aluno 3</h4>
-                                    <p>"Depoimento fantástico do aluno 3 para completar."</p>
+                                    <h4>Nome Aluno 3</h4> {/* REPLACE */}
+                                    <p>"Depoimento fantástico do aluno 3..."</p> {/* REPLACE */}
                                 </div>
                             </div>
                         </div>
@@ -207,7 +207,6 @@
         </section>
 
         <!-- ===== Group Details Section ===== -->
-         {/* Gentle fade for this info section */}
         <section id="detalhes-grupo" style="padding: 80px 0; background-color: var(--color-gray-light);" data-aos="fade-in" data-aos-duration="1000">
              <div class="container">
                 <h2 class="section-title" style="margin-bottom: 2rem;">Comunicação Real em Grupo</h2>
@@ -228,14 +227,12 @@
              <div class="container">
                 <h2 class="section-title" data-aos="fade-up">Pronto para Falar com Confiança?</h2>
                 <p class="contact-subtitle" data-aos="fade-up" data-aos-delay="100">Envie uma mensagem ou agende sua consulta inicial pelo Calendly (Use o botão flutuante ou os links acima!) para discutirmos seus objetivos.</p>
-                 {/* Animate primary CTA button */}
                 <div data-aos="zoom-in" data-aos-delay="200">
                    <a href="https://wa.me/33678663850" target="_blank" rel="noopener noreferrer" class="button button-primary button-large contact-cta">
                        <i class="fa-brands fa-whatsapp"></i>
                        Enviar Mensagem Rápida (WhatsApp)
                     </a>
                 </div>
-                 {/* Fade in contact links together */}
                 <div class="contact-details" data-aos="fade-up" data-aos-delay="300">
                     <a href="mailto:lfangelomiranda@gmail.com" aria-label="Enviar email">
                         <i class="fa-solid fa-envelope"></i>
@@ -302,14 +299,17 @@
                 });
             }
 
-            // 5. Initialize AOS with refined settings
-             AOS.init({
-                 offset: 100, // Trigger slightly earlier
-                 duration: 700, // Slightly faster than before
-                 easing: 'ease-out-cubic', // Smoother easing
-                 once: true, // Only animate once
-                 disable: 'mobile' // Optionally disable on mobile if it feels too much
-             });
+            // 5. Initialize AOS with Delay
+             setTimeout(() => { // ADDED setTimeout
+                AOS.init({
+                    offset: 100,
+                    duration: 700,
+                    easing: 'ease-out-cubic',
+                    once: true,
+                    // disable: 'mobile' // Keep this commented out unless needed
+                });
+             }, 100); // Delay AOS initialization by 100ms
+
 
         }; // End window.onload
     </script>
