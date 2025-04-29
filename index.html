@@ -3,27 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Aulas de inglês online focadas em conversação e fluência com professor experiente. Aulas individuais e em grupo. Agende sua consulta!">
     <title>Speak Up - Sua Fluência em Inglês de Alto Nível</title>
-    <!-- Link to the CSS stylesheet -->
-    <link rel="stylesheet" href="style_premium.css">
     <!-- Google Font Import -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Calendly Badge Widget CSS -->
+    <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
+    <!-- SwiperJS CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <!-- Link to your Custom CSS stylesheet -->
+    <link rel="stylesheet" href="style_premium.css">
 </head>
 <body>
 
     <header class="site-header">
         <div class="container header-container">
-            <!-- Using the original JPEG logo path -->
             <img src="images/1000109137 (1).svg" alt="Speak Up Logo" class="logo">
-             <nav class="site-nav">
+            <nav class="site-nav" id="main-nav">
                  <a href="#services">Suas Aulas</a>
                  <a href="#about">Professor</a>
+                 <a href="#detalhes-grupo">Aulas em Grupo</a>
                  <a href="#contact" class="button button-secondary button-small">Contato</a>
-             </nav>
+            </nav>
+            <button id="mobile-menu-toggle" class="mobile-menu-toggle" aria-label="Toggle Menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
         </div>
     </header>
 
@@ -31,7 +39,7 @@
 
         <!-- ===== Hero Section ===== -->
         <section id="hero" class="hero-section">
-            <div class="container hero-content">
+             <div class="container hero-content">
                 <div class="hero-text">
                     <h1 class="hero-headline">Speak Up.<br>Sua Fluência em Inglês de Alto Nível.</h1>
                     <p class="hero-subheadline">Converse com confiança em qualquer situação, com aulas online personalizadas e focadas em você.</p>
@@ -52,7 +60,7 @@
             <div class="container">
                 <h2 class="section-title">Por que a Speak Up é Diferente?</h2>
                 <div class="value-points">
-                    <div class="value-point">
+                     <div class="value-point">
                         <div class="value-icon"> <i class="fa-solid fa-comments"></i> </div>
                         <h3>Foco Real na Conversação</h3>
                         <p>Aulas desenhadas para destravar sua fala em situações práticas e relevantes para seus objetivos.</p>
@@ -78,9 +86,13 @@
 
         <!-- ===== About Section ===== -->
         <section id="about" class="about-section">
-            <div class="container about-content">
+             <div class="container about-content">
                 <div class="about-image">
-                    <img src="images/WhatsApp Image 2025-04-22 at 11.43.29.jpeg" alt="Conheça Seu Professor - Felipe Miranda" class="tutor-photo-about">
+                    <div class="about-video-container">
+                        <!-- === REPLACE IFRAME SRC === -->
+                        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Video sobre Speak Up e Professor Felipe" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                    </div>
+                     <p style="font-size: 0.8rem; text-align: center; color: var(--color-gray-medium); margin-top: 10px;">(Video Introdução)</p>
                 </div>
                 <div class="about-text">
                     <h2 class="section-title-offset">Conheça Seu Professor.</h2>
@@ -89,7 +101,7 @@
                         Minha paixão é conectar pessoas através da comunicação. Como especialista em inglês (nível C1/C2 comprovado), minha missão é ajudar brasileiros a conquistar a fluência real. Meus 3 anos de vivência e trabalho entre Portugal e Holanda me deram uma visão única das necessidades práticas do idioma no cenário internacional.
                     </p>
                     <p>
-                        Na Speak Up, aplico essa experiência diretamente, focando na comunicação autêntica e na confiança que você precisa para se destacar. Vamos juntos transformar seu inglês?
+                        Na Speak Up, aplico essa experiência diretamente, focando na comunicação autêntica e na confiança que você precisa para se destacar. Assista ao vídeo para saber mais e vamos juntos transformar seu inglês?
                     </p>
                    <a href="https://www.linkedin.com/in/felipe-angelo-715144199/" target="_blank" rel="noopener noreferrer" class="text-link"><i class="fa-brands fa-linkedin"></i> Conecte-se no LinkedIn</a>
                  </div>
@@ -106,25 +118,25 @@
                         <h3>Aulas em Grupo</h3>
                         <p class="description">Ideal para interação dinâmica e prática acessível.</p>
                         <p class="price">R$ 30 <span class="price-detail">/ pessoa / hora</span></p>
-                        <a href="https://calendar.app.google/zHmyaw7gYY5zsEVT8" class="button button-secondary">Quero Saber Mais</a>
+                        <a href="#detalhes-grupo" class="button button-secondary">Quero Saber Mais</a>
                     </div>
                     <div class="service-option individual-highlight">
                         <div class="service-icon"><i class="fa-solid fa-user"></i></div>
                         <h3>Aulas Individuais</h3>
                         <p class="description">Máximo foco e personalização total para seus objetivos.</p>
                         <p class="price">R$ 50 <span class="price-detail">/ hora</span></p>
-                        <a href="https://calendar.app.google/zHmyaw7gYY5zsEVT8" class="button button-primary">Quero Aula Individual</a>
+                        <a href="https://calendly.com/lspeak-up/30min" target="_blank" rel="noopener noreferrer" class="button button-primary">Quero Aula Individual</a>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- ===== Testimonials Section ===== -->
+        <!-- ===== Static Testimonials Section ===== -->
         <section id="testimonials" class="testimonials-section">
-            <div class="container">
+             <div class="container">
                 <h2 class="section-title">Resultados Que Falam Por Si.</h2>
                 <div class="testimonial-quotes">
-                    <blockquote class="testimonial-quote">
+                   <blockquote class="testimonial-quote">
                         <p>"O método aplicado ajuda a vermos o que o aluno precisa entender mais do que somente decorar. E sempre voltando ao ponto de erro do aluno. E a aula acaba fluindo naturalmente e nem sentimos ter passado 1 hora de aula."</p>
                         <cite>– H. Marks</cite>
                     </blockquote>
@@ -139,26 +151,110 @@
                 </div>
             </div>
         </section>
+        <!-- ===== End Static Testimonials Section ===== -->
+
+
+        <!-- ===== NEW: Video Testimonials Section ===== -->
+        <section id="video-testimonials" class="video-testimonials-section">
+            <div class="container">
+                <h2 class="section-title">O Que Nossos Alunos Dizem (Vídeos)</h2>
+
+                <!-- Swiper -->
+                <div class="swiper video-testimonial-swiper">
+                    <div class="swiper-wrapper">
+
+                        <!-- Slide 1 -->
+                        <div class="swiper-slide">
+                            <div class="testimonial-video-card">
+                                <div class="testimonial-video-embed-container">
+                                    <!-- === REPLACE VIDEO ID === -->
+                                    <iframe src="https://www.youtube.com/embed/VIDEO_ID_1" title="Depoimento Aluno 1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                                </div>
+                                <div class="testimonial-video-card-content">
+                                    <h4>Nome Aluno 1</h4> <!-- REPLACE -->
+                                    <p>"Citação curta do aluno 1 sobre a experiência..."</p> <!-- REPLACE -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Slide 2 -->
+                        <div class="swiper-slide">
+                            <div class="testimonial-video-card">
+                                <div class="testimonial-video-embed-container">
+                                     <!-- === REPLACE VIDEO ID === -->
+                                    <iframe src="https://www.youtube.com/embed/VIDEO_ID_2" title="Depoimento Aluno 2" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                                </div>
+                                <div class="testimonial-video-card-content">
+                                     <h4>Nome Aluno 2</h4> <!-- REPLACE -->
+                                     <p>"Outra citação ótima do aluno 2 aqui."</p> <!-- REPLACE -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Slide 3 (Optional) -->
+                        <div class="swiper-slide">
+                             <div class="testimonial-video-card">
+                                <div class="testimonial-video-embed-container">
+                                    <!-- === REPLACE VIDEO ID === -->
+                                    <iframe src="https://www.youtube.com/embed/VIDEO_ID_3" title="Depoimento Aluno 3" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                                </div>
+                                <div class="testimonial-video-card-content">
+                                    <h4>Nome Aluno 3</h4> <!-- REPLACE -->
+                                    <p>"Depoimento fantástico do aluno 3 para completar."</p> <!-- REPLACE -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Add more slides if you have more videos -->
+
+                    </div>
+                    <!-- Add Pagination -->
+                    <div class="swiper-pagination"></div>
+
+                    <!-- Add Navigation -->
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-button-next"></div>
+                </div>
+            </div>
+        </section>
+        <!-- ===== End Video Testimonials Section ===== -->
+
+
+        <!-- ===== Group Details Section ===== -->
+        <section id="detalhes-grupo" style="padding: 80px 0; background-color: var(--color-gray-light);">
+             <div class="container">
+                <h2 class="section-title" style="margin-bottom: 2rem;">Comunicação Real em Grupo</h2>
+                 <p style="max-width: 700px; margin-left: auto; margin-right: auto; text-align: center; margin-bottom: 1.5rem;">
+                    Imagine aprender inglês enquanto **colabora com colegas para alcançar um objetivo comum**, usando o idioma de forma natural e significativa. É assim que funcionam nossas aulas em grupo! Criamos um ambiente dinâmico onde a comunicação é a chave.
+                 </p>
+                 <p style="max-width: 700px; margin-left: auto; margin-right: auto; text-align: center; margin-bottom: 3rem;">
+                    Cada aula gira em torno de uma **meta comunicativa concreta**: pode ser organizar um projeto, entender instruções complexas ou expressar e defender opiniões sobre um tema interessante. Você aprenderá e praticará a linguagem necessária – vocabulário, expressões, estruturas gramaticais – **diretamente no contexto em que ela é usada**. É a forma mais eficaz de desenvolver fluência prática e confiança para interagir em inglês fora da sala de aula. Tudo isso com a vantagem de turmas pequenas e interação constante.
+                 </p>
+                <div style="text-align: center;">
+                    <a href="https://calendly.com/lspeak-up/30min" target="_blank" rel="noopener noreferrer" class="button button-primary">Agendar Consulta para Grupo</a>
+                </div>
+            </div>
+        </section>
+        <!-- ===== End Group Details Section ===== -->
 
         <!-- ===== Contact Section ===== -->
         <section id="contact" class="contact-section">
-            <div class="container">
+             <div class="container">
                 <h2 class="section-title">Pronto para Falar com Confiança?</h2>
-                <p class="contact-subtitle">Envie uma mensagem e agende sua aula experimental.</p>
+                <p class="contact-subtitle">Envie uma mensagem ou agende sua consulta inicial pelo Calendly (Use o botão flutuante ou os links acima!) para discutirmos seus objetivos.</p>
                <a href="https://wa.me/33678663850" target="_blank" rel="noopener noreferrer" class="button button-primary button-large contact-cta">
                    <i class="fa-brands fa-whatsapp"></i>
-                   Enviar Mensagem Rápida
+                   Enviar Mensagem Rápida (WhatsApp)
                 </a>
                 <div class="contact-details">
-                     <a href="mailto:lfangelomiranda@gmail.com" aria-label="Enviar email para lfangelomiranda@gmail.com">
+                    <a href="mailto:lfangelomiranda@gmail.com" aria-label="Enviar email">
                         <i class="fa-solid fa-envelope"></i>
                         <span>lfangelomiranda@gmail.com</span>
                     </a>
-                    <a href="https://www.linkedin.com/in/felipe-angelo-715144199/" target="_blank" rel="noopener noreferrer" aria-label="Perfil de Felipe Miranda no LinkedIn">
+                    <a href="https://www.linkedin.com/in/felipe-angelo-715144199/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
                         <i class="fa-brands fa-linkedin"></i>
                         <span>LinkedIn</span>
                     </a>
-                    <a href="https://www.instagram.com/felipeangelo.m/" target="_blank" rel="noopener noreferrer" aria-label="Perfil de Felipe Angelo no Instagram">
+                    <a href="https://www.instagram.com/felipeangelo.m/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
                         <i class="fa-brands fa-instagram"></i>
                         <span>@felipeangelo.m</span>
                     </a>
@@ -170,7 +266,7 @@
 
     <footer class="site-footer">
         <div class="container footer-content">
-            <p>© 2025 Speak Up. Todos os direitos reservados.</p>
+            <p>© <span id="current-year">2024</span> Speak Up. Todos os direitos reservados.</p>
             <div class="footer-links">
                  <a href="#hero">Início</a>
                  <a href="mailto:lfangelomiranda@gmail.com">Email</a>
@@ -178,7 +274,80 @@
         </div>
     </footer>
 
-    <!-- NO AOS SCRIPT INCLUDED -->
+    <!-- == External Scripts == -->
+    <!-- Calendly Badge Widget Script -->
+    <script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
+    <!-- Swiper JS -->
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+    <!-- == Custom Scripts == -->
+    <script>
+        window.onload = function() {
+
+            // 1. Initialize Calendly Widget
+            Calendly.initBadgeWidget({
+                url: 'https://calendly.com/lspeak-up/30min',
+                text: 'Agende Sua Consulta Aqui!', // Customize as needed
+                color: 'var(--color-logo-yellow)', // Use hex '#EEA824' if variable doesn't work
+                textColor: 'var(--color-navy-deep)', // Use hex '#112234' if variable doesn't work
+            });
+
+            // 2. Initialize Mobile Menu Toggle
+            const menuToggle = document.getElementById('mobile-menu-toggle');
+            const mainNav = document.getElementById('main-nav');
+            if (menuToggle && mainNav) {
+                menuToggle.addEventListener('click', function() {
+                    mainNav.classList.toggle('mobile-nav-active');
+                    const icon = menuToggle.querySelector('i');
+                    if (icon) {
+                         icon.classList.toggle('fa-bars');
+                         icon.classList.toggle('fa-times'); // Make sure fa-times is available in FA v6
+                    }
+                });
+            }
+
+            // 3. Update Footer Year
+            const currentYearSpan = document.getElementById('current-year');
+            if (currentYearSpan) {
+                 currentYearSpan.textContent = new Date().getFullYear();
+            }
+
+            // 4. Initialize Video Testimonial Swiper
+            // Ensure Swiper class exists before initializing
+            if (document.querySelector('.video-testimonial-swiper')) {
+                 const testimonialSwiper = new Swiper('.video-testimonial-swiper', {
+                    // Mobile First Config
+                    slidesPerView: 1,
+                    spaceBetween: 30,
+                    loop: true, // Consider removing if you only have 2-3 videos
+                    grabCursor: true,
+                    // Responsive breakpoints
+                    breakpoints: {
+                        // >= Tablet
+                        768: {
+                            slidesPerView: 2,
+                            spaceBetween: 40
+                        },
+                        // >= Desktop
+                        1024: {
+                            slidesPerView: 3,
+                            spaceBetween: 50
+                        }
+                    },
+                    pagination: {
+                        el: '.swiper-pagination',
+                        clickable: true,
+                    },
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                });
+            }
+
+        }; // End window.onload
+    </script>
+    <!-- End Scripts -->
 
 </body>
 </html>
