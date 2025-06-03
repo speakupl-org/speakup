@@ -1,0 +1,328 @@
+/* --- Global Styles & Variables --- */
+:root {
+    --main-background: #FFFFFF;
+    --off-white-section-bg: #F7F9FA; /* Slightly different off-white for subtlety */
+    --primary-serious-color: #006A70;  /* Slightly deeper, richer teal */
+    --primary-vibrant-accent: #FDB813; /* Slightly warmer, richer gold */
+    --secondary-vibrant-accent: #00A09A;/* Slightly softer Confident Teal */
+    --main-text-color: #1f1f1f;         /* A touch softer than pure black */
+    
+    --white: #FFFFFF;
+    --light-text-on-dark-bg: #EFF3F4;
+    --medium-grey-text: #586065;
+    --border-light: #DEE2E6; /* Slightly darker light border */
+
+    --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.03), 0 1px 1px rgba(0,0,0,0.02);
+    --shadow-md: 0 3px 5px -1px rgba(0,0,0,0.04), 0 2px 3px -1px rgba(0,0,0,0.03);
+    --shadow-lg: 0 8px 12px -3px rgba(0,0,0,0.04), 0 3px 5px -2px rgba(0,0,0,0.02);
+}
+
+/* --- Keyframes for Animations --- */
+@keyframes drawLine { from { width: 0; } to { width: 100%; } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes gentleWave { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-5px) scale(1.02); } }
+@keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 8px -2px var(--primary-vibrant-accent), 0 0 15px -5px var(--primary-vibrant-accent); opacity: 0.8; } 50% { box-shadow: 0 0 12px 0px var(--primary-vibrant-accent), 0 0 25px -3px var(--primary-vibrant-accent); opacity: 1; } }
+
+@keyframes slideUpFadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes blockageResolve {
+    0% { transform: scaleX(1) scaleY(0.2); opacity: 0.7; background-color: var(--medium-grey-text); }
+    50% { transform: scaleX(0.3) scaleY(1); opacity: 0.4; background-color: var(--secondary-vibrant-accent); }
+    100% { transform: scaleX(1) scaleY(1); opacity: 0; background-color: var(--secondary-vibrant-accent); }
+}
+@keyframes checkmarkDraw { from { stroke-dashoffset: 25; } to { stroke-dashoffset: 0; } } /* For SVG checkmarks if path styled */
+@keyframes quizPulse { 0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0,163,163, 0.3); } 50% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(0,163,163, 0); } }
+@keyframes bounceSlightly { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+@keyframes scaleIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes growAndFadeQuote { from { transform: scale(0.5) translateY(10px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+@keyframes radiatingBackground {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* --- Base Scroll Animation Styles --- */
+.animated-title, .animated-text, .benefit-item, .testimonial-card,
+.quiz-placeholder, .photo-circle-placeholder, .blockage-element, .quiz-cta {
+    opacity: 0;
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+.animated-title.in-view, .animated-text.in-view {
+    animation: slideUpFadeIn 0.8s ease-out forwards;
+}
+
+/* --- CSS Reset/Normalization --- */
+/* (Keep as before) */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+    font-family: var(--font-primary); line-height: 1.7; color: var(--main-text-color);
+    background-color: var(--main-background);
+    -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+}
+img { max-width: 100%; height: auto; display: block; }
+
+/* --- Utility Classes --- */
+/* (Keep as before) */
+.container { width: 90%; max-width: 1140px; margin: 0 auto; padding: 0 15px; position: relative; }
+.section { padding: 80px 0; } /* Slightly more padding for breathing room */
+@media (max-width: 768px) { .section { padding: 60px 0; } }
+
+.section-title {
+    font-size: 2.3rem; font-weight: 700; color: var(--primary-serious-color);
+    text-align: center; margin-bottom: 45px; letter-spacing: -0.5px;
+}
+.section-title .highlight { color: var(--secondary-vibrant-accent); }
+.section-subtitle.highlight-text-main {
+    color: var(--main-text-color); font-weight: 500; font-size: 1.2rem;
+    display: block; margin-top: -18px;
+}
+
+.cta-button {
+    display: inline-block; padding: 15px 35px;
+    background-color: var(--primary-vibrant-accent); color: var(--main-text-color);
+    text-decoration: none; font-weight: 600; font-size: 1.05rem;
+    border-radius: 8px;
+    transition: background-color 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
+    border: none; cursor: pointer; text-align: center; box-shadow: var(--shadow-sm);
+}
+.cta-button:hover, .cta-button:focus {
+    background-color: #EAA703; /* Slightly darker, richer gold */
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: var(--shadow-md); color: var(--main-text-color);
+}
+.cta-button-large { font-size: 1.2rem; padding: 18px 40px; }
+
+/* --- Sticky Header --- */
+.sticky-header {
+    position: sticky; top: 0; left: 0; width: 100%;
+    background-color: rgba(255, 255, 255, 0.85); /* Less transparent for readability */
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    padding: 10px 0; box-shadow: 0 2px 5px rgba(0,0,0,0.05); z-index: 1000;
+}
+/* (rest of header same as before) */
+.sticky-header .container { display: flex; justify-content: space-between; align-items: center; }
+.logo-area { display: flex; align-items: center; text-decoration: none; }
+.logo-icon { width: 48px; height: 48px; margin-right: 12px; }
+.logo-text { font-size: 1.75rem; color: var(--main-text-color); font-weight: 500; }
+.logo-text .up { font-weight: 700; color: var(--secondary-vibrant-accent);}
+.header-cta { padding: 10px 22px; font-size: 0.9rem; }
+
+/* --- Hero Section --- */
+/* (Keep most of Hero from previous version, adjust delays for cohesion) */
+.hero-section {
+    background-color: var(--main-background); padding: 90px 0 110px;
+    text-align: center; position: relative; overflow: hidden;
+}
+.hero-background-shape { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; overflow: hidden; }
+.hero-background-shape svg { width: 100%; height: 100%; object-fit: cover; animation: gentleWave 15s ease-in-out infinite alternate; }
+.hero-background-shape svg path { fill: var(--secondary-vibrant-accent); } /* Opacity set inline on path */
+.hero-content-wrapper { position: relative; z-index: 2; }
+.hero-title {
+    font-size: 2.7rem; line-height: 1.25; font-weight: 700; color: var(--primary-serious-color);
+    margin-bottom: 20px; letter-spacing: -0.8px;
+    animation: slideUpFadeIn 0.8s ease-out 0.2s backwards; /* Adjusted delay */
+}
+.desktop-break { display: none; }
+@media (min-width: 768px) { .hero-title { font-size: 3rem; } .desktop-break { display: block; } }
+.hero-title .highlight-animated { position: relative; display: inline-block; color: var(--secondary-vibrant-accent); }
+.hero-title .highlight-animated::after {
+    content: ''; position: absolute; bottom: -5px; left: 0; height: 3.5px;
+    background-color: var(--primary-vibrant-accent); border-radius: 2px; width: 0;
+    animation: drawLine 0.8s ease-out 1.0s forwards; /* Adjusted delay */
+}
+.hero-subtitle {
+    font-size: 1.2rem; color: var(--medium-grey-text); margin-bottom: 35px; max-width: 720px;
+    margin-left: auto; margin-right: auto; line-height: 1.75;
+    animation: slideUpFadeIn 0.8s ease-out 0.5s backwards;
+}
+.hero-cta {
+    margin-top: 10px;
+    animation: slideUpFadeIn 0.8s ease-out 0.8s backwards, pulseGlow 2.5s infinite 2.5s; /* Slightly faster pulse */
+}
+.hero-line {
+    position: absolute; height: 3px; border-radius: 3px; z-index: 1; width: 0;
+    animation-timing-function: ease-out; animation-fill-mode: forwards; animation-name: drawLine;
+}
+.hero-line-1 { max-width: 160px; background-color: var(--secondary-vibrant-accent); top: 15%; left: 10%; transform: rotate(-30deg) translateX(-50%); transform-origin: left center; animation-duration: 0.7s; animation-delay: 1.6s; }
+.hero-line-2 { max-width: 210px; background-color: var(--primary-vibrant-accent); bottom: 20%; right: 10%; transform: rotate(15deg) translateX(50%); transform-origin: right center; animation-duration: 0.9s; animation-delay: 1.8s; }
+@media (max-width: 768px) {
+    .hero-title { font-size: 2.3rem; } .hero-subtitle { font-size: 1.1rem; }
+    .hero-line-1 { max-width: 100px; top: 10%; left: 5%; } .hero-line-2 { max-width: 120px; bottom: 15%; right: 5%; }
+}
+@media (max-width: 480px) { .hero-line-1, .hero-line-2 { display: none; } .hero-title { font-size: 2rem; } }
+
+/* --- Pain Point & Solution Section --- */
+.pain-point-section { background-color: var(--main-background); text-align: center; }
+.pain-point-visual { height: 40px; margin-bottom: 20px; display: flex; justify-content: center; align-items: center; }
+.blockage-element.in-view { /* Visual for blockage */
+    width: 80px; height: 10px;
+    border-radius: 5px;
+    animation: blockageResolve 2s ease-in-out forwards;
+}
+.empathetic-text { font-size: 1.2rem; max-width: 780px; margin-left: auto; margin-right: auto; color: var(--medium-grey-text); line-height: 1.8; }
+.empathetic-text.in-view { animation-delay: 0.3s; /* Delay after blockage animates */ }
+
+/* --- Benefits Section --- */
+.benefits-section { background-color: var(--off-white-section-bg); }
+.benefits-section .section-title .highlight { color: var(--secondary-vibrant-accent); }
+.benefit-list { display: flex; flex-direction: column; gap: 25px; max-width: 680px; margin: 0 auto; }
+.benefit-item {
+    display: flex; align-items: center; background-color: var(--white);
+    padding: 22px 28px; border-radius: 12px; box-shadow: var(--shadow-md);
+    opacity: 0; transform: translateX(-20px);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+.benefit-item.in-view {
+    opacity: 1;
+    transform: translateX(0);
+}
+/* Staggered animation for benefit items */
+.benefit-item:nth-child(1).in-view { transition-delay: 0.1s; }
+.benefit-item:nth-child(2).in-view { transition-delay: 0.25s; }
+.benefit-item:nth-child(3).in-view { transition-delay: 0.4s; }
+
+.benefit-item:hover { transform: translateY(-5px) translateX(0) !important; box-shadow: var(--shadow-lg); } /* Ensure hover override in-view transform*/
+.benefit-box {
+    width: 58px; height: 58px; background-color: var(--primary-vibrant-accent);
+    display: flex; justify-content: center; align-items: center;
+    margin-right: 22px; flex-shrink: 0; border-radius: 10px;
+    transition: transform 0.3s ease;
+}
+.benefit-item:hover .benefit-box { transform: rotate(15deg) scale(1.05); }
+.benefit-box .checkmark-icon {
+    width: 30px; height: 30px; color: var(--primary-serious-color); /* Darker checkmark on gold */
+    /* If using SVG path for checkmarkDraw animation:
+    stroke: var(--primary-serious-color);
+    stroke-width: 2;
+    fill: none;
+    stroke-dasharray: 25;
+    stroke-dashoffset: 25; */
+}
+/* .benefit-item.in-view .checkmark-icon { animation: checkmarkDraw 0.5s ease-out 0.5s forwards; } */
+.benefit-text { font-size: 1.1rem; color: var(--main-text-color); font-weight: 500; }
+
+/* --- Mini-Quiz Section --- */
+.quiz-section { background-color: var(--main-background); text-align: center; }
+.quiz-section .section-title { color: var(--primary-serious-color); }
+.quiz-placeholder.in-view {
+    border: 2.5px dashed var(--secondary-vibrant-accent);
+    padding: 38px 28px; margin: 30px auto 40px; max-width: 620px;
+    background-color: color-mix(in srgb, var(--secondary-vibrant-accent) 4%, white);
+    border-radius: 12px; color: var(--medium-grey-text);
+    animation: quizPulse 2.5s infinite 0.5s;
+    opacity: 1; /* Override base scroll animation opacity */
+}
+.quiz-placeholder p { margin-bottom: 10px; font-size: 1.05rem; }
+.quiz-placeholder p:last-child { margin-bottom: 0; }
+.quiz-cta.in-view {
+    opacity: 1; /* Override base */
+    animation: bounceSlightly 1.5s ease-in-out infinite 1s;
+}
+
+
+/* --- About Professor Luiz Section --- */
+.about-teacher-section { background-color: var(--off-white-section-bg); }
+.about-teacher-container { display: flex; flex-wrap: wrap; align-items: center; gap: 30px 50px; }
+.bio-text-content { flex: 1.8; min-width: 300px; }
+.bio-text-content .section-title { text-align: left; margin-bottom: 20px;}
+@media (max-width: 859px) { .bio-text-content .section-title { text-align: center; } }
+.bio-text-content p { font-size: 1.05rem; color: var(--medium-grey-text); margin-bottom: 18px; }
+.bio-text-content .section-title .highlight { color: var(--secondary-vibrant-accent); }
+
+.teacher-photo-area { flex: 1; max-width: 280px; margin: 0 auto; }
+.photo-circle-placeholder.in-view {
+    width: 210px; height: 210px; background-color: var(--medium-grey-text);
+    border-radius: 50%; margin: 0 auto;
+    display: flex; justify-content: center; align-items: center;
+    color: var(--white); font-size: 1.1rem; text-align: center;
+    border: 7px solid var(--primary-vibrant-accent);
+    box-shadow: 0 0 0 7px var(--off-white-section-bg), var(--shadow-lg);
+    animation: scaleIn 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    opacity: 1; /* Override base */
+}
+@media (min-width: 860px) {
+    .bio-text-content { order: 1; }
+    .teacher-photo-area { order: 2; margin-left: auto; margin-right: 0;}
+}
+
+/* --- Testimonials Section --- */
+.testimonials-section { background-color: var(--main-background); }
+.testimonial-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 30px; }
+.testimonial-card {
+    background-color: var(--off-white-section-bg); padding: 28px; border-radius: 12px;
+    box-shadow: var(--shadow-md); border-top: 6px solid var(--primary-serious-color);
+    opacity: 0; transform: translateY(30px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out, box-shadow 0.3s ease;
+    position: relative; /* For quote mark positioning */
+}
+.testimonial-card.in-view {
+    opacity: 1;
+    transform: translateY(0);
+}
+.testimonial-card:hover { transform: translateY(-6px) !important; box-shadow: var(--shadow-lg); }
+/* Staggered animation for testimonial cards */
+.testimonial-card:nth-child(1).in-view { transition-delay: 0.1s; }
+.testimonial-card:nth-child(2).in-view { transition-delay: 0.25s; }
+.testimonial-card:nth-child(3).in-view { transition-delay: 0.4s; }
+
+.quote-mark-animated { /* Replaces ::before for better animation control */
+    font-family: Georgia, serif; font-size: 3.5rem;
+    color: var(--secondary-vibrant-accent);
+    position: absolute; left: 20px; top: 15px; line-height: 0.8;
+    opacity: 0; /* Initial state for animation */
+}
+.testimonial-card.in-view .quote-mark-animated {
+    animation: growAndFadeQuote 0.7s ease-out 0.5s forwards;
+}
+.testimonial-quote-text { font-style: italic; color: var(--medium-grey-text); margin-bottom: 18px; font-size: 0.95rem; padding-top: 20px; /* Space for quote mark */ }
+.testimonial-author {
+    font-weight: 600; text-align: right; color: var(--primary-serious-color);
+    font-size: 0.9rem;
+}
+.testimonial-author::before { content: "— "; }
+
+/* --- Final Call to Action Section --- */
+.final-cta-section {
+    background-color: var(--primary-serious-color); padding: 80px 0;
+    text-align: center; color: var(--white); position: relative; overflow: hidden;
+}
+.final-cta-background-animation { /* Animated gradient or pattern */
+    position: absolute; top:0; left:0; width: 100%; height: 100%;
+    z-index: 0;
+    background: linear-gradient(135deg, 
+        var(--secondary-vibrant-accent) 0%, 
+        var(--primary-serious-color) 30%, 
+        var(--primary-serious-color) 70%, 
+        var(--primary-vibrant-accent) 100%);
+    background-size: 300% 300%; /* For animation movement */
+    opacity: 0.15; /* Very subtle */
+    animation: radiatingBackground 15s ease infinite;
+}
+.final-cta-section .container { position: relative; z-index: 1;}
+.final-cta-title { font-size: 2.4rem; color: var(--white); margin-bottom: 30px; letter-spacing: -0.5px; }
+@media (max-width: 768px) { .final-cta-title { font-size: 2rem; } }
+.final-cta-button {
+    background-color: var(--primary-vibrant-accent); color: var(--main-text-color);
+    margin-bottom: 25px;
+    animation: pulseGlow 2s infinite 1s, slideUpFadeIn 0.8s ease-out 0.3s backwards;
+}
+.final-cta-button.in-view { animation-delay: 0.4s, 2.5s; } /* For IntersectionObserver, if using one general selector for it */
+.final-cta-button:hover { background-color: #EAA703; color: var(--main-text-color); }
+.reassurance-text {
+    font-size: 1.1rem; color: var(--light-text-on-dark-bg);
+    max-width: 620px; margin: 0 auto; line-height: 1.75;
+}
+.reassurance-text.in-view { animation-delay: 0.6s; }
+
+/* --- Footer --- */
+.site-footer {
+    background-color: var(--main-text-color); color: #a0a7ac;
+    text-align: center; padding: 30px 0; font-size: 0.85rem;
+    border-top: 3px solid var(--primary-serious-color); /* Small branding touch */
+}
+.site-footer p { margin-bottom: 0; }
+.site-footer a { color: #c0c7cc; text-decoration: none; transition: color 0.2s ease; }
+.site-footer a:hover { color: var(--primary-vibrant-accent); text-decoration: underline; }
