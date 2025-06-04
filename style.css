@@ -39,20 +39,20 @@
 @keyframes growAndFadeQuote { from { transform: scale(0.5) translateY(10px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
 @keyframes radiatingBackground { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
-@keyframes teacherFrameReveal { from { opacity: 0; transform: translateY(30px) scale(0.9); clip-path: polygon(50% 100%, 0% 100%, 100% 100%); } to { opacity: 1; transform: translateY(0) scale(1); clip-path: polygon(50% 0%, 0% 100%, 100% 100%); } }
-@keyframes svgGentleBob { /* Updated in About Teacher mobile specific */
-    0%, 100% { transform: scale(1.1) translateY(-12%); } /* Base for mobile */
-    50% { transform: scale(1.1) translateY(calc(-12% - 4px)); }
+@keyframes teacherFrameReveal { from { opacity: 0; transform: translateY(30px) scale(0.9); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes svgGentleBob { /* Mobile Base Bob, transformed with SVG position */
+    0%, 100% { transform: translateX(-50%) translateY(-15%); }
+    50% { transform: translateX(-50%) translateY(calc(-15% - 4px)); }
 }
-@media (min-width: 860px) { /* Desktop bob for teacher SVG */
+@media (min-width: 860px) { /* Desktop Bob for Teacher SVG */
     @keyframes svgGentleBob {
-        0%, 100% { transform: scale(1.1) translateY(-10%); }
-        50% { transform: scale(1.1) translateY(calc(-10% - 4px)); }
+        0%, 100% { transform: translateX(-50%) translateY(-10%); }
+        50% { transform: translateX(-50%) translateY(calc(-10% - 4px)); }
     }
 }
 
 @keyframes sparkleFloat {0%{transform:translateY(20px) translateX(0) scale(.3);opacity:0}50%{opacity:.12}to{transform:translateY(-180px) translateX(30px) scale(1.3);opacity:0}}
-@keyframes potentialLineDrift {0%{transform:translateX(0) scaleX(.8);opacity:.03}50%{transform:translateX(15px) scaleX(1.2);opacity:.08}to{transform:translateX(0) scaleX(.8);opacity:.03}}
+@keyframes potentialLineDrift {0%{transform:translateX(0) scaleX(.8);opacity:.03}50%{transform:translateX(15px) scaleX(1.2);opacity:.08}to{transform:translateX(0) scaleX(.8);opacity:.03}} /* If re-added */
 @keyframes bridgeDotFlow {0%{transform:translateX(-30px) scale(.5);opacity:0}50%{opacity:.2}to{transform:translateX(30px) scale(1);opacity:0}}
 @keyframes dynamicBlockageWrithe {0%{transform:scaleX(.9) rotate(-3deg);opacity:.15}50%{transform:scaleX(1.1) rotate(3deg);opacity:.08}to{transform:scaleX(.9) rotate(-3deg);opacity:.15}}
 @keyframes blockageFragmentFloat {0%{transform:translateY(10px) rotate(0deg) scale(.5);opacity:0}50%{opacity:.1}to{transform:translateY(-40px) rotate(720deg) scale(1.2);opacity:0}}
@@ -63,7 +63,7 @@
 @keyframes quizNodePulse {0%,to{transform:scale(1);opacity:.1}50%{transform:scale(1.5);opacity:.25}}
 @keyframes guidingAuraPulse {0%,to{transform:scale(.7) translate(-50%,-50%);opacity:.04}50%{transform:scale(1.3) translate(-50%,-50%);opacity:.09}}
 @keyframes auraRayShimmer {0%{opacity:0;transform:scaleY(.5) rotate(-5deg)}50%{opacity:.07}to{opacity:0;transform:scaleY(1.5) rotate(5deg)}}
-@keyframes voiceRipple {0%{transform:scale(.4);opacity:0}50%{opacity:.09}to{transform:scale(2.8);opacity:0}} /* Used for old .narrative-voice-ripple if any exist */
+/* @keyframes voiceRipple defined later specifically for positiveSoundRipple */
 @keyframes strongConverge {0%{transform:translateY(100px) rotate(15deg) scaleX(.3);opacity:0}70%{opacity:.15}to{transform:translateY(-70px) rotate(-8deg) scaleX(1.8);opacity:0}}
 @keyframes convergeLines {0%{transform:translateY(90px) rotate(12deg) scaleX(.4);opacity:0}70%{opacity:.12}to{transform:translateY(-60px) rotate(-7deg) scaleX(1.6);opacity:0}}
 @keyframes focusPointGlow {0%,to{opacity:.08;transform:scale(.8) translate(-50%,-50%)}50%{opacity:.2;transform:scale(1.2) translate(-50%,-50%)}}
@@ -158,9 +158,9 @@ img, svg { max-width: 100%; height: auto; display: block; }
 .hero-subtitle { font-size: 1rem; color: var(--medium-grey-text); margin-bottom: 30px; max-width: 95%; margin-left: auto; margin-right: auto; line-height: 1.65; opacity: 0; animation: slideUpFadeIn 0.8s ease-out 0.5s forwards; }
 .hero-cta { margin-top: 10px; opacity: 0; animation: slideUpFadeIn 0.8s ease-out 0.8s forwards, pulseGlow 2.5s infinite 2.5s; }
 .hero-line { position: absolute; height: 3px; border-radius: 3px; z-index: 1; width: 0; animation: drawLine ease-out forwards; }
-.hero-line-1, .hero-line-2 { display:none; } /* Hidden on small mobile by default */
-@media (min-width: 480px) { .hero-title { font-size: 2.3rem; letter-spacing: -0.8px; } } /* Larger phones */
-@media (min-width: 768px) { /* Tablet and up */
+.hero-line-1, .hero-line-2 { display:none; }
+@media (min-width: 480px) { .hero-title { font-size: 2.3rem; letter-spacing: -0.8px; } }
+@media (min-width: 768px) { 
     .hero-section { padding: 90px 0 70px; } .hero-title { font-size: 2.7rem; margin-bottom: 20px; } .desktop-break { display: block; }
     .hero-title .highlight-animated::after { bottom: -5px; height: 3.5px; } .hero-subtitle { font-size: 1.2rem; margin-bottom: 35px; max-width: 720px; line-height: 1.75; }
     .hero-line-1 { display: block; max-width: 160px; background-color: var(--secondary-vibrant-accent); top: 15%; left: 10%; transform: rotate(-30deg) translateX(-50%); transform-origin: left center; animation-duration: 0.7s; animation-delay: 1.6s; }
@@ -199,32 +199,39 @@ img, svg { max-width: 100%; height: auto; display: block; }
 }
 
 /* --- Mini-Quiz Section (Mobile First) --- */
-.quiz-section { background-color: var(--main-background); text-align: center; }
-.quiz-placeholder { border: 2.5px dashed var(--secondary-vibrant-accent); padding: 30px 20px; margin: 25px auto 30px; max-width: 100%; background-color: color-mix(in srgb, var(--secondary-vibrant-accent) 4%, white); border-radius: 10px; color: var(--medium-grey-text); opacity: 0; }
-.quiz-placeholder.in-view { animation: quizPulse 2.5s infinite 0.5s, slideUpFadeIn 0.8s ease-out forwards; opacity: 1; }
+.quiz-section { background-color: var(--main-background); text-align: center; position: relative; overflow: hidden; }
+.quiz-section .narrative-background { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: 0; pointer-events: none; }
+.quiz-section .container { position: relative; z-index: 1; }
+.quiz-placeholder { border: 2.5px dashed var(--secondary-vibrant-accent); padding: 30px 20px; margin: 25px auto 30px; max-width: 100%; background-color: color-mix(in srgb, var(--secondary-vibrant-accent) 4%, white); border-radius: 10px; color: var(--medium-grey-text); opacity: 0; position: relative; }
+.quiz-placeholder.in-view { animation: quizPulse 2.5s infinite 0.5s, slideUpFadeIn 0.8s ease-out forwards; opacity: 1 !important; }
 .quiz-placeholder p { margin-bottom: 10px; font-size: 1rem; }
+.quiz-cta { opacity: 0; position: relative; z-index: 2; background-color: var(--primary-vibrant-accent); color: var(--main-text-color); }
+.quiz-cta.in-view { opacity: 1 !important; animation: bounceSlightly 1.5s ease-in-out infinite 1s, slideUpFadeIn 0.8s ease-out forwards; }
+.quiz-cta:hover, .quiz-cta:focus { background-color: #EAA703; color: var(--main-text-color); }
 @media (min-width: 768px) {
     .quiz-placeholder { padding: 38px 28px; margin: 30px auto 40px; max-width: 620px; border-radius: 12px;}
     .quiz-placeholder p { font-size: 1.05rem; }
 }
 
-/* --- About Professor Luiz Section (Mobile First) --- */
+/* --- About Professor Luiz Section (Mobile First, using 3D frame approach) --- */
 .about-teacher-section { background-color: var(--off-white-section-bg); }
 .about-teacher-container { display: flex; flex-direction: column; align-items: center; gap: 30px; }
 .bio-text-content { flex: 1; width: 100%; text-align: center; }
 .bio-text-content .section-title { text-align: center; margin-bottom: 20px;}
 .bio-text-content p { font-size: 1rem; color: var(--medium-grey-text); margin-bottom: 15px; }
-.teacher-photo-area { flex: none; order: -1; max-width: 260px; width: 80%; min-width: 200px; margin: 0 auto 20px auto; display: flex; justify-content: center; align-items: center; height: auto; }
-.teacher-triangular-frame { width: 100%; padding-bottom: 115.38%; position: relative; background-color: var(--primary-vibrant-accent); border: 3px solid var(--primary-vibrant-accent); box-shadow: 0 4px 10px rgba(0,0,0,0.1); clip-path: polygon(50% 0%, 0% 100%, 100% 100%); opacity: 0; overflow: hidden; }
+.teacher-photo-area { order: -1; max-width: 280px; width: 85%; min-width: 220px; margin: 0 auto 20px auto; position: relative; display: flex; justify-content: center; align-items: center; }
+.teacher-triangular-frame { width: 100%; height: 300px; position: relative; opacity: 0; } /* Height to contain elements */
 .animated-teacher-frame.in-view { animation: teacherFrameReveal 1s cubic-bezier(0.165, 0.84, 0.44, 1) 0.2s forwards; }
-.teacher-face-svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top; transform: scale(1.1) translateY(-12%); animation: svgGentleBob 3.5s ease-in-out infinite 1.2s; }
-@media (min-width: 860px) { /* Desktop layout for Teacher */
+.teacher-triangular-frame::before, .teacher-triangular-frame::after { content: ''; position: absolute; width: 100%; height: 100%; top: 0; left: 0; background-color: var(--primary-vibrant-accent); border: 3px solid var(--primary-vibrant-accent); box-sizing: border-box; }
+.teacher-triangular-frame::before { clip-path: polygon(0% 100%, 100% 100%, 50% 0%); z-index: 3; } /* Front bottom */
+.teacher-triangular-frame::after { clip-path: polygon(50% 0%, 0% 100%, 100% 100%); z-index: 1; } /* Back top */
+.teacher-face-svg { position: absolute; width: 100%; height: auto; max-height: 100%; left: 50%; bottom: 0; transform: translateX(-50%) translateY(-15%); z-index: 2; animation: svgGentleBob 3.5s ease-in-out infinite 1.2s; }
+@media (min-width: 860px) {
     .about-teacher-container { flex-direction: row; align-items: center; gap: 50px; }
-    .bio-text-content { order: 1; text-align: left; flex: 1.8; width: auto;}
-    .bio-text-content .section-title { text-align: left;}
-    .teacher-photo-area { order: 2; margin: 0 0 0 auto; max-width: 300px; height: 320px; flex: 1;}
-    .teacher-triangular-frame { border: 4px solid var(--primary-vibrant-accent); padding-bottom: 0; width:260px; height:300px; }
-    .teacher-face-svg { transform: scale(1.1) translateY(-10%); } /* Adjust desktop transform as needed */
+    .bio-text-content { order: 1; text-align: left; flex: 1.8; width: auto;} .bio-text-content .section-title { text-align: left;}
+    .teacher-photo-area { order: 2; margin: 0 0 0 auto; max-width: 300px; flex: 1; height: 350px; }
+    .teacher-triangular-frame { height: 330px; border-width: 4px;}
+    .teacher-face-svg { transform: translateX(-50%) translateY(-10%); }
     .bio-text-content p { font-size: 1.05rem; margin-bottom: 18px;}
 }
 
@@ -248,14 +255,15 @@ img, svg { max-width: 100%; height: auto; display: block; }
     .testimonial-author { font-size: 0.9rem; }
 }
 
-/* --- Final Call to Action Section (Mobile First) --- */
+/* --- Final Call to Action Section (Mobile First with Button Fix) --- */
 .final-cta-section { background-color: var(--primary-serious-color); padding: 60px 0; text-align: center; color: var(--white); position: relative; overflow: hidden; }
 .final-cta-background-animation { position: absolute; top:0; left:0; width: 100%; height: 100%; z-index: 0; background: linear-gradient(135deg, var(--secondary-vibrant-accent) 0%, var(--primary-serious-color) 30%, var(--primary-serious-color) 70%, var(--primary-vibrant-accent) 100%); background-size: 300% 300%; opacity: 0.15; animation: radiatingBackground 15s ease infinite; }
 .final-cta-section .narrative-background { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: 1; pointer-events: none; }
 .final-cta-section .final-cta-content-container { position: relative; z-index: 2; }
 .final-cta-title { font-size: 1.8rem; color: var(--white); margin-bottom: 25px; letter-spacing: -0.5px; }
-.final-cta-button { margin-bottom: 20px; opacity: 0; position: relative; /* CTA button styles (large, color, etc) already defined globally */ }
+.final-cta-button { background-color: var(--primary-vibrant-accent) !important; color: var(--main-text-color) !important; border: none; margin-bottom: 20px; opacity: 0; position: relative; transition: background-color 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease, color 0.25s ease, opacity 0.8s ease-out; }
 .final-cta-button.in-view { opacity: 1 !important; animation: slideUpFadeIn 0.8s ease-out 0.3s forwards, pulseGlow 2s infinite 2s; }
+.final-cta-button:hover, .final-cta-button:focus { background-color: #EAA703 !important; color: var(--main-text-color) !important; }
 .reassurance-text { font-size: 1rem; color: var(--light-text-on-dark-bg); max-width: 90%; margin: 0 auto; line-height: 1.7; }
 @media (min-width: 768px) {
     .final-cta-section { padding: 80px 0; } .final-cta-title { font-size: 2.4rem; margin-bottom: 30px;}
@@ -271,24 +279,21 @@ img, svg { max-width: 100%; height: auto; display: block; }
 
 
 /* === NARRATIVE BACKGROUND STYLES === */
-/* Generic Narrative Background Container */
 .narrative-background { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: 1; pointer-events: none; }
-.hero-section .hero-background-shape { z-index: 0; } /* Specific to Hero's existing SVG BG */
+.hero-section .hero-background-shape { z-index: 0; }
 
-/* Transitional Narrative Element */
 .narrative-transition-element-area { height: 40px; position: relative; width: 100%; overflow: hidden; display: flex; justify-content: center; align-items: center; margin-top: -15px; margin-bottom: -15px; z-index: 1; }
 .narrative-bridge-dot { width: 5px; height: 5px; background-color: rgba(var(--rgb-secondary-vibrant-accent), 0.7); border-radius: 50%; margin: 0 6px; opacity: 0; animation: bridgeDotFlow 3s infinite ease-in-out; }
 .narrative-bridge-dot:nth-child(1) { animation-delay: 0s; } .narrative-bridge-dot:nth-child(2) { animation-delay: 0.2s; } .narrative-bridge-dot:nth-child(3) { animation-delay: 0.4s; }
-/* Note: 4th & 5th bridge dots were removed in HTML for brevity on transition, re-add if desired. */
-.narrative-transition-element-area .narrative-cloud.tiny-transition { width: 60px; height: 20px; animation-duration: 20s; opacity: 0.7 !important; animation-name:none; /* No drift for this one */ position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.6); }
+.narrative-transition-element-area .narrative-cloud.tiny-transition { width: 60px; height: 20px; animation-duration: 20s; opacity: 0.7 !important; animation-name:none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.6); }
 @media (min-width: 768px) {
     .narrative-transition-element-area { height: 60px; margin-top: -20px; margin-bottom: -20px;}
     .narrative-bridge-dot { width: 6px; height: 6px; margin: 0 8px; background-color: rgba(var(--rgb-secondary-vibrant-accent), 0.8);}
 }
 
-/* --- CLOUDS (NEW CREATIVE) --- */
+/* --- CLOUDS --- */
 .narrative-cloud { position: absolute; border-radius: 50%; opacity: 0; background-color: rgba(var(--cloud-color-base), 0.4); animation-name: cloudDrift; animation-timing-function: linear; animation-iteration-count: infinite; z-index: -1; }
-.narrative-cloud.style1 { width: 120px; height: 40px; border-radius: 20px / 30px; animation-duration: 70s; } /* Mobile base size */
+.narrative-cloud.style1 { width: 120px; height: 40px; border-radius: 20px / 30px; animation-duration: 70s; }
 .narrative-cloud.style1::before, .narrative-cloud.style1::after { content: ''; position: absolute; background-color: inherit; border-radius: 50%; }
 .narrative-cloud.style1::before { width: 60px; height: 60px; top: -25px; left: 15px; }
 .narrative-cloud.style1::after { width: 80px; height: 80px; top: -30px; right: 10px; }
@@ -297,60 +302,64 @@ img, svg { max-width: 100%; height: auto; display: block; }
 .narrative-cloud.style3 { width: 80px; height: 25px; border-radius: 12px / 20px; animation-duration: 60s; }
 .narrative-cloud.style3::before { content: ''; position: absolute; background-color: inherit; border-radius: 50%; width: 40px; height: 40px; top: -15px; left: 8px; }
 .narrative-cloud.style3::after { content: ''; position: absolute; background-color: inherit; border-radius: 50%; width: 50px; height: 50px; top: -20px; right: 4px; }
-/* Modifiers */
-.narrative-cloud.dense { background-color: rgba(var(--cloud-color-base), 0.55); }
-.narrative-cloud.bright { background-color: rgba(var(--cloud-color-base), 0.3); box-shadow: 0 0 15px 8px rgba(var(--white), 0.25); }
-.narrative-cloud.wispy { background-color: rgba(var(--cloud-color-base), 0.25); transform: scale(0.8); }
-.narrative-cloud.calm { animation-duration: 100s; }
-.narrative-cloud.clear-sky { background-color: rgba(var(--cloud-color-base), 0.15); }
-.narrative-cloud.sunset-glow { background-image: linear-gradient(to top, rgba(var(--rgb-primary-vibrant-accent),0.2), rgba(var(--cloud-color-base), 0.3)); }
-
-@media (min-width: 768px) { /* Desktop cloud sizes */
+.narrative-cloud.dense { background-color: rgba(var(--cloud-color-base), 0.55); } .narrative-cloud.bright { background-color: rgba(var(--cloud-color-base), 0.3); box-shadow: 0 0 15px 8px rgba(var(--white), 0.25); }
+.narrative-cloud.wispy { background-color: rgba(var(--cloud-color-base), 0.25); transform: scale(0.8); } .narrative-cloud.calm { animation-duration: 100s; }
+.narrative-cloud.clear-sky { background-color: rgba(var(--cloud-color-base), 0.15); } .narrative-cloud.sunset-glow { background-image: linear-gradient(to top, rgba(var(--rgb-primary-vibrant-accent),0.2), rgba(var(--cloud-color-base), 0.3)); }
+@media (min-width: 768px) {
     .narrative-cloud.style1 { width: 150px; height: 50px; border-radius: 25px / 40px; animation-duration: 60s; }
-    .narrative-cloud.style1::before { width: 80px; height: 80px; top: -30px; left: 20px; }
-    .narrative-cloud.style1::after { width: 100px; height: 100px; top: -40px; right: 10px; }
+    .narrative-cloud.style1::before { width: 80px; height: 80px; top: -30px; left: 20px; } .narrative-cloud.style1::after { width: 100px; height: 100px; top: -40px; right: 10px; }
     .narrative-cloud.style2 { width: 200px; height: 40px; border-radius: 20px; animation-duration: 75s; left: -200px; }
     .narrative-cloud.style2::before { width: 120px; height: 60px; top: -20px; }
     .narrative-cloud.style3 { width: 100px; height: 35px; border-radius: 20px / 30px; animation-duration: 50s; }
-    .narrative-cloud.style3::before { width: 50px; height: 50px; top: -20px; left: 10px; }
-    .narrative-cloud.style3::after { width: 60px; height: 60px; top: -25px; right: 5px; }
+    .narrative-cloud.style3::before { width: 50px; height: 50px; top: -20px; left: 10px; } .narrative-cloud.style3::after { width: 60px; height: 60px; top: -25px; right: 5px; }
 }
 
-
-/* --- SOUND WAVES (NEW CREATIVE) --- */
+/* --- SOUND WAVES --- */
 .narrative-distant-wave { position: absolute; width: 60px; height: 60px; border: 2px solid rgba(var(--rgb-secondary-vibrant-accent), 0.2); border-radius: 50%; opacity: 0; animation: distantWavePulse 5s infinite ease-in-out; }
 .narrative-distant-wave.delayed { animation-delay: 2.5s; }
 .narrative-blocked-wave { position: absolute; width: 80px; height: 25px; border: 2px solid rgba(var(--rgb-medium-grey-text), 0.4); border-radius: 12px; opacity: 0.1; animation: blockedWaveJitter 1s infinite; }
 .narrative-flowing-wave { position: absolute; width: 120px; height: 120px; border: 2px solid rgba(var(--rgb-secondary-vibrant-accent), 0.3); border-radius: 50%; opacity: 0; animation: flowingWave 6s infinite ease-in-out alternate; }
-.narrative-flowing-wave.alt { top: 60%; left: 70%; animation-delay: 1s; border-color: rgba(var(--rgb-primary-vibrant-accent), 0.3); }
+.narrative-flowing-wave.alt { animation-delay: 1s; border-color: rgba(var(--rgb-primary-vibrant-accent), 0.3); }
 .narrative-teacher-soundwave.gentle { position: absolute; width: 100px; height: 100px; border: 2px solid rgba(var(--rgb-primary-vibrant-accent), 0.25); border-radius: 50%; opacity: 0; animation: gentleSoundWaveExpand 5s infinite ease-in-out 0.5s; }
 .narrative-positive-sound-ripple { position: absolute; width: 50px; height: 50px; border: 3px solid rgba(var(--rgb-secondary-vibrant-accent), 0.5); border-radius: 50%; opacity: 0; animation: positiveSoundRipple 4s infinite linear; }
-.narrative-positive-sound-ripple.large { width: 70px; height: 70px; animation-duration: 5s; }
-.narrative-positive-sound-ripple.small { width: 30px; height: 30px; animation-duration: 3.5s; }
+.narrative-positive-sound-ripple.large { width: 70px; height: 70px; animation-duration: 5s; } .narrative-positive-sound-ripple.small { width: 30px; height: 30px; animation-duration: 3.5s; }
 .narrative-focused-soundwave.strong { position: absolute; height: 3px; background-color: rgba(var(--rgb-primary-vibrant-accent), 0.6); border-radius: 1.5px; opacity: 0; animation: focusedSoundWavePropagate 3s infinite ease-out; left: 0; }
 .narrative-focused-soundwave.strong.delayed { animation-delay: 0.8s; }
-@media (min-width: 768px) { /* Desktop sound wave sizes */
-    .narrative-distant-wave { width: 80px; height: 80px; }
-    .narrative-blocked-wave { width: 100px; height: 30px; }
-    .narrative-flowing-wave { width: 150px; height: 150px; }
+@media (min-width: 768px) {
+    .narrative-distant-wave { width: 80px; height: 80px; } .narrative-blocked-wave { width: 100px; height: 30px; } .narrative-flowing-wave { width: 150px; height: 150px; }
     .narrative-teacher-soundwave.gentle { width: 120px; height: 120px; }
-    .narrative-positive-sound-ripple { width: 60px; height: 60px; }
-    .narrative-positive-sound-ripple.large { width: 90px; height: 90px; }
-    .narrative-positive-sound-ripple.small { width: 40px; height: 40px; }
+    .narrative-positive-sound-ripple { width: 60px; height: 60px; } .narrative-positive-sound-ripple.large { width: 90px; height: 90px; } .narrative-positive-sound-ripple.small { width: 40px; height: 40px; }
     .narrative-focused-soundwave.strong { height: 4px; border-radius: 2px; }
 }
 
-/* --- OTHER NEW CREATIVE NARRATIVE ELEMENTS --- */
+/* --- OTHER NARRATIVE ELEMENTS --- */
+.narrative-spark { position: absolute; width: 8px; height: 8px; background-color: rgba(var(--rgb-primary-vibrant-accent), 0.75); border-radius: 50%; opacity: 0; animation: sparkleFloat 7.5s infinite linear; } /* Kept old sparks if used */
+.narrative-blockage-fragment { position: absolute; width: 7px; height: 7px; background-color: rgba(var(--rgb-medium-grey-text), 0.45); border-radius: 2px; opacity: 0; animation: blockageFragmentFloat 6s infinite linear; }
+.narrative-clearing-element.decisive { position: absolute; top: 50%; left: 50%; width: 110px; height: 110px; border-radius: 50%; background: radial-gradient(circle, rgba(var(--rgb-secondary-vibrant-accent), 0.08) 0%, rgba(var(--rgb-secondary-vibrant-accent), 0) 65%); animation: decisiveClear 7s ease-in-out 1.8s infinite; transform: translate(-50%, -50%) scale(0); opacity: 0; }
+.narrative-energy-wash { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(var(--rgb-secondary-vibrant-accent), 0) 0%, rgba(var(--rgb-secondary-vibrant-accent), 0.08) 50%, rgba(var(--rgb-secondary-vibrant-accent), 0) 100%); animation: energyWashFade 8s infinite ease-in-out; opacity: 0; }
+.narrative-flow-particle { position: absolute; width: 12px; height: 12px; background-color: rgba(var(--rgb-primary-vibrant-accent), 0.6); border-radius: 55% 45% 75% 25% / 45% 55% 45% 55%; opacity: 0; animation: flowUpEnhanced 6.5s infinite linear; }
+.narrative-flow-particle.fast { animation-duration: 5.5s; width: 10px; height: 10px;} .narrative-flow-particle.slow { animation-duration: 8.5s; width: 15px; height: 15px;} /* Used if more defined in HTML */
+.narrative-quiz-node { position: absolute; width: 10px; height: 10px; background-color: rgba(var(--rgb-primary-vibrant-accent), 0.8); border-radius: 50%; box-shadow: 0 0 8px rgba(var(--rgb-primary-vibrant-accent), 0.5); animation: quizNodePulse 3s infinite ease-in-out; }
+.narrative-guiding-aura { position: absolute; /* style in teacher section */ }
+.narrative-aura-ray { position: absolute; /* style in teacher section */ }
+.narrative-converging-line.strong { position: absolute; /* Style in final CTA */ animation-name: strongConverge;}
+.narrative-starburst-element { position: absolute; width: 40px; height: 40px; opacity: 0; animation: starburst 3.5s infinite ease-out; }
+.narrative-starburst-element::before, .narrative-starburst-element::after { content: ''; position: absolute; top: 50%; left: 50%; width: 100%; height: 3px; background-color: rgba(var(--rgb-primary-vibrant-accent), 0.5); border-radius: 1.5px; transform-origin: center; transform: translate(-50%, -50%) rotate(0deg); }
+.narrative-starburst-element::after { transform: translate(-50%, -50%) rotate(90deg); }
+
 .narrative-barrier-line { position: absolute; height: 2px; max-width: 120px; background-color: rgba(var(--rgb-medium-grey-text), 0.5); opacity: 0; animation: barrierLineAppear 1.5s forwards ease-out; }
 .narrative-barrier-line.slanted { transform: rotate(15deg); max-width: 100px; animation-delay: 0.5s; }
 .narrative-path-sound-node { position: absolute; width: 10px; height: 10px; background-color: rgba(var(--rgb-primary-vibrant-accent), 0.5); border-radius: 50%; opacity: 0.7; box-shadow: 0 0 8px rgba(var(--rgb-primary-vibrant-accent), 0.4); animation: pathSoundNodeGlow 2.5s infinite ease-in-out; }
 .narrative-speech-bubble-echo { position: absolute; width: 40px; height: 30px; background-color: rgba(var(--rgb-secondary-vibrant-accent), 0.1); border: 1px solid rgba(var(--rgb-secondary-vibrant-accent), 0.2); border-radius: 8px 8px 8px 2px; opacity: 0; animation: speechBubbleEcho 4s infinite ease-out; transform-origin: bottom left; }
 .narrative-speech-bubble-echo::after { content: ''; position: absolute; bottom: -7px; left: 8px; width: 0; height: 0; border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 9px solid rgba(var(--rgb-secondary-vibrant-accent), 0.15); }
 .narrative-speech-bubble-echo.delayed { animation-delay: 1.5s; }
-.narrative-starburst-element { position: absolute; width: 40px; height: 40px; opacity: 0; animation: starburst 3.5s infinite ease-out; }
-.narrative-starburst-element::before, .narrative-starburst-element::after { content: ''; position: absolute; top: 50%; left: 50%; width: 100%; height: 3px; background-color: rgba(var(--rgb-primary-vibrant-accent), 0.5); border-radius: 1.5px; transform-origin: center; transform: translate(-50%, -50%) rotate(0deg); }
-.narrative-starburst-element::after { transform: translate(-50%, -50%) rotate(90deg); }
-@media (min-width: 768px) { /* Desktop other elements */
+
+@media (min-width: 768px) { /* Desktop sizes for re-used/other elements */
+    .narrative-blockage-fragment { width: 8px; height: 8px; background-color: rgba(var(--rgb-medium-grey-text), 0.5);}
+    .narrative-clearing-element.decisive { width: 130px; height: 130px; background: radial-gradient(circle, rgba(var(--rgb-secondary-vibrant-accent), 0.1) 0%, rgba(var(--rgb-secondary-vibrant-accent), 0) 70%);}
+    .narrative-flow-particle {width: 15px; height: 15px; background-color: rgba(var(--rgb-primary-vibrant-accent), 0.65);}
+    .narrative-flow-particle.fast { width: 12px; height: 12px;} .narrative-flow-particle.slow { width: 18px; height: 18px;}
+    .narrative-quiz-node {width:12px; height:12px;}
     .narrative-barrier-line { max-width: 150px; } .narrative-barrier-line.slanted { max-width: 120px;}
     .narrative-path-sound-node { width: 12px; height: 12px; }
     .narrative-speech-bubble-echo { width: 50px; height: 40px; border-radius: 10px 10px 10px 3px; }
@@ -359,109 +368,88 @@ img, svg { max-width: 100%; height: auto; display: block; }
 }
 
 
-/* --- PLACEMENT of Narrative Elements (OLD & NEW) within sections --- */
-/* You WILL need to adjust these top/left/delay values extensively for your desired look */
-
-/* Hero BG Elements */
+/* --- PLACEMENT of ALL Narrative Elements within sections --- */
+/* (Copied from your latest instruction for placement, then verified HTML matches) */
 .hero-narrative-bg .narrative-cloud.style1 { top: 10%; left: -150px; animation-delay: 0s; }
 .hero-narrative-bg .narrative-cloud.style2 { top: 60%; left: -200px; animation-delay: 10s; }
 .hero-narrative-bg .narrative-cloud.style3 { top: 30%; left: -100px; animation-delay: 20s; }
-.hero-narrative-bg .narrative-distant-wave { top: 20%; left: 25%;} /* HTML has 2 of these */
-.hero-narrative-bg .narrative-distant-wave.delayed { top: 70%; right: 20%; left:auto; }
-.hero-narrative-bg .narrative-spark:nth-of-type(6) { top: 15%; left: 80%; animation-delay: 1s; } /* Example: sparks were general before */
-.hero-narrative-bg .narrative-spark:nth-of-type(7) { top: 80%; left: 15%; animation-delay: 3s; }
-/* Existing potential-lines are removed if sparks fulfill that idea, or re-add if desired */
+.hero-narrative-bg .narrative-distant-wave { top: 20%; left: 25%;} /* First of these divs in HTML */
+.hero-narrative-bg .narrative-distant-wave.delayed { top: 70%; right: 20%; left:auto; } /* Second of these divs */
+.hero-narrative-bg .narrative-spark { top: 15%; left: 80%; animation-delay: 1s; } /* Third of these divs */
+.hero-narrative-bg .narrative-spark + .narrative-spark { top: 80%; left: 15%; animation-delay: 3s; } /* Fourth of these divs - Spark adjacent to spark */
 
-/* Pain Point BG Elements */
 .pain-narrative-bg .narrative-cloud.style2.dense { top: 15%; left: -200px; animation-delay: 1s; }
 .pain-narrative-bg .narrative-blocked-wave { top: 55%; left: 40%; transform-origin: center; }
-.pain-narrative-bg .narrative-barrier-line { top: 25%; left: 10%; } /* First one */
-.pain-narrative-bg .narrative-barrier-line.slanted { top: 70%; right: 10%; left:auto; transform: rotate(20deg); animation-delay: 0.5s;} /* Second one */
+.pain-narrative-bg .narrative-barrier-line { top: 25%; left: 10%; }
+.pain-narrative-bg .narrative-barrier-line.slanted { top: 70%; right: 10%; transform: rotate(20deg); animation-delay: 0.5s;}
 .pain-narrative-bg .narrative-blockage-fragment {top: 45%; left: 35%; animation-delay: 1s;}
-.pain-narrative-bg .narrative-clearing-element.decisive {top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); }
+.pain-narrative-bg .narrative-clearing-element.decisive {top: 50%; left: 50%; } /* Transform for centering done in element style */
 
-/* Benefits BG Elements */
 .benefits-narrative-bg .narrative-cloud.style1.bright { top: 5%; left: -150px; animation-delay: 2s;}
 .benefits-narrative-bg .narrative-cloud.style3.bright { top: 65%; left: -100px; animation-delay: 12s;}
-.benefits-narrative-bg .narrative-flowing-wave { top: 25%; left: 15%; } /* First */
-.benefits-narrative-bg .narrative-flowing-wave.alt { top: 50%; left: 60%; } /* Second */
-.benefits-narrative-bg .narrative-energy-wash { /* Spans full area, defined above */ }
-.benefits-narrative-bg .narrative-flow-particle.fast { bottom: 0%; left: 20%; animation-delay: 0s; } /* First particle */
-.benefits-narrative-bg .narrative-flow-particle { bottom: 0%; left: 75%; animation-delay: 1.1s; } /* Second particle */
+.benefits-narrative-bg .narrative-flowing-wave { top: 25%; left: 15%; }
+.benefits-narrative-bg .narrative-flowing-wave.alt { top: 50%; left: 60%; }
+.benefits-narrative-bg .narrative-energy-wash { /* Full area by default */ }
+.benefits-narrative-bg .narrative-flow-particle.fast { bottom: 0%; left: 20%; animation-delay: 0s; }
+.benefits-narrative-bg .narrative-flow-particle:not(.fast) { bottom: 0%; left: 75%; animation-delay: 1.1s; } /* Regular speed one */
 
-/* Quiz BG Elements */
 .quiz-narrative-bg .narrative-cloud.style1.wispy { top: 70%; left: -150px; animation-delay: 3s;}
-/* SVG is an element, its position is fixed as full bg */
-.quiz-narrative-bg .narrative-path-sound-node:nth-of-type(2) { top: 30%; left: 35%; } /* After SVG in DOM */
+/* SVG is positioned by its own class .narrative-quiz-path-svg */
+.quiz-narrative-bg .narrative-path-sound-node:nth-of-type(2) { top: 30%; left: 35%; } /* After SVG in DOM for this .narrative-background */
 .quiz-narrative-bg .narrative-path-sound-node:nth-of-type(3) { top: 65%; left: 60%; animation-delay: 0.8s; }
-.quiz-narrative-bg .narrative-quiz-node { top: 40%; left: 15%; animation-delay: 8s; } /* Last div child */
+.quiz-narrative-bg .narrative-quiz-node { top: 40%; left: 15%; animation-delay: 8s; } /* Old quiz node, last of the group */
 
-/* Teacher BG Elements (Positioning these with teacher frame is key) */
 .teacher-narrative-bg .narrative-cloud.style3.calm { top: 10%; left: -100px; animation-delay: 5s;}
-.teacher-narrative-bg .narrative-guiding-aura { /* Style in its section, positioning updated */ }
-.teacher-narrative-bg .narrative-teacher-soundwave.gentle { /* Base centered, overridden by MQ */ top: 50%; left: 50%; transform: translate(-120%, -50%); }
-.teacher-narrative-bg .narrative-aura-ray:nth-of-type(4) { top: calc(50% - 100px); left: calc(50% - 10px); transform: rotate(-30deg); animation-delay: 0.5s;} /* After cloud, aura, soundwave */
-.teacher-narrative-bg .narrative-aura-ray:nth-of-type(5) { top: calc(50% - 90px); left: calc(50% + 5px); transform: rotate(10deg); animation-delay: 1.5s;}
+/* Guiding aura, teacher soundwave, aura rays position relative to photo area and are handled by MQ below */
 
-@media (min-width: 860px) { /* Desktop teacher soundwave/aura pos */
-    .teacher-narrative-bg .narrative-teacher-soundwave.gentle { left: auto; right: calc(100% - 150px - 15px + 160px); top: 50%; transform: translateY(-50%); }
+@media (min-width: 860px) { /* Desktop teacher narrative pos */
     .teacher-narrative-bg .narrative-guiding-aura { left: calc(100% - 150px - 15px); top: 50%; transform: translate(-50%, -50%); }
-    .teacher-narrative-bg .narrative-aura-ray { left: calc(100% - 150px - 15px); top: 50%; } /* Base */
-    .teacher-narrative-bg .narrative-aura-ray:nth-of-type(4) { transform: translateY(-100px) rotate(-30deg) translateX(-10px); }
-    .teacher-narrative-bg .narrative-aura-ray:nth-of-type(5) { transform: translateY(-90px) rotate(10deg) translateX(5px); }
+    .teacher-narrative-bg .narrative-teacher-soundwave.gentle { left: auto; right: calc(100% - 150px - 15px + 160px); top: 50%; transform: translateY(-50%); }
+    .teacher-narrative-bg .narrative-aura-ray { left: calc(100% - 150px - 15px); top: 50%; }
+    .teacher-narrative-bg .narrative-aura-ray:nth-of-type(3) { transform: translateY(-100px) rotate(-30deg) translateX(-10px); } /* After cloud, aura, soundwave */
+    .teacher-narrative-bg .narrative-aura-ray:nth-of-type(4) { transform: translateY(-90px) rotate(10deg) translateX(5px); }
+    .teacher-narrative-bg .narrative-aura-ray:nth-of-type(5) { display:none; } /* Original HTML only had 2 after aura/soundwave */
 }
-@media (max-width: 859px) { /* Mobile teacher soundwave/aura pos */
-     .teacher-narrative-bg .narrative-teacher-soundwave.gentle { top: calc(50% + 70px + 170px); left: 50%; transform: translateX(-50%); }
-     .teacher-narrative-bg .narrative-guiding-aura { top: calc(50% + 70px); left: 50%; transform: translate(-50%,-50%); width:300px; height:300px;}
-     .teacher-narrative-bg .narrative-aura-ray { left: 50%; top: calc(50% + 70px); height: 60px;}
-    .teacher-narrative-bg .narrative-aura-ray:nth-of-type(4) { transform: translateY(-80px) rotate(-30deg) translateX(-10px); }
-    .teacher-narrative-bg .narrative-aura-ray:nth-of-type(5) { transform: translateY(-70px) rotate(10deg) translateX(5px); }
+@media (max-width: 859px) { /* Mobile teacher narrative pos */
+     .teacher-narrative-bg .narrative-guiding-aura { top: calc(50% + 30px); left: 50%; width:300px; height:300px;}
+     .teacher-narrative-bg .narrative-teacher-soundwave.gentle { top: calc(50% + 30px + 170px); left: 50%; transform: translateX(-50%); }
+     .teacher-narrative-bg .narrative-aura-ray { left: 50%; top: calc(50% + 30px); height: 60px;}
+    .teacher-narrative-bg .narrative-aura-ray:nth-of-type(3) { transform: translateY(-80px) rotate(-30deg) translateX(-10px); }
+    .teacher-narrative-bg .narrative-aura-ray:nth-of-type(4) { transform: translateY(-70px) rotate(10deg) translateX(5px); }
+    .teacher-narrative-bg .narrative-aura-ray:nth-of-type(5) { display:none; }
 }
 
-/* Testimonials BG Elements */
 .testimonials-narrative-bg .narrative-cloud.style1.clear-sky { top: 10%; left: -150px; animation-delay: 0.5s; opacity:0.8 !important; animation-name:none; transform: translateX(25vw); }
-.testimonials-narrative-bg .narrative-speech-bubble-echo { top: 20%; left: 15%; } /* first bubble */
-.testimonials-narrative-bg .narrative-speech-bubble-echo.delayed { top: 60%; left: 70%; } /* second bubble */
-.testimonials-narrative-bg .narrative-positive-sound-ripple.large { top: 40%; left: 40%; } /* first ripple */
-.testimonials-narrative-bg .narrative-positive-sound-ripple.small { top: 70%; left: 20%; animation-delay: 1s; } /* second ripple */
+.testimonials-narrative-bg .narrative-speech-bubble-echo { top: 20%; left: 15%; }
+.testimonials-narrative-bg .narrative-speech-bubble-echo.delayed { top: 60%; left: 70%; }
+.testimonials-narrative-bg .narrative-positive-sound-ripple.large { top: 40%; left: 40%; }
+.testimonials-narrative-bg .narrative-positive-sound-ripple.small { top: 70%; left: 20%; animation-delay: 1s; }
 
-/* Final CTA BG Elements */
 .final-cta-narrative-bg .narrative-cloud.style2.sunset-glow { top: 20%; left: -200px; animation-delay: 1s; }
-.final-cta-narrative-bg .narrative-focused-soundwave.strong { top: 30%; } /* First, after cloud */
-.final-cta-narrative-bg .narrative-focused-soundwave.strong.delayed { top: 60%; } /* Second */
-.final-cta-narrative-bg .narrative-converging-line.strong {left: 20%; animation-delay: 0s;} /* First line after waves */
-/* The other .narrative-converging-line without .strong from older iteration (middle one) is now gone as focused-soundwaves replace it */
-/* .narrative-focus-point from older iteration removed, .narrative-starburst-element for new effect */
+.final-cta-narrative-bg .narrative-focused-soundwave.strong { top: 30%; }
+.final-cta-narrative-bg .narrative-focused-soundwave.strong.delayed { top: 60%; }
+.final-cta-narrative-bg .narrative-converging-line.strong {left: 20%; animation-delay: 0s;} /* Single .converging-line */
 .final-cta-narrative-bg .narrative-starburst-element { top: 45%; left: 45%; transform-origin: center; animation-delay: 1.5s;}
 
 
-/* --- MOBILE OPTIMIZATIONS FOR NARRATIVE ELEMENTS --- */
-@media (max-width: 768px) { /* Tablet and smaller general reductions */
-    .narrative-cloud.style1 { width: 100px; height: 35px; }
-    .narrative-cloud.style1::before { width: 50px; height: 50px; top: -20px; } .narrative-cloud.style1::after { width: 70px; height: 70px; top: -25px; }
-    .narrative-cloud.style2 { width: 140px; height: 25px; } .narrative-cloud.style2::before { width: 90px; height: 40px; top: -12px;}
-    .narrative-cloud.style3 { width: 70px; height: 22px; }
-
-    .narrative-distant-wave { width: 50px; height: 50px; }
-    .narrative-blocked-wave { width: 70px; height: 22px; }
-    .narrative-flowing-wave { width: 100px; height: 100px; }
+/* --- MOBILE OPTIMIZATIONS FOR NARRATIVE ELEMENTS (Keep from previous) --- */
+@media (max-width: 768px) {
+    .narrative-cloud.style1 { width: 100px; height: 35px; } .narrative-cloud.style1::before { width: 50px; height: 50px; top: -20px; } .narrative-cloud.style1::after { width: 70px; height: 70px; top: -25px; }
+    .narrative-cloud.style2 { width: 140px; height: 25px; } .narrative-cloud.style2::before { width: 90px; height: 40px; top: -12px;} .narrative-cloud.style3 { width: 70px; height: 22px; }
+    .narrative-distant-wave { width: 50px; height: 50px; } .narrative-blocked-wave { width: 70px; height: 22px; } .narrative-flowing-wave { width: 100px; height: 100px; }
     .narrative-teacher-soundwave.gentle { width: 90px; height: 90px; }
     .narrative-positive-sound-ripple { width: 45px; height: 45px; } .narrative-positive-sound-ripple.large { width: 60px; height: 60px; } .narrative-positive-sound-ripple.small { width: 25px; height: 25px; }
-
-    .narrative-speech-bubble-echo { width: 35px; height: 25px; }
-    .narrative-starburst-element { width: 35px; height: 35px; }
+    .narrative-speech-bubble-echo { width: 35px; height: 25px; } .narrative-starburst-element { width: 35px; height: 35px; }
 }
-
-@media (max-width: 480px) { /* Small mobile: Hide more, simplify more */
-    .hero-narrative-bg .narrative-cloud.style2, .hero-narrative-bg .narrative-distant-wave.delayed { display: none; }
+@media (max-width: 480px) {
+    .hero-narrative-bg .narrative-cloud.style2, .hero-narrative-bg .narrative-distant-wave.delayed, .hero-narrative-bg .narrative-spark + .narrative-spark { display: none; }
     .pain-narrative-bg .narrative-barrier-line.slanted, .pain-narrative-bg .narrative-cloud.style2.dense { display: none; }
-    .benefits-narrative-bg .narrative-cloud.style3.bright, .benefits-narrative-bg .narrative-flowing-wave.alt {display: none;}
+    .benefits-narrative-bg .narrative-cloud.style3.bright, .benefits-narrative-bg .narrative-flowing-wave.alt, .benefits-narrative-bg .narrative-flow-particle:not(.fast) {display: none;}
     .quiz-narrative-bg .narrative-cloud.style1.wispy, .quiz-narrative-bg .narrative-path-sound-node:nth-of-type(3) {display:none;}
-    .teacher-narrative-bg .narrative-cloud.style3.calm, .teacher-narrative-bg .narrative-aura-ray:nth-of-type(5) {display:none;}
+    .teacher-narrative-bg .narrative-cloud.style3.calm, .teacher-narrative-bg .narrative-aura-ray:nth-of-type(4), .teacher-narrative-bg .narrative-aura-ray:nth-of-type(5) {display:none;} /* Adjust based on actual number of rays used in HTML*/
     .testimonials-narrative-bg .narrative-speech-bubble-echo.delayed, .testimonials-narrative-bg .narrative-positive-sound-ripple.small {display:none;}
     .final-cta-narrative-bg .narrative-starburst-element, .final-cta-narrative-bg .narrative-focused-soundwave.strong.delayed {display:none;}
 
-    .narrative-cloud.style1 { width: 80px; height: 30px; }
-    .narrative-cloud.style1::before { width: 40px; height: 40px; top: -15px; } .narrative-cloud.style1::after { width: 50px; height: 50px; top: -20px; }
+    .narrative-cloud.style1 { width: 80px; height: 30px; } .narrative-cloud.style1::before { width: 40px; height: 40px; top: -15px; } .narrative-cloud.style1::after { width: 50px; height: 50px; top: -20px; }
     .pain-narrative-bg .narrative-clearing-element.decisive { width:80px; height:80px;}
 }
