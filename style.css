@@ -11,6 +11,8 @@
     --light-text-on-dark-bg: #EFF3F4;
     --medium-grey-text: #586065;
     --border-light: #DEE2E6;
+    --cloud-color-base: 230, 238, 240; /* For rgba clouds */
+    --soundwave-color-base: var(--secondary-vibrant-accent);
 
     --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 
@@ -18,664 +20,423 @@
     --shadow-md: 0 3px 5px -1px rgba(0,0,0,0.04), 0 2px 3px -1px rgba(0,0,0,0.03);
     --shadow-lg: 0 8px 12px -3px rgba(0,0,0,0.04), 0 3px 5px -2px rgba(0,0,0,0.02);
 
-    /* RGB versions for rgba() narrative backgrounds */
     --rgb-primary-serious-color: 0, 106, 112;
     --rgb-primary-vibrant-accent: 253, 184, 19;
     --rgb-secondary-vibrant-accent: 0, 160, 154;
-    --rgb-medium-grey-text: 88, 96, 101; /* For blockage fragments */
+    --rgb-medium-grey-text: 88, 96, 101;
 }
 
-/* --- Keyframes for Original Animations --- */
-@keyframes drawLine { from { width: 0; } to { width: 100%; } }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes gentleWave { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-5px) scale(1.02); } }
-@keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 8px -2px var(--primary-vibrant-accent), 0 0 15px -5px var(--primary-vibrant-accent); opacity: 0.8; } 50% { box-shadow: 0 0 12px 0px var(--primary-vibrant-accent), 0 0 25px -3px var(--primary-vibrant-accent); opacity: 1; } }
-@keyframes slideUpFadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes blockageResolve { 0% { transform: scaleX(1) scaleY(0.2); opacity: 0.7; background-color: var(--medium-grey-text); } 50% { transform: scaleX(0.3) scaleY(1); opacity: 0.4; background-color: var(--secondary-vibrant-accent); } 100% { transform: scaleX(1) scaleY(1); opacity: 0; background-color: var(--secondary-vibrant-accent); } }
-@keyframes quizPulse { 0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(var(--rgb-secondary-vibrant-accent), 0.3); } 50% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(var(--rgb-secondary-vibrant-accent), 0); } }
-@keyframes bounceSlightly { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
-@keyframes scaleIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-@keyframes growAndFadeQuote { from { transform: scale(0.5) translateY(10px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
-@keyframes radiatingBackground { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+/* === ALL KEYFRAMES (Original, Narrative, New Creative) === */
+/* Keep all existing @keyframes definitions from the previous full CSS you have. */
+/* ... (Your drawLine, fadeIn, gentleWave, pulseGlow, slideUpFadeIn, etc.) ... */
+/* ... (Your teacherFrameReveal, svgGentleBob, sparkleFloat, potentialLineDrift etc.) ... */
+
+@keyframes cloudDrift {
+    from { transform: translateX(-150%); opacity: 0; } /* Start off-screen left */
+    20%, 80% { opacity: 1; } /* Fade in and out at edges of screen time */
+    to { transform: translateX(150%); opacity: 0; } /* End off-screen right */
+}
+@keyframes distantWavePulse {
+    0%, 100% { transform: scale(0.8); opacity: 0.05; }
+    50% { transform: scale(1.2); opacity: 0.15; }
+}
+@keyframes blockedWaveJitter {
+    0%, 100% { transform: translateX(0) scaleX(1); opacity: 0.1; }
+    25% { transform: translateX(-3px) scaleX(0.95); opacity: 0.08; }
+    50% { transform: translateX(3px) scaleX(1.05); opacity: 0.12; }
+    75% { transform: translateX(-2px) scaleX(1); opacity: 0.09; }
+}
+@keyframes barrierLineAppear {
+    from { width: 0; opacity: 0; }
+    to { width: 100%; opacity: 0.2; } /* Width is relative to its own max-width */
+}
+@keyframes flowingWave {
+    0% { transform: translateX(-20%) scaleY(0.8); opacity: 0.1; }
+    50% { transform: translateX(0) scaleY(1.2); opacity: 0.2; }
+    100% { transform: translateX(20%) scaleY(0.8); opacity: 0.1; }
+}
+@keyframes pathSoundNodeGlow {
+    0%, 100% { background-color: rgba(var(--rgb-primary-vibrant-accent), 0.5); box-shadow: 0 0 5px rgba(var(--rgb-primary-vibrant-accent),0.3); }
+    50% { background-color: rgba(var(--rgb-secondary-vibrant-accent), 0.7); box-shadow: 0 0 12px rgba(var(--rgb-secondary-vibrant-accent),0.5); }
+}
+@keyframes gentleSoundWaveExpand {
+    0%, 100% { transform: scale(0.9); opacity: 0.08; }
+    50% { transform: scale(1.1); opacity: 0.18; }
+}
+@keyframes speechBubbleEcho {
+    0% { transform: scale(0.5) translateY(10px); opacity: 0; }
+    70% { transform: scale(1.2) translateY(-5px); opacity: 0.25; }
+    100% { transform: scale(1.5) translateY(-15px); opacity: 0; }
+}
+@keyframes positiveSoundRipple { /* Re-using for stronger effect */
+    0% { transform: scale(0.3); opacity: 0; border-width: 4px; }
+    50% { opacity: 0.2; }
+    100% { transform: scale(3); opacity: 0; border-width: 1px; }
+}
+@keyframes focusedSoundWavePropagate {
+    0% { width: 10%; opacity: 0.1; transform: translateX(-50%); } /* Start narrow from left */
+    50% { opacity: 0.3; }
+    100% { width: 100%; opacity: 0.05; transform: translateX(0%); } /* Expand right */
+}
+@keyframes starburst {
+    0% { transform: scale(0) rotate(0deg); opacity: 0; }
+    50% { opacity: 0.25; }
+    100% { transform: scale(1.5) rotate(360deg); opacity: 0; }
+}
+
+/* ... (And all other existing @keyframes) ... */
 
 
 /* --- Base Scroll Animation Styles --- */
+/* (No change from your previous version) */
 .animated-title, .animated-text, .benefit-item, .testimonial-card,
-.quiz-placeholder, .blockage-element, .quiz-cta, .animated-teacher-frame { /* Added .animated-teacher-frame */
+.quiz-placeholder, .blockage-element, .quiz-cta, .animated-teacher-frame {
     opacity: 0;
     transition: opacity 0.6s ease-out, transform 0.6s ease-out;
 }
-.animated-title.in-view, .animated-text.in-view { /* Content animation */
+.animated-title.in-view, .animated-text.in-view {
      animation: slideUpFadeIn 0.8s ease-out forwards;
 }
 
 /* --- CSS Reset/Normalization --- */
+/* (No change from your previous version) */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; font-size: 16px; }
+html { scroll-behavior: smooth; font-size: 16px; -webkit-text-size-adjust: 100%; }
 body {
     font-family: var(--font-primary); line-height: 1.7; color: var(--main-text-color);
     background-color: var(--main-background);
     -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
 }
-img, svg { max-width: 100%; height: auto; display: block; } /* Include SVG here for block display */
+img, svg { max-width: 100%; height: auto; display: block; }
 
 /* --- Utility Classes & Base Section Styling --- */
-.container {
-    width: 90%; max-width: 1140px; margin: 0 auto; padding: 0 15px;
-    position: relative; /* Default for stacking */
-    z-index: 2;        /* Ensure content is above narrative backgrounds */
-}
-.section {
-    padding: 80px 0;
-    position: relative; /* For narrative background positioning and z-index context */
-    overflow: hidden;   /* Recommended for sections with full-width absolute children */
-}
-#pain-point.section { /* Special adjustment for Pain Point section to be closer to hero */
-    padding-top: 40px;
-}
-@media (max-width: 768px) {
-    .section { padding: 60px 0; }
-    #pain-point.section { padding-top: 30px; }
-}
+/* (No change needed from your "mobile optimized" CSS version for .container, .section, .section-title, .cta-button etc.) */
+/* ... (Paste your existing mobile-optimized utility, section, cta, header, hero, pain-point, benefits, quiz, teacher, testimonials, final-cta, footer CSS here) ... */
 
-.section-title {
-    font-size: 2.3rem; font-weight: 700; color: var(--primary-serious-color);
-    text-align: center; margin-bottom: 45px; letter-spacing: -0.5px;
-}
+/* Ensure this existing mobile optimized base is here from previous iterations: */
+.container { width: 90%; max-width: 1140px; margin-left: auto; margin-right: auto; padding-left: 15px; padding-right: 15px; position: relative; z-index: 2; }
+.section { padding: 60px 0; position: relative; overflow: hidden; }
+#pain-point.section { padding-top: 30px; }
+@media (min-width: 768px) { .section { padding: 80px 0; } #pain-point.section { padding-top: 40px; } }
+.section-title { font-size: 2rem; font-weight: 700; color: var(--primary-serious-color); text-align: center; margin-bottom: 35px; letter-spacing: -0.5px; }
 .section-title .highlight { color: var(--secondary-vibrant-accent); }
-.section-subtitle.highlight-text-main {
-    color: var(--main-text-color); font-weight: 500; font-size: 1.2rem;
-    display: block; margin-top: -18px;
-}
+.section-subtitle.highlight-text-main { color: var(--main-text-color); font-weight: 500; font-size: 1.1rem; display: block; margin-top: -15px; }
+@media (min-width: 768px) { .section-title { font-size: 2.3rem; margin-bottom: 45px; } .section-subtitle.highlight-text-main { font-size: 1.2rem; margin-top: -18px; } }
+.cta-button { display: inline-block; padding: 12px 28px; background-color: var(--primary-vibrant-accent); color: var(--main-text-color); text-decoration: none; font-weight: 600; font-size: 1rem; border-radius: 8px; transition: background-color 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease, color 0.25s ease; border: none; cursor: pointer; text-align: center; box-shadow: var(--shadow-sm); }
+.cta-button:hover, .cta-button:focus { background-color: #EAA703; transform: translateY(-3px) scale(1.02); box-shadow: var(--shadow-md); color: var(--main-text-color); }
+.cta-button-large { font-size: 1.1rem; padding: 15px 35px; }
+@media (min-width: 768px) { .cta-button { padding: 15px 35px; font-size: 1.05rem; } .cta-button-large { font-size: 1.2rem; padding: 18px 40px; } }
 
-.cta-button {
-    display: inline-block; padding: 15px 35px;
-    background-color: var(--primary-vibrant-accent); color: var(--main-text-color);
-    text-decoration: none; font-weight: 600; font-size: 1.05rem;
-    border-radius: 8px;
-    transition: background-color 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease, color 0.25s ease;
-    border: none; cursor: pointer; text-align: center; box-shadow: var(--shadow-sm);
-}
-.cta-button:hover, .cta-button:focus {
-    background-color: #EAA703;
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: var(--shadow-md); color: var(--main-text-color);
-}
-.cta-button-large { font-size: 1.2rem; padding: 18px 40px; }
-
-/* --- Sticky Header --- */
-.sticky-header {
-    position: sticky; top: 0; left: 0; width: 100%;
-    background-color: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-    padding: 10px 0; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    z-index: 1000; /* High z-index to stay on top of everything */
-}
-.sticky-header .container { display: flex; justify-content: space-between; align-items: center; }
-.logo-area { display: flex; align-items: center; text-decoration: none; }
-.logo-icon { width: 48px; height: 48px; margin-right: 12px; }
-.logo-text { font-size: 1.75rem; color: var(--main-text-color); font-weight: 500; }
-.logo-text .up { font-weight: 700; color: var(--secondary-vibrant-accent);}
-.header-cta { padding: 10px 22px; font-size: 0.9rem; }
-
-/* --- Hero Section --- */
-.hero-section {
-    background-color: var(--main-background); padding: 90px 0 70px; /* Reduced bottom padding for transition element */
-    text-align: center;
-}
-.hero-background-shape {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    z-index: 0; /* Behind hero-content and narrative */
-    overflow: hidden;
-}
-.hero-background-shape svg { width: 100%; height: 100%; object-fit: cover; animation: gentleWave 15s ease-in-out infinite alternate; }
-.hero-background-shape svg path { fill: var(--secondary-vibrant-accent); } /* Opacity is on path itself in HTML */
-.hero-content-wrapper { /* .container class provides z-index: 2 */ }
-.hero-title {
-    font-size: 2.7rem; line-height: 1.25; font-weight: 700; color: var(--primary-serious-color);
-    margin-bottom: 20px; letter-spacing: -0.8px;
-    opacity: 0; animation: slideUpFadeIn 0.8s ease-out 0.2s forwards;
-}
-.desktop-break { display: none; }
-@media (min-width: 768px) { .hero-title { font-size: 3rem; } .desktop-break { display: block; } }
-.hero-title .highlight-animated { position: relative; display: inline-block; color: var(--secondary-vibrant-accent); }
-.hero-title .highlight-animated::after {
-    content: ''; position: absolute; bottom: -5px; left: 0; height: 3.5px;
-    background-color: var(--primary-vibrant-accent); border-radius: 2px; width: 0;
-    animation: drawLine 0.8s ease-out 1.0s forwards;
-}
-.hero-subtitle {
-    font-size: 1.2rem; color: var(--medium-grey-text); margin-bottom: 35px; max-width: 720px;
-    margin-left: auto; margin-right: auto; line-height: 1.75;
-    opacity: 0; animation: slideUpFadeIn 0.8s ease-out 0.5s forwards;
-}
-.hero-cta {
-    margin-top: 10px; opacity: 0;
-    animation: slideUpFadeIn 0.8s ease-out 0.8s forwards, pulseGlow 2.5s infinite 2.5s;
-}
-.hero-line { /* These are decorative lines within the hero content area */
-    position: absolute; height: 3px; border-radius: 3px; z-index: 1; /* Above narrative-bg, below content */
-    width: 0;
-    animation-timing-function: ease-out; animation-fill-mode: forwards; animation-name: drawLine;
-}
-.hero-line-1 { max-width: 160px; background-color: var(--secondary-vibrant-accent); top: 15%; left: 10%; transform: rotate(-30deg) translateX(-50%); transform-origin: left center; animation-duration: 0.7s; animation-delay: 1.6s; }
-.hero-line-2 { max-width: 210px; background-color: var(--primary-vibrant-accent); bottom: 20%; right: 10%; transform: rotate(15deg) translateX(50%); transform-origin: right center; animation-duration: 0.9s; animation-delay: 1.8s; }
-@media (max-width: 768px) {
-    .hero-section { padding-bottom: 50px; }
-    .hero-title { font-size: 2.3rem; } .hero-subtitle { font-size: 1.1rem; }
-    .hero-line-1 { max-width: 100px; top: 10%; left: 5%; } .hero-line-2 { max-width: 120px; bottom: 15%; right: 5%; }
-}
-@media (max-width: 480px) { .hero-line-1, .hero-line-2 { display: none; } .hero-title { font-size: 2rem; } }
-
-/* --- Pain Point & Solution Section --- */
-.pain-point-section { background-color: var(--main-background); text-align: center; }
-.pain-point-visual { height: 40px; margin-bottom: 20px; display: flex; justify-content: center; align-items: center; }
-.blockage-element { opacity:0; /* Handled by general .in-view via JS */ }
-.blockage-element.in-view {
-    width: 80px; height: 10px; border-radius: 5px;
-    animation: blockageResolve 2s ease-in-out forwards;
-}
-.empathetic-text { font-size: 1.2rem; max-width: 780px; margin-left: auto; margin-right: auto; color: var(--medium-grey-text); line-height: 1.8; }
-
-/* --- Benefits Section --- */
-.benefits-section { background-color: var(--off-white-section-bg); }
-.benefits-section .section-title .highlight { color: var(--secondary-vibrant-accent); }
-.benefit-list { display: flex; flex-direction: column; gap: 25px; max-width: 680px; margin: 0 auto; }
-.benefit-item {
-    display: flex; align-items: center; background-color: var(--white);
-    padding: 22px 28px; border-radius: 12px; box-shadow: var(--shadow-md);
-    opacity: 0; transform: translateX(-20px); /* Initial for scroll */
-    transition: opacity 0.5s ease-out, transform 0.5s ease-out, box-shadow 0.3s ease-out;
-}
-.benefit-item.in-view { opacity: 1; transform: translateX(0); }
-.benefit-item:nth-child(1).in-view { transition-delay: 0.1s; }
-.benefit-item:nth-child(2).in-view { transition-delay: 0.25s; }
-.benefit-item:nth-child(3).in-view { transition-delay: 0.4s; }
-.benefit-item:hover { transform: translateY(-5px) translateX(0) !important; box-shadow: var(--shadow-lg); }
-.benefit-box {
-    width: 58px; height: 58px; background-color: var(--primary-vibrant-accent);
-    display: flex; justify-content: center; align-items: center;
-    margin-right: 22px; flex-shrink: 0; border-radius: 10px;
-    transition: transform 0.3s ease;
-}
-.benefit-item:hover .benefit-box { transform: rotate(15deg) scale(1.05); }
-.benefit-box .checkmark-icon { width: 30px; height: 30px; color: var(--primary-serious-color); }
-.benefit-text { font-size: 1.1rem; color: var(--main-text-color); font-weight: 500; }
-
-/* --- Mini-Quiz Section --- */
-.quiz-section { background-color: var(--main-background); text-align: center; }
-.quiz-section .section-title { color: var(--primary-serious-color); }
-.quiz-placeholder {
-    border: 2.5px dashed var(--secondary-vibrant-accent);
-    padding: 38px 28px; margin: 30px auto 40px; max-width: 620px;
-    background-color: color-mix(in srgb, var(--secondary-vibrant-accent) 4%, white);
-    border-radius: 12px; color: var(--medium-grey-text); opacity: 0;
-}
-.quiz-placeholder.in-view {
-    animation: quizPulse 2.5s infinite 0.5s, slideUpFadeIn 0.8s ease-out forwards; opacity: 1;
-}
-.quiz-placeholder p { margin-bottom: 10px; font-size: 1.05rem; }
-.quiz-placeholder p:last-child { margin-bottom: 0; }
-.quiz-cta { opacity: 0; }
-.quiz-cta.in-view {
-    opacity: 1; animation: bounceSlightly 1.5s ease-in-out infinite 1s, slideUpFadeIn 0.8s ease-out forwards;
-}
-
-/* --- About Professor Luiz Section --- */
-.about-teacher-section { background-color: var(--off-white-section-bg); }
-.about-teacher-container { display: flex; flex-wrap: wrap; align-items: center; gap: 30px 50px; }
-.bio-text-content { flex: 1.8; min-width: 300px; }
-.bio-text-content .section-title { text-align: left; margin-bottom: 20px;}
-@media (max-width: 859px) { .bio-text-content .section-title { text-align: center; } }
-.bio-text-content p { font-size: 1.05rem; color: var(--medium-grey-text); margin-bottom: 18px; }
-.bio-text-content .section-title .highlight { color: var(--secondary-vibrant-accent); }
-
-.teacher-photo-area {
-    flex: 1;
-    max-width: 300px;
-    min-width: 250px; /* Ensures some width for the frame */
-    margin: 20px auto; /* Add some vertical margin too */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 320px; /* Give photo area a fixed height to work with frame */
-}
-.teacher-triangular-frame {
-    width: 260px;
-    height: 300px;
-    position: relative;
-    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-    background-color: var(--medium-grey-text); /* Fallback color or border effect visible if SVG has transparency */
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    border: 4px solid var(--primary-vibrant-accent); /* Visual definition for the frame */
-    opacity: 0; /* Initial state for .in-view animation */
-    overflow: hidden; /* Important to ensure SVG parts outside triangle are clipped */
-}
-.animated-teacher-frame.in-view { /* Applied to .teacher-triangular-frame */
-    animation: teacherFrameReveal 1s cubic-bezier(0.165, 0.84, 0.44, 1) 0.2s forwards;
-}
-.teacher-face-svg {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* 'cover' will fill, 'contain' will show all. Experiment with this! */
-    object-position: center top; /* Try to keep the 'top' of the SVG visible */
-    position: absolute; /* Needed to be positioned within the frame */
-    top: 0;
-    left: 50%;
-    /* Fine-tune translateX and especially translateY to position your SVG's 'face' part */
-    transform: translateX(-50%) translateY(-5%); /* Pushes SVG content slightly up */
-    animation: svgGentleBob 3.5s ease-in-out infinite 1.2s; /* Starts after frame reveals */
-}
-@media (min-width: 860px) {
-    .bio-text-content { order: 1; }
-    .teacher-photo-area { order: 2; margin-left: auto; margin-right: 0; margin-top:0; margin-bottom:0; }
-}
-
-/* --- Testimonials Section --- */
-.testimonials-section { background-color: var(--main-background); }
-.testimonial-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 30px; }
-.testimonial-card {
-    background-color: var(--off-white-section-bg); padding: 28px; border-radius: 12px;
-    box-shadow: var(--shadow-md); border-top: 6px solid var(--primary-serious-color);
-    opacity: 0; transform: translateY(30px);
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out, box-shadow 0.3s ease;
-    position: relative;
-}
-.testimonial-card.in-view { opacity: 1; transform: translateY(0); }
-.testimonial-card:hover { transform: translateY(-6px) !important; box-shadow: var(--shadow-lg); }
-.testimonial-card:nth-child(1).in-view { transition-delay: 0.1s; }
-.testimonial-card:nth-child(2).in-view { transition-delay: 0.25s; }
-.testimonial-card:nth-child(3).in-view { transition-delay: 0.4s; }
-
-.quote-mark-animated {
-    font-family: Georgia, serif; font-size: 3.5rem;
-    color: var(--secondary-vibrant-accent);
-    position: absolute; left: 20px; top: 15px; line-height: 0.8; opacity: 0;
-}
-.testimonial-card.in-view .quote-mark-animated { animation: growAndFadeQuote 0.7s ease-out 0.5s forwards; }
-.testimonial-quote-text { font-style: italic; color: var(--medium-grey-text); margin-bottom: 18px; font-size: 0.95rem; padding-top: 20px; }
-.testimonial-author { font-weight: 600; text-align: right; color: var(--primary-serious-color); font-size: 0.9rem; }
-.testimonial-author::before { content: "— "; }
-
-/* --- Final Call to Action Section --- */
-.final-cta-section {
-    background-color: var(--primary-serious-color); padding: 80px 0;
-    text-align: center; color: var(--white);
-}
-.final-cta-background-animation { /* The main colorful gradient background */
-    position: absolute; top:0; left:0; width: 100%; height: 100%;
-    z-index: 0; /* Bottom-most background layer */
-    background: linear-gradient(135deg, 
-        var(--secondary-vibrant-accent) 0%, 
-        var(--primary-serious-color) 30%, 
-        var(--primary-serious-color) 70%, 
-        var(--primary-vibrant-accent) 100%);
-    background-size: 300% 300%; opacity: 0.15;
-    animation: radiatingBackground 15s ease infinite;
-}
-.final-cta-section .final-cta-content-container { /* The text and button content */
-    position: relative;
-    z-index: 3; /* Above narrative (z-index:1) and main bg animation (z-index:0) */
-}
-.final-cta-title {
-    font-size: 2.4rem; color: var(--white); margin-bottom: 30px; letter-spacing: -0.5px;
-}
-@media (max-width: 768px) { .final-cta-title { font-size: 2rem; } }
-.final-cta-button {
-    background-color: var(--primary-vibrant-accent);
-    color: var(--main-text-color);
-    margin-bottom: 25px;
-    opacity: 0; /* Initial for scroll animation */
-    position: relative; /* Needed for potential explicit z-index */
-    z-index: 4; /* Explicitly high to ensure visibility above all backgrounds in this section */
-}
-.final-cta-button.in-view {
-    animation: slideUpFadeIn 0.8s ease-out 0.3s forwards, pulseGlow 2s infinite 2s;
-    opacity: 1; /* Final for scroll animation */
-}
-/* Hover state inherited from general .cta-button:hover */
-.reassurance-text {
-    font-size: 1.1rem; color: var(--light-text-on-dark-bg);
-    max-width: 620px; margin: 0 auto; line-height: 1.75;
-}
-
-/* --- Footer --- */
-.site-footer {
-    background-color: var(--main-text-color); color: #a0a7ac;
-    text-align: center; padding: 30px 0; font-size: 0.85rem;
-    border-top: 3px solid var(--primary-serious-color);
-}
-.site-footer p { margin-bottom: 0; }
-.site-footer a { color: #c0c7cc; text-decoration: none; transition: color 0.2s ease; }
-.site-footer a:hover { color: var(--primary-vibrant-accent); text-decoration: underline; }
-
+/* Header, Hero, Pain Point, Benefits, Quiz, Teacher (Frame and SVG), Testimonials, Final CTA (Button fix) and Footer */
+/* Make sure ALL styles from your last *working and mobile-optimized* CSS are here for these sections */
+/* ... For example, ensure final-cta-button styles include the opacity and z-index fixes ... */
 
 /* === NARRATIVE BACKGROUND STYLES === */
-
-/* --- Keyframes for Narrative & Teacher Animations (Enhanced) --- */
-@keyframes teacherFrameReveal {
-    from {
-        opacity: 0;
-        transform: translateY(30px) scale(0.9);
-        clip-path: polygon(50% 100%, 0 100%, 100% 100%); /* Start as flat line at bottom */
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-        clip-path: polygon(50% 0%, 0% 100%, 100% 100%); /* Full triangle */
-    }
-}
-@keyframes svgGentleBob {
-    0%, 100% { transform: translateX(-50%) translateY(-5%); } /* Match initial translateY from .teacher-face-svg */
-    50% { transform: translateX(-50%) translateY(-5% - 4px); } /* Bob up slightly */
-}
-@keyframes sparkleFloat {
-    0% { transform: translateY(20px) translateX(0) scale(0.3); opacity: 0; }
-    50% { opacity: 0.12; }
-    100% { transform: translateY(-180px) translateX(30px) scale(1.3); opacity: 0; }
-}
-@keyframes potentialLineDrift {
-    0% { transform: translateX(0) scaleX(0.8); opacity: 0.03; }
-    50% { transform: translateX(15px) scaleX(1.2); opacity: 0.08; }
-    100% { transform: translateX(0) scaleX(0.8); opacity: 0.03; }
-}
-@keyframes bridgeDotFlow {
-    0% { transform: translateX(-30px) scale(0.5); opacity: 0; }
-    50% { opacity: 0.2; }
-    100% { transform: translateX(30px) scale(1); opacity: 0; }
-}
-@keyframes dynamicBlockageWrithe {
-    0% { transform: scaleX(0.9) rotate(-3deg); opacity: 0.15; }
-    50% { transform: scaleX(1.1) rotate(3deg); opacity: 0.08; }
-    100% { transform: scaleX(0.9) rotate(-3deg); opacity: 0.15; }
-}
-@keyframes blockageFragmentFloat {
-    0% { transform: translateY(10px) rotate(0deg) scale(0.5); opacity: 0; }
-    50% { opacity: 0.1; }
-    100% { transform: translateY(-40px) rotate(720deg) scale(1.2); opacity: 0; }
-}
-@keyframes decisiveClear {
-    0% { transform: scale(0.1) rotate(-45deg); opacity: 0; }
-    60% { opacity: 0.18; transform: scale(1.5) rotate(15deg); }
-    100% { transform: scale(2.5) rotate(45deg); opacity: 0; }
-}
-@keyframes energyWashFade {
-    0% { opacity: 0; transform: translateY(30%);}
-    50% { opacity: 0.06; transform: translateY(0%);}
-    100% { opacity: 0; transform: translateY(-30%);}
-}
-@keyframes flowUpEnhanced {
-    0% { transform: translateY(70px) scale(0.5) rotate(-10deg); opacity: 0; }
-    70% { opacity: 0.13; }
-    100% { transform: translateY(-220px) scale(1.2) rotate(10deg); opacity: 0; }
-}
-@keyframes drawPath { to { stroke-dashoffset: 0; } }
-@keyframes quizNodePulse {
-    0%, 100% { transform: scale(1); opacity: 0.1; }
-    50% { transform: scale(1.5); opacity: 0.25; }
-}
-@keyframes guidingAuraPulse {
-    0% { transform: scale(0.7) translate(-50%, -50%); opacity: 0.04; }
-    50% { transform: scale(1.3) translate(-50%, -50%); opacity: 0.09; }
-    100% { transform: scale(0.7) translate(-50%, -50%); opacity: 0.04; }
-}
-@keyframes auraRayShimmer {
-    0% { opacity: 0; transform: scaleY(0.5) rotate(-5deg); }
-    50% { opacity: 0.07; }
-    100% { opacity: 0; transform: scaleY(1.5) rotate(5deg); }
-}
-@keyframes voiceRipple {
-    0% { transform: scale(0.4); opacity: 0; }
-    50% { opacity: 0.09; }
-    100% { transform: scale(2.8); opacity: 0; }
-}
-@keyframes strongConverge {
-    0% { transform: translateY(100px) rotate(15deg) scaleX(0.3); opacity: 0; }
-    70% { opacity: 0.15; }
-    100% { transform: translateY(-70px) rotate(-8deg) scaleX(1.8); opacity: 0; }
-}
-@keyframes convergeLines { /* Keeping the original convergeLines for non-strong lines */
-    0% { transform: translateY(90px) rotate(12deg) scaleX(0.4); opacity: 0; }
-    70% { opacity: 0.12; }
-    100% { transform: translateY(-60px) rotate(-7deg) scaleX(1.6); opacity: 0; }
-}
-@keyframes focusPointGlow {
-    0%, 100% { opacity: 0.08; transform: scale(0.8) translate(-50%, -50%); }
-    50% { opacity: 0.2; transform: scale(1.2) translate(-50%, -50%); }
-}
-
-
-/* --- Generic Narrative Background Container --- */
+/* Generic Narrative Background Container (No change) */
 .narrative-background {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    overflow: hidden;
-    z-index: 1; /* Below .container (z-index: 2) but above section's base */
-    pointer-events: none; /* So they don't interfere with interactions */
+    overflow: hidden; z-index: 1; pointer-events: none;
 }
-.hero-section .hero-background-shape { z-index: 0; } /* SVG wave behind narrative */
+.hero-section .hero-background-shape { z-index: 0; }
 
-/* --- Transitional Narrative Element (Between Hero and Pain Point) --- */
-.narrative-transition-element-area {
-    height: 60px;
-    position: relative;
-    width: 100%;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: -20px; /* Adjust to fine-tune spacing with hero */
-    margin-bottom: -20px; /* Adjust to fine-tune spacing with pain point */
-    z-index: 1; /* Ensure it's above hero bg if overlap, but below next section content */
-}
-.narrative-bridge-dot {
-    width: 6px; height: 6px;
-    background-color: rgba(var(--rgb-secondary-vibrant-accent), 0.8);
+/* --- NEW CREATIVE NARRATIVE ELEMENTS --- */
+
+/* Clouds */
+.narrative-cloud {
+    position: absolute;
     border-radius: 50%;
-    margin: 0 8px;
+    opacity: 0; /* Start invisible, animation brings them in */
+    background-color: rgba(var(--cloud-color-base), 0.4); /* Base soft cloud color */
+    animation-name: cloudDrift;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    z-index: -1; /* Keep clouds furthest back in narrative layer */
+}
+.narrative-cloud.style1 { /* Typical fluffy */
+    width: 150px; height: 50px;
+    border-radius: 25px / 40px; /* More oval */
+    animation-duration: 60s; /* Slow drift */
+}
+.narrative-cloud.style1::before, .narrative-cloud.style1::after {
+    content: ''; position: absolute; background-color: inherit; border-radius: 50%;
+}
+.narrative-cloud.style1::before { width: 80px; height: 80px; top: -30px; left: 20px; }
+.narrative-cloud.style1::after { width: 100px; height: 100px; top: -40px; right: 10px; }
+
+.narrative-cloud.style2 { /* Longer, thinner */
+    width: 200px; height: 40px;
+    border-radius: 20px;
+    animation-duration: 75s;
+    left: -200px; /* Ensures it starts off-screen properly */
+}
+.narrative-cloud.style2::before {
+    content: ''; position: absolute; background-color: inherit; border-radius: 50%;
+    width: 120px; height: 60px; top: -20px; left: 50%; transform: translateX(-50%);
+}
+.narrative-cloud.style3 { /* Smaller, scattered */
+    width: 100px; height: 35px;
+    border-radius: 20px / 30px;
+    animation-duration: 50s;
+}
+.narrative-cloud.style3::before { content: ''; position: absolute; background-color: inherit; border-radius: 50%; width: 50px; height: 50px; top: -20px; left: 10px; }
+.narrative-cloud.style3::after { content: ''; position: absolute; background-color: inherit; border-radius: 50%; width: 60px; height: 60px; top: -25px; right: 5px; }
+
+/* Cloud Modifiers */
+.narrative-cloud.dense { background-color: rgba(var(--cloud-color-base), 0.55); }
+.narrative-cloud.bright { background-color: rgba(var(--cloud-color-base), 0.3); box-shadow: 0 0 20px 10px rgba(var(--white), 0.3); }
+.narrative-cloud.wispy { background-color: rgba(var(--cloud-color-base), 0.25); transform: scale(0.8); }
+.narrative-cloud.calm { animation-duration: 90s; } /* Even slower */
+.narrative-cloud.clear-sky { background-color: rgba(var(--cloud-color-base), 0.15); }
+.narrative-cloud.sunset-glow { background-image: linear-gradient(to top, rgba(var(--rgb-primary-vibrant-accent),0.2), rgba(var(--cloud-color-base), 0.3)); }
+.narrative-cloud.tiny-transition { width: 60px; height: 20px; animation-duration: 20s; opacity: 0.7 !important; transform: translateX(0) !important; /* override drift temporarily for static placement */ }
+
+/* Sound Waves (General structure for a simple div-based wave) */
+.narrative-soundwave-base { /* Common for different wave types */
+    position: absolute;
+    border-radius: 50%;
+    border: 2px solid var(--soundwave-color-base);
     opacity: 0;
-    animation: bridgeDotFlow 3s infinite ease-in-out;
 }
-.narrative-bridge-dot:nth-child(1) { animation-delay: 0s; }
-.narrative-bridge-dot:nth-child(2) { animation-delay: 0.2s; }
-.narrative-bridge-dot:nth-child(3) { animation-delay: 0.4s; }
-.narrative-bridge-dot:nth-child(4) { animation-delay: 0.6s; }
-.narrative-bridge-dot:nth-child(5) { animation-delay: 0.8s; }
+.narrative-distant-wave {
+    position: absolute;
+    width: 80px; height: 80px;
+    border: 2px solid rgba(var(--rgb-secondary-vibrant-accent), 0.2);
+    border-radius: 50%;
+    opacity: 0;
+    animation: distantWavePulse 5s infinite ease-in-out;
+}
+.narrative-distant-wave.delayed { animation-delay: 2.5s; }
 
+.narrative-blocked-wave {
+    position: absolute;
+    width: 100px; height: 30px; /* More elongated */
+    border: 2px solid rgba(var(--rgb-medium-grey-text), 0.4);
+    border-radius: 15px; /* Oval */
+    opacity: 0.1;
+    animation: blockedWaveJitter 1s infinite;
+    left: 20%; top: 60%;
+}
+.narrative-flowing-wave {
+    position: absolute;
+    width: 150px; height: 150px; /* Larger flowing */
+    border: 2px solid rgba(var(--rgb-secondary-vibrant-accent), 0.3);
+    border-radius: 50%;
+    opacity: 0;
+    animation: flowingWave 6s infinite ease-in-out alternate;
+    top: 20%; left: 10%;
+}
+.narrative-flowing-wave.alt { top: 60%; left: 70%; animation-delay: 1s; border-color: rgba(var(--rgb-primary-vibrant-accent), 0.3); }
 
-/* --- Hero Section Narrative --- */
-.hero-narrative-bg .narrative-spark {
-    position: absolute; width: 8px; height: 8px;
-    background-color: rgba(var(--rgb-primary-vibrant-accent), 0.75);
+.narrative-teacher-soundwave.gentle {
+    position: absolute;
+    width: 120px; height: 120px;
+    border: 2px solid rgba(var(--rgb-primary-vibrant-accent), 0.25);
+    border-radius: 50%;
+    opacity: 0;
+    animation: gentleSoundWaveExpand 5s infinite ease-in-out 0.5s;
+    /* Position near teacher aura - needs media query adjustments */
+    top: 50%; left: 50%; transform: translate(-150%, -50%); /* Example */
+}
+
+.narrative-positive-sound-ripple { /* Reuse of existing voice ripple */
+    position: absolute; width: 60px; height: 60px;
+    border: 3px solid rgba(var(--rgb-secondary-vibrant-accent), 0.5); /* Stronger */
     border-radius: 50%; opacity: 0;
-    animation: sparkleFloat 7.5s infinite linear;
+    animation: positiveSoundRipple 4s infinite linear;
 }
-.hero-narrative-bg .narrative-spark:nth-child(1) { top: 12%; left: 8%; animation-delay: 0s; width: 7px; height: 7px; }
-.hero-narrative-bg .narrative-spark:nth-child(2) { top: 33%; left: 88%; animation-delay: 1.3s; width:11px; height: 11px; }
-.hero-narrative-bg .narrative-spark:nth-child(3) { top: 78%; left: 12%; animation-delay: 2.6s; }
-.hero-narrative-bg .narrative-spark:nth-child(4) { top: 52%; left: 55%; animation-delay: 3.3s; background-color: rgba(var(--rgb-secondary-vibrant-accent), 0.7);}
-.hero-narrative-bg .narrative-spark:nth-child(5) { top: 82%; left: 72%; animation-delay: 4.2s; width:8px; height: 8px;}
+.narrative-positive-sound-ripple.large { width: 90px; height: 90px; animation-duration: 5s; }
+.narrative-positive-sound-ripple.small { width: 40px; height: 40px; animation-duration: 3.5s; }
 
-.narrative-potential-line {
+.narrative-focused-soundwave.strong {
     position: absolute;
-    height: 1px;
-    width: 150px;
-    background-color: rgba(var(--rgb-primary-serious-color), 0.4);
-    opacity: 0.05;
-    animation: potentialLineDrift 12s infinite alternate ease-in-out;
-}
-.hero-narrative-bg .narrative-potential-line:nth-child(odd) { top: 25%; left: 20%; transform: rotate(-10deg); animation-delay: 0.5s;}
-.hero-narrative-bg .narrative-potential-line:nth-child(even) { bottom: 20%; right: 15%; transform: rotate(15deg); width: 200px; animation-delay: 1.5s;}
-
-
-/* --- Pain Point Section Narrative --- */
-.pain-narrative-bg .narrative-blockage-line.dynamic {
-    position: absolute; height: 2.5px; width: 170px;
-    background-color: rgba(var(--rgb-primary-serious-color), 0.6);
-    opacity: 0.1; animation: dynamicBlockageWrithe 8s infinite alternate ease-in-out;
-}
-.pain-narrative-bg .narrative-blockage-line.dynamic:nth-child(1) { top: 22%; left: 10%; transform: rotate(20deg); animation-delay: 0s; }
-.pain-narrative-bg .narrative-blockage-line.dynamic:nth-child(2) { top: 68%; right: 5%; transform: rotate(-15deg); animation-delay: 0.7s; width: 210px; }
-
-.narrative-blockage-fragment {
-    position: absolute;
-    width: 8px; height: 8px;
-    background-color: rgba(var(--rgb-medium-grey-text), 0.5);
+    height: 4px; /* Thicker line for focus */
+    background-color: rgba(var(--rgb-primary-vibrant-accent), 0.6);
     border-radius: 2px;
     opacity: 0;
-    animation: blockageFragmentFloat 6s infinite linear;
+    animation: focusedSoundWavePropagate 3s infinite ease-out;
+    left: 0; /* Animation handles x-translation for propagate effect */
+    /* Positioning based on section */
 }
-.pain-narrative-bg .narrative-blockage-fragment:nth-child(3) { top: 40%; left: 30%; animation-delay: 1s;}
-.pain-narrative-bg .narrative-blockage-fragment:nth-child(4) { top: 50%; left: 70%; animation-delay: 2s;}
+.narrative-focused-soundwave.strong.delayed { animation-delay: 0.8s; }
 
-.pain-narrative-bg .narrative-clearing-element.decisive {
-    position: absolute; top: 50%; left: 50%;
-    width: 130px; height: 130px; border-radius: 50%;
-    background: radial-gradient(circle, rgba(var(--rgb-secondary-vibrant-accent), 0.1) 0%, rgba(var(--rgb-secondary-vibrant-accent), 0) 70%);
-    animation: decisiveClear 7s ease-in-out 1.8s infinite;
-    transform: translate(-50%, -50%) scale(0); opacity: 0;
-}
-
-
-/* --- Benefits Section Narrative --- */
-.benefits-narrative-bg .narrative-energy-wash {
+/* Barrier Lines (Pain Point) */
+.narrative-barrier-line {
     position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: linear-gradient(to bottom, rgba(var(--rgb-secondary-vibrant-accent), 0) 0%, rgba(var(--rgb-secondary-vibrant-accent), 0.08) 50%, rgba(var(--rgb-secondary-vibrant-accent), 0) 100%);
-    animation: energyWashFade 8s infinite ease-in-out;
+    height: 2px;
+    max-width: 150px; /* Control its length */
+    background-color: rgba(var(--rgb-medium-grey-text), 0.5);
     opacity: 0;
+    animation: barrierLineAppear 1.5s forwards ease-out;
+    top: 30%; left: 10%;
 }
-.benefits-narrative-bg .narrative-flow-particle {
-    position: absolute; width: 15px; height: 15px;
-    background-color: rgba(var(--rgb-primary-vibrant-accent), 0.65);
-    border-radius: 55% 45% 75% 25% / 45% 55% 45% 55%; opacity: 0;
-    animation: flowUpEnhanced 6.5s infinite linear;
-}
-.benefits-narrative-bg .narrative-flow-particle.fast { animation-duration: 5s; width: 12px; height: 12px;}
-.benefits-narrative-bg .narrative-flow-particle.slow { animation-duration: 8s; width: 18px; height: 18px;}
+.narrative-barrier-line.slanted { top: 70%; right: 15%; left: auto; transform: rotate(15deg); max-width: 120px; animation-delay: 0.5s; }
 
-.benefits-narrative-bg .narrative-flow-particle:nth-child(2) { bottom: 0%; left: 15%; animation-delay: 0s; }
-.benefits-narrative-bg .narrative-flow-particle:nth-child(3) { bottom: 0%; left: 80%; animation-delay: 1.1s; background-color: rgba(var(--rgb-secondary-vibrant-accent),0.65); }
-.benefits-narrative-bg .narrative-flow-particle:nth-child(4) { bottom: 0%; left: 40%; animation-delay: 1.9s; }
-.benefits-narrative-bg .narrative-flow-particle:nth-child(5) { bottom: 0%; left: 60%; animation-delay: 2.7s; background-color: rgba(var(--rgb-primary-vibrant-accent),0.5); }
-.benefits-narrative-bg .narrative-flow-particle:nth-child(6) { bottom: 0%; left: 95%; animation-delay: 0.5s; }
-
-
-/* --- Quiz Section Narrative --- */
-.quiz-narrative-bg .narrative-quiz-path-svg {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-}
-.narrative-quiz-path-svg .quiz-svg-path-element {
-    stroke-dasharray: 1200; stroke-dashoffset: 1200;
-    animation: drawPath 18s ease-in-out infinite alternate;
-}
-.narrative-quiz-path-svg .quiz-svg-path-element:nth-child(2) { animation-delay: 1.5s; }
-
-.narrative-quiz-node {
+/* Path Sound Node (Quiz) - different from quiz-node */
+.narrative-path-sound-node {
     position: absolute;
-    width: 10px; height: 10px;
-    background-color: rgba(var(--rgb-primary-vibrant-accent), 0.8);
+    width: 12px; height: 12px;
+    background-color: rgba(var(--rgb-primary-vibrant-accent), 0.5);
     border-radius: 50%;
-    box-shadow: 0 0 8px rgba(var(--rgb-primary-vibrant-accent), 0.5);
-    animation: quizNodePulse 3s infinite ease-in-out;
+    opacity: 0.7;
+    box-shadow: 0 0 8px rgba(var(--rgb-primary-vibrant-accent), 0.4);
+    animation: pathSoundNodeGlow 2.5s infinite ease-in-out;
+    /* Position these on top of your SVG paths manually or with JS */
 }
-/* Note: Nth-child selectors here apply to children of .quiz-narrative-bg *after* the SVG */
-.quiz-narrative-bg .narrative-quiz-node:nth-of-type(1) { top: 25%; left: 40%; animation-delay: 2s; }
-.quiz-narrative-bg .narrative-quiz-node:nth-of-type(2) { top: 60%; left: 70%; animation-delay: 5s; background-color: rgba(var(--rgb-secondary-vibrant-accent),0.8); box-shadow: 0 0 8px rgba(var(--rgb-secondary-vibrant-accent),0.5); }
-.quiz-narrative-bg .narrative-quiz-node:nth-of-type(3) { top: 40%; left: 15%; animation-delay: 8s; }
 
-
-/* --- About Teacher Section Narrative --- */
-.teacher-narrative-bg .narrative-guiding-aura {
-    position: absolute; top: 50%; left: 50%;
-    width: 400px; height: 400px; /* Slightly larger for the frame */
-    background: radial-gradient(circle, rgba(var(--rgb-primary-vibrant-accent), 0.15) 0%, rgba(var(--rgb-primary-vibrant-accent), 0) 70%);
-    border-radius: 50%; transform: translate(-50%, -50%);
-    animation: guidingAuraPulse 9.5s ease-in-out infinite;
-}
-.narrative-aura-ray {
+/* Speech Bubble Echo (Testimonials) */
+.narrative-speech-bubble-echo {
     position: absolute;
-    width: 2px; height: 80px;
-    background-color: rgba(var(--rgb-primary-vibrant-accent), 0.3);
+    width: 50px; height: 40px;
+    background-color: rgba(var(--rgb-secondary-vibrant-accent), 0.1);
+    border: 1px solid rgba(var(--rgb-secondary-vibrant-accent), 0.2);
+    border-radius: 10px 10px 10px 3px; /* Speech bubble shape */
     opacity: 0;
-    animation: auraRayShimmer 7s infinite ease-in-out;
-    transform-origin: bottom center;
+    animation: speechBubbleEcho 4s infinite ease-out;
+    transform-origin: bottom left;
 }
-/* Nth-child for rays refers to them as direct children of teacher-narrative-bg, after the aura div */
-.teacher-narrative-bg .narrative-aura-ray:nth-of-type(1) { top: calc(50% - 100px); left: calc(50% - 10px); transform: rotate(-30deg); animation-delay: 0.5s;}
-.teacher-narrative-bg .narrative-aura-ray:nth-of-type(2) { top: calc(50% - 90px); left: calc(50% + 5px); transform: rotate(10deg); animation-delay: 1.5s;}
-.teacher-narrative-bg .narrative-aura-ray:nth-of-type(3) { top: calc(50% - 110px); left: calc(50% - 5px); transform: rotate(40deg); animation-delay: 2.5s;}
+.narrative-speech-bubble-echo::after { /* Tail of bubble */
+    content: ''; position: absolute;
+    bottom: -8px; left: 10px;
+    width: 0; height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 10px solid rgba(var(--rgb-secondary-vibrant-accent), 0.15);
+}
+.narrative-speech-bubble-echo.delayed { animation-delay: 1.5s; }
 
-@media (min-width: 860px) {
-    .teacher-narrative-bg .narrative-guiding-aura {
-       left: calc(100% - 150px - 15px); /* Approx center X of teacher photo area */
-       top: 50%; /* Centered vertically with photo area */
-    }
-    .teacher-narrative-bg .narrative-aura-ray {
-        /* Base position centered on the guiding aura's new position */
-        left: calc(100% - 150px - 15px);
+/* Starburst (Final CTA) */
+.narrative-starburst-element {
+    position: absolute;
+    width: 50px; height: 50px;
+    opacity: 0;
+    animation: starburst 3.5s infinite ease-out;
+}
+.narrative-starburst-element::before, .narrative-starburst-element::after {
+    content: ''; position: absolute;
+    top: 50%; left: 50%;
+    width: 100%; height: 4px; /* Line thickness */
+    background-color: rgba(var(--rgb-primary-vibrant-accent), 0.5);
+    border-radius: 2px;
+    transform-origin: center;
+    transform: translate(-50%, -50%) rotate(0deg);
+}
+.narrative-starburst-element::after { transform: translate(-50%, -50%) rotate(90deg); }
+/* Could add more pseudo-elements for more points to the star */
+
+
+/* --- Placement of new narrative elements within sections --- */
+/* These are examples. Adjust top/left/right/bottom and animation delays! */
+
+/* Hero BG Elements */
+.hero-narrative-bg .narrative-cloud.style1 { top: 10%; left: -150px; animation-delay: 0s; }
+.hero-narrative-bg .narrative-cloud.style2 { top: 60%; left: -200px; animation-delay: 10s; }
+.hero-narrative-bg .narrative-cloud.style3 { top: 30%; left: -100px; animation-delay: 20s; }
+.hero-narrative-bg .narrative-distant-wave:nth-of-type(4) { top: 20%; left: 25%;} /* Adjust selector if more elements */
+.hero-narrative-bg .narrative-distant-wave.delayed { top: 70%; right: 20%; left:auto; }
+/* Sparks are from previous iteration */
+
+/* Transition Element */
+.narrative-transition-element-area .narrative-cloud.tiny-transition {
+    position: absolute; /* Ensure it's positioned */
+    top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.6); /* Center & small */
+    animation: none; /* No drift in this static placement */
+}
+
+
+/* Pain Point BG Elements */
+.pain-narrative-bg .narrative-cloud.style2.dense { top: 15%; left: -200px; animation-delay: 1s; }
+.pain-narrative-bg .narrative-blocked-wave { top: 55%; left: 40%; transform-origin: center; }
+.pain-narrative-bg .narrative-barrier-line { top: 25%; left: 10%; }
+.pain-narrative-bg .narrative-barrier-line.slanted { top: 70%; right: 10%; transform: rotate(20deg); }
+/* Blockage fragments & clearing element from previous */
+
+/* Benefits BG Elements */
+.benefits-narrative-bg .narrative-cloud.style1.bright { top: 5%; left: -150px; animation-delay: 2s;}
+.benefits-narrative-bg .narrative-cloud.style3.bright { top: 65%; left: -100px; animation-delay: 12s;}
+.benefits-narrative-bg .narrative-flowing-wave { top: 25%; left: 15%; }
+.benefits-narrative-bg .narrative-flowing-wave.alt { top: 50%; left: 60%; }
+/* Energy wash & flow particles from previous */
+
+/* Quiz BG Elements */
+.quiz-narrative-bg .narrative-cloud.style1.wispy { top: 70%; left: -150px; animation-delay: 3s;}
+.quiz-narrative-bg .narrative-path-sound-node:nth-of-type(2) { top: 30%; left: 35%; } /* Example, after SVG */
+.quiz-narrative-bg .narrative-path-sound-node:nth-of-type(3) { top: 65%; left: 60%; animation-delay: 0.8s; }
+
+/* Teacher BG Elements */
+.teacher-narrative-bg .narrative-cloud.style3.calm { top: 10%; left: -100px; animation-delay: 5s;}
+.teacher-narrative-bg .narrative-teacher-soundwave.gentle {
+    /* Needs precise positioning relative to triangular frame using media queries if complex */
+    /* Simple example for now */
+    top: 50%; left: 20%;
+    transform: translate(0, -50%); /* Default */
+}
+@media (min-width: 860px) { /* Desktop: relative to teacher on right */
+    .teacher-narrative-bg .narrative-teacher-soundwave.gentle {
+        left: auto; right: calc(100% - 150px - 15px + 130px); /* To the left of teacher */
         top: 50%;
+        transform: translateY(-50%);
     }
-     .teacher-narrative-bg .narrative-aura-ray:nth-of-type(1) { transform: translateY(-100px) rotate(-30deg) translateX(-10px); }
-     .teacher-narrative-bg .narrative-aura-ray:nth-of-type(2) { transform: translateY(-90px) rotate(10deg) translateX(5px); }
-     .teacher-narrative-bg .narrative-aura-ray:nth-of-type(3) { transform: translateY(-110px) rotate(40deg) translateX(-5px); }
 }
-@media (max-width: 859px) {
-     .teacher-narrative-bg .narrative-guiding-aura { top: calc(50% + 70px); left: 50%; } /* Adjust if teacher photo is lower on mobile */
-     .teacher-narrative-bg .narrative-aura-ray {
+@media (max-width: 859px) { /* Mobile: below stacked teacher */
+     .teacher-narrative-bg .narrative-teacher-soundwave.gentle {
+        top: calc(50% + 70px + 160px); /* Below where frame ends */
         left: 50%;
-        top: calc(50% + 70px);
-     }
-    .teacher-narrative-bg .narrative-aura-ray:nth-of-type(1) { transform: translateY(-100px) rotate(-30deg) translateX(-10px); }
-    .teacher-narrative-bg .narrative-aura-ray:nth-of-type(2) { transform: translateY(-90px) rotate(10deg) translateX(5px); }
-    .teacher-narrative-bg .narrative-aura-ray:nth-of-type(3) { transform: translateY(-110px) rotate(40deg) translateX(-5px); }
+        transform: translateX(-50%);
+    }
 }
 
 
-/* --- Testimonials Section Narrative --- */
-.testimonials-narrative-bg .narrative-voice-ripple {
-    position: absolute; width: 65px; height: 65px;
-    border: 2.8px solid rgba(var(--rgb-secondary-vibrant-accent), 0.4);
-    border-radius: 50%; opacity: 0;
-    animation: voiceRipple 6s infinite linear;
+/* Testimonials BG Elements */
+.testimonials-narrative-bg .narrative-cloud.style1.clear-sky { top: 10%; left: -150px; animation-delay: 0.5s; opacity:0.8 !important; /* Static cloud */ animation-name:none; transform: translateX(30vw); }
+.testimonials-narrative-bg .narrative-speech-bubble-echo:nth-of-type(2) { top: 20%; left: 15%; } /* after cloud */
+.testimonials-narrative-bg .narrative-speech-bubble-echo.delayed { top: 60%; left: 70%; }
+.testimonials-narrative-bg .narrative-positive-sound-ripple.large { top: 40%; left: 40%; }
+.testimonials-narrative-bg .narrative-positive-sound-ripple.small { top: 70%; left: 20%; animation-delay: 1s; }
+
+/* Final CTA BG Elements */
+.final-cta-narrative-bg .narrative-cloud.style2.sunset-glow { top: 20%; left: -200px; animation-delay: 1s; }
+.final-cta-narrative-bg .narrative-focused-soundwave.strong:nth-of-type(2) { top: 30%; } /* After cloud */
+.final-cta-narrative-bg .narrative-focused-soundwave.strong.delayed { top: 60%; animation-delay: 0.5s; }
+.final-cta-narrative-bg .narrative-starburst-element { top: 45%; left: 45%; transform-origin: center; } /* Near center, under text potentially */
+
+
+/* --- MOBILE OPTIMIZATIONS FOR NARRATIVE ELEMENTS --- */
+@media (max-width: 768px) {
+    .narrative-cloud.style1 { width: 120px; height: 40px; }
+    .narrative-cloud.style1::before { width: 60px; height: 60px; top: -25px; }
+    .narrative-cloud.style1::after { width: 80px; height: 80px; top: -30px; }
+    .narrative-cloud.style2 { width: 160px; height: 30px; }
+    .narrative-cloud.style2::before { width: 100px; height: 50px; top: -15px;}
+    .narrative-cloud.style3 { width: 80px; height: 25px; }
+
+    .narrative-distant-wave { width: 60px; height: 60px; }
+    .narrative-blocked-wave { width: 80px; height: 25px; }
+    .narrative-flowing-wave { width: 120px; height: 120px; }
+    .narrative-teacher-soundwave.gentle { width: 100px; height: 100px; }
+    .narrative-positive-sound-ripple { width: 50px; height: 50px; }
+    .narrative-positive-sound-ripple.large { width: 70px; height: 70px; }
+    .narrative-positive-sound-ripple.small { width: 30px; height: 30px; }
+
+    .narrative-speech-bubble-echo { width: 40px; height: 30px; }
+    .narrative-starburst-element { width: 40px; height: 40px; }
 }
-.testimonials-narrative-bg .narrative-voice-ripple.large { width: 80px; height: 80px; animation-duration: 7s; }
-.testimonials-narrative-bg .narrative-voice-ripple.small { width: 50px; height: 50px; animation-duration: 5s; }
 
-.testimonials-narrative-bg .narrative-voice-ripple:nth-child(1) { top: 15%; left: 10%; animation-delay: 0s; } /* Large */
-.testimonials-narrative-bg .narrative-voice-ripple:nth-child(2) { top: 58%; left: 85%; animation-delay: 1.5s; border-color: rgba(var(--rgb-primary-serious-color),0.4); } /* Regular */
-.testimonials-narrative-bg .narrative-voice-ripple:nth-child(3) { top: 80%; left: 35%; animation-delay: 2.6s; } /* Small */
-.testimonials-narrative-bg .narrative-voice-ripple:nth-child(4) { top: 30%; left: 50%; animation-delay: 3.5s; border-color: rgba(var(--rgb-primary-vibrant-accent),0.3);} /* Regular */
+@media (max-width: 480px) {
+    /* Hide some less critical or more complex elements on very small screens */
+    .hero-narrative-bg .narrative-cloud.style2, .hero-narrative-bg .narrative-distant-wave.delayed { display: none; }
+    .pain-narrative-bg .narrative-barrier-line.slanted { display: none; }
+    .benefits-narrative-bg .narrative-cloud.style3.bright {display: none;}
+    .teacher-narrative-bg .narrative-aura-ray:nth-of-type(3) {display:none;}
+    .testimonials-narrative-bg .narrative-speech-bubble-echo.delayed {display:none;}
+    .final-cta-narrative-bg .narrative-starburst-element {display:none;}
 
+    .narrative-cloud.style1 { width: 100px; height: 35px; }
+    .narrative-cloud.style1::before { width: 50px; height: 50px; top: -20px; }
+    .narrative-cloud.style1::after { width: 60px; height: 60px; top: -25px; }
 
-/* --- Final CTA Section Narrative --- */
-/* .final-cta-section .final-cta-background-animation already has z-index: 0 */
-/* .final-cta-section .narrative-background already has z-index: 1 */
-.final-cta-narrative-bg .narrative-converging-line {
-    position: absolute; width: 4px; height: 95px;
-    background-color: rgba(var(--rgb-primary-vibrant-accent), 0.65);
-    opacity: 0; animation: convergeLines 8s infinite linear; /* Uses normal convergeLines by default */
-    bottom: 0; transform-origin: bottom center;
+    .pain-narrative-bg .narrative-clearing-element.decisive { width:90px; height:90px;}
+
+    /* Further reduce count or complexity */
+    .benefits-narrative-bg .narrative-flow-particle:nth-child(3) {display:none;}
 }
-.final-cta-narrative-bg .narrative-converging-line.strong {
-    animation-name: strongConverge; /* Overrides convergeLines for .strong */
-    width: 5px; height: 110px;
-}
-
-.final-cta-narrative-bg .narrative-converging-line:nth-of-type(1) { left: 20%; animation-delay: 0s; } /* Strong */
-.final-cta-narrative-bg .narrative-converging-line:nth-of-type(2) { left: 50%; animation-delay: 0.8s; } /* Regular */
-.final-cta-narrative-bg .narrative-converging-line:nth-of-type(3) { left: 80%; animation-delay: 1.6s; } /* Strong */
-
-.narrative-focus-point {
-    position: absolute;
-    bottom: 15%; /* Adjust if needed to visually align near the button area */
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 30px; height: 30px;
-    background-color: rgba(var(--rgb-primary-vibrant-accent), 0.7);
-    border-radius: 50%;
-    box-shadow: 0 0 20px 5px rgba(var(--rgb-primary-vibrant-accent), 0.4);
-    animation: focusPointGlow 3s infinite ease-in-out;
-    opacity: 0; /* Initial for animation */
-}
-.final-cta-narrative-bg .narrative-focus-point { animation-delay: 2s; }
