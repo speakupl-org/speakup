@@ -17,7 +17,7 @@
     <header class="sticky-header">
         <div class="container">
             <a href="#hero" class="logo-area" aria-label="Speak Up Homepage">
-                <img src="images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon">
+                <img src="images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon"> <!-- MAKE SURE images/logo.svg EXISTS -->
                 <span class="logo-text">Speak <span class="up">Up</span></span>
             </a>
             <a href="#final-cta" class="cta-button header-cta">Sua Aula Intro Grátis!</a>
@@ -107,7 +107,7 @@
                         <div class="benefit-box">
                             <svg class="checkmark-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M9.00004 16.17L4.83004 12L3.41004 13.41L9.00004 19L21 7.00001L19.59 5.59001L9.00004 16.17Z"/></svg>
                         </div>
-                        <span class="benefit-text">Ter Conversas Reais, Foco na Prática!</span>
+                        <span class="benefit-text">Conversas Reais, Foco na Prática!</span>
                     </div>
                     <div class="benefit-item"> 
                         <div class="benefit-box">
@@ -144,13 +144,27 @@
             </div>
             <div class="container"> 
                 <h2 class="section-title animated-title">Qual Seu Maior Desafio Para Falar Inglês com Confiança?</h2>
-                <div class="quiz-placeholder"> 
-                    <p>Um breve quiz interativo (3-5 perguntas) aparecerá aqui para entendermos melhor suas necessidades.</p>
-                    <p>Suas respostas nos ajudarão a guiar sua jornada para a fluência!</p>
+                
+                <!-- Tally Form Embed Code START -->
+                <div class="tally-form-wrapper">
+                    <iframe data-tally-src="https://tally.so/embed/wagb99?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" 
+                            loading="lazy" 
+                            width="100%" 
+                            height="307" 
+                            frameborder="0" 
+                            marginheight="0" 
+                            marginwidth="0" 
+                            title="Um breve quiz interativo">
+                    </iframe>
                 </div>
-                <a href="#" class="cta-button quiz-cta">Iniciar Quiz!</a> 
+                <!-- Tally Form Embed Code END -->
+                                
             </div>
         </section>
+        <!-- Tally Script (as provided by user) -->
+        <script>
+            var d=document,w="https://tally.so/widgets/embed.js",v=function(){"undefined"!=typeof Tally?Tally.loadEmbeds():d.querySelectorAll("iframe[data-tally-src]:not([src])").forEach((function(e){e.src=e.dataset.tallySrc}))};if("undefined"!=typeof Tally)v();else if(d.querySelector('script[src="'+w+'"]')==null){var s=d.createElement("script");s.src=w,s.onload=v,s.onerror=v,d.body.appendChild(s);}
+        </script>
 
         <!-- Sobre o Professor Luiz Section: Guidance, Connection (Circular Photo) -->
         <section id="about-teacher" class="about-teacher-section section">
@@ -168,7 +182,7 @@
                     <h2 class="section-title animated-title">Sobre o <span class="highlight">Professor Luiz</span></h2>
                     <p class="animated-text">Olá! Sou o Professor Luiz, e minha maior dedicação é ajudar brasileiros como você a descobrir o prazer e a confiança de se comunicar em inglês. Acredito que aprender um novo idioma abre portas e transforma vidas, e estou aqui para tornar essa jornada o mais tranquila, eficaz e motivadora possível para você. Vamos juntos alcançar seus objetivos no inglês?</p>
                 </div>
-                <div class="teacher-photo-area animated-teacher-frame" id="teacherPhoto"> <!-- Entry animation on area -->
+                <div class="teacher-photo-area animated-teacher-frame" id="teacherPhoto"> 
                     <img src="images/Face.svg" alt="Ilustração do Professor Luiz" class="teacher-face-svg"> <!-- Ensure images/Face.svg exists -->
                 </div>
             </div>
