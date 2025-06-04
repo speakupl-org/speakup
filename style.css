@@ -1,235 +1,518 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Speak Up - Conquiste a Fluência Definitiva</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- Optional: Link to Google Fonts
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
-    -->
-</head>
-<body>
+/* --- Global Styles & Variables --- */
+:root {
+    --main-background: #FFFFFF;
+    --off-white-section-bg: #F7F9FA;
+    --primary-serious-color: #006A70;
+    --primary-vibrant-accent: #FDB813;
+    --secondary-vibrant-accent: #00A09A;
+    --main-text-color: #1f1f1f;
+    
+    --white: #FFFFFF;
+    --light-text-on-dark-bg: #EFF3F4;
+    --medium-grey-text: #586065;
+    --border-light: #DEE2E6;
 
-    <!-- Sticky Header -->
-    <header class="sticky-header">
-        <div class="container">
-            <a href="#hero" class="logo-area" aria-label="Speak Up Homepage">
-                <img src="images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon">
-                <span class="logo-text">Speak <span class="up">Up</span></span>
-            </a>
-            <a href="#final-cta" class="cta-button header-cta">Sua Aula Intro Grátis!</a>
-        </div>
-    </header>
+    --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 
-    <main>
-        <!-- Hero Section -->
-        <section id="hero" class="hero-section">
-            <div class="narrative-background hero-narrative-bg">
-                <div class="narrative-spark"></div>
-                <div class="narrative-spark"></div>
-                <div class="narrative-spark"></div>
-                <div class="narrative-spark"></div>
-                <div class="narrative-spark"></div>
-            </div>
-            <div class="hero-background-shape">
-                <svg viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M0,160 C120,120 240,120 360,140 C480,160 600,200 720,190 C840,180 960,120 1080,110 C1200,100 1320,140 1440,160 L1440,320 L0,320 Z" fill-opacity="0.05"></path>
-                    <path d="M0,220 C100,200 200,150 300,160 C400,170 500,230 600,240 C700,250 800,210 900,190 C1000,170 1100,170 1200,200 C1300,230 1440,220 1440,220 L1440,320 L0,320 Z" fill-opacity="0.07"></path>
-                </svg>
-            </div>
-            <div class="hero-content-wrapper container">
-                <h1 class="hero-title">Chegou a Sua Vez de Conquistar a <span class="highlight-animated">Fluência Definitiva</span>: <br class="desktop-break">Speak Up e Comunique-se com o Mundo!</h1>
-                <p class="hero-subtitle">Aprenda a se expressar em inglês com naturalidade e confiança através de um método de apoio, desenhado para brasileiros.</p>
-                <a href="#final-cta" class="cta-button cta-button-large hero-cta">Sua Aula Intro Grátis!</a>
-            </div>
-            <div class="hero-line hero-line-1"></div>
-            <div class="hero-line hero-line-2"></div>
-        </section>
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.03), 0 1px 1px rgba(0,0,0,0.02);
+    --shadow-md: 0 3px 5px -1px rgba(0,0,0,0.04), 0 2px 3px -1px rgba(0,0,0,0.03);
+    --shadow-lg: 0 8px 12px -3px rgba(0,0,0,0.04), 0 3px 5px -2px rgba(0,0,0,0.02);
 
-        <!-- Pain Point & Solution Introduction Section -->
-        <section id="pain-point" class="pain-point-section section">
-            <div class="narrative-background pain-narrative-bg">
-                <div class="narrative-blockage-line"></div>
-                <div class="narrative-blockage-line"></div>
-                <div class="narrative-clearing-element"></div>
-            </div>
-            <div class="container">
-                <div class="pain-point-visual">
-                    <div class="blockage-element"></div>
-                </div>
-                <p class="empathetic-text animated-text">Muitos brasileiros dedicam anos ao estudo do inglês, mas sentem um bloqueio na hora de falar. Se essa é a sua realidade, o "Speak Up" está aqui para mudar essa história e mostrar um caminho eficaz para a fluência.</p>
-            </div>
-        </section>
+    /* RGB versions for rgba() narrative backgrounds */
+    --rgb-primary-serious-color: 0, 106, 112;
+    --rgb-primary-vibrant-accent: 253, 184, 19;
+    --rgb-secondary-vibrant-accent: 0, 160, 154;
+}
 
-        <!-- Benefits Section -->
-        <section id="benefits" class="benefits-section section">
-            <div class="narrative-background benefits-narrative-bg">
-                <div class="narrative-flow-particle"></div>
-                <div class="narrative-flow-particle"></div>
-                <div class="narrative-flow-particle"></div>
-                <div class="narrative-flow-particle"></div>
-            </div>
-            <div class="container">
-                <h2 class="section-title animated-title">Com a Speak Up, <span class="highlight">você vai:</span></h2>
-                <div class="benefit-list">
-                    <div class="benefit-item">
-                        <div class="benefit-box">
-                            <svg class="checkmark-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M9.00004 16.17L4.83004 12L3.41004 13.41L9.00004 19L21 7.00001L19.59 5.59001L9.00004 16.17Z"/></svg>
-                        </div>
-                        <span class="benefit-text">Conversas Reais, Foco na Prática!</span>
-                    </div>
-                    <div class="benefit-item">
-                        <div class="benefit-box">
-                           <svg class="checkmark-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M9.00004 16.17L4.83004 12L3.41004 13.41L9.00004 19L21 7.00001L19.59 5.59001L9.00004 16.17Z"/></svg>
-                        </div>
-                        <span class="benefit-text">Desenvolver Fluência Natural e Fluida.</span>
-                    </div>
-                    <div class="benefit-item">
-                        <div class="benefit-box">
-                            <svg class="checkmark-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M9.00004 16.17L4.83004 12L3.41004 13.41L9.00004 19L21 7.00001L19.59 5.59001L9.00004 16.17Z"/></svg>
-                        </div>
-                        <span class="benefit-text">Receber Feedback que Fortalece Sua Confiança.</span>
-                    </div>
-                </div>
-            </div>
-        </section>
+/* --- Keyframes for Original Animations --- */
+@keyframes drawLine { from { width: 0; } to { width: 100%; } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes gentleWave { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-5px) scale(1.02); } }
+@keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 8px -2px var(--primary-vibrant-accent), 0 0 15px -5px var(--primary-vibrant-accent); opacity: 0.8; } 50% { box-shadow: 0 0 12px 0px var(--primary-vibrant-accent), 0 0 25px -3px var(--primary-vibrant-accent); opacity: 1; } }
+@keyframes slideUpFadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes blockageResolve { 0% { transform: scaleX(1) scaleY(0.2); opacity: 0.7; background-color: var(--medium-grey-text); } 50% { transform: scaleX(0.3) scaleY(1); opacity: 0.4; background-color: var(--secondary-vibrant-accent); } 100% { transform: scaleX(1) scaleY(1); opacity: 0; background-color: var(--secondary-vibrant-accent); } }
+@keyframes quizPulse { 0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0,163,163, 0.3); } 50% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(0,163,163, 0); } }
+@keyframes bounceSlightly { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+@keyframes scaleIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes growAndFadeQuote { from { transform: scale(0.5) translateY(10px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+@keyframes radiatingBackground { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
-        <!-- Self-Assessment/Mini-Quiz Section -->
-        <section id="quiz" class="quiz-section section">
-            <div class="narrative-background quiz-narrative-bg">
-                <svg class="narrative-quiz-path-svg" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <linearGradient id="quizPathGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" style="stop-color:rgba(var(--rgb-secondary-vibrant-accent),0.2)" />
-                            <stop offset="100%" style="stop-color:rgba(var(--rgb-primary-vibrant-accent),0.2)" />
-                        </linearGradient>
-                    </defs>
-                    <path class="quiz-svg-path-element" d="M-10,100 Q150,20 300,120 T600,80 T900,150 T1200,50 L1500,100" stroke="url(#quizPathGradient)" stroke-width="3" fill="none" stroke-dasharray="10, 10" />
-                    <path class="quiz-svg-path-element" d="M-10,200 Q200,280 400,180 T700,250 T1000,150 T1300,220 L1500,200" stroke="url(#quizPathGradient)" stroke-width="2" fill="none" stroke-dasharray="5, 5" />
-                </svg>
-            </div>
-            <div class="container">
-                <h2 class="section-title animated-title">Qual Seu Maior Desafio Para Falar Inglês com Confiança?</h2>
-                <div class="quiz-placeholder">
-                    <p>Um breve quiz interativo (3-5 perguntas) aparecerá aqui para entendermos melhor suas necessidades.</p>
-                    <p>Suas respostas nos ajudarão a guiar sua jornada para a fluência!</p>
-                </div>
-                <a href="#" class="cta-button quiz-cta">Iniciar Quiz</a>
-            </div>
-        </section>
+/* --- Base Scroll Animation Styles --- */
+.animated-title, .animated-text, .benefit-item, .testimonial-card,
+.quiz-placeholder, .photo-circle-placeholder, .blockage-element, .quiz-cta {
+    opacity: 0;
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+.animated-title.in-view, .animated-text.in-view { /* This handles content fade-in */
+    opacity: 1; /* Simpler than animation: slideUpFadeIn for main content fade*/
+    transform: translateY(0); /* Assuming they might have an initial translateY */
+}
+/* If you still want the slideUpFadeIn for content: */
+ .animated-title.in-view, .animated-text.in-view {
+     animation: slideUpFadeIn 0.8s ease-out forwards;
+ }
 
-        <!-- Sobre o Professor Luiz Section -->
-        <section id="about-teacher" class="about-teacher-section section">
-            <div class="narrative-background teacher-narrative-bg">
-                <div class="narrative-guiding-aura"></div>
-            </div>
-            <div class="container about-teacher-container">
-                <div class="bio-text-content">
-                    <h2 class="section-title animated-title">Sobre o <span class="highlight">Professor Luiz</span></h2>
-                    <p class="animated-text">Olá! Sou o Professor Luiz, e minha maior dedicação é ajudar brasileiros como você a descobrir o prazer e a confiança de se comunicar em inglês. Com anos de experiência e uma metodologia focada na conversação prática, meu objetivo é quebrar as barreiras que te impedem de falar fluentemente.</p>
-                    <p class="animated-text" style="animation-delay: 0.2s;">Minhas aulas são dinâmicas, personalizadas e criam um ambiente de aprendizado seguro e motivador. Juntos, vamos trabalhar suas dificuldades específicas, construir sua confiança e destravar seu potencial para que você possa se comunicar com o mundo sem medo!</p>
-                </div>
-                <div class="teacher-photo-area">
-                    <div class="photo-circle-placeholder">
-                        <span>Foto do<br>Professor Luiz</span>
-                    </div>
-                </div>
-            </div>
-        </section>
+/* --- CSS Reset/Normalization --- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+    font-family: var(--font-primary); line-height: 1.7; color: var(--main-text-color);
+    background-color: var(--main-background);
+    -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+}
+img { max-width: 100%; height: auto; display: block; }
 
-        <!-- Testimonials Section -->
-        <section id="testimonials" class="testimonials-section section">
-             <div class="narrative-background testimonials-narrative-bg">
-                <div class="narrative-voice-ripple"></div>
-                <div class="narrative-voice-ripple"></div>
-                <div class="narrative-voice-ripple"></div>
-            </div>
-            <div class="container">
-                <h2 class="section-title animated-title">O Que os Alunos Dizem <span class="section-subtitle highlight-text-main">(Depoimentos)</span></h2>
-                <div class="testimonial-grid">
-                    <div class="testimonial-card">
-                        <span class="quote-mark-animated">“</span>
-                        <p class="testimonial-quote-text">Ótimo trabalho. Atento, lembra das falhas e acertos do aluno. Sobre a aula: O método aplicado ajuda a vermos o que o aluno precisa entender mais do que somente decorar. E sempre voltando ao ponto de erro do aluno. E a aula acaba fluindo naturalmente e nem sentimos ter passado 1 hora de aula. Ótimo profissional.</p>
-                        <p class="testimonial-author">- Henrique M.</p>
-                    </div>
-                    <div class="testimonial-card">
-                        <span class="quote-mark-animated">“</span>
-                        <p class="testimonial-quote-text">Minha filha Diany estava hesitante em ter aulas de inglês, mas depois de começar com o Professor Luiz, ela simplesmente adora! Agora ela participa ativamente e está cada vez mais confiante. Ele tem um jeito especial de ensinar para crianças. Recomendo muito!</p>
-                        <p class="testimonial-author">- Mãe da Diany B.</p>
-                    </div>
-                    <div class="testimonial-card">
-                        <span class="quote-mark-animated">“</span>
-                        <p class="testimonial-quote-text">Durante anos, senti um nervosismo enorme só de pensar em falar inglês em público ou no trabalho. As aulas com o Professor Luiz me deram as ferramentas e a tranquilidade para finalmente me sentir à vontade. A diferença é incrível, e já vejo resultados na minha carreira!</p>
-                        <p class="testimonial-author">- Carol S.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+/* --- Utility Classes & Base Section Styling --- */
+.container {
+    width: 90%;
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 15px;
+    position: relative; /* Crucial for z-index stacking with narrative backgrounds */
+    z-index: 2;        /* Ensure content is above narrative backgrounds */
+}
+.section {
+    padding: 80px 0;
+    position: relative; /* For narrative background positioning */
+    overflow: hidden;   /* Recommended for sections with full-width absolute children */
+}
+@media (max-width: 768px) { .section { padding: 60px 0; } }
 
-        <!-- Final Call to Action Section -->
-        <section id="final-cta" class="final-cta-section section">
-             <div class="narrative-background final-cta-narrative-bg">
-                <div class="narrative-converging-line"></div>
-                <div class="narrative-converging-line"></div>
-                <div class="narrative-converging-line"></div>
-             </div>
-             <div class="final-cta-background-animation"></div>
-            <div class="container">
-                <h2 class="final-cta-title animated-title">Pronto(a) para Finalmente Falar Inglês com Confiança?</h2>
-                <a href="#" class="cta-button cta-button-large final-cta-button">Sua Aula Intro Grátis!</a>
-                <p class="reassurance-text animated-text">Sem compromisso, apenas uma conversa para nos conhecermos e planejarmos seus próximos passos rumo à fluência!</p>
-            </div>
-        </section>
-    </main>
+.section-title {
+    font-size: 2.3rem; font-weight: 700; color: var(--primary-serious-color);
+    text-align: center; margin-bottom: 45px; letter-spacing: -0.5px;
+}
+.section-title .highlight { color: var(--secondary-vibrant-accent); }
+.section-subtitle.highlight-text-main {
+    color: var(--main-text-color); font-weight: 500; font-size: 1.2rem;
+    display: block; margin-top: -18px;
+}
 
-    <!-- Footer -->
-    <footer class="site-footer">
-        <div class="container">
-            <p>© <span id="current-year">2024</span> Speak Up - Professor Luiz. Todos os direitos reservados. | <a href="#privacy-policy-placeholder">Política de Privacidade</a></p>
-        </div>
-    </footer>
+.cta-button {
+    display: inline-block; padding: 15px 35px;
+    background-color: var(--primary-vibrant-accent); color: var(--main-text-color);
+    text-decoration: none; font-weight: 600; font-size: 1.05rem;
+    border-radius: 8px;
+    transition: background-color 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
+    border: none; cursor: pointer; text-align: center; box-shadow: var(--shadow-sm);
+}
+.cta-button:hover, .cta-button:focus {
+    background-color: #EAA703;
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: var(--shadow-md); color: var(--main-text-color);
+}
+.cta-button-large { font-size: 1.2rem; padding: 18px 40px; }
 
-    <script>
-        document.getElementById('current-year').textContent = new Date().getFullYear();
-        
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                const hrefTarget = this.getAttribute('href');
-                if (hrefTarget && hrefTarget.startsWith('#') && hrefTarget.length > 1) {
-                    const targetElement = document.querySelector(hrefTarget);
-                    if (targetElement) {
-                        e.preventDefault();
-                        targetElement.scrollIntoView({
-                            behavior: 'smooth'
-                        });
-                    }
-                }
-            });
-        });
+/* --- Sticky Header --- */
+.sticky-header {
+    position: sticky; top: 0; left: 0; width: 100%;
+    background-color: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    padding: 10px 0; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    z-index: 1000; /* High z-index to stay on top of everything */
+}
+.sticky-header .container { display: flex; justify-content: space-between; align-items: center; }
+.logo-area { display: flex; align-items: center; text-decoration: none; }
+.logo-icon { width: 48px; height: 48px; margin-right: 12px; }
+.logo-text { font-size: 1.75rem; color: var(--main-text-color); font-weight: 500; }
+.logo-text .up { font-weight: 700; color: var(--secondary-vibrant-accent);}
+.header-cta { padding: 10px 22px; font-size: 0.9rem; }
 
-        const animatedElements = document.querySelectorAll('.animated-title, .animated-text, .benefit-item, .testimonial-card, .quiz-placeholder, .photo-circle-placeholder, .blockage-element, .quiz-cta');
+/* --- Hero Section --- */
+.hero-section {
+    background-color: var(--main-background); padding: 90px 0 110px;
+    text-align: center; /* position: relative already on .section */
+}
+.hero-background-shape { /* This is the SVG wave */
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 0; /* Behind hero-content and narrative */
+    overflow: hidden;
+}
+.hero-background-shape svg { width: 100%; height: 100%; object-fit: cover; animation: gentleWave 15s ease-in-out infinite alternate; }
+.hero-background-shape svg path { fill: var(--secondary-vibrant-accent); }
+.hero-content-wrapper { /* z-index: 2 is already on .container for hero */ }
+.hero-title {
+    font-size: 2.7rem; line-height: 1.25; font-weight: 700; color: var(--primary-serious-color);
+    margin-bottom: 20px; letter-spacing: -0.8px;
+    opacity: 0; /* Initial state for animation */
+    animation: slideUpFadeIn 0.8s ease-out 0.2s forwards;
+}
+.desktop-break { display: none; }
+@media (min-width: 768px) { .hero-title { font-size: 3rem; } .desktop-break { display: block; } }
+.hero-title .highlight-animated { position: relative; display: inline-block; color: var(--secondary-vibrant-accent); }
+.hero-title .highlight-animated::after {
+    content: ''; position: absolute; bottom: -5px; left: 0; height: 3.5px;
+    background-color: var(--primary-vibrant-accent); border-radius: 2px; width: 0;
+    animation: drawLine 0.8s ease-out 1.0s forwards;
+}
+.hero-subtitle {
+    font-size: 1.2rem; color: var(--medium-grey-text); margin-bottom: 35px; max-width: 720px;
+    margin-left: auto; margin-right: auto; line-height: 1.75;
+    opacity: 0; /* Initial state for animation */
+    animation: slideUpFadeIn 0.8s ease-out 0.5s forwards;
+}
+.hero-cta {
+    margin-top: 10px;
+    opacity: 0; /* Initial state for animation */
+    animation: slideUpFadeIn 0.8s ease-out 0.8s forwards, pulseGlow 2.5s infinite 2.5s;
+}
+.hero-line {
+    position: absolute; height: 3px; border-radius: 3px; z-index: 1; /* Above narrative-bg but below content */
+    width: 0;
+    animation-timing-function: ease-out; animation-fill-mode: forwards; animation-name: drawLine;
+}
+.hero-line-1 { max-width: 160px; background-color: var(--secondary-vibrant-accent); top: 15%; left: 10%; transform: rotate(-30deg) translateX(-50%); transform-origin: left center; animation-duration: 0.7s; animation-delay: 1.6s; }
+.hero-line-2 { max-width: 210px; background-color: var(--primary-vibrant-accent); bottom: 20%; right: 10%; transform: rotate(15deg) translateX(50%); transform-origin: right center; animation-duration: 0.9s; animation-delay: 1.8s; }
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('in-view');
-                }
-                // Optional: If you want animations to reset when scrolling out of view
-                // else { 
-                //     entry.target.classList.remove('in-view');
-                // }
-            });
-        }, {
-            threshold: 0.1 
-        });
+@media (max-width: 768px) {
+    .hero-title { font-size: 2.3rem; } .hero-subtitle { font-size: 1.1rem; }
+    .hero-line-1 { max-width: 100px; top: 10%; left: 5%; } .hero-line-2 { max-width: 120px; bottom: 15%; right: 5%; }
+}
+@media (max-width: 480px) { .hero-line-1, .hero-line-2 { display: none; } .hero-title { font-size: 2rem; } }
 
-        animatedElements.forEach(el => {
-            observer.observe(el);
-        });
-    </script>
+/* --- Pain Point & Solution Section --- */
+.pain-point-section { background-color: var(--main-background); text-align: center; }
+.pain-point-visual { height: 40px; margin-bottom: 20px; display: flex; justify-content: center; align-items: center; }
+.blockage-element { opacity:0; /* Scroll animation from general class handles fade */ }
+.blockage-element.in-view {
+    width: 80px; height: 10px; border-radius: 5px;
+    animation: blockageResolve 2s ease-in-out forwards;
+}
+.empathetic-text { font-size: 1.2rem; max-width: 780px; margin-left: auto; margin-right: auto; color: var(--medium-grey-text); line-height: 1.8; }
+.empathetic-text.in-view { animation-delay: 0.3s; } /* Keep using slideUpFadeIn */
 
-</body>
-</html>
+/* --- Benefits Section --- */
+.benefits-section { background-color: var(--off-white-section-bg); }
+.benefits-section .section-title .highlight { color: var(--secondary-vibrant-accent); }
+.benefit-list { display: flex; flex-direction: column; gap: 25px; max-width: 680px; margin: 0 auto; }
+.benefit-item {
+    display: flex; align-items: center; background-color: var(--white);
+    padding: 22px 28px; border-radius: 12px; box-shadow: var(--shadow-md);
+    opacity: 0; transform: translateX(-20px); /* Initial for scroll */
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out, box-shadow 0.3s ease-out; /* Added box-shadow transition */
+}
+.benefit-item.in-view {
+    opacity: 1;
+    transform: translateX(0);
+}
+.benefit-item:nth-child(1).in-view { transition-delay: 0.1s; }
+.benefit-item:nth-child(2).in-view { transition-delay: 0.25s; }
+.benefit-item:nth-child(3).in-view { transition-delay: 0.4s; }
+.benefit-item:hover { transform: translateY(-5px) translateX(0) !important; box-shadow: var(--shadow-lg); }
+.benefit-box {
+    width: 58px; height: 58px; background-color: var(--primary-vibrant-accent);
+    display: flex; justify-content: center; align-items: center;
+    margin-right: 22px; flex-shrink: 0; border-radius: 10px;
+    transition: transform 0.3s ease;
+}
+.benefit-item:hover .benefit-box { transform: rotate(15deg) scale(1.05); }
+.benefit-box .checkmark-icon { width: 30px; height: 30px; color: var(--primary-serious-color); }
+.benefit-text { font-size: 1.1rem; color: var(--main-text-color); font-weight: 500; }
+
+/* --- Mini-Quiz Section --- */
+.quiz-section { background-color: var(--main-background); text-align: center; }
+.quiz-section .section-title { color: var(--primary-serious-color); }
+.quiz-placeholder {
+    border: 2.5px dashed var(--secondary-vibrant-accent);
+    padding: 38px 28px; margin: 30px auto 40px; max-width: 620px;
+    background-color: color-mix(in srgb, var(--secondary-vibrant-accent) 4%, white);
+    border-radius: 12px; color: var(--medium-grey-text);
+    opacity: 0; /* Scroll animation */
+}
+.quiz-placeholder.in-view {
+    animation: quizPulse 2.5s infinite 0.5s, slideUpFadeIn 0.8s ease-out forwards; /* slideUpFadeIn will make it appear, then pulse */
+    opacity: 1; /* Ensure opacity is set for pulse */
+}
+.quiz-placeholder p { margin-bottom: 10px; font-size: 1.05rem; }
+.quiz-placeholder p:last-child { margin-bottom: 0; }
+.quiz-cta { opacity: 0; /* Scroll animation */ }
+.quiz-cta.in-view {
+    opacity: 1;
+    animation: bounceSlightly 1.5s ease-in-out infinite 1s, slideUpFadeIn 0.8s ease-out forwards;
+}
+
+/* --- About Professor Luiz Section --- */
+.about-teacher-section { background-color: var(--off-white-section-bg); }
+.about-teacher-container { display: flex; flex-wrap: wrap; align-items: center; gap: 30px 50px; }
+.bio-text-content { flex: 1.8; min-width: 300px; }
+.bio-text-content .section-title { text-align: left; margin-bottom: 20px;}
+@media (max-width: 859px) { .bio-text-content .section-title { text-align: center; } }
+.bio-text-content p { font-size: 1.05rem; color: var(--medium-grey-text); margin-bottom: 18px; }
+.bio-text-content .section-title .highlight { color: var(--secondary-vibrant-accent); }
+
+.teacher-photo-area { flex: 1; max-width: 280px; margin: 0 auto; }
+.photo-circle-placeholder {
+    width: 210px; height: 210px; background-color: var(--medium-grey-text);
+    border-radius: 50%; margin: 0 auto;
+    display: flex; justify-content: center; align-items: center;
+    color: var(--white); font-size: 1.1rem; text-align: center;
+    border: 7px solid var(--primary-vibrant-accent);
+    box-shadow: 0 0 0 7px var(--off-white-section-bg), var(--shadow-lg);
+    opacity: 0; /* Scroll animation */
+}
+.photo-circle-placeholder.in-view {
+    animation: scaleIn 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    opacity: 1; /* Final state for scaleIn */
+}
+@media (min-width: 860px) {
+    .bio-text-content { order: 1; }
+    .teacher-photo-area { order: 2; margin-left: auto; margin-right: 0;}
+}
+
+/* --- Testimonials Section --- */
+.testimonials-section { background-color: var(--main-background); }
+.testimonial-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 30px; }
+.testimonial-card {
+    background-color: var(--off-white-section-bg); padding: 28px; border-radius: 12px;
+    box-shadow: var(--shadow-md); border-top: 6px solid var(--primary-serious-color);
+    opacity: 0; transform: translateY(30px); /* Initial for scroll */
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out, box-shadow 0.3s ease;
+    position: relative;
+}
+.testimonial-card.in-view {
+    opacity: 1;
+    transform: translateY(0);
+}
+.testimonial-card:hover { transform: translateY(-6px) !important; box-shadow: var(--shadow-lg); }
+.testimonial-card:nth-child(1).in-view { transition-delay: 0.1s; }
+.testimonial-card:nth-child(2).in-view { transition-delay: 0.25s; }
+.testimonial-card:nth-child(3).in-view { transition-delay: 0.4s; }
+
+.quote-mark-animated {
+    font-family: Georgia, serif; font-size: 3.5rem;
+    color: var(--secondary-vibrant-accent);
+    position: absolute; left: 20px; top: 15px; line-height: 0.8;
+    opacity: 0;
+}
+.testimonial-card.in-view .quote-mark-animated {
+    animation: growAndFadeQuote 0.7s ease-out 0.5s forwards;
+}
+.testimonial-quote-text { font-style: italic; color: var(--medium-grey-text); margin-bottom: 18px; font-size: 0.95rem; padding-top: 20px; }
+.testimonial-author {
+    font-weight: 600; text-align: right; color: var(--primary-serious-color);
+    font-size: 0.9rem;
+}
+.testimonial-author::before { content: "— "; }
+
+/* --- Final Call to Action Section --- */
+.final-cta-section {
+    background-color: var(--primary-serious-color); padding: 80px 0;
+    text-align: center; color: var(--white); /* position: relative on .section */
+}
+.final-cta-background-animation {
+    position: absolute; top:0; left:0; width: 100%; height: 100%;
+    z-index: 0; /* Behind .container content */
+    background: linear-gradient(135deg, 
+        var(--secondary-vibrant-accent) 0%, 
+        var(--primary-serious-color) 30%, 
+        var(--primary-serious-color) 70%, 
+        var(--primary-vibrant-accent) 100%);
+    background-size: 300% 300%;
+    opacity: 0.15;
+    animation: radiatingBackground 15s ease infinite;
+}
+.final-cta-title { font-size: 2.4rem; color: var(--white); margin-bottom: 30px; letter-spacing: -0.5px; }
+@media (max-width: 768px) { .final-cta-title { font-size: 2rem; } }
+.final-cta-button {
+    background-color: var(--primary-vibrant-accent); color: var(--main-text-color);
+    margin-bottom: 25px;
+    opacity: 0; /* Scroll animation from base */
+}
+.final-cta-button.in-view { /* Use intersection observer if defined, otherwise set delay here */
+    animation: slideUpFadeIn 0.8s ease-out 0.3s forwards, pulseGlow 2s infinite 2s;
+    opacity: 1;
+}
+.final-cta-button:hover { background-color: #EAA703; color: var(--main-text-color); }
+.reassurance-text {
+    font-size: 1.1rem; color: var(--light-text-on-dark-bg);
+    max-width: 620px; margin: 0 auto; line-height: 1.75;
+}
+.reassurance-text.in-view { animation-delay: 0.6s; } /* If using slideUpFadeIn globally for .animated-text */
+
+
+/* --- Footer --- */
+.site-footer {
+    background-color: var(--main-text-color); color: #a0a7ac;
+    text-align: center; padding: 30px 0; font-size: 0.85rem;
+    border-top: 3px solid var(--primary-serious-color);
+}
+.site-footer p { margin-bottom: 0; }
+.site-footer a { color: #c0c7cc; text-decoration: none; transition: color 0.2s ease; }
+.site-footer a:hover { color: var(--primary-vibrant-accent); text-decoration: underline; }
+
+
+/* === NARRATIVE BACKGROUND STYLES === */
+
+/* --- Keyframes for Narrative Animations --- */
+@keyframes sparkleFloat {
+    0% { transform: translateY(20px) translateX(0) scale(0.3); opacity: 0; }
+    50% { opacity: 0.1; } /* Max opacity mid-animation */
+    100% { transform: translateY(-180px) translateX(30px) scale(1.3); opacity: 0; }
+}
+@keyframes tangledLines {
+    0% { transform: scaleX(0.4) rotate(-8deg); opacity: 0.12; }
+    50% { transform: scaleX(1.1) rotate(8deg); opacity: 0.06; }
+    100% { transform: scaleX(0.4) rotate(-8deg); opacity: 0.12; }
+}
+@keyframes clearPath {
+    0% { transform: scale(0.1); opacity: 0; }
+    50% { opacity: 0.15; } /* Slightly more visible when active */
+    100% { transform: scale(1.8); opacity: 0; }
+}
+@keyframes flowUp {
+    0% { transform: translateY(60px) scale(0.6); opacity: 0; }
+    70% { opacity: 0.11; }
+    100% { transform: translateY(-200px) scale(1.1); opacity: 0; }
+}
+@keyframes drawPath {
+    to { stroke-dashoffset: 0; }
+}
+@keyframes guidingAuraPulse {
+    0% { transform: scale(0.7) translate(-50%, -50%); opacity: 0.04; }
+    50% { transform: scale(1.3) translate(-50%, -50%); opacity: 0.09; }
+    100% { transform: scale(0.7) translate(-50%, -50%); opacity: 0.04; }
+}
+@keyframes voiceRipple {
+    0% { transform: scale(0.4); opacity: 0; }
+    50% { opacity: 0.09; }
+    100% { transform: scale(2.8); opacity: 0; }
+}
+@keyframes convergeLines {
+    0% { transform: translateY(90px) rotate(12deg) scaleX(0.4); opacity: 0; }
+    70% { opacity: 0.12; }
+    100% { transform: translateY(-60px) rotate(-7deg) scaleX(1.6); opacity: 0; }
+}
+
+/* --- Generic Narrative Background Container --- */
+.narrative-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 1; /* Below .container (z-index: 2) but above section's base (implicit z-index: auto/0) */
+    pointer-events: none;
+}
+.hero-section .hero-background-shape { z-index: 0; } /* Explicitly set hero SVG wave behind narrative */
+
+/* --- Hero Section Narrative --- */
+.hero-narrative-bg .narrative-spark {
+    position: absolute;
+    width: 8px; height: 8px;
+    background-color: rgba(var(--rgb-primary-vibrant-accent), 0.7);
+    border-radius: 50%;
+    opacity: 0;
+    animation-name: sparkleFloat;
+    animation-duration: 7s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+.hero-narrative-bg .narrative-spark:nth-child(1) { top: 15%; left: 10%; animation-delay: 0s; width: 7px; height: 7px; }
+.hero-narrative-bg .narrative-spark:nth-child(2) { top: 35%; left: 85%; animation-delay: 1.2s; width:11px; height: 11px; }
+.hero-narrative-bg .narrative-spark:nth-child(3) { top: 75%; left: 15%; animation-delay: 2.5s; }
+.hero-narrative-bg .narrative-spark:nth-child(4) { top: 55%; left: 50%; animation-delay: 3.2s; background-color: rgba(var(--rgb-secondary-vibrant-accent), 0.6);}
+.hero-narrative-bg .narrative-spark:nth-child(5) { top: 80%; left: 75%; animation-delay: 4.1s; width:8px; height: 8px;}
+
+/* --- Pain Point Section Narrative --- */
+.pain-narrative-bg .narrative-blockage-line {
+    position: absolute;
+    height: 2px; width: 180px;
+    background-color: rgba(var(--rgb-primary-serious-color), 0.5);
+    opacity: 0.1;
+    animation: tangledLines 9s infinite alternate ease-in-out;
+}
+.pain-narrative-bg .narrative-blockage-line:nth-child(1) { top: 25%; left: 8%; transform: rotate(18deg); animation-delay: 0s; }
+.pain-narrative-bg .narrative-blockage-line:nth-child(2) { top: 65%; right: 3%; transform: rotate(-12deg); animation-delay: 0.8s; width: 220px; }
+.pain-narrative-bg .narrative-clearing-element {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    background-color: rgba(var(--rgb-secondary-vibrant-accent), 0.06);
+    animation: clearPath 8s ease-in-out 1.5s infinite;
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+}
+
+/* --- Benefits Section Narrative --- */
+.benefits-narrative-bg .narrative-flow-particle {
+    position: absolute;
+    width: 14px; height: 14px;
+    background-color: rgba(var(--rgb-primary-vibrant-accent), 0.6);
+    border-radius: 55% 45% 75% 25% / 45% 55% 45% 55%; /* More organic */
+    opacity: 0;
+    animation: flowUp 6s infinite linear;
+}
+.benefits-narrative-bg .narrative-flow-particle:nth-child(1) { bottom: 0%; left: 18%; animation-delay: 0s; }
+.benefits-narrative-bg .narrative-flow-particle:nth-child(2) { bottom: 0%; left: 78%; animation-delay: 1.3s; background-color: rgba(var(--rgb-secondary-vibrant-accent),0.6); width: 17px; height: 17px; }
+.benefits-narrative-bg .narrative-flow-particle:nth-child(3) { bottom: 0%; left: 42%; animation-delay: 2.1s; width: 11px; height: 11px; }
+.benefits-narrative-bg .narrative-flow-particle:nth-child(4) { bottom: 0%; left: 92%; animation-delay: 2.9s; }
+
+/* --- Quiz Section Narrative --- */
+.quiz-narrative-bg .narrative-quiz-path-svg { /* Class given to the SVG element */
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    /* z-index is managed by parent .narrative-background */
+}
+.narrative-quiz-path-svg .quiz-svg-path-element { /* Class given to path elements */
+    stroke-dasharray: 1200; 
+    stroke-dashoffset: 1200;
+    animation: drawPath 18s ease-in-out infinite alternate;
+}
+.narrative-quiz-path-svg .quiz-svg-path-element:nth-child(2) {
+    animation-delay: 1.5s;
+}
+
+/* --- About Teacher Section Narrative --- */
+.teacher-narrative-bg .narrative-guiding-aura {
+    position: absolute;
+    top: 50%; left: 50%; /* Default, will be adjusted by transform */
+    width: 350px; height: 350px; /* Larger aura */
+    background: radial-gradient(circle, rgba(var(--rgb-primary-vibrant-accent), 0.12) 0%, rgba(var(--rgb-primary-vibrant-accent), 0) 75%);
+    border-radius: 50%;
+    transform: translate(-50%, -50%); /* Center it properly first */
+    animation: guidingAuraPulse 9s ease-in-out infinite;
+}
+@media (min-width: 860px) { /* Align with teacher photo (adjust if teacher-photo-area's flex properties change) */
+    .teacher-narrative-bg .narrative-guiding-aura {
+       left: calc(100% - 140px - 25px); /* Approx center of teacher photo from right */
+       /* This may still need tweaking based on final photo placement and sizes */
+    }
+}
+@media (max-width: 859px) { /* Center when stacked */
+     .teacher-narrative-bg .narrative-guiding-aura {
+        top: 70%; /* May need adjustment if teacher photo is not at the very bottom of the section */
+        left: 50%;
+     }
+}
+
+/* --- Testimonials Section Narrative --- */
+.testimonials-narrative-bg .narrative-voice-ripple {
+    position: absolute;
+    width: 60px; height: 60px;
+    border: 2.5px solid rgba(var(--rgb-secondary-vibrant-accent), 0.35);
+    border-radius: 50%;
+    opacity: 0;
+    animation: voiceRipple 5.5s infinite linear;
+}
+.testimonials-narrative-bg .narrative-voice-ripple:nth-child(1) { top: 18%; left: 12%; animation-delay: 0s; }
+.testimonials-narrative-bg .narrative-voice-ripple:nth-child(2) { top: 55%; left: 82%; animation-delay: 1.7s; border-color: rgba(var(--rgb-primary-serious-color),0.35); }
+.testimonials-narrative-bg .narrative-voice-ripple:nth-child(3) { top: 78%; left: 38%; animation-delay: 2.8s; }
+
+/* --- Final CTA Section Narrative --- */
+.final-cta-section .final-cta-background-animation { z-index: 0; } /* Ensure main CTA anim bg is below narrative if any specific layering here */
+.final-cta-narrative-bg .narrative-converging-line {
+    position: absolute;
+    width: 3.5px; height: 90px;
+    background-color: rgba(var(--rgb-primary-vibrant-accent), 0.6);
+    opacity: 0;
+    animation: convergeLines 7.5s infinite linear;
+    bottom: 0;
+    transform-origin: bottom center;
+}
+.final-cta-narrative-bg .narrative-converging-line:nth-child(1) { left: 22%; animation-delay: 0s; }
+.final-cta-narrative-bg .narrative-converging-line:nth-child(2) { left: 50%; animation-delay: 0.9s; height: 110px;}
+.final-cta-narrative-bg .narrative-converging-line:nth-child(3) { left: 78%; animation-delay: 1.7s; }
