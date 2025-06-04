@@ -5,7 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Speak Up - Conquiste a Fluência Definitiva</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Optional: Link to Google Fonts -->
+    <!-- Optional: Link to Google Fonts
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    -->
 </head>
 <body>
 
@@ -13,7 +17,7 @@
     <header class="sticky-header">
         <div class="container">
             <a href="#hero" class="logo-area" aria-label="Speak Up Homepage">
-                <img src="images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon">
+                <img src="images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon"> <!-- Ensure images/logo.svg exists -->
                 <span class="logo-text">Speak <span class="up">Up</span></span>
             </a>
             <a href="#final-cta" class="cta-button header-cta">Sua Aula Intro Grátis!</a>
@@ -37,8 +41,8 @@
             </div>
             <div class="hero-background-shape">
                 <svg viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M0,160 C120,120 240,120 360,140 C480,160 600,200 720,190 C840,180 960,120 1080,110 C1200,100 1320,140 1440,160 L1440,320 L0,320 Z" fill-opacity="0.04"></path> <!-- Reduced opacity -->
-                    <path d="M0,220 C100,200 200,150 300,160 C400,170 500,230 600,240 C700,250 800,210 900,190 C1000,170 1100,170 1200,200 C1300,230 1440,220 1440,220 L1440,320 L0,320 Z" fill-opacity="0.06"></path> <!-- Reduced opacity -->
+                    <path d="M0,160 C120,120 240,120 360,140 C480,160 600,200 720,190 C840,180 960,120 1080,110 C1200,100 1320,140 1440,160 L1440,320 L0,320 Z" fill-opacity="0.04"></path>
+                    <path d="M0,220 C100,200 200,150 300,160 C400,170 500,230 600,240 C700,250 800,210 900,190 C1000,170 1100,170 1200,200 C1300,230 1440,220 1440,220 L1440,320 L0,320 Z" fill-opacity="0.06"></path>
                 </svg>
             </div>
             <div class="hero-content-wrapper container">
@@ -56,7 +60,7 @@
             <div class="narrative-cloud style1 tiny-transition bridge-cloud brief-moment"></div>
         </div>
 
-        <!-- Pain Point Section: Frustration, Blockage -->
+        <!-- Pain Point & Solution Introduction Section: Frustration, Blockage -->
         <section id="pain-point" class="pain-point-section section">
             <div class="narrative-background pain-narrative-bg">
                 <div class="narrative-cloud style2 dense fractured-drift uneasy-motion"></div>
@@ -89,7 +93,7 @@
                 <div class="narrative-flow-particle benefit-particle fast energetic"></div>
                 <div class="narrative-flow-particle benefit-particle energetic"></div>
                 <div class="narrative-flow-particle benefit-particle slow purposeful"></div>
-                <div class="narrative-learning-glyph"></div> <!-- Symbol of learning -->
+                <div class="narrative-learning-glyph"></div>
                 <div class="narrative-learning-glyph"></div>
                 <svg class="narrative-guiding-path-svg" width="100%" height="100%" aria-hidden="true">
                     <path class="narrative-guiding-path-line illuminated-path" d="M 10% 20% Q 30% 5% 50% 25% T 90% 20%" /> 
@@ -99,9 +103,24 @@
             <div class="container">
                 <h2 class="section-title animated-title">Com a Speak Up, <span class="highlight">você vai:</span></h2>
                 <div class="benefit-list">
-                    <div class="benefit-item"> <div class="benefit-box"><svg class="checkmark-icon" viewBox="0 0 24 24"><path d="M9.00004 16.17L4.83004 12L3.41004 13.41L9.00004 19L21 7.00001L19.59 5.59001L9.00004 16.17Z"/></svg></div> <span class="benefit-text">Conversas Reais, Foco na Prática!</span></div>
-                    <div class="benefit-item"> <div class="benefit-box"><svg class="checkmark-icon" viewBox="0 0 24 24"><path d="M9.00004 16.17L4.83004 12L3.41004 13.41L9.00004 19L21 7.00001L19.59 5.59001L9.00004 16.17Z"/></svg></div> <span class="benefit-text">Desenvolver Fluência Natural e Fluida.</span></div>
-                    <div class="benefit-item"> <div class="benefit-box"><svg class="checkmark-icon" viewBox="0 0 24 24"><path d="M9.00004 16.17L4.83004 12L3.41004 13.41L9.00004 19L21 7.00001L19.59 5.59001L9.00004 16.17Z"/></svg></div> <span class="benefit-text">Receber Feedback que Fortalece Sua Confiança.</span></div>
+                    <div class="benefit-item"> 
+                        <div class="benefit-box">
+                            <svg class="checkmark-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M9.00004 16.17L4.83004 12L3.41004 13.41L9.00004 19L21 7.00001L19.59 5.59001L9.00004 16.17Z"/></svg>
+                        </div>
+                        <span class="benefit-text">Conversas Reais, Foco na Prática!</span>
+                    </div>
+                    <div class="benefit-item"> 
+                        <div class="benefit-box">
+                           <svg class="checkmark-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M9.00004 16.17L4.83004 12L3.41004 13.41L9.00004 19L21 7.00001L19.59 5.59001L9.00004 16.17Z"/></svg>
+                        </div>
+                        <span class="benefit-text">Desenvolver Fluência Natural e Fluida.</span>
+                    </div>
+                    <div class="benefit-item"> 
+                        <div class="benefit-box">
+                            <svg class="checkmark-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M9.00004 16.17L4.83004 12L3.41004 13.41L9.00004 19L21 7.00001L19.59 5.59001L9.00004 16.17Z"/></svg>
+                        </div>
+                        <span class="benefit-text">Receber Feedback que Fortalece Sua Confiança.</span>
+                    </div>
                 </div>
             </div>
         </section>
@@ -125,8 +144,11 @@
             </div>
             <div class="container"> 
                 <h2 class="section-title animated-title">Qual Seu Maior Desafio Para Falar Inglês com Confiança?</h2>
-                <div class="quiz-placeholder"> <p>Um breve quiz interativo (3-5 perguntas) aparecerá aqui...</p> <p>Suas respostas nos ajudarão a guiar sua jornada...</p> </div>
-                <a href="#" class="cta-button quiz-cta">Iniciar Quiz</a> 
+                <div class="quiz-placeholder"> 
+                    <p>Um breve quiz interativo (3-5 perguntas) aparecerá aqui para entendermos melhor suas necessidades.</p>
+                    <p>Suas respostas nos ajudarão a guiar sua jornada para a fluência!</p>
+                </div>
+                <a href="#" class="cta-button quiz-cta">Iniciar Quiz!</a> 
             </div>
         </section>
 
@@ -144,12 +166,11 @@
             <div class="container about-teacher-container">
                 <div class="bio-text-content" id="teacherBioText">
                     <h2 class="section-title animated-title">Sobre o <span class="highlight">Professor Luiz</span></h2>
-                    <p class="animated-text">Olá! Sou o Professor Luiz...</p>
-                    <p class="animated-text" style="animation-delay: 0.2s;">Minhas aulas são dinâmicas...</p>
+                    <p class="animated-text">Olá! Sou o Professor Luiz, e minha maior dedicação é ajudar brasileiros como você a descobrir o prazer e a confiança de se comunicar em inglês. Acredito que aprender um novo idioma abre portas e transforma vidas, e estou aqui para tornar essa jornada o mais tranquila, eficaz e motivadora possível para você. Vamos juntos alcançar seus objetivos no inglês?</p>
                 </div>
                 <div class="teacher-photo-area" id="teacherPhoto">
-                    <div class="teacher-triangular-frame animated-teacher-frame"> 
-                        <img src="images/Face.svg" alt="Ilustração do Professor Luiz" class="teacher-face-svg">
+                    <div class="teacher-photo-circle animated-teacher-frame"> 
+                        <img src="images/Face.svg" alt="Ilustração do Professor Luiz" class="teacher-face-svg"> <!-- Ensure images/Face.svg exists -->
                     </div>
                 </div>
             </div>
@@ -158,22 +179,41 @@
         <!-- Testimonials Section: Amplified Success -->
         <section id="testimonials" class="testimonials-section section">
              <div class="narrative-background testimonials-narrative-bg">
-                <div class="narrative-cloud style1 clear-sky celebratory-cloud beaming-sky"></div> 
-                <div class="narrative-speech-bubble-echo success-echo student-voice"></div> 
-                <div class="narrative-speech-bubble-echo success-echo student-voice delayed"></div> 
-                <div class="narrative-positive-sound-ripple large testimonial-ripple resonating-success"></div> 
+                <div class="narrative-cloud style1 clear-sky celebratory-cloud beaming-sky gentle-testimonial-cloud"></div> 
+                <div class="narrative-voice-glow"></div>
+                <div class="narrative-voice-glow delayed"></div>
+                <div class="narrative-positive-sound-ripple large testimonial-ripple resonating-success prominent-ripple"></div> 
                 <div class="narrative-positive-sound-ripple small testimonial-ripple resonating-success"></div> 
-                <div class="narrative-positive-mote success-mote achievement-sparkle"></div> 
-                <div class="narrative-positive-mote success-mote achievement-sparkle"></div>
-                <div class="narrative-star-shine"></div>
-                <div class="narrative-star-shine"></div>
+                <div class="narrative-achievement-sparkle"></div> 
+                <div class="narrative-achievement-sparkle"></div>
+                <div class="narrative-star-shine testimonial-star"></div>
+                <div class="narrative-star-shine testimonial-star alt-timing"></div>
+                <div class="narrative-connecting-dot"></div>
+                <div class="narrative-connecting-dot"></div>
+                <div class="narrative-connecting-dot"></div>
             </div>
             <div class="container">
-                <h2 class="section-title animated-title">O Que os Alunos Dizem <span class="section-subtitle highlight-text-main">(Depoimentos)</span></h2>
+                <h2 class="section-title animated-title">O Que os Alunos Dizem <span class="section-subtitle highlight-text-main"></span></h2> 
                 <div class="testimonial-grid">
-                    <div class="testimonial-card"> <span class="quote-mark-animated">“</span> <p class="testimonial-quote-text">Ótimo trabalho...</p> <p class="testimonial-author">- Henrique M.</p> </div>
-                    <div class="testimonial-card"> <span class="quote-mark-animated">“</span> <p class="testimonial-quote-text">Minha filha Diany...</p> <p class="testimonial-author">- Mãe da Diany B.</p> </div>
-                    <div class="testimonial-card"> <span class="quote-mark-animated">“</span> <p class="testimonial-quote-text">Durante anos...</p> <p class="testimonial-author">- Carol S.</p> </div>
+                    <div class="testimonial-card"> 
+                        <span class="quote-mark-animated polished-quote">“</span>
+                        <p class="testimonial-quote-text">Ótimo trabalho. Atento, lembra das falhas e acertos do aluno. Sobre a aula: O método aplicado ajuda a vermos o que o aluno precisa entender mais do que somente decorar. E sempre voltando ao ponto de erro do aluno. E a aula acaba fluindo naturalmente e nem sentimos ter passado 1 hora de aula. Ótimo profissional.</p>
+                        <p class="testimonial-author">- Henrique M.</p>
+                    </div>
+                    <!-- START: Conceptual Testimonial - Mãe da Diany B. - REPLACE WITH REAL TESTIMONIAL & GET PERMISSION -->
+                    <div class="testimonial-card"> 
+                        <span class="quote-mark-animated polished-quote">“</span>
+                        <p class="testimonial-quote-text">Minha filha agora AMA as aulas de inglês! Antes era uma luta, hoje ela fica ansiosa pela próxima aula com o Professor Luiz. Incrível!</p>
+                        <p class="testimonial-author">- Mãe da Diany B.</p>
+                    </div>
+                    <!-- END: Conceptual Testimonial - Mãe da Diany B. -->
+                    <!-- START: Conceptual Testimonial - Carol S. - REPLACE WITH REAL TESTIMONIAL & GET PERMISSION -->
+                    <div class="testimonial-card"> 
+                        <span class="quote-mark-animated polished-quote">“</span>
+                        <p class="testimonial-quote-text">Finalmente encontrei um lugar onde me sinto totalmente à vontade para falar inglês sem medo de errar. As aulas com o Professor Luiz são diferentes e muito eficazes!</p>
+                        <p class="testimonial-author">- Carol S.</p>
+                    </div>
+                    <!-- END: Conceptual Testimonial - Carol S. -->
                 </div>
             </div>
         </section>
@@ -195,7 +235,7 @@
                 <div class="narrative-cta-focus-glow"></div> 
                 <h2 class="final-cta-title animated-title">Pronto(a) para Finalmente Falar Inglês com Confiança?</h2>
                 <a href="#" class="cta-button cta-button-large final-cta-button">Sua Aula Intro Grátis!</a> 
-                <p class="reassurance-text animated-text">Sem compromisso, apenas uma conversa...</p>
+                <p class="reassurance-text animated-text">Sem compromisso, apenas uma conversa para nos conhecermos e planejarmos seus próximos passos!</p>
             </div>
         </section>
     </main>
@@ -203,24 +243,37 @@
     <!-- Footer -->
     <footer class="site-footer">
         <div class="container">
-            <p>© <span id="current-year">2024</span> Speak Up - Professor Luiz. Todos os direitos reservados. | <a href="#privacy-policy-placeholder">Política de Privacidade</a></p>
+            <p>© <span id="current-year"></span> Speak Up - Professor Luiz. Todos os direitos reservados. | <a href="#privacy-policy-placeholder">Política de Privacidade</a></p>
         </div>
     </footer>
 
-    <script> // Existing JS
+    <script>
         document.getElementById('current-year').textContent = new Date().getFullYear();
+        
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 const hrefTarget = this.getAttribute('href');
-                if (hrefTarget && hrefTarget.startsWith('#') && hrefTarget.length > 1) {
+                if (hrefTarget && hrefTarget.startsWith('#') && hrefTarget.length > 1 && hrefTarget !== "#privacy-policy-placeholder") {
                     const targetElement = document.querySelector(hrefTarget);
-                    if (targetElement) { e.preventDefault(); targetElement.scrollIntoView({ behavior: 'smooth' }); }
+                    if (targetElement) { 
+                        e.preventDefault(); 
+                        targetElement.scrollIntoView({ behavior: 'smooth' }); 
+                    }
                 }
             });
         });
-        const animatedElements = document.querySelectorAll('.animated-title, .animated-text, .benefit-item, .testimonial-card, .quiz-placeholder, .blockage-element, .quiz-cta, .animated-teacher-frame, .final-cta-button');
+
+        const animatedElements = document.querySelectorAll(
+            '.animated-title, .animated-text, .benefit-item, .testimonial-card, ' +
+            '.quiz-placeholder, .blockage-element, .quiz-cta, .animated-teacher-frame, .final-cta-button' 
+        );
+        
         const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('in-view'); } });
+            entries.forEach(entry => { 
+                if (entry.isIntersecting) { 
+                    entry.target.classList.add('in-view'); 
+                } 
+            });
         }, { threshold: 0.1 });
         animatedElements.forEach(el => { observer.observe(el); });
 
@@ -230,14 +283,15 @@
         if (teacherPhotoArea && teacherBioText && connectionLineSvgContainer) {
             const drawConnectionLines = () => {
                 if (!connectionLineSvgContainer.classList.contains('drawn')) {
-                    const photoRect = teacherPhotoArea.getBoundingClientRect(); const bioRect = teacherBioText.getBoundingClientRect(); const svgRect = connectionLineSvgContainer.getBoundingClientRect();
-                    const startX = (photoRect.left + photoRect.width * 0.5) - svgRect.left;
-                    const startY = (photoRect.top + photoRect.height * 0.35) - svgRect.top; // Start slightly higher on photo
-                    const endX = bioRect.left - svgRect.left - 15; // End to the left of bio
-                    const endYMid = (bioRect.top + bioRect.height * 0.5) - svgRect.top;
+                    const photoRect = teacherPhotoArea.getBoundingClientRect(); 
+                    const bioRect = teacherBioText.getBoundingClientRect(); 
+                    const svgRect = connectionLineSvgContainer.getBoundingClientRect();
+                    const startX = (photoRect.left + photoRect.width / 2) - svgRect.left;
+                    const startY = (photoRect.top + photoRect.height * 0.35) - svgRect.top; 
+                    const endX = bioRect.left - svgRect.left - 15;
                     const endYUpper = (bioRect.top + bioRect.height * 0.2) - svgRect.top;
+                    const endYMid = (bioRect.top + bioRect.height * 0.5) - svgRect.top;
                     const endYLower = (bioRect.top + bioRect.height * 0.8) - svgRect.top;
-
                     connectionLineSvgContainer.innerHTML = `
                         <path class="narrative-connection-line" d="M ${startX} ${startY} C ${startX - 35} ${startY}, ${endX + 35} ${endYUpper}, ${endX} ${endYUpper}" />
                         <path class="narrative-connection-line" d="M ${startX} ${startY} C ${startX - 45} ${startY + (endYMid - startY) * 0.5}, ${endX + 45} ${endYMid - (endYMid - startY) * 0.5}, ${endX} ${endYMid}" style="animation-delay: 0.2s;" />
