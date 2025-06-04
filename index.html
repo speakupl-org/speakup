@@ -4,722 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Speak Up - Conquiste a Fluência Definitiva</title>
-    <style>
-        /* --- Global Styles & Variables --- */
-        :root {
-            --main-background: #FFFFFF;
-            --off-white-section-bg: #F7F9FA;
-            --primary-serious-color: #006A70;
-            --primary-vibrant-accent: #FDB813;
-            --secondary-vibrant-accent: #00A09A;
-            --main-text-color: #1f1f1f;
-            
-            --white: #FFFFFF;
-            --light-text-on-dark-bg: #EFF3F4;
-            --medium-grey-text: #586065;
-            --border-light: #DEE2E6;
-            --cloud-color-base: 230, 238, 240; /* For rgba clouds */
-            --soundwave-color-base: var(--secondary-vibrant-accent);
-
-            --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-
-            --shadow-sm: 0 1px 2px rgba(0,0,0,0.03), 0 1px 1px rgba(0,0,0,0.02);
-            --shadow-md: 0 3px 5px -1px rgba(0,0,0,0.04), 0 2px 3px -1px rgba(0,0,0,0.03);
-            --shadow-lg: 0 8px 12px -3px rgba(0,0,0,0.04), 0 3px 5px -2px rgba(0,0,0,0.02);
-
-            --rgb-primary-serious-color: 0, 106, 112;
-            --rgb-primary-vibrant-accent: 253, 184, 19;
-            --rgb-secondary-vibrant-accent: 0, 160, 154;
-            --rgb-medium-grey-text: 88, 96, 101;
-        }
-
-        /* === ALL KEYFRAMES === */
-        @keyframes drawLine { from { width: 0; } to { width: 100%; } }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes gentleWave { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-5px) scale(1.02); } }
-        @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 8px -2px var(--primary-vibrant-accent), 0 0 15px -5px var(--primary-vibrant-accent); opacity: 0.8; } 50% { box-shadow: 0 0 12px 0px var(--primary-vibrant-accent), 0 0 25px -3px var(--primary-vibrant-accent); opacity: 1; } }
-        @keyframes slideUpFadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes blockageResolve { 0% { transform: scaleX(1) scaleY(0.2); opacity: 0.7; background-color: var(--medium-grey-text); } 50% { transform: scaleX(0.3) scaleY(1); opacity: 0.4; background-color: var(--secondary-vibrant-accent); } 100% { transform: scaleX(1) scaleY(1); opacity: 0; background-color: var(--secondary-vibrant-accent); } }
-        @keyframes quizPulse { 0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(var(--rgb-secondary-vibrant-accent), 0.3); } 50% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(var(--rgb-secondary-vibrant-accent), 0); } }
-        @keyframes bounceSlightly { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
-        @keyframes scaleIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        @keyframes growAndFadeQuote { from { transform: scale(0.5) translateY(10px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
-        @keyframes radiatingBackground { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-        @keyframes teacherFrameReveal { from { opacity: 0; transform: translateY(30px) scale(0.9); } to { opacity: 1; transform: translateY(0) scale(1); } }
-        @keyframes svgGentleBob { 0%, 100% { transform: translateX(-50%) translateY(-15%); } 50% { transform: translateX(-50%) translateY(calc(-15% - 4px)); } }
-        @media (min-width: 860px) { @keyframes svgGentleBob { 0%, 100% { transform: translateX(-50%) translateY(-10%); } 50% { transform: translateX(-50%) translateY(calc(-10% - 4px)); } } }
-        @keyframes sparkleFloat {0%{transform:translateY(20px) translateX(0) scale(.3);opacity:0}50%{opacity:.12}to{transform:translateY(-180px) translateX(30px) scale(1.3);opacity:0}}
-        @keyframes bridgeDotFlow {0%{transform:translateX(-30px) scale(.5);opacity:0}50%{opacity:.2}to{transform:translateX(30px) scale(1);opacity:0}}
-        @keyframes dynamicBlockageWrithe {0%{transform:scaleX(.9) rotate(-3deg);opacity:.15}25%{transform:scaleX(1.05) rotate(1deg);opacity:.1}50%{transform:scaleX(1.1) rotate(3deg);opacity:.08}75%{transform:scaleX(1.05) rotate(-1deg);opacity:.1}to{transform:scaleX(.9) rotate(-3deg);opacity:.15}}
-        @keyframes blockageFragmentFloat {0%{transform:translateY(10px) rotate(0deg) scale(.5);opacity:0}50%{opacity:.1}to{transform:translateY(-40px) rotate(720deg) scale(1.2);opacity:0}}
-        @keyframes decisiveClear {0%{transform:scale(.1) rotate(-45deg);opacity:0}60%{opacity:.18;transform:scale(1.5) rotate(15deg)}to{transform:scale(2.5) rotate(45deg);opacity:0}}
-        @keyframes energyWashFade {0%{opacity:0;transform:translateY(30%)}50%{opacity:.06;transform:translateY(0%)}to{opacity:0;transform:translateY(-30%)}}
-        @keyframes flowUpEnhanced {0%{transform:translateY(70px) scale(.5) rotate(-10deg);opacity:0}70%{opacity:.13}to{transform:translateY(-220px) scale(1.2) rotate(10deg);opacity:0}}
-        @keyframes drawPath {to{stroke-dashoffset:0}}
-        @keyframes quizNodePulse {0%,to{transform:scale(1);opacity:.1}50%{transform:scale(1.5);opacity:.25}}
-        @keyframes guidingAuraPulse {0%,to{transform:scale(.7) translate(-50%,-50%);opacity:.04}50%{transform:scale(1.3) translate(-50%,-50%);opacity:.09}}
-        @keyframes auraRayShimmer {0%{opacity:0;transform:scaleY(.5) rotate(-5deg)}50%{opacity:.07}to{opacity:0;transform:scaleY(1.5) rotate(5deg)}}
-        @keyframes strongConverge {0%{transform:translateY(100px) rotate(15deg) scaleX(.3);opacity:0}70%{opacity:.15}to{transform:translateY(-70px) rotate(-8deg) scaleX(1.8);opacity:0}}
-        @keyframes convergeLines {0%{transform:translateY(90px) rotate(12deg) scaleX(.4);opacity:0}70%{opacity:.12}to{transform:translateY(-60px) rotate(-7deg) scaleX(1.6);opacity:0}}
-        @keyframes focusPointGlow {0%,to{opacity:.08;transform:scale(.8) translate(-50%,-50%)}50%{opacity:.2;transform:scale(1.2) translate(-50%,-50%)}}
-        @keyframes cloudDrift { from { transform: translateX(-150%); opacity: 0; } 20%, 80% { opacity: 1; } to { transform: translateX(150%); opacity: 0; } }
-        @keyframes distantWavePulse { 0%, 100% { transform: scale(0.8); opacity: 0.05; } 50% { transform: scale(1.2); opacity: 0.15; } }
-        @keyframes blockedWaveJitter { 0%, 100% { transform: translateX(0) scaleX(1); opacity: 0.1; } 25% { transform: translateX(-3px) scaleX(0.95); opacity: 0.08; } 50% { transform: translateX(3px) scaleX(1.05); opacity: 0.12; } 75% { transform: translateX(-2px) scaleX(1); opacity: 0.09; } }
-        @keyframes barrierLineAppear { from { width: 0; opacity: 0; } to { width: 100%; opacity: 0.2; } }
-        @keyframes flowingWave { 0% { transform: translateX(-20%) scaleY(0.8); opacity: 0.1; } 50% { transform: translateX(0) scaleY(1.2); opacity: 0.2; } 100% { transform: translateX(20%) scaleY(0.8); opacity: 0.1; } }
-        @keyframes pathSoundNodeGlow { 0%, 100% { background-color: rgba(var(--rgb-primary-vibrant-accent), 0.5); box-shadow: 0 0 5px rgba(var(--rgb-primary-vibrant-accent),0.3); } 50% { background-color: rgba(var(--rgb-secondary-vibrant-accent), 0.7); box-shadow: 0 0 12px rgba(var(--rgb-secondary-vibrant-accent),0.5); } }
-        @keyframes gentleSoundWaveExpand { 0%, 100% { transform: scale(0.9); opacity: 0.08; } 50% { transform: scale(1.1); opacity: 0.18; } }
-        @keyframes speechBubbleEcho { 0% { transform: scale(0.5) translateY(10px); opacity: 0; } 70% { transform: scale(1.2) translateY(-5px); opacity: 0.25; } 100% { transform: scale(1.5) translateY(-15px); opacity: 0; } }
-        @keyframes positiveSoundRipple { 0% { transform: scale(0.3); opacity: 0; border-width: 4px; } 50% { opacity: 0.2; } 100% { transform: scale(3); opacity: 0; border-width: 1px; } }
-        @keyframes focusedSoundWavePropagate { 0% { width: 10%; opacity: 0.1; transform: translateX(-50%); } 50% { opacity: 0.3; } 100% { width: 100%; opacity: 0.05; transform: translateX(0%); } }
-        @keyframes starburst { 0% { transform: scale(0) rotate(0deg); opacity: 0; } 50% { opacity: 0.25; } 100% { transform: scale(1.5) rotate(360deg); opacity: 0; } }
-        
-        /* NEW Keyframes for subtle elements */
-        @keyframes energyWispDrift {
-          0% { transform: translate(0, 0) scale(0.8) rotate(-5deg); opacity: 0; }
-          25% { opacity: 0.05; }
-          50% { transform: translate(30px, -15px) scale(1) rotate(0deg); opacity: 0.08; }
-          75% { opacity: 0.05; }
-          100% { transform: translate(60px, -30px) scale(0.8) rotate(5deg); opacity: 0; }
-        }
-        @keyframes tensionLineAppear {
-          0%, 100% { width: 0; opacity: 0; transform: translateX(-50%) translateY(0); }
-          10% { width: 50px; opacity: 0.15; transform: translateX(-50%) translateY(-1px); }
-          50% { opacity: 0.25; transform: translateX(-50%) translateY(1px); }
-          90% { width: 50px; opacity: 0.15; transform: translateX(-50%) translateY(-1px); }
-        }
-        @keyframes drawGuidingPath { 
-          to { stroke-dashoffset: 0; opacity: 0.2; }
-        }
-        @keyframes thoughtMoteFloat {
-          0%, 100% { transform: translateY(0px) translateX(0px) scale(1); opacity: 0.1; }
-          25% { transform: translateY(-5px) translateX(3px) scale(1.05); opacity: 0.2; }
-          50% { transform: translateY(0px) translateX(-3px) scale(0.95); opacity: 0.25; }
-          75% { transform: translateY(5px) translateX(0px) scale(1.05); opacity: 0.2; }
-        }
-        @keyframes drawConnectionLine { 
-          from { stroke-dashoffset: 100; opacity: 0;}
-          to { stroke-dashoffset: 0; opacity: 0.4; }
-        }
-        @keyframes positiveMoteGlow {
-          0%, 100% { opacity: 0.1; transform: scale(0.8); box-shadow: 0 0 4px rgba(var(--rgb-primary-vibrant-accent),0.2); }
-          50% { opacity: 0.3; transform: scale(1.2); box-shadow: 0 0 10px rgba(var(--rgb-primary-vibrant-accent),0.4); }
-        }
-        @keyframes ctaFocusGlowPulse {
-          0%, 100% { box-shadow: 0 0 20px 8px rgba(var(--rgb-primary-vibrant-accent), 0.15), 0 0 30px 12px rgba(var(--rgb-primary-vibrant-accent), 0.08); opacity: 0.2; transform: scale(1); }
-          50% { box-shadow: 0 0 30px 12px rgba(var(--rgb-primary-vibrant-accent), 0.25), 0 0 50px 20px rgba(var(--rgb-primary-vibrant-accent), 0.12); opacity: 0.35; transform: scale(1.05); }
-        }
-
-
-        /* --- Base Scroll Animation Styles --- */
-        .animated-title, .animated-text, .benefit-item, .testimonial-card,
-        .quiz-placeholder, .blockage-element, .quiz-cta, .animated-teacher-frame, .final-cta-button { 
-            opacity: 0;
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-        }
-        .animated-title.in-view, .animated-text.in-view,
-        .benefit-item.in-view, .testimonial-card.in-view, 
-        .quiz-placeholder.in-view, .blockage-element.in-view,
-        .quiz-cta.in-view, .animated-teacher-frame.in-view,
-        .final-cta-button.in-view { 
-            animation: slideUpFadeIn 0.8s ease-out forwards;
-        }
-        .quiz-cta.in-view {
-            opacity: 1 !important; 
-            animation: bounceSlightly 1.5s ease-in-out infinite 1s, slideUpFadeIn 0.8s ease-out forwards;
-        }
-        .final-cta-button.in-view {
-            opacity: 1 !important; 
-            animation: slideUpFadeIn 0.8s ease-out 0.3s forwards, pulseGlow 2s infinite 2s;
-        }
-
-        /* --- CSS Reset/Normalization --- */
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; font-size: 16px; -webkit-text-size-adjust: 100%;}
-        body {
-            font-family: var(--font-primary); line-height: 1.7; color: var(--main-text-color);
-            background-color: var(--main-background);
-            -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
-            overflow-x: hidden;
-        }
-        img, svg { max-width: 100%; height: auto; display: block; }
-
-        /* --- Utility Classes & Base Section Styling (Mobile First) --- */
-        .container {
-            width: 90%; max-width: 1140px; margin-left: auto; margin-right: auto;
-            padding-left: 15px; padding-right: 15px; position: relative; z-index: 2;
-        }
-        .section { padding: 60px 0; position: relative; overflow: hidden; }
-        #pain-point.section { padding-top: 30px; }
-        @media (min-width: 768px) { 
-            .section { padding: 80px 0; }
-            #pain-point.section { padding-top: 40px; }
-        }
-
-        .section-title { font-size: 2rem; font-weight: 700; color: var(--primary-serious-color); text-align: center; margin-bottom: 35px; letter-spacing: -0.5px; }
-        .section-title .highlight { color: var(--secondary-vibrant-accent); }
-        .section-subtitle.highlight-text-main { font-weight: 500; font-size: 1.1rem; display: block; margin-top: -15px; color: var(--main-text-color); }
-        @media (min-width: 768px) {
-            .section-title { font-size: 2.3rem; margin-bottom: 45px; }
-            .section-subtitle.highlight-text-main { font-size: 1.2rem; margin-top: -18px; }
-        }
-
-        .cta-button { display: inline-block; padding: 12px 28px; background-color: var(--primary-vibrant-accent); color: var(--main-text-color); text-decoration: none; font-weight: 600; font-size: 1rem; border-radius: 8px; transition: background-color 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease, color 0.25s ease; border: none; cursor: pointer; text-align: center; box-shadow: var(--shadow-sm); }
-        .cta-button:hover, .cta-button:focus { background-color: #EAA703; transform: translateY(-3px) scale(1.02); box-shadow: var(--shadow-md); color: var(--main-text-color); }
-        .cta-button-large { font-size: 1.1rem; padding: 15px 35px; }
-        @media (min-width: 768px) {
-            .cta-button { padding: 15px 35px; font-size: 1.05rem; }
-            .cta-button-large { font-size: 1.2rem; padding: 18px 40px; }
-        }
-
-        /* --- Sticky Header (Mobile First) --- */
-        .sticky-header { 
-            position: sticky; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            background-color: rgba(255, 255, 255, 0.85); 
-            backdrop-filter: blur(12px); 
-            -webkit-backdrop-filter: blur(12px); 
-            padding: 8px 0; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
-            z-index: 1000; 
-        }
-        .sticky-header .container { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-        }
-        .logo-area { 
-            display: flex; 
-            align-items: center; 
-            text-decoration: none; 
-            flex-shrink: 0; 
-        }
-        .logo-icon { 
-            width: 36px; 
-            height: 36px; 
-            margin-right: 8px; 
-        }
-        .logo-text { 
-            font-size: 1.4rem; 
-            color: var(--main-text-color); 
-            font-weight: 500; 
-            white-space: nowrap; 
-        }
-        .logo-text .up { 
-            font-weight: 700; 
-            color: var(--secondary-vibrant-accent);
-        }
-        .header-cta { 
-            padding: 8px 12px; 
-            font-size: 0.8rem; 
-            flex-shrink: 1; 
-            text-align: center;
-        }
-
-        @media (max-width: 379px) {
-            .logo-icon {
-                width: 32px;
-                height: 32px;
-                margin-right: 6px;
-            }
-            .logo-text {
-                font-size: 1.25rem; 
-            }
-            .header-cta {
-                padding: 6px 10px; 
-                font-size: 0.75rem; 
-            }
-        }
-
-        @media (min-width: 768px) {
-            .sticky-header { padding: 10px 0; }
-            .logo-icon { 
-                width: 48px; 
-                height: 48px; 
-                margin-right: 12px; 
-            }
-            .logo-text { 
-                font-size: 1.75rem; 
-            }
-            .header-cta { 
-                padding: 10px 22px; 
-                font-size: 0.9rem; 
-            }
-        }
-
-
-        /* --- Hero Section (Mobile First) --- */
-        .hero-section { background-color: var(--main-background); padding: 70px 0 50px; text-align: center; }
-        .hero-background-shape { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; overflow: hidden; }
-        .hero-background-shape svg { width: 100%; height: 100%; object-fit: cover; animation: gentleWave 15s ease-in-out infinite alternate; }
-        .hero-background-shape svg path { fill: var(--secondary-vibrant-accent); }
-        .hero-title { font-size: 2rem; line-height: 1.25; font-weight: 700; color: var(--primary-serious-color); margin-bottom: 15px; letter-spacing: -0.5px; opacity: 0; animation: slideUpFadeIn 0.8s ease-out 0.2s forwards; }
-        .desktop-break { display: none; }
-        .hero-title .highlight-animated { position: relative; display: inline-block; color: var(--secondary-vibrant-accent); }
-        .hero-title .highlight-animated::after { content: ''; position: absolute; bottom: -4px; left: 0; height: 3px; background-color: var(--primary-vibrant-accent); border-radius: 2px; width: 0; animation: drawLine 0.8s ease-out 1.0s forwards; }
-        .hero-subtitle { font-size: 1rem; color: var(--medium-grey-text); margin-bottom: 30px; max-width: 95%; margin-left: auto; margin-right: auto; line-height: 1.65; opacity: 0; animation: slideUpFadeIn 0.8s ease-out 0.5s forwards; }
-        .hero-cta { margin-top: 10px; opacity: 0; animation: slideUpFadeIn 0.8s ease-out 0.8s forwards, pulseGlow 2.5s infinite 2.5s; }
-        @media (min-width: 480px) { .hero-title { font-size: 2.3rem; letter-spacing: -0.8px; } }
-        @media (min-width: 768px) { 
-            .hero-section { padding: 90px 0 70px; } .hero-title { font-size: 2.7rem; margin-bottom: 20px; } .desktop-break { display: block; }
-            .hero-title .highlight-animated::after { bottom: -5px; height: 3.5px; } .hero-subtitle { font-size: 1.2rem; margin-bottom: 35px; max-width: 720px; line-height: 1.75; }
-        }
-        @media (min-width: 992px) { .hero-title { font-size: 3rem; } }
-
-        /* --- Pain Point Section (Mobile First) --- */
-        .pain-point-section { background-color: var(--main-background); text-align: center; }
-        .pain-point-visual { height: 30px; margin-bottom: 15px; display: flex; justify-content: center; align-items: center; }
-        .empathetic-text { font-size: 1.05rem; max-width: 90%; margin-left: auto; margin-right: auto; color: var(--medium-grey-text); line-height: 1.75; }
-        @media (min-width: 768px) {
-            .pain-point-visual { height: 40px; margin-bottom: 20px; }
-            .blockage-element.in-view { width: 80px; height: 10px; border-radius: 5px;}
-            .empathetic-text { font-size: 1.2rem; max-width: 780px; line-height: 1.8;}
-        }
-
-        /* --- Benefits Section (Mobile First) --- */
-        .benefits-section { background-color: var(--off-white-section-bg); }
-        .benefit-list { display: flex; flex-direction: column; gap: 20px; max-width: 100%; }
-        .benefit-item:nth-child(1).in-view { transition-delay: 0.1s; } .benefit-item:nth-child(2).in-view { transition-delay: 0.25s; } .benefit-item:nth-child(3).in-view { transition-delay: 0.4s; }
-        .benefit-item:hover { transform: translateY(-5px) translateX(0) !important; box-shadow: var(--shadow-lg); }
-        .benefit-box { width: 50px; height: 50px; background-color: var(--primary-vibrant-accent); display: flex; justify-content: center; align-items: center; margin-right: 18px; flex-shrink: 0; border-radius: 8px; transition: transform 0.3s ease; }
-        .benefit-item:hover .benefit-box { transform: rotate(15deg) scale(1.05); }
-        .benefit-box .checkmark-icon { width: 26px; height: 26px; color: var(--primary-serious-color); }
-        .benefit-text { font-size: 1rem; color: var(--main-text-color); font-weight: 500; }
-        @media (min-width: 768px) {
-            .benefit-list { gap: 25px; max-width: 680px; margin: 0 auto;}
-            .benefit-item { padding: 22px 28px; border-radius: 12px; }
-            .benefit-box { width: 58px; height: 58px; margin-right: 22px; border-radius: 10px;}
-            .benefit-box .checkmark-icon { width: 30px; height: 30px; }
-            .benefit-text { font-size: 1.1rem; }
-        }
-
-        /* --- Mini-Quiz Section (Mobile First) --- */
-        .quiz-section { background-color: var(--main-background); text-align: center; position: relative; overflow: hidden; }
-        .quiz-section .narrative-background { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: 0; pointer-events: none; }
-        .quiz-section .container { position: relative; z-index: 1; }
-        .quiz-placeholder.in-view {
-            animation: quizPulse 2.5s infinite 0.5s, slideUpFadeIn 0.8s ease-out forwards; 
-            opacity: 1 !important; 
-            border: 2.5px dashed var(--secondary-vibrant-accent);
-            padding: 30px 20px; margin: 25px auto 30px; max-width: 100%;
-            background-color: color-mix(in srgb, var(--secondary-vibrant-accent) 4%, white);
-            border-radius: 10px; color: var(--medium-grey-text); position: relative;
-        }
-        .quiz-cta:hover, .quiz-cta:focus { background-color: #EAA703; color: var(--main-text-color); }
-        @media (min-width: 768px) {
-            .quiz-placeholder.in-view { padding: 38px 28px; margin: 30px auto 40px; max-width: 620px; border-radius: 12px;}
-            .quiz-placeholder p { font-size: 1.05rem; }
-        }
-
-        /* --- About Professor Luiz Section (Mobile First, using 3D frame approach) --- */
-        .about-teacher-section { background-color: var(--off-white-section-bg); }
-        .about-teacher-container { display: flex; flex-direction: column; align-items: center; gap: 30px; }
-        .bio-text-content { flex: 1; width: 100%; text-align: center; }
-        .bio-text-content .section-title { text-align: center; margin-bottom: 20px;}
-        .bio-text-content p { font-size: 1rem; color: var(--medium-grey-text); margin-bottom: 15px; }
-        .teacher-photo-area { order: -1; max-width: 280px; width: 85%; min-width: 220px; margin: 0 auto 20px auto; position: relative; display: flex; justify-content: center; align-items: center; }
-        .teacher-triangular-frame { width: 100%; height: 300px; position: relative; opacity: 0; } 
-        .teacher-triangular-frame::before, 
-        .teacher-triangular-frame::after { 
-            content: ''; 
-            position: absolute; 
-            width: 100%; 
-            height: 100%; 
-            top: 0; 
-            left: 0; 
-            box-sizing: border-box; 
-        }
-        .teacher-triangular-frame::before { /* Main visible yellow triangle */
-            clip-path: polygon(0% 100%, 100% 100%, 50% 0%); 
-            z-index: 2; 
-            background-color: var(--primary-vibrant-accent);
-            border: 3px solid var(--primary-vibrant-accent); 
-        }
-        .teacher-triangular-frame::after { /* Depth/shadow effect */
-            clip-path: polygon(0% 100%, 100% 100%, 50% 0%); 
-            z-index: 1; 
-            background-color: color-mix(in srgb, var(--primary-vibrant-accent) 80%, #000000 40%); 
-            border: none; 
-            transform: translate(3px, 3px); 
-        }
-        .teacher-face-svg { /* The professor's image */
-            position: absolute;
-            width: 100%; 
-            height: auto;
-            max-height: 100%; 
-            left: 50%;
-            bottom: 0;
-            transform: translateX(-50%) translateY(-15%); 
-            z-index: 3; 
-            animation: svgGentleBob 3.5s ease-in-out infinite 1.2s;
-        }
-        @media (min-width: 860px) {
-            .about-teacher-container { flex-direction: row; align-items: center; gap: 50px; }
-            .bio-text-content { order: 1; text-align: left; flex: 1.8; width: auto;} .bio-text-content .section-title { text-align: left;}
-            .teacher-photo-area { order: 2; margin: 0 0 0 auto; max-width: 300px; flex: 1; height: 350px; }
-            .teacher-triangular-frame { height: 330px; border-width: 4px;}
-            .teacher-face-svg { transform: translateX(-50%) translateY(-10%); } 
-            .bio-text-content p { font-size: 1.05rem; margin-bottom: 18px;}
-        }
-
-        /* --- Testimonials Section (Mobile First) --- */
-        .testimonials-section { background-color: var(--main-background); }
-        .testimonial-grid { display: grid; grid-template-columns: 1fr; gap: 20px; margin-top: 25px; }
-        .testimonial-card:hover { transform: translateY(-6px) !important; box-shadow: var(--shadow-lg); }
-        .quote-mark-animated { font-family: Georgia, serif; font-size: 3rem; color: var(--secondary-vibrant-accent); position: absolute; left: 15px; top: 12px; line-height: 0.8; opacity: 0; }
-        .testimonial-card.in-view .quote-mark-animated { animation: growAndFadeQuote 0.7s ease-out 0.5s forwards; }
-        .testimonial-quote-text { font-style: italic; color: var(--medium-grey-text); margin-bottom: 15px; font-size: 0.9rem; padding-top: 15px; }
-        .testimonial-author { font-weight: 600; text-align: right; color: var(--primary-serious-color); font-size: 0.85rem; }
-        .testimonial-author::before { content: "— "; }
-        @media (min-width: 600px) { .testimonial-grid { grid-template-columns: repeat(2, 1fr); gap: 25px; } }
-        @media (min-width: 992px) {
-            .testimonial-grid { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 30px;}
-            .testimonial-card { padding: 28px; border-radius: 12px; border-top-width: 6px; }
-            .quote-mark-animated { font-size: 3.5rem; left: 20px; top: 15px;}
-            .testimonial-quote-text { font-size: 0.95rem; padding-top: 20px; margin-bottom: 18px; }
-            .testimonial-author { font-size: 0.9rem; }
-        }
-
-        /* --- Final Call to Action Section (Mobile First with Button Fix) --- */
-        .final-cta-section { background-color: var(--primary-serious-color); padding: 60px 0; text-align: center; color: var(--white); position: relative; overflow: hidden; }
-        .final-cta-background-animation { position: absolute; top:0; left:0; width: 100%; height: 100%; z-index: 0; background: linear-gradient(135deg, var(--secondary-vibrant-accent) 0%, var(--primary-serious-color) 30%, var(--primary-serious-color) 70%, var(--primary-vibrant-accent) 100%); background-size: 300% 300%; opacity: 0.15; animation: radiatingBackground 15s ease infinite; }
-        .final-cta-section .narrative-background { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: 1; pointer-events: none; }
-        .final-cta-section .final-cta-content-container { position: relative; z-index: 2; } /* Ensures content is above narrative and gradient */
-        .final-cta-title { font-size: 1.8rem; color: var(--white); margin-bottom: 25px; letter-spacing: -0.5px; }
-        .final-cta-button {
-            background-color: var(--primary-vibrant-accent) !important; 
-            color: var(--main-text-color) !important; 
-            border: none; margin-bottom: 20px;
-            position: relative; /* Ensure it's above the focus glow if z-index isn't enough */
-            z-index: 1; /* Above narrative-cta-focus-glow */
-        }
-        .final-cta-button:hover, .final-cta-button:focus { background-color: #EAA703 !important; color: var(--main-text-color) !important; }
-        .reassurance-text { font-size: 1rem; color: var(--light-text-on-dark-bg); max-width: 90%; margin: 0 auto; line-height: 1.7; }
-        @media (min-width: 768px) {
-            .final-cta-section { padding: 80px 0; } .final-cta-title { font-size: 2.4rem; margin-bottom: 30px;}
-            .final-cta-button { margin-bottom: 25px; } .reassurance-text { font-size: 1.1rem; max-width: 620px; line-height: 1.75;}
-        }
-
-        /* --- Footer (Mobile First) --- */
-        .site-footer { background-color: var(--main-text-color); color: #a0a7ac; text-align: center; padding: 25px 0; font-size: 0.8rem; border-top: 3px solid var(--primary-serious-color); }
-        .site-footer p { margin-bottom: 0; line-height: 1.5; }
-        .site-footer a { color: #c0c7cc; text-decoration: none; transition: color 0.2s ease; }
-        .site-footer a:hover { color: var(--primary-vibrant-accent); text-decoration: underline; }
-        @media (min-width: 768px) { .site-footer { padding: 30px 0; font-size: 0.85rem; } }
-
-
-        /* === NARRATIVE BACKGROUND STYLES === */
-        .narrative-background { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: 1; pointer-events: none; }
-        .hero-section .hero-background-shape { z-index: 0; }
-
-        .narrative-transition-element-area { height: 40px; position: relative; width: 100%; overflow: hidden; display: flex; justify-content: center; align-items: center; margin-top: -15px; margin-bottom: -15px; z-index: 1; }
-        .narrative-bridge-dot { width: 5px; height: 5px; background-color: rgba(var(--rgb-secondary-vibrant-accent), 0.7); border-radius: 50%; margin: 0 6px; opacity: 0; animation: bridgeDotFlow 3s infinite ease-in-out; }
-        .narrative-bridge-dot:nth-child(1) { animation-delay: 0s; } 
-        .narrative-bridge-dot:nth-child(2) { animation-delay: 0.2s; } 
-        .narrative-bridge-dot:nth-child(3) { animation-delay: 0.4s; }
-        .narrative-transition-element-area .narrative-cloud.tiny-transition { width: 60px; height: 20px; animation-duration: 20s; opacity: 0.7 !important; animation-name:none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.6); }
-        @media (min-width: 768px) {
-            .narrative-transition-element-area { height: 60px; margin-top: -20px; margin-bottom: -20px;}
-            .narrative-bridge-dot { width: 6px; height: 6px; margin: 0 8px; background-color: rgba(var(--rgb-secondary-vibrant-accent), 0.8);}
-        }
-
-        /* --- CLOUDS --- */
-        .narrative-cloud { position: absolute; border-radius: 50%; opacity: 0; background-color: rgba(var(--cloud-color-base), 0.4); animation-name: cloudDrift; animation-timing-function: linear; animation-iteration-count: infinite; z-index: -1; }
-        .narrative-cloud.style1 { width: 120px; height: 40px; border-radius: 20px / 30px; animation-duration: 70s; }
-        .narrative-cloud.style1::before, .narrative-cloud.style1::after { content: ''; position: absolute; background-color: inherit; border-radius: 50%; }
-        .narrative-cloud.style1::before { width: 60px; height: 60px; top: -25px; left: 15px; }
-        .narrative-cloud.style1::after { width: 80px; height: 80px; top: -30px; right: 10px; }
-        .narrative-cloud.style2 { width: 160px; height: 30px; border-radius: 15px; animation-duration: 85s; left: -160px; }
-        .narrative-cloud.style2::before { content: ''; position: absolute; background-color: inherit; border-radius: 50%; width: 100px; height: 50px; top: -15px; left: 50%; transform: translateX(-50%); }
-        .narrative-cloud.style3 { width: 80px; height: 25px; border-radius: 12px / 20px; animation-duration: 60s; }
-        .narrative-cloud.style3::before { content: ''; position: absolute; background-color: inherit; border-radius: 50%; width: 40px; height: 40px; top: -15px; left: 8px; }
-        .narrative-cloud.style3::after { content: ''; position: absolute; background-color: inherit; border-radius: 50%; width: 50px; height: 50px; top: -20px; right: 4px; }
-        .narrative-cloud.dense { background-color: rgba(var(--cloud-color-base), 0.55); } 
-        .narrative-cloud.bright { background-color: rgba(var(--cloud-color-base), 0.3); box-shadow: 0 0 15px 8px rgba(var(--white), 0.25); }
-        .narrative-cloud.wispy { background-color: rgba(var(--cloud-color-base), 0.25); transform: scale(0.8); } 
-        .narrative-cloud.calm { animation-duration: 100s; }
-        .narrative-cloud.clear-sky { background-color: rgba(var(--cloud-color-base), 0.15); } 
-        .narrative-cloud.sunset-glow { background-image: linear-gradient(to top, rgba(var(--rgb-primary-vibrant-accent),0.2), rgba(var(--cloud-color-base), 0.3)); }
-        @media (min-width: 768px) {
-            .narrative-cloud.style1 { width: 150px; height: 50px; border-radius: 25px / 40px; animation-duration: 60s; }
-            .narrative-cloud.style1::before { width: 80px; height: 80px; top: -30px; left: 20px; } .narrative-cloud.style1::after { width: 100px; height: 100px; top: -40px; right: 10px; }
-            .narrative-cloud.style2 { width: 200px; height: 40px; border-radius: 20px; animation-duration: 75s; left: -200px; }
-            .narrative-cloud.style2::before { width: 120px; height: 60px; top: -20px; }
-            .narrative-cloud.style3 { width: 100px; height: 35px; border-radius: 20px / 30px; animation-duration: 50s; }
-            .narrative-cloud.style3::before { width: 50px; height: 50px; top: -20px; left: 10px; } .narrative-cloud.style3::after { width: 60px; height: 60px; top: -25px; right: 5px; }
-        }
-
-        /* --- SOUND WAVES --- */
-        .narrative-distant-wave { position: absolute; width: 60px; height: 60px; border: 2px solid rgba(var(--rgb-secondary-vibrant-accent), 0.2); border-radius: 50%; opacity: 0; animation: distantWavePulse 5s infinite ease-in-out; }
-        .narrative-distant-wave.delayed { animation-delay: 2.5s; }
-        .narrative-blocked-wave { position: absolute; width: 80px; height: 25px; border: 2px solid rgba(var(--rgb-medium-grey-text), 0.4); border-radius: 12px; opacity: 0.1; animation: blockedWaveJitter 1s infinite; }
-        .narrative-flowing-wave { position: absolute; width: 120px; height: 120px; border: 2px solid rgba(var(--rgb-secondary-vibrant-accent), 0.3); border-radius: 50%; opacity: 0; animation: flowingWave 6s infinite ease-in-out alternate; }
-        .narrative-flowing-wave.alt { animation-delay: 1s; border-color: rgba(var(--rgb-primary-vibrant-accent), 0.3); }
-        .narrative-teacher-soundwave.gentle { position: absolute; width: 100px; height: 100px; border: 2px solid rgba(var(--rgb-primary-vibrant-accent), 0.25); border-radius: 50%; opacity: 0; animation: gentleSoundWaveExpand 5s infinite ease-in-out 0.5s; }
-        .narrative-positive-sound-ripple { position: absolute; width: 50px; height: 50px; border: 3px solid rgba(var(--rgb-secondary-vibrant-accent), 0.5); border-radius: 50%; opacity: 0; animation: positiveSoundRipple 4s infinite linear; }
-        .narrative-positive-sound-ripple.large { width: 70px; height: 70px; animation-duration: 5s; } 
-        .narrative-positive-sound-ripple.small { width: 30px; height: 30px; animation-duration: 3.5s; }
-        .narrative-focused-soundwave.strong { position: absolute; height: 3px; background-color: rgba(var(--rgb-primary-vibrant-accent), 0.6); border-radius: 1.5px; opacity: 0; animation: focusedSoundWavePropagate 3s infinite ease-out; left: 0; }
-        .narrative-focused-soundwave.strong.delayed { animation-delay: 0.8s; }
-        @media (min-width: 768px) {
-            .narrative-distant-wave { width: 80px; height: 80px; } .narrative-blocked-wave { width: 100px; height: 30px; } .narrative-flowing-wave { width: 150px; height: 150px; }
-            .narrative-teacher-soundwave.gentle { width: 120px; height: 120px; }
-            .narrative-positive-sound-ripple { width: 60px; height: 60px; } .narrative-positive-sound-ripple.large { width: 90px; height: 90px; } .narrative-positive-sound-ripple.small { width: 40px; height: 40px; }
-            .narrative-focused-soundwave.strong { height: 4px; border-radius: 2px; }
-        }
-
-        /* --- OTHER NARRATIVE ELEMENTS (Existing + New) --- */
-        .narrative-spark { position: absolute; width: 8px; height: 8px; background-color: rgba(var(--rgb-primary-vibrant-accent), 0.75); border-radius: 50%; opacity: 0; animation: sparkleFloat 7.5s infinite linear; } 
-        .narrative-blockage-fragment { position: absolute; width: 7px; height: 7px; background-color: rgba(var(--rgb-medium-grey-text), 0.45); border-radius: 2px; opacity: 0; animation: blockageFragmentFloat 6s infinite linear; }
-        .narrative-clearing-element.decisive { position: absolute; top: 50%; left: 50%; width: 110px; height: 110px; border-radius: 50%; background: radial-gradient(circle, rgba(var(--rgb-secondary-vibrant-accent), 0.08) 0%, rgba(var(--rgb-secondary-vibrant-accent), 0) 65%); animation: decisiveClear 7s ease-in-out 1.8s infinite; transform: translate(-50%, -50%) scale(0); opacity: 0; }
-        .narrative-energy-wash { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(var(--rgb-secondary-vibrant-accent), 0) 0%, rgba(var(--rgb-secondary-vibrant-accent), 0.08) 50%, rgba(var(--rgb-secondary-vibrant-accent), 0) 100%); animation: energyWashFade 8s infinite ease-in-out; opacity: 0; }
-        .narrative-flow-particle { position: absolute; width: 12px; height: 12px; background-color: rgba(var(--rgb-primary-vibrant-accent), 0.6); border-radius: 55% 45% 75% 25% / 45% 55% 45% 55%; opacity: 0; animation: flowUpEnhanced 6.5s infinite linear; }
-        .narrative-flow-particle.fast { animation-duration: 5.5s; width: 10px; height: 10px;} 
-        .narrative-flow-particle.slow { animation-duration: 8.5s; width: 15px; height: 15px;} 
-        .narrative-quiz-node { position: absolute; width: 10px; height: 10px; background-color: rgba(var(--rgb-primary-vibrant-accent), 0.8); border-radius: 50%; box-shadow: 0 0 8px rgba(var(--rgb-primary-vibrant-accent), 0.5); animation: quizNodePulse 3s infinite ease-in-out; }
-        .narrative-guiding-aura { position: absolute; width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle, rgba(var(--rgb-primary-vibrant-accent),0) 0%, rgba(var(--rgb-primary-vibrant-accent),0.02) 40%, rgba(var(--rgb-primary-vibrant-accent),0.08) 70%, rgba(var(--rgb-primary-vibrant-accent),0) 100%); animation: guidingAuraPulse 6s infinite ease-in-out; }
-        .narrative-aura-ray { position: absolute; width: 80px; height: 2px; background-color: rgba(var(--rgb-primary-vibrant-accent),0.15); opacity:0; animation: auraRayShimmer 5s infinite; transform-origin: left center;}
-        .narrative-converging-line { position: absolute; opacity: 0; } 
-        .narrative-converging-line.strong { animation-name: strongConverge; width: 4px; height: 180px; background: linear-gradient(to top, transparent, rgba(var(--rgb-secondary-vibrant-accent),0.7));} 
-        .narrative-converging-line.variant2 { animation-name: convergeLines; width: 3px; height: 150px; background: linear-gradient(to top, transparent, rgba(var(--rgb-primary-vibrant-accent),0.6));}
-
-        .narrative-starburst-element { position: absolute; width: 40px; height: 40px; opacity: 0; animation: starburst 3.5s infinite ease-out; }
-        .narrative-starburst-element::before, .narrative-starburst-element::after { content: ''; position: absolute; top: 50%; left: 50%; width: 100%; height: 3px; background-color: rgba(var(--rgb-primary-vibrant-accent), 0.5); border-radius: 1.5px; transform-origin: center; transform: translate(-50%, -50%) rotate(0deg); }
-        .narrative-starburst-element::after { transform: translate(-50%, -50%) rotate(90deg); }
-
-        .narrative-barrier-line { position: absolute; height: 2px; max-width: 120px; background-color: rgba(var(--rgb-medium-grey-text), 0.5); opacity: 0; animation: barrierLineAppear 1.5s forwards ease-out; }
-        .narrative-barrier-line.slanted { transform: rotate(15deg); max-width: 100px; animation-delay: 0.5s; }
-        .narrative-path-sound-node { position: absolute; width: 10px; height: 10px; background-color: rgba(var(--rgb-primary-vibrant-accent), 0.5); border-radius: 50%; opacity: 0.7; box-shadow: 0 0 8px rgba(var(--rgb-primary-vibrant-accent), 0.4); animation: pathSoundNodeGlow 2.5s infinite ease-in-out; }
-        .narrative-speech-bubble-echo { position: absolute; width: 40px; height: 30px; background-color: rgba(var(--rgb-secondary-vibrant-accent), 0.1); border: 1px solid rgba(var(--rgb-secondary-vibrant-accent), 0.2); border-radius: 8px 8px 8px 2px; opacity: 0; animation: speechBubbleEcho 4s infinite ease-out; transform-origin: bottom left; }
-        .narrative-speech-bubble-echo::after { content: ''; position: absolute; bottom: -7px; left: 8px; width: 0; height: 0; border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 9px solid rgba(var(--rgb-secondary-vibrant-accent), 0.15); }
-        .narrative-speech-bubble-echo.delayed { animation-delay: 1.5s; }
-        .narrative-dynamic-blockage-placeholder { 
-            position: absolute;
-            width: 100px; 
-            height: 20px; 
-            animation: dynamicBlockageWrithe 4s infinite ease-in-out .5s;
-            border-radius: 5px;
-            opacity: 0; 
-        }
-        .narrative-energy-wisp {
-          position: absolute;
-          width: 60px; height: 2px; 
-          background: linear-gradient(90deg, transparent, rgba(var(--rgb-secondary-vibrant-accent), 0.15), transparent);
-          border-radius: 50%;
-          opacity: 0;
-          animation: energyWispDrift 12s infinite ease-in-out;
-        }
-        .narrative-tension-line {
-          position: absolute;
-          height: 1px;
-          background-color: rgba(var(--rgb-medium-grey-text), 0.5);
-          opacity: 0;
-          animation: tensionLineAppear 3.5s infinite cubic-bezier(0.68, -0.55, 0.27, 1.55);
-          left: 50%; 
-        }
-        .narrative-guiding-path-line { 
-          stroke-width: 1.5px;
-          stroke: rgba(var(--rgb-primary-serious-color), 0.2);
-          fill: none;
-          stroke-dasharray: 150; 
-          stroke-dashoffset: 150;
-          opacity: 0;
-          animation: drawGuidingPath 7s infinite alternate ease-in-out;
-        }
-        .narrative-thought-mote {
-          position: absolute;
-          width: 8px; height: 8px;
-          background-color: rgba(var(--rgb-secondary-vibrant-accent), 0.25);
-          border-radius: 50%;
-          opacity: 0;
-          box-shadow: 0 0 5px rgba(var(--rgb-secondary-vibrant-accent),0.15);
-          animation: thoughtMoteFloat 6s infinite ease-in-out;
-        }
-        .narrative-connection-line { 
-          stroke-width: 1px;
-          stroke: rgba(var(--rgb-primary-vibrant-accent), 0.4);
-          fill: none;
-          stroke-dasharray: 100; 
-          stroke-dashoffset: 100;
-          opacity: 0;
-        }
-        .teacher-narrative-bg .narrative-connection-line.in-view-draw { /* Class added by JS */
-            animation: drawConnectionLine 2s ease-out forwards;
-        }
-        .narrative-positive-mote {
-          position: absolute;
-          width: 5px; height: 5px;
-          background-color: rgba(var(--rgb-primary-vibrant-accent), 0.5);
-          border-radius: 50%;
-          opacity: 0;
-          animation: positiveMoteGlow 4.5s infinite ease-in-out;
-        }
-        .narrative-cta-focus-glow {
-          position: absolute;
-          width: 120%; 
-          height: 120%; 
-          top: 50%; left: 50%;
-          transform: translate(-50%, -50%);
-          border-radius: 12px; 
-          opacity: 0;
-          animation: ctaFocusGlowPulse 3s infinite ease-in-out 1s; 
-          pointer-events: none; 
-          z-index: -1; /* Ensure it's behind the button text/content */
-        }
-
-
-        @media (min-width: 768px) { /* Desktop sizes for re-used/other elements */
-            .narrative-blockage-fragment { width: 8px; height: 8px; background-color: rgba(var(--rgb-medium-grey-text), 0.5);}
-            .narrative-clearing-element.decisive { width: 130px; height: 130px; background: radial-gradient(circle, rgba(var(--rgb-secondary-vibrant-accent), 0.1) 0%, rgba(var(--rgb-secondary-vibrant-accent), 0) 70%);}
-            .narrative-flow-particle {width: 15px; height: 15px; background-color: rgba(var(--rgb-primary-vibrant-accent), 0.65);}
-            .narrative-flow-particle.fast { width: 12px; height: 12px;} .narrative-flow-particle.slow { width: 18px; height: 18px;}
-            .narrative-quiz-node {width:12px; height:12px;}
-            .narrative-barrier-line { max-width: 150px; } .narrative-barrier-line.slanted { max-width: 120px;}
-            .narrative-path-sound-node { width: 12px; height: 12px; }
-            .narrative-speech-bubble-echo { width: 50px; height: 40px; border-radius: 10px 10px 10px 3px; }
-            .narrative-speech-bubble-echo::after { bottom: -8px; left: 10px; border-left-width:8px; border-right-width:8px; border-top-width:10px;}
-            .narrative-starburst-element { width: 50px; height: 50px; } .narrative-starburst-element::before, .narrative-starburst-element::after { height: 4px; border-radius: 2px; }
-        }
-
-
-        /* --- PLACEMENT of ALL Narrative Elements within sections --- */
-        /* Hero Section Narrative Elements */
-        .hero-narrative-bg .narrative-cloud.style1 { top: 10%; left: -150px; animation-delay: 0s; } /* 1st cloud */
-        .hero-narrative-bg .narrative-cloud.style2 { top: 60%; left: -200px; animation-delay: 10s; } /* 2nd cloud */
-        .hero-narrative-bg .narrative-cloud.style3 { top: 30%; left: -100px; animation-delay: 20s; } /* 3rd cloud */
-        .hero-narrative-bg .narrative-distant-wave:nth-of-type(1) { top: 20%; left: 25%; animation-delay: 0.2s; } /* 1st distant wave */
-        .hero-narrative-bg .narrative-distant-wave.delayed:nth-of-type(2) { top: 70%; right: 20%; left:auto; animation-delay: 2.7s; } /* 2nd distant wave */
-        .hero-narrative-bg .narrative-spark:nth-of-type(1) { top: 15%; left: 80%; animation-delay: 1s; } /* 1st spark */
-        .hero-narrative-bg .narrative-spark:nth-of-type(2) { top: 80%; left: 15%; animation-delay: 3s; } /* 2nd spark */
-        .hero-narrative-bg .narrative-spark:nth-of-type(3) { top: 50%; left: 5%; animation-delay: 5s; } /* 3rd spark */
-        .hero-narrative-bg .narrative-energy-wisp:nth-of-type(1) { top: 25%; left: 10%; animation-delay: 0.5s; } /* 1st wisp */
-        .hero-narrative-bg .narrative-energy-wisp:nth-of-type(2) { top: 75%; right: 10%; animation-delay: 2.5s; transform: scaleX(-1);} /* 2nd wisp, flipped */
-
-        /* Pain Point Section Narrative Elements */
-        .pain-narrative-bg .narrative-cloud.style2.dense { top: 15%; left: -200px; animation-delay: 1s; } /* 1st cloud (dense) */
-        .pain-narrative-bg .narrative-blocked-wave { top: 55%; left: 40%; transform-origin: center; animation-delay: 0.3s; } /* 1st Blocked wave */
-        .pain-narrative-bg .narrative-barrier-line:nth-of-type(1) { top: 25%; left: 10%; animation-delay: 0.1s; } /* 1st barrier line */
-        .pain-narrative-bg .narrative-barrier-line.slanted:nth-of-type(2) { top: 70%; right: 10%; transform: rotate(20deg); animation-delay: 0.6s;} /* 2nd barrier line (slanted) */
-        .pain-narrative-bg .narrative-blockage-fragment:nth-of-type(1) {top: 45%; left: 35%; animation-delay: 1s;} /* 1st fragment */
-        .pain-narrative-bg .narrative-blockage-fragment:nth-of-type(2) {top: 60%; left: 70%; animation-delay: 1.8s;} /* 2nd fragment */
-        .pain-narrative-bg .narrative-dynamic-blockage-placeholder { top: 30%; left: 60%; animation-delay: 0.5s; } /* 1st Dynamic blockage */
-        .pain-narrative-bg .narrative-tension-line:nth-of-type(1) { top: 50%; animation-delay: 0.8s; } /* 1st tension line */
-        .pain-narrative-bg .narrative-tension-line:nth-of-type(2) { top: 80%; animation-delay: 2.2s; } /* 2nd tension line */
-        .pain-narrative-bg .narrative-clearing-element.decisive {top: 50%; left: 50%; animation-delay: 1.8s; } /* 1st Decisive clear */
-
-        /* Benefits Section Narrative Elements */
-        .benefits-narrative-bg .narrative-cloud.style1.bright { top: 5%; left: -150px; animation-delay: 2s;} /* 1st cloud (bright) */
-        .benefits-narrative-bg .narrative-cloud.style3.bright { top: 65%; left: -100px; animation-delay: 12s;} /* 2nd cloud (bright) */
-        .benefits-narrative-bg .narrative-flowing-wave:nth-of-type(1) { top: 25%; left: 15%; animation-delay: 0.4s; } /* 1st flowing wave */
-        .benefits-narrative-bg .narrative-flowing-wave.alt:nth-of-type(2) { top: 50%; left: 60%; animation-delay: 1.4s; } /* 2nd flowing wave (alt) */
-        .benefits-narrative-bg .narrative-energy-wash { animation-delay: 0.2s; } /* 1st Energy wash */
-        .benefits-narrative-bg .narrative-flow-particle.fast:nth-of-type(1) { bottom: 0%; left: 20%; animation-delay: 0s; } /* 1st particle (fast) */
-        .benefits-narrative-bg .narrative-flow-particle:nth-of-type(2) { bottom: 0%; left: 75%; animation-delay: 1.1s; } /* 2nd particle (regular) */
-        .benefits-narrative-bg .narrative-flow-particle.slow:nth-of-type(3) { bottom: 0%; left: 45%; animation-delay: 2.2s; } /* 3rd particle (slow) */
-        .benefits-narrative-bg .narrative-spark:nth-of-type(1) { top: 10%; left: 90%; animation-delay: 0.5s; } /* 1st spark in benefits */
-        .benefits-narrative-bg .narrative-guiding-path-svg { position: absolute; top:0; left:0; width:100%; height:100%; z-index:0; pointer-events:none;} /* Guiding path SVG container */
-
-        /* Quiz Section Narrative Elements */
-        .quiz-narrative-bg .narrative-cloud.style1.wispy { top: 70%; left: -150px; animation-delay: 3s;} /* 1st cloud (wispy) */
-        .quiz-narrative-bg .narrative-path-sound-node:nth-of-type(1) { top: 30%; left: 35%; animation-delay: 0.3s; } /* 1st path sound node */
-        .quiz-narrative-bg .narrative-path-sound-node:nth-of-type(2) { top: 65%; left: 60%; animation-delay: 1.1s; } /* 2nd path sound node */
-        .quiz-narrative-bg .narrative-path-sound-node:nth-of-type(3) { top: 45%; left: 80%; animation-delay: 1.9s; } /* 3rd path sound node */
-        .quiz-narrative-bg .narrative-quiz-node { top: 40%; left: 15%; animation-delay: 8s; } /* 1st quiz node */
-        .quiz-narrative-bg .narrative-thought-mote:nth-of-type(1) { top: 20%; left: 20%; animation-delay: 0.5s; } /* 1st thought mote */
-        .quiz-narrative-bg .narrative-thought-mote:nth-of-type(2) { top: 70%; left: 75%; animation-delay: 1.5s; } /* 2nd thought mote */
-        .quiz-narrative-bg .narrative-thought-mote:nth-of-type(3) { top: 50%; left: 50%; animation-delay: 2.5s; } /* 3rd thought mote */
-
-
-        /* Teacher Section Narrative Elements */
-        .teacher-narrative-bg .narrative-cloud.style3.calm { top: 10%; left: -100px; animation-delay: 5s;} /* 1st cloud (calm) */
-        .teacher-narrative-bg .narrative-connection-line-svg { position: absolute; top:0; left:0; width:100%; height:100%; z-index: 0; pointer-events: none;} /* SVG container for connection lines */
-        
-        @media (min-width: 860px) { /* Desktop teacher narrative pos */
-            .teacher-narrative-bg .narrative-guiding-aura { left: calc(100% - 150px - 15px); top: 50%; transform: translate(-50%, -50%); animation-delay: 0.1s; } /* 1st guiding aura */
-            .teacher-narrative-bg .narrative-teacher-soundwave.gentle { left: auto; right: calc(100% - 150px - 15px + 160px); top: 50%; transform: translateY(-50%); animation-delay: 0.5s; } /* 1st teacher soundwave */
-            .teacher-narrative-bg .narrative-aura-ray { left: calc(100% - 150px - 15px); top: 50%; } 
-            .teacher-narrative-bg .narrative-aura-ray:nth-of-type(1) { transform: translateY(-100px) rotate(-30deg) translateX(-10px); animation-delay: 0.2s; } /* 1st aura ray */
-            .teacher-narrative-bg .narrative-aura-ray:nth-of-type(2) { transform: translateY(-90px) rotate(10deg) translateX(5px); animation-delay: 0.7s; } /* 2nd aura ray */
-            .teacher-narrative-bg .narrative-aura-ray:nth-of-type(3) { transform: translateY(100px) rotate(20deg) translateX(-5px); animation-delay: 1.2s; } /* 3rd aura ray */
-        }
-        @media (max-width: 859px) { /* Mobile teacher narrative pos */
-             .teacher-narrative-bg .narrative-guiding-aura { top: calc(50% + 30px); left: 50%; width:300px; height:300px; animation-delay: 0.1s;} /* 1st guiding aura */
-             .teacher-narrative-bg .narrative-teacher-soundwave.gentle { top: calc(50% + 30px + 170px); left: 50%; transform: translateX(-50%); animation-delay: 0.5s;} /* 1st teacher soundwave */
-             .teacher-narrative-bg .narrative-aura-ray { left: 50%; top: calc(50% + 30px); height: 60px;} 
-            .teacher-narrative-bg .narrative-aura-ray:nth-of-type(1) { transform: translateY(-80px) rotate(-30deg) translateX(-10px); animation-delay: 0.2s;} /* 1st aura ray */
-            .teacher-narrative-bg .narrative-aura-ray:nth-of-type(2) { transform: translateY(-70px) rotate(10deg) translateX(5px); animation-delay: 0.7s;} /* 2nd aura ray */
-            .teacher-narrative-bg .narrative-aura-ray:nth-of-type(3) { transform: translateY(70px) rotate(30deg) translateX(10px); animation-delay: 1.2s; } /* 3rd aura ray */
-        }
-
-        /* Testimonials Section Narrative Elements */
-        .testimonials-narrative-bg .narrative-cloud.style1.clear-sky { top: 10%; left: -150px; animation-delay: 0.5s; opacity:0.8 !important; animation-name:none; transform: translateX(25vw); } /* 1st cloud (clear-sky) */
-        .testimonials-narrative-bg .narrative-speech-bubble-echo:nth-of-type(1) { top: 20%; left: 15%; animation-delay: 0.2s;} /* 1st speech bubble */
-        .testimonials-narrative-bg .narrative-speech-bubble-echo.delayed:nth-of-type(2) { top: 60%; left: 70%; animation-delay: 1.7s;} /* 2nd speech bubble (delayed) */
-        .testimonials-narrative-bg .narrative-positive-sound-ripple.large:nth-of-type(1) { top: 40%; left: 40%; animation-delay: 0.3s; } /* 1st sound ripple (large) */
-        .testimonials-narrative-bg .narrative-positive-sound-ripple.small:nth-of-type(2) { top: 70%; left: 20%; animation-delay: 1.3s; } /* 2nd sound ripple (small) */
-        .testimonials-narrative-bg .narrative-positive-sound-ripple:nth-of-type(3) { top: 50%; left: 80%; animation-delay: 2.0s; width: 40px; height: 40px; } /* 3rd sound ripple */
-        .testimonials-narrative-bg .narrative-positive-mote:nth-of-type(1) {top: 15%; left: 70%; animation-delay: 0.4s;} /* 1st positive mote */
-        .testimonials-narrative-bg .narrative-positive-mote:nth-of-type(2) {top: 80%; left: 30%; animation-delay: 1.2s;} /* 2nd positive mote */
-
-        /* Final CTA Section Narrative Elements */
-        .final-cta-narrative-bg .narrative-cloud.style2.sunset-glow { top: 20%; left: -200px; animation-delay: 1s; } /* 1st cloud (sunset-glow) */
-        .final-cta-narrative-bg .narrative-focused-soundwave.strong:nth-of-type(1) { top: 30%; animation-delay: 0.2s; } /* 1st focused soundwave */
-        .final-cta-narrative-bg .narrative-focused-soundwave.strong.delayed:nth-of-type(2) { top: 60%; animation-delay: 1s; } /* 2nd focused soundwave (delayed) */
-        .final-cta-narrative-bg .narrative-converging-line.strong:nth-of-type(1) {left: 20%; animation-delay: 0s;} /* 1st converging line (strong) */
-        .final-cta-narrative-bg .narrative-converging-line.variant2:nth-of-type(2) {left: 80%; top: 10%; animation-delay: 0.7s;} /* 2nd converging line (variant2) */
-        .final-cta-narrative-bg .narrative-starburst-element { top: 45%; left: 45%; transform-origin: center; animation-delay: 1.5s;} /* 1st starburst */
-        .final-cta-section .final-cta-content-container .narrative-cta-focus-glow { /* Position relative to the content container of final CTA */
-            width: 250px; 
-            height: 100px; 
-            top: 55%; 
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: -1; 
-        }
-
-
-        /* --- MOBILE OPTIMIZATIONS FOR NARRATIVE ELEMENTS --- */
-        @media (max-width: 768px) {
-            .narrative-aura-ray { width: 60px; } 
-        }
-        @media (max-width: 480px) {
-            .hero-narrative-bg .narrative-cloud.style2, .hero-narrative-bg .narrative-distant-wave.delayed:nth-of-type(2), .hero-narrative-bg .narrative-spark:nth-of-type(2), .hero-narrative-bg .narrative-spark:nth-of-type(3), .hero-narrative-bg .narrative-energy-wisp { display: none; } 
-            .pain-narrative-bg .narrative-barrier-line.slanted:nth-of-type(2), .pain-narrative-bg .narrative-cloud.style2.dense, .pain-narrative-bg .narrative-blockage-fragment:nth-of-type(2), .pain-narrative-bg .narrative-dynamic-blockage-placeholder, .pain-narrative-bg .narrative-tension-line { display: none; }
-            .benefits-narrative-bg .narrative-cloud.style3.bright, .benefits-narrative-bg .narrative-flowing-wave.alt:nth-of-type(2), .benefits-narrative-bg .narrative-flow-particle:nth-of-type(2), .benefits-narrative-bg .narrative-flow-particle.slow:nth-of-type(3), .benefits-narrative-bg .narrative-spark:nth-of-type(1), .benefits-narrative-bg .narrative-guiding-path-svg {display: none;} 
-            .quiz-narrative-bg .narrative-cloud.style1.wispy, .quiz-narrative-bg .narrative-path-sound-node:nth-of-type(2), .quiz-narrative-bg .narrative-path-sound-node:nth-of-type(3), .quiz-narrative-bg .narrative-thought-mote {display:none;} 
-            .teacher-narrative-bg .narrative-cloud.style3.calm, .teacher-narrative-bg .narrative-aura-ray:nth-of-type(2), .teacher-narrative-bg .narrative-aura-ray:nth-of-type(3), .teacher-narrative-bg .narrative-connection-line-svg {display:none;} 
-            .testimonials-narrative-bg .narrative-speech-bubble-echo.delayed:nth-of-type(2), .testimonials-narrative-bg .narrative-positive-sound-ripple.small:nth-of-type(2), .testimonials-narrative-bg .narrative-positive-sound-ripple:nth-of-type(3), .testimonials-narrative-bg .narrative-positive-mote {display:none;}
-            .final-cta-narrative-bg .narrative-starburst-element, .final-cta-narrative-bg .narrative-focused-soundwave.strong.delayed:nth-of-type(2), .final-cta-narrative-bg .narrative-converging-line.variant2:nth-of-type(2), .final-cta-section .final-cta-content-container .narrative-cta-focus-glow {display:none;}
-
-            .narrative-cloud.style1 { width: 80px; height: 30px; } .narrative-cloud.style1::before { width: 40px; height: 40px; top: -15px; } .narrative-cloud.style1::after { width: 50px; height: 50px; top: -20px; }
-            .pain-narrative-bg .narrative-clearing-element.decisive { width:80px; height:80px;}
-        }
-
-        /* Ensure quiz path SVG is visible */
-        .narrative-quiz-path-svg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1; 
-            pointer-events: none;
-        }
-        .quiz-svg-path-element {
-            stroke-dashoffset: 1000; 
-            animation: drawPath 10s linear infinite alternate; 
-        }
-
-    </style>
+    <link rel="stylesheet" href="style.css">
+    <!-- Optional: Link to Google Fonts
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    -->
 </head>
 <body>
 
+    <!-- Sticky Header -->
     <header class="sticky-header">
         <div class="container">
             <a href="#hero" class="logo-area" aria-label="Speak Up Homepage">
-                <img src="images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon">
+                <img src="images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon"> <!-- MAKE SURE images/logo.svg EXISTS -->
                 <span class="logo-text">Speak <span class="up">Up</span></span>
             </a>
             <a href="#final-cta" class="cta-button header-cta">Sua Aula Intro Grátis!</a>
@@ -727,9 +25,19 @@
     </header>
 
     <main>
+        <!-- Hero Section -->
         <section id="hero" class="hero-section">
             <div class="narrative-background hero-narrative-bg">
-                <div class="narrative-cloud style1"></div> <div class="narrative-cloud style2"></div> <div class="narrative-cloud style3"></div> <div class="narrative-distant-wave"></div> <div class="narrative-distant-wave delayed"></div> <div class="narrative-spark"></div> <div class="narrative-spark"></div> <div class="narrative-spark"></div> <div class="narrative-energy-wisp"></div> <div class="narrative-energy-wisp"></div> </div>
+                <div class="narrative-cloud style1 subtle-drift"></div>
+                <div class="narrative-cloud style2 slow-drift"></div>
+                <div class="narrative-cloud style3 gentle-drift"></div>
+                <div class="narrative-distant-wave soft-pulse"></div>
+                <div class="narrative-distant-wave soft-pulse delayed"></div>
+                <div class="narrative-energy-wisp upward"></div>
+                <div class="narrative-energy-wisp upward alternate"></div>
+                <div class="narrative-spark hero-spark"></div>
+                <div class="narrative-spark hero-spark"></div>
+            </div>
             <div class="hero-background-shape">
                 <svg viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg">
                     <path d="M0,160 C120,120 240,120 360,140 C480,160 600,200 720,190 C840,180 960,120 1080,110 C1200,100 1320,140 1440,160 L1440,320 L0,320 Z" fill-opacity="0.05"></path>
@@ -741,46 +49,50 @@
                 <p class="hero-subtitle">Aprenda a se expressar em inglês com naturalidade e confiança através de um método de apoio, desenhado para brasileiros.</p>
                 <a href="#final-cta" class="cta-button cta-button-large hero-cta">Sua Aula Intro Grátis!</a>
             </div>
+            <!-- Hero Lines are decorative for content area, kept for original design -->
+            <!-- <div class="hero-line hero-line-1"></div> -->
+            <!-- <div class="hero-line hero-line-2"></div> -->
         </section>
 
+        <!-- Transitional Narrative Element -->
         <div class="narrative-transition-element-area">
             <div class="narrative-bridge-dot"></div>
             <div class="narrative-bridge-dot"></div>
             <div class="narrative-bridge-dot"></div>
-            <div class="narrative-cloud style1 tiny-transition"></div>
+            <div class="narrative-cloud style1 tiny-transition bridge-cloud"></div>
         </div>
 
+        <!-- Pain Point & Solution Introduction Section -->
         <section id="pain-point" class="pain-point-section section">
             <div class="narrative-background pain-narrative-bg">
-                <div class="narrative-cloud style2 dense"></div> 
-                <div class="narrative-blocked-wave"></div> 
-                <div class="narrative-barrier-line"></div> 
-                <div class="narrative-barrier-line slanted"></div> 
-                <div class="narrative-blockage-fragment"></div> 
-                <div class="narrative-blockage-fragment"></div> 
-                <div class="narrative-dynamic-blockage-placeholder"></div> 
-                <div class="narrative-tension-line"></div> <div class="narrative-tension-line"></div> <div class="narrative-clearing-element decisive"></div> 
+                <div class="narrative-cloud style2 dense fractured-drift"></div>
+                <div class="narrative-blocked-wave erratic-pulse"></div>
+                <div class="narrative-barrier-line sharp"></div>
+                <div class="narrative-barrier-line sharp slanted"></div>
+                <div class="narrative-dynamic-blockage-placeholder"></div> <!-- Representing the feeling of blockage -->
+                <div class="narrative-tension-line"></div>
+                <div class="narrative-clearing-element decisive focus-clear"></div>
             </div>
             <div class="container">
                 <div class="pain-point-visual">
-                    <div class="blockage-element"></div> 
+                    <div class="blockage-element"></div> <!-- The visual that resolves -->
                 </div>
                 <p class="empathetic-text animated-text">Muitos brasileiros dedicam anos ao estudo do inglês, mas sentem um bloqueio na hora de falar. Se essa é a sua realidade, o "Speak Up" está aqui para mudar essa história e mostrar um caminho eficaz para a fluência.</p>
             </div>
         </section>
 
+        <!-- Benefits Section -->
         <section id="benefits" class="benefits-section section">
             <div class="narrative-background benefits-narrative-bg">
-                <div class="narrative-cloud style1 bright"></div> 
-                <div class="narrative-cloud style3 bright"></div> 
-                <div class="narrative-flowing-wave"></div> 
-                <div class="narrative-flowing-wave alt"></div> 
-                <div class="narrative-energy-wash"></div> 
-                <div class="narrative-flow-particle fast"></div> 
-                <div class="narrative-flow-particle"></div> 
-                <div class="narrative-flow-particle slow"></div> 
-                <div class="narrative-spark"></div> 
-                <svg class="narrative-guiding-path-svg" width="100%" height="100%">
+                <div class="narrative-cloud style1 bright upward-drift"></div>
+                <div class="narrative-cloud style3 bright soft-fade-drift"></div>
+                <div class="narrative-flowing-wave positive-flow"></div>
+                <div class="narrative-flowing-wave positive-flow alt"></div>
+                <div class="narrative-energy-wash subtle-pulse"></div>
+                <div class="narrative-flow-particle benefit-particle fast"></div>
+                <div class="narrative-flow-particle benefit-particle"></div>
+                <div class="narrative-flow-particle benefit-particle slow"></div>
+                <svg class="narrative-guiding-path-svg" width="100%" height="100%" aria-hidden="true">
                     <path class="narrative-guiding-path-line" d="M 10% 20% Q 30% 10% 50% 30% T 90% 25%" /> 
                     <path class="narrative-guiding-path-line" d="M 20% 80% Q 40% 90% 60% 70% T 90% 75%" style="animation-delay: 1.5s;"/> 
                 </svg>
@@ -810,23 +122,22 @@
             </div>
         </section>
 
+        <!-- Self-Assessment/Mini-Quiz Section -->
         <section id="quiz" class="quiz-section section">
             <div class="narrative-background quiz-narrative-bg">
-                <div class="narrative-cloud style1 wispy"></div> 
+                <div class="narrative-cloud style1 wispy thinking-cloud"></div> 
                 <svg class="narrative-quiz-path-svg" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                     <defs>
                         <linearGradient id="quizPathGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" style="stop-color:rgba(var(--rgb-secondary-vibrant-accent),0.25)" />
-                            <stop offset="100%" style="stop-color:rgba(var(--rgb-primary-vibrant-accent),0.25)" />
+                            <stop offset="0%" style="stop-color:rgba(var(--rgb-secondary-vibrant-accent),0.3)" />
+                            <stop offset="100%" style="stop-color:rgba(var(--rgb-primary-vibrant-accent),0.3)" />
                         </linearGradient>
                     </defs>
-                    <path class="quiz-svg-path-element" d="M-10,100 Q150,20 300,120 T600,80 T900,150 T1200,50 L1500,100" stroke="url(#quizPathGradient)" stroke-width="3.5" fill="none" stroke-dasharray="10, 10" />
-                    <path class="quiz-svg-path-element" d="M-10,200 Q200,280 400,180 T700,250 T1000,150 T1300,220 L1500,200" stroke="url(#quizPathGradient)" stroke-width="2.5" fill="none" stroke-dasharray="7, 7" />
+                    <path class="quiz-svg-path-element connecting-dot-path" d="M-10,100 Q150,20 300,120 T600,80 T900,150 T1200,50 L1500,100" stroke="url(#quizPathGradient)" stroke-width="3.5" fill="none" stroke-dasharray="10, 10" />
+                    <path class="quiz-svg-path-element connecting-dot-path" d="M-10,200 Q200,280 400,180 T700,250 T1000,150 T1300,220 L1500,200" stroke="url(#quizPathGradient)" stroke-width="2.5" fill="none" stroke-dasharray="7, 7" style="animation-delay: 0.5s;" />
                 </svg>
-                <div class="narrative-path-sound-node"></div> 
-                <div class="narrative-path-sound-node"></div> 
-                <div class="narrative-path-sound-node"></div> 
-                <div class="narrative-quiz-node"></div> 
+                <div class="narrative-path-sound-node discovery-node"></div> 
+                <div class="narrative-path-sound-node discovery-node alt-pos"></div> 
                 <div class="narrative-thought-mote"></div> 
                 <div class="narrative-thought-mote"></div> 
                 <div class="narrative-thought-mote"></div> 
@@ -841,15 +152,16 @@
             </div>
         </section>
 
+        <!-- Sobre o Professor Luiz Section -->
         <section id="about-teacher" class="about-teacher-section section">
             <div class="narrative-background teacher-narrative-bg">
-                <div class="narrative-cloud style3 calm"></div> 
-                <div class="narrative-guiding-aura"></div> 
-                <div class="narrative-teacher-soundwave gentle"></div> 
+                <div class="narrative-cloud style3 calm supportive-cloud"></div> 
+                <div class="narrative-guiding-aura teacher-aura"></div> 
+                <div class="narrative-teacher-soundwave gentle teaching-wave"></div> 
                 <div class="narrative-aura-ray"></div> 
                 <div class="narrative-aura-ray"></div> 
                 <div class="narrative-aura-ray"></div> 
-                <svg class="narrative-connection-line-svg" width="100%" height="100%"></svg>
+                <svg class="narrative-connection-line-svg" width="100%" height="100%" aria-hidden="true"></svg>
             </div>
             <div class="container about-teacher-container">
                 <div class="bio-text-content" id="teacherBioText">
@@ -859,22 +171,22 @@
                 </div>
                 <div class="teacher-photo-area" id="teacherPhoto">
                     <div class="teacher-triangular-frame animated-teacher-frame"> 
-                        <img src="images/Face.svg" alt="Ilustração do Professor Luiz" class="teacher-face-svg">
+                        <img src="images/Face.svg" alt="Ilustração do Professor Luiz" class="teacher-face-svg"> <!-- MAKE SURE images/Face.svg EXISTS -->
                     </div>
                 </div>
             </div>
         </section>
 
+        <!-- Testimonials Section -->
         <section id="testimonials" class="testimonials-section section">
              <div class="narrative-background testimonials-narrative-bg">
-                <div class="narrative-cloud style1 clear-sky"></div> 
-                <div class="narrative-speech-bubble-echo"></div> 
-                <div class="narrative-speech-bubble-echo delayed"></div> 
-                <div class="narrative-positive-sound-ripple large"></div> 
-                <div class="narrative-positive-sound-ripple small"></div> 
-                <div class="narrative-positive-sound-ripple"></div> 
-                <div class="narrative-positive-mote"></div> 
-                <div class="narrative-positive-mote"></div> 
+                <div class="narrative-cloud style1 clear-sky celebratory-cloud"></div> 
+                <div class="narrative-speech-bubble-echo success-echo"></div> 
+                <div class="narrative-speech-bubble-echo success-echo delayed"></div> 
+                <div class="narrative-positive-sound-ripple large testimonial-ripple"></div> 
+                <div class="narrative-positive-sound-ripple small testimonial-ripple"></div> 
+                <div class="narrative-positive-mote success-mote"></div> 
+                <div class="narrative-positive-mote success-mote"></div> 
             </div>
             <div class="container">
                 <h2 class="section-title animated-title">O Que os Alunos Dizem <span class="section-subtitle highlight-text-main">(Depoimentos)</span></h2>
@@ -898,14 +210,15 @@
             </div>
         </section>
 
+        <!-- Final Call to Action Section -->
         <section id="final-cta" class="final-cta-section section">
              <div class="narrative-background final-cta-narrative-bg">
-                <div class="narrative-cloud style2 sunset-glow"></div> 
-                <div class="narrative-focused-soundwave strong"></div> 
-                <div class="narrative-focused-soundwave strong delayed"></div> 
-                <div class="narrative-converging-line strong"></div> 
-                <div class="narrative-converging-line variant2"></div> 
-                <div class="narrative-starburst-element"></div> 
+                <div class="narrative-cloud style2 sunset-glow action-cloud"></div> 
+                <div class="narrative-focused-soundwave strong final-wave"></div> 
+                <div class="narrative-focused-soundwave strong final-wave delayed"></div> 
+                <div class="narrative-converging-line strong action-line"></div> 
+                <div class="narrative-converging-line variant2 action-line"></div> 
+                <div class="narrative-starburst-element cta-starburst"></div> 
              </div>
              <div class="final-cta-background-animation"></div> 
             <div class="container final-cta-content-container"> 
@@ -917,6 +230,7 @@
         </section>
     </main>
 
+    <!-- Footer -->
     <footer class="site-footer">
         <div class="container">
             <p>© <span id="current-year">2024</span> Speak Up - Professor Luiz. Todos os direitos reservados. | <a href="#privacy-policy-placeholder">Política de Privacidade</a></p>
@@ -969,19 +283,16 @@
                 if (!connectionLineSvgContainer.classList.contains('drawn')) {
                     const photoRect = teacherPhotoArea.getBoundingClientRect();
                     const bioRect = teacherBioText.getBoundingClientRect();
-                    const containerRect = connectionLineSvgContainer.getBoundingClientRect(); // Get container's rect for relative positioning
+                    const containerRect = connectionLineSvgContainer.getBoundingClientRect();
 
-                    // Adjust start Y to be more towards the center/upper part of the photo area
                     const startX = (photoRect.left + photoRect.width / 2) - containerRect.left;
-                    const startY = (photoRect.top + photoRect.height * 0.3) - containerRect.top; // Start from higher up the photo
+                    const startY = (photoRect.top + photoRect.height * 0.3) - containerRect.top; 
                     
-                    // Aim for mid-points on the left edge of the bio text
-                    const endX = bioRect.left - containerRect.left - 10; // Slightly to the left of the bio text
-                    const endY1 = bioRect.top - containerRect.top + bioRect.height * 0.25; // Upper quarter
-                    const endY2 = bioRect.top - containerRect.top + bioRect.height * 0.5;  // Middle
-                    const endY3 = bioRect.top - containerRect.top + bioRect.height * 0.75; // Lower quarter
+                    const endX = bioRect.left - containerRect.left - 10;
+                    const endY1 = bioRect.top - containerRect.top + bioRect.height * 0.25;
+                    const endY2 = bioRect.top - containerRect.top + bioRect.height * 0.5;
+                    const endY3 = bioRect.top - containerRect.top + bioRect.height * 0.75;
 
-                    // Define SVG paths - adjust control points for desired curve
                     let path1 = `<path class="narrative-connection-line" d="M ${startX} ${startY} C ${startX - 30} ${startY}, ${endX + 30} ${endY1}, ${endX} ${endY1}" />`;
                     let path2 = `<path class="narrative-connection-line" d="M ${startX} ${startY} C ${startX - 40} ${startY + (endY2 - startY) * 0.5}, ${endX + 40} ${endY2 - (endY2 - startY) * 0.5}, ${endX} ${endY2}" style="animation-delay: 0.25s;" />`;
                     let path3 = `<path class="narrative-connection-line" d="M ${startX} ${startY} C ${startX - 30} ${startY}, ${endX + 30} ${endY3}, ${endX} ${endY3}" style="animation-delay: 0.5s;" />`;
