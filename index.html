@@ -89,7 +89,7 @@
                 <div class="narrative-cloud style3 bright soft-fade-drift dissolving"></div>
                 <div class="narrative-flowing-wave positive-flow clarity-wave"></div>
                 <div class="narrative-flowing-wave positive-flow clarity-wave alt"></div>
-                <div class="narrative-energy-wash subtle-pulse growth-pulse"></div>
+                <div class="narrative-energy-wash subtle-pulse growth-pulse"></div> <!-- ADDED ELEMENT -->
                 <div class="narrative-flow-particle benefit-particle fast energetic"></div>
                 <div class="narrative-flow-particle benefit-particle energetic"></div>
                 <div class="narrative-flow-particle benefit-particle slow purposeful"></div>
@@ -158,6 +158,15 @@
                     </iframe>
                 </div>
                 <!-- Tally Form Embed Code END -->
+
+                <!-- WhatsApp Button Area START -->
+                <div class="post-quiz-cta-container">
+                    <a href="https://wa.me/33678663850" target="_blank" class="cta-button cta-button-large quiz-whatsapp-cta">
+                        Agende Aqui!
+                    </a>
+                    <p class="button-subtext">Clique aqui para tirar dúvidas e agendar seu horário diretamente com o Professor Luiz.</p>
+                </div>
+                <!-- WhatsApp Button Area END -->
 
             </div>
         </section>
@@ -283,7 +292,8 @@
 
         const animatedElements = document.querySelectorAll(
             '.animated-title, .animated-text, .benefit-item, .testimonial-card, ' +
-            '.tally-form-wrapper, .blockage-element, .animated-teacher-frame, .final-cta-button'
+            '.tally-form-wrapper, .blockage-element, .animated-teacher-frame, .final-cta-button, ' +
+            '.post-quiz-cta-container' // ENSURED .post-quiz-cta-container is observed
         );
 
         const observer = new IntersectionObserver((entries) => {
