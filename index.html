@@ -5,13 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Speak Up - Conquiste a Fluência Definitiva</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Optional: Link to Google Fonts
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    -->
 </head>
 <body>
 
+    <!-- Sticky Header -->
     <header class="sticky-header">
         <div class="container">
             <a href="#hero" class="logo-area" aria-label="Speak Up Homepage">
-                <img src="images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon">
+                <img src="placeholder_logo.svg" alt="Speak Up Logo Icon" class="logo-icon">
                 <span class="logo-text">Speak <span class="up">Up</span></span>
             </a>
             <a href="#final-cta" class="cta-button header-cta">Sua Aula Intro Grátis!</a>
@@ -22,7 +28,7 @@
         <!-- Hero Section -->
         <section id="hero" class="hero-section">
             <div class="hero-background-shape">
-                <svg viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg" class="hero-svg-wave">
+                <svg viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg">
                     <path d="M0,160 C120,120 240,120 360,140 C480,160 600,200 720,190 C840,180 960,120 1080,110 C1200,100 1320,140 1440,160 L1440,320 L0,320 Z" fill-opacity="0.05"></path>
                     <path d="M0,220 C100,200 200,150 300,160 C400,170 500,230 600,240 C700,250 800,210 900,190 C1000,170 1100,170 1200,200 C1300,230 1440,220 1440,220 L1440,320 L0,320 Z" fill-opacity="0.07"></path>
                 </svg>
@@ -38,43 +44,40 @@
 
         <!-- Pain Point & Solution Introduction Section -->
         <section id="pain-point" class="pain-point-section section">
-            <div class="section-background-graphic pain-point-bg-graphic">
-                <!-- SVG for tangled/resolving lines -->
-                <svg viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
-                    <path class="bg-line-tangled" d="M10 80 Q 50 10, 90 70 T 150 20 Q 180 90, 190 40" stroke-width="2" fill="none"/>
-                    <path class="bg-line-resolving" d="M10 50 Q 70 40, 100 50 T 190 50" stroke-width="2" fill="none" style="opacity:0;"/>
-                </svg>
-            </div>
             <div class="container">
+                <div class="pain-point-visual">
+                    <div class="blockage-element"></div>
+                </div>
                 <p class="empathetic-text animated-text">Muitos brasileiros dedicam anos ao estudo do inglês, mas sentem um bloqueio na hora de falar. Se essa é a sua realidade, o "Speak Up" está aqui para mudar essa história e mostrar um caminho eficaz para a fluência.</p>
             </div>
         </section>
 
         <!-- Benefits Section -->
         <section id="benefits" class="benefits-section section">
-            <div class="section-background-graphic benefits-bg-graphic">
-                 <div class="benefit-bg-element benefit-bg-1"></div>
-                 <div class="benefit-bg-element benefit-bg-2"></div>
-                 <div class="benefit-bg-element benefit-bg-3"></div>
-            </div>
             <div class="container">
                 <h2 class="section-title animated-title">Com a Speak Up, <span class="highlight">você vai:</span></h2>
                 <div class="benefit-list">
-                    <div class="benefit-item" data-bg-activate="benefit-bg-1">
+                    <div class="benefit-item">
                         <div class="benefit-box">
-                            <svg class="checkmark-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            <svg class="checkmark-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.00004 16.17L4.83004 12L3.41004 13.41L9.00004 19L21 7.00001L19.59 5.59001L9.00004 16.17Z"/>
+                            </svg>
                         </div>
                         <span class="benefit-text">Conversas Reais, Foco na Prática!</span>
                     </div>
-                    <div class="benefit-item" data-bg-activate="benefit-bg-2">
+                    <div class="benefit-item">
                         <div class="benefit-box">
-                           <svg class="checkmark-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                           <svg class="checkmark-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.00004 16.17L4.83004 12L3.41004 13.41L9.00004 19L21 7.00001L19.59 5.59001L9.00004 16.17Z"/>
+                            </svg>
                         </div>
                         <span class="benefit-text">Desenvolver Fluência Natural e Fluida.</span>
                     </div>
-                    <div class="benefit-item" data-bg-activate="benefit-bg-3">
+                    <div class="benefit-item">
                         <div class="benefit-box">
-                            <svg class="checkmark-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            <svg class="checkmark-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.00004 16.17L4.83004 12L3.41004 13.41L9.00004 19L21 7.00001L19.59 5.59001L9.00004 16.17Z"/>
+                            </svg>
                         </div>
                         <span class="benefit-text">Receber Feedback que Fortalece Sua Confiança.</span>
                     </div>
@@ -84,14 +87,6 @@
 
         <!-- Self-Assessment/Mini-Quiz Section -->
         <section id="quiz" class="quiz-section section">
-            <div class="section-background-graphic quiz-bg-graphic">
-                <!-- SVG for abstract question marks / pathways -->
-                <svg viewBox="0 0 300 150" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-                    <circle class="quiz-bg-dot" cx="50" cy="75" r="3"/> <path class="quiz-bg-path" d="M70 75 Q 90 50, 110 75 T 150 75" />
-                    <circle class="quiz-bg-dot" cx="250" cy="40" r="3"/> <path class="quiz-bg-path" d="M230 40 Q 210 20, 190 40 T 150 40" />
-                    <circle class="quiz-bg-dot" cx="150" cy="110" r="3"/> <path class="quiz-bg-path" d="M130 110 Q 150 130, 170 110 T 210 110" />
-                </svg>
-            </div>
             <div class="container">
                 <h2 class="section-title animated-title">Qual Seu Maior Desafio Para Falar Inglês com Confiança?</h2>
                 <div class="quiz-placeholder">
@@ -104,26 +99,15 @@
 
         <!-- Sobre o Professor Luiz Section -->
         <section id="about-teacher" class="about-teacher-section section">
-            <div class="section-background-graphic about-bg-graphic">
-                <!-- SVG for connection/network -->
-                <svg width="200" height="200" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="25" cy="25" r="5" class="about-node"/> <circle cx="75" cy="25" r="5" class="about-node"/>
-                    <circle cx="50" cy="50" r="8" class="about-node about-node-center"/>
-                    <circle cx="25" cy="75" r="5" class="about-node"/> <circle cx="75" cy="75" r="5" class="about-node"/>
-                    <line x1="25" y1="25" x2="50" y2="50" class="about-connector"/> <line x1="75" y1="25" x2="50" y2="50" class="about-connector"/>
-                    <line x1="25" y1="75" x2="50" y2="50" class="about-connector"/> <line x1="75" y1="75" x2="50" y2="50" class="about-connector"/>
-                </svg>
-            </div>
             <div class="container about-teacher-container">
                 <div class="bio-text-content">
                     <h2 class="section-title animated-title">Sobre o <span class="highlight">Professor Luiz</span></h2>
-                    <p class="animated-text">Olá! Sou o Professor Luiz...</p>
-                    <p class="animated-text" style="animation-delay: 0.2s;">Minhas aulas são dinâmicas...</p>
+                    <p class="animated-text">Olá! Sou o Professor Luiz, e minha maior dedicação é ajudar brasileiros como você a descobrir o prazer e a confiança de se comunicar em inglês. Com anos de experiência e uma metodologia focada na conversação prática, meu objetivo é quebrar as barreiras que te impedem de falar fluentemente.</p>
+                    <p class="animated-text" style="animation-delay: 0.2s;">Minhas aulas são dinâmicas, personalizadas e criam um ambiente de aprendizado seguro e motivador. Juntos, vamos trabalhar suas dificuldades específicas, construir sua confiança e destravar seu potencial para que você possa se comunicar com o mundo sem medo!</p>
                 </div>
                 <div class="teacher-photo-area">
-                    <img src="images/Face.svg" alt="Foto do Professor Luiz" class="teacher-photo">
-                    <div class="teacher-photo-sparks">
-                        <span class="spark"></span><span class="spark"></span><span class="spark"></span>
+                    <div class="photo-circle-placeholder">
+                        <span>Foto do<br>Professor Luiz</span>
                     </div>
                 </div>
             </div>
@@ -131,25 +115,22 @@
 
         <!-- Testimonials Section -->
         <section id="testimonials" class="testimonials-section section">
-            <div class="section-background-graphic testimonials-bg-graphic">
-                 <span class="bg-starburst"></span><span class="bg-starburst"></span><span class="bg-starburst"></span>
-            </div>
             <div class="container">
                 <h2 class="section-title animated-title">O Que os Alunos Dizem <span class="section-subtitle highlight-text-main">(Depoimentos)</span></h2>
                 <div class="testimonial-grid">
                     <div class="testimonial-card">
                         <span class="quote-mark-animated">“</span>
-                        <p class="testimonial-quote-text">Ótimo trabalho...</p>
+                        <p class="testimonial-quote-text">Ótimo trabalho. Atento, lembra das falhas e acertos do aluno. Sobre a aula: O método aplicado ajuda a vermos o que o aluno precisa entender mais do que somente decorar. E sempre voltando ao ponto de erro do aluno. E a aula acaba fluindo naturalmente e nem sentimos ter passado 1 hora de aula. Ótimo profissional.</p>
                         <p class="testimonial-author">- Henrique M.</p>
                     </div>
                     <div class="testimonial-card">
                         <span class="quote-mark-animated">“</span>
-                        <p class="testimonial-quote-text">Minha filha Diany...</p>
+                        <p class="testimonial-quote-text">Minha filha Diany estava hesitante em ter aulas de inglês, mas depois de começar com o Professor Luiz, ela simplesmente adora! Agora ela participa ativamente e está cada vez mais confiante. Ele tem um jeito especial de ensinar para crianças. Recomendo muito!</p>
                         <p class="testimonial-author">- Mãe da Diany B.</p>
                     </div>
                     <div class="testimonial-card">
                         <span class="quote-mark-animated">“</span>
-                        <p class="testimonial-quote-text">Durante anos...</p>
+                        <p class="testimonial-quote-text">Durante anos, senti um nervosismo enorme só de pensar em falar inglês em público ou no trabalho. As aulas com o Professor Luiz me deram as ferramentas e a tranquilidade para finalmente me sentir à vontade. A diferença é incrível, e já vejo resultados na minha carreira!</p>
                         <p class="testimonial-author">- Carol S.</p>
                     </div>
                 </div>
@@ -158,58 +139,60 @@
 
         <!-- Final Call to Action Section -->
         <section id="final-cta" class="final-cta-section section">
-             <div class="final-cta-background-animation">
-                <!-- Can add more complex SVG/particles here if desired -->
-                <span class="cta-particle"></span> <span class="cta-particle"></span> <span class="cta-particle"></span>
-                <span class="cta-particle"></span> <span class="cta-particle"></span> <span class="cta-particle"></span>
-             </div>
+             <div class="final-cta-background-animation"></div>
             <div class="container">
                 <h2 class="final-cta-title animated-title">Pronto(a) para Finalmente Falar Inglês com Confiança?</h2>
                 <a href="#" class="cta-button cta-button-large final-cta-button">Sua Aula Intro Grátis!</a>
-                <p class="reassurance-text animated-text">Sem compromisso...</p>
+                <p class="reassurance-text animated-text">Sem compromisso, apenas uma conversa para nos conhecermos e planejarmos seus próximos passos rumo à fluência!</p>
             </div>
         </section>
     </main>
 
+    <!-- Footer -->
     <footer class="site-footer">
         <div class="container">
             <p>© <span id="current-year">2024</span> Speak Up - Professor Luiz. Todos os direitos reservados. | <a href="#privacy-policy-placeholder">Política de Privacidade</a></p>
         </div>
     </footer>
 
-    <script> // (JavaScript for Intersection Observer remains largely the same)
+    <script>
         document.getElementById('current-year').textContent = new Date().getFullYear();
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => { /* ... smooth scroll ... */ });
+        
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const hrefTarget = this.getAttribute('href');
+                if (hrefTarget && hrefTarget.startsWith('#') && hrefTarget.length > 1) {
+                    const targetElement = document.querySelector(hrefTarget);
+                    if (targetElement) {
+                        e.preventDefault();
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            });
+        });
 
-        const animatedElements = document.querySelectorAll(
-            '.animated-title, .animated-text, .benefit-item, .testimonial-card, .quiz-placeholder, .teacher-photo, .blockage-element, .quiz-cta, .section-background-graphic'
-        );
+        // Intersection Observer for scroll animations
+        const animatedElements = document.querySelectorAll('.animated-title, .animated-text, .benefit-item, .testimonial-card, .quiz-placeholder, .photo-circle-placeholder, .blockage-element, .quiz-cta');
+
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('in-view');
-                    // Activate corresponding benefit background element
-                    if (entry.target.classList.contains('benefit-item')) {
-                        const bgTargetClass = entry.target.dataset.bgActivate;
-                        if (bgTargetClass) {
-                            const bgElement = document.querySelector(`.benefits-bg-graphic .${bgTargetClass}`);
-                            if (bgElement) bgElement.classList.add('active');
-                        }
-                    }
-                } else {
-                    // Optional: remove 'in-view' if you want animations to replay on scroll up
-                    // entry.target.classList.remove('in-view');
-                     if (entry.target.classList.contains('benefit-item')) {
-                        const bgTargetClass = entry.target.dataset.bgActivate;
-                        if (bgTargetClass) {
-                            const bgElement = document.querySelector(`.benefits-bg-graphic .${bgTargetClass}`);
-                            if (bgElement) bgElement.classList.remove('active');
-                        }
-                    }
+                    // Optional: Unobserve after animation to save resources
+                    // observer.unobserve(entry.target); 
                 }
             });
-        }, { threshold: 0.1 });
-        animatedElements.forEach(el => { observer.observe(el); });
+        }, {
+            threshold: 0.1 // Trigger when 10% of the element is visible
+        });
+
+        animatedElements.forEach(el => {
+            observer.observe(el);
+        });
+
     </script>
+
 </body>
 </html>
