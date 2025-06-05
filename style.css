@@ -55,7 +55,7 @@
     50% { opacity: 0.12; transform: scale(1.02); }
 }
 @keyframes energyWispDrift {
-    0% { opacity: 0; transform: translate3d(0, 50px, 0) rotate(var(--initial-rotation, 0deg)); } /* Use rotate if specific start needed */
+    0% { opacity: 0; transform: translate3d(0, 50px, 0) rotate(var(--initial-rotation, 0deg)); }
     50% { opacity: 0.2; }
     100% { opacity: 0; transform: translate3d(0, -150px, 0) scale(1.2) rotate(var(--initial-rotation, 0deg)); }
 }
@@ -116,30 +116,30 @@
 .final-cta-button {
     opacity: 0;
     transform: translateY(25px);
-    transition: opacity 0.65s ease-out, transform 0.65s ease-out; /* Fallback, but can be overridden */
+    transition: opacity 0.65s ease-out, transform 0.65s ease-out; /* Fallback */
 }
 
 /* Generic .in-view for simple slideUpFadeIn */
 .animated-title.in-view, .animated-text.in-view,
 .benefit-item.in-view, .testimonial-card.in-view,
 .blockage-element.in-view {
-    opacity: 1; /* Target state */
-    transform: translateY(0); /* Target state */
+    opacity: 1;
+    transform: translateY(0);
     animation: slideUpFadeIn 0.85s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
 /* Specific .in-view animations */
 .post-quiz-cta-container.in-view {
-    transition-property: none; /* Disable base transition to prevent flicker */
+    transition-property: none;
     animation: slideUpFadeIn 0.85s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-    animation-delay: 0.5s; /* Appear slightly after the form */
+    animation-delay: 0.5s;
 }
 .animated-teacher-frame.in-view {
-    transition-property: none; /* Disable base transition */
+    transition-property: none;
     animation: teacherFrameReveal 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s forwards;
 }
 .final-cta-button.in-view {
-    transition-property: none; /* Disable base transition */
+    transition-property: none;
     animation-name: slideUpFadeInToPulseStart, pulseGlow;
     animation-duration: 0.8s, 2.2s;
     animation-timing-function: ease-out, ease-in-out;
@@ -148,7 +148,7 @@
     animation-fill-mode: forwards, none;
 }
 .tally-form-wrapper.in-view {
-    transition-property: none; /* Disable base transition */
+    transition-property: none;
     animation-name: slideUpFadeIn, tallyFormGlow;
     animation-duration: 0.85s, 2.5s;
     animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94), ease-in-out;
@@ -185,17 +185,17 @@ img, svg { max-width: 100%; height: auto; display: block; }
 @media (max-width: 379px) { .logo-icon { width: 32px; height: 32px; margin-right: 6px; } .logo-text { font-size: 1.25rem; } .header-cta { padding: 6px 10px; font-size: 0.75rem; } }
 @media (min-width: 768px) { .sticky-header { padding: 10px 0; } .logo-icon { width: 48px; height: 48px; margin-right: 12px; } .logo-text { font-size: 1.75rem; } .header-cta { padding: 10px 22px; font-size: 0.9rem; } }
 
-/* Hero Section (Polished for Responsiveness) */
+/* Hero Section (Polished for Responsiveness) */ /* MODIFIED FOR SPACING */
 .hero-section {
     background-color: var(--main-background);
-    padding: 60px 0 40px;
+    padding: 60px 0 20px; /* MODIFIED padding-bottom */
     text-align: center;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     min-height: 70vh;
-    max-height: 900px; /* CAP */
+    max-height: 900px;
     position: relative;
     overflow: hidden;
 }
@@ -211,13 +211,13 @@ img, svg { max-width: 100%; height: auto; display: block; }
 .hero-cta { margin-top: 5px; padding: 14px 30px; font-size: 1.05rem; }
 
 @media (max-width: 360px) {
-    .hero-section { padding: 50px 0 30px; min-height: 65vh; }
+    .hero-section { padding: 50px 0 20px; min-height: 65vh; } /* MODIFIED padding-bottom */
     .hero-title { font-size: 1.75rem; margin-bottom: 10px;}
     .hero-subtitle { font-size: 0.9rem; margin-bottom: 20px; line-height: 1.55; }
     .hero-cta { padding: 12px 25px; font-size: 1rem; }
 }
 @media (min-width: 768px) {
-    .hero-section { padding: 90px 0 70px; min-height: 80vh; }
+    .hero-section { padding: 90px 0 30px; min-height: 80vh; } /* MODIFIED padding-bottom */
     .hero-content-wrapper { max-width: 720px; }
     .hero-title { font-size: 2.7rem; margin-bottom: 20px; line-height: 1.25; letter-spacing: -0.8px;}
     .desktop-break { display: block; }
@@ -230,7 +230,32 @@ img, svg { max-width: 100%; height: auto; display: block; }
     .hero-content-wrapper { max-width: 780px; }
 }
 
-/* Pain Point Section (Polished for Responsiveness) */
+/* Transitional Element: A subtle shift */ /* MODIFIED FOR SPACING */
+.narrative-transition-element-area {
+    height: 20px; /* REDUCED */
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: -10px; /* REDUCED */
+    margin-bottom: 0px; /* REDUCED */
+    z-index: 1;
+}
+.narrative-bridge-dot { width: 5px; height: 5px; background-color: rgba(var(--rgb-secondary-vibrant-accent), 0.65); border-radius: 50%; margin: 0 6px; opacity: 0; animation: bridgeDotFlow 3.2s infinite ease-in-out; }
+.narrative-bridge-dot.subtle-fade:nth-child(1) { animation-delay: 0s; } .narrative-bridge-dot.subtle-fade:nth-child(2) { animation-delay: 0.25s; } .narrative-bridge-dot.subtle-fade:nth-child(3) { animation-delay: 0.5s; }
+.narrative-transition-element-area .narrative-cloud.tiny-transition.bridge-cloud.brief-moment { width: 55px; height: 18px; opacity: 0.6 !important; animation-name:none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.58); background-color: rgba(var(--cloud-color-base), 0.28); }
+@media (min-width: 768px) {
+    .narrative-transition-element-area {
+        height: 30px; /* REDUCED */
+        margin-top: -15px; /* REDUCED */
+        margin-bottom: 0px; /* REDUCED */
+    }
+    .narrative-bridge-dot { width: 6px; height: 6px; margin: 0 8px; background-color: rgba(var(--rgb-secondary-vibrant-accent), 0.75);}
+}
+
+/* Pain Point Section (Polished for Responsiveness) */ /* MODIFIED FOR SPACING */
 .pain-point-section {
     background-color: var(--main-background);
     text-align: center;
@@ -238,13 +263,16 @@ img, svg { max-width: 100%; height: auto; display: block; }
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 70px 0;
-    min-height: 280px;
-    max-height: 600px; /* CAP */
+    padding: 20px 0 70px 0; /* MODIFIED padding-top, bottom */
+    min-height: auto;      /* MODIFIED */
+    max-height: 600px;
     position: relative;
     overflow: hidden;
 }
-#pain-point.section { padding-top: 70px; } /* More specific for base */
+#pain-point.section { /* MODIFIED - Ensure this is specific to #pain-point if general .section rule conflicts */
+    padding-top: 20px;
+    padding-bottom: 70px;
+}
 .pain-point-section .container {
     display: flex;
     flex-direction: column;
@@ -253,13 +281,29 @@ img, svg { max-width: 100%; height: auto; display: block; }
     width: 100%;
     flex-grow: 0;
 }
-.pain-point-visual { height: 30px; margin-bottom: 25px; display: flex; justify-content: center; align-items: center; width: 100%; }
+.pain-point-visual {
+    height: 30px;
+    margin-bottom: 15px; /* MODIFIED margin-bottom */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
 .empathetic-text { font-size: 1.1rem; max-width: 90%; color: var(--medium-grey-text); line-height: 1.8; }
 
 @media (min-width: 768px) {
-    .pain-point-section { padding: 90px 0; min-height: 320px; }
-    #pain-point.section { padding-top: 90px; }
-    .pain-point-visual { height: 40px; margin-bottom: 30px; }
+    .pain-point-section {
+        padding: 30px 0 90px 0; /* MODIFIED padding */
+        min-height: auto;       /* MODIFIED */
+    }
+    #pain-point.section { /* MODIFIED - Ensure this is specific */
+        padding-top: 30px;
+        padding-bottom: 90px;
+    }
+    .pain-point-visual {
+        height: 40px;
+        margin-bottom: 20px; /* MODIFIED margin-bottom */
+    }
     .empathetic-text { font-size: 1.25rem; max-width: 780px; line-height: 1.85;}
 }
 
@@ -339,11 +383,29 @@ img, svg { max-width: 100%; height: auto; display: block; }
 /* === NARRATIVE BACKGROUND STYLES === */
 .narrative-background { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: 1; pointer-events: none; }
 .hero-section .hero-background-shape { z-index: 0; }
-.narrative-transition-element-area { height: 40px; position: relative; width: 100%; overflow: hidden; display: flex; justify-content: center; align-items: center; margin-top: -15px; margin-bottom: -15px; z-index: 1; }
+.narrative-transition-element-area {
+    height: 20px;
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: -10px;
+    margin-bottom: 0px;
+    z-index: 1;
+}
 .narrative-bridge-dot { width: 5px; height: 5px; background-color: rgba(var(--rgb-secondary-vibrant-accent), 0.65); border-radius: 50%; margin: 0 6px; opacity: 0; animation: bridgeDotFlow 3.2s infinite ease-in-out; }
 .narrative-bridge-dot.subtle-fade:nth-child(1) { animation-delay: 0s; } .narrative-bridge-dot.subtle-fade:nth-child(2) { animation-delay: 0.25s; } .narrative-bridge-dot.subtle-fade:nth-child(3) { animation-delay: 0.5s; }
 .narrative-transition-element-area .narrative-cloud.tiny-transition.bridge-cloud.brief-moment { width: 55px; height: 18px; opacity: 0.6 !important; animation-name:none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.58); background-color: rgba(var(--cloud-color-base), 0.28); }
-@media (min-width: 768px) { .narrative-transition-element-area { height: 60px; margin-top: -20px; margin-bottom: -20px;} .narrative-bridge-dot { width: 6px; height: 6px; margin: 0 8px; background-color: rgba(var(--rgb-secondary-vibrant-accent), 0.75);} }
+@media (min-width: 768px) {
+    .narrative-transition-element-area {
+        height: 30px;
+        margin-top: -15px;
+        margin-bottom: 0px;
+    }
+    .narrative-bridge-dot { width: 6px; height: 6px; margin: 0 8px; background-color: rgba(var(--rgb-secondary-vibrant-accent), 0.75);}
+}
 
 .narrative-cloud { position: absolute; border-radius: 50%; opacity: 0; background-color: rgba(var(--cloud-color-base), 0.33); animation-name: cloudDrift; animation-timing-function: linear; animation-iteration-count: infinite; z-index: -1; filter: blur(1.2px); }
 .narrative-cloud.style1 { width: 120px; height: 40px; border-radius: 20px / 30px; animation-duration: 78s; }
@@ -354,26 +416,26 @@ img, svg { max-width: 100%; height: auto; display: block; }
 .narrative-cloud.style3 { width: 80px; height: 25px; border-radius: 12px / 20px; animation-duration: 68s; }
 .narrative-cloud.style3::before { content: ''; position: absolute; background-color: inherit; border-radius: 50%; width: 40px; height: 40px; top: -15px; left: 8px; } .narrative-cloud.style3::after { content: ''; position: absolute; background-color: inherit; border-radius: 50%; width: 50px; height: 50px; top: -20px; right: 4px; }
 .narrative-cloud.dense { background-color: rgba(var(--cloud-color-base), 0.52); filter: blur(0.8px); }
-.narrative-cloud.tight-formation { /* Used in .pain-narrative-bg */ }
+.narrative-cloud.tight-formation { /* class combo example */ }
 .narrative-cloud.bright { background-color: rgba(var(--cloud-color-base), 0.28); box-shadow: 0 0 18px 9px rgba(var(--white), 0.32); filter: blur(1.8px); }
-.narrative-cloud.light-formation { /* Used in .benefits-narrative-bg */ }
+.narrative-cloud.light-formation { /* class combo example */ }
 .narrative-cloud.upward-drift { animation-name: upwardDrift; }
 .narrative-cloud.soft-fade-drift { animation-name: softFadeDrift; }
-.narrative-cloud.dissolving { /* used with soft-fade-drift */ }
+.narrative-cloud.dissolving { /* class combo example */ }
 .narrative-cloud.fractured-drift { animation-name: fracturedDrift; }
-.narrative-cloud.uneasy-motion { /* used with fractured-drift */ }
+.narrative-cloud.uneasy-motion { /* class combo example */ }
 .narrative-cloud.wispy { background-color: rgba(var(--cloud-color-base), 0.22); transform: scale(0.82); filter: blur(2.2px); }
 .narrative-cloud.thinking-cloud { animation-name: thinkingCloudSubtleShift; }
-.narrative-cloud.insight-cloud { /* used with thinking-cloud */ }
+.narrative-cloud.insight-cloud { /* class combo example */ }
 .narrative-cloud.calm { animation-duration: 115s; }
 .narrative-cloud.supportive-cloud { background-color: rgba(var(--cloud-color-base), 0.3); animation-duration: 98s; filter:blur(1.3px);}
 .narrative-cloud.empathetic-aura-cloud { animation-name: empatheticAuraCloudShift; }
 .narrative-cloud.clear-sky { background-color: rgba(var(--cloud-color-base), 0.12); filter: blur(2.8px); animation-duration: 125s;}
-.narrative-cloud.celebratory-cloud { /* used with clear-sky and beaming-sky */ }
+.narrative-cloud.celebratory-cloud { /* class combo example */ }
 .narrative-cloud.beaming-sky { animation: beamingSkyPulse 5s infinite ease-in-out, cloudDrift 120s linear infinite 0.5s; }
-.narrative-cloud.gentle-testimonial-cloud { /* Usually with beaming-sky */ }
+.narrative-cloud.gentle-testimonial-cloud { /* Class combo example */ }
 .narrative-cloud.sunset-glow { background-image: linear-gradient(to top, rgba(var(--rgb-primary-vibrant-accent),0.18), rgba(var(--cloud-color-base), 0.28)); filter: blur(1.2px); }
-.narrative-cloud.action-cloud { /* Usually with sunset-glow and focused-sky */ }
+.narrative-cloud.action-cloud { /* class combo example */ }
 .narrative-cloud.focused-sky { animation-name: focusedSkyDrift; }
 .narrative-cloud.soft-haze { animation-duration: 85s; background-color: rgba(var(--cloud-color-base), 0.25); filter: blur(2px);}
 .narrative-cloud.high-wisps { width:70px; height:20px; animation-duration: 95s; background-color: rgba(var(--cloud-color-base), 0.15); filter: blur(3px);}
@@ -397,7 +459,7 @@ img, svg { max-width: 100%; height: auto; display: block; }
 .narrative-teacher-soundwave.gentle.teaching-wave.encouraging-vibration { animation-name: teachingWaveGentle; }
 .narrative-positive-sound-ripple { position: absolute; width: 50px; height: 50px; border: 2.5px solid rgba(var(--rgb-secondary-vibrant-accent), 0.4); border-radius: 50%; opacity: 0; animation-duration: 4.8s; animation-timing-function: linear; animation-iteration-count: infinite; }
 .narrative-positive-sound-ripple.testimonial-ripple.resonating-success { animation-name: resonatingSuccessRipple; border-style: solid; }
-.narrative-positive-sound-ripple.prominent-ripple { /* Applied in placement for large one */ }
+.narrative-positive-sound-ripple.prominent-ripple { /* Combo */ }
 .narrative-positive-sound-ripple.large { width: 70px; height: 70px; animation-duration: 5.8s; }
 .narrative-positive-sound-ripple.small { width: 30px; height: 30px; animation-duration: 4s; }
 .narrative-focused-soundwave.strong { position: absolute; height: 3px; background: linear-gradient(to right, transparent, rgba(var(--rgb-primary-vibrant-accent), 0.65), transparent); border-radius: 1.5px; opacity: 0; animation-timing-function: ease-out; animation-iteration-count: infinite; left: 0; }
@@ -409,13 +471,13 @@ img, svg { max-width: 100%; height: auto; display: block; }
 }
 
 .narrative-energy-wisp.upward.subtle-glow { position: absolute; width: 75px; height: 1.5px; background: linear-gradient(90deg, transparent, rgba(var(--rgb-secondary-vibrant-accent), 0.2), transparent); border-radius: 50%; opacity: 0; animation: energyWispDrift 13.5s infinite ease-in-out; filter: drop-shadow(0 0 2px rgba(var(--rgb-secondary-vibrant-accent),0.1));}
-.narrative-energy-wisp.upward.subtle-glow.alternate { /* Animation behavior and visual changes controlled by placement */ }
+.narrative-energy-wisp.upward.subtle-glow.alternate { /* Combo */ }
 .narrative-light-mote { position: absolute; width: 5px; height: 5px; background-color: rgba(var(--rgb-primary-vibrant-accent), 0.6); border-radius: 50%; opacity:0; animation: sparkleFloat 8s infinite linear; box-shadow: 0 0 3px rgba(var(--rgb-primary-vibrant-accent), 0.4); }
 .narrative-barrier-line.sharp { position: absolute; height: 1.5px; max-width: 120px; background-color: rgba(var(--rgb-medium-grey-text), 0.4); opacity: 0; animation: sharpBarrierFlicker 1.9s forwards ease-out; transform-origin: left; }
-.narrative-barrier-line.sharp.thick { height: 2px; } .narrative-barrier-line.sharp.slanted.intersecting { /* Animation behavior controlled by placement */ }
+.narrative-barrier-line.sharp.thick { height: 2px; } .narrative-barrier-line.sharp.slanted.intersecting { /* Combo */ }
 .narrative-shatter-particle { position:absolute; width: 5px; height:5px; background-color: rgba(var(--rgb-medium-grey-text),0.6); border-radius: 1px; opacity:0; animation-name: shatterParticleSpin; animation-duration: 2s; animation-timing-function: cubic-bezier(0.1, 0.7, 0.3, 1); animation-fill-mode: forwards;}
 .narrative-dynamic-blockage-placeholder.tense-energy { position: absolute; width: 100px; height: 20px; animation: tenseEnergyWrithe 4.8s infinite ease-in-out .5s; border-radius: 5px; opacity: 0; background: radial-gradient(ellipse at center, rgba(var(--rgb-medium-grey-text),0.18) 0%,transparent 65%); }
-.narrative-tension-line.sharp-flicker { position: absolute; height: 1px; background-color: rgba(var(--rgb-medium-grey-text), 0.4); opacity: 0; /* Keyframe animation assumed for tensionLineAppear or handled differently */ left: 50%; }
+.narrative-tension-line.sharp-flicker { position: absolute; height: 1px; background-color: rgba(var(--rgb-medium-grey-text), 0.4); opacity: 0; left: 50%; }
 .narrative-clearing-element.decisive.focus-clear.hope-spark { position: absolute; top: 50%; left: 50%; width: 110px; height: 110px; border-radius: 50%; animation: hopeSparkBurst 7.2s ease-in-out 1.9s infinite; transform: translate(-50%, -50%) scale(0); opacity: 0; }
 .narrative-energy-wash.subtle-pulse.growth-pulse {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -426,7 +488,7 @@ img, svg { max-width: 100%; height: auto; display: block; }
 .narrative-learning-glyph { position: absolute; opacity:0; font-size:18px; color: rgba(var(--rgb-primary-serious-color),0.07); animation: reflectiveMoteFloat 7.5s infinite ease-in-out; }
 .narrative-learning-glyph::before { content: "💡"; }
 .narrative-flow-particle { position: absolute; opacity:0; border-radius:50%; background-color: rgba(var(--rgb-primary-vibrant-accent),0.12); animation-timing-function: linear; animation-iteration-count: infinite; width: 10px; height: 10px; }
-.narrative-flow-particle.benefit-particle { /* base */ }
+.narrative-flow-particle.benefit-particle { /* Base */}
 .narrative-flow-particle.benefit-particle.fast { animation-name: energeticParticleFlow; animation-duration: 9s; }
 .narrative-flow-particle.benefit-particle.energetic { animation-name: energeticParticleFlow; animation-duration: 12s; filter: blur(0.5px); box-shadow: 0 0 5px rgba(var(--rgb-primary-vibrant-accent), 0.35);}
 .narrative-flow-particle.benefit-particle.slow.purposeful {animation-name: purposefulParticleFlow; animation-duration: 15s; box-shadow: 0 0 3px rgba(var(--rgb-secondary-vibrant-accent), 0.3);}
@@ -441,10 +503,10 @@ img, svg { max-width: 100%; height: auto; display: block; }
 .narrative-connection-line { stroke-width: 1.2px; stroke: rgba(var(--rgb-primary-vibrant-accent), 0.4); fill: none; stroke-dasharray: 100; stroke-dashoffset: 100; opacity: 0; }
 .teacher-narrative-bg .narrative-connection-line.in-view-draw { animation: drawConnectionLine 2.2s ease-out 0.35s forwards; }
 .narrative-voice-glow { position: absolute; width: 60px; height: 60px; border-radius: 50%; animation: voiceGlowPulse 5s infinite ease-in-out; opacity: 0; }
-.narrative-voice-glow.delayed { /* behavior controlled by placement */ }
+.narrative-voice-glow.delayed { /* Controlled by placement delay */ }
 .narrative-achievement-sparkle { position: absolute; width: 12px; height: 12px; background-color: rgba(var(--rgb-primary-vibrant-accent),0.7); border-radius: 50%; animation: achievementSparkleShine 3s infinite ease-in-out; opacity:0;}
 .narrative-star-shine.testimonial-star { position: absolute; width: 10px; height: 10px; background-color: rgba(255,255,220,0.6); border-radius: 50%; opacity: 0; animation: starShineTwinkleBright 3.5s infinite alternate; box-shadow: 0 0 6px 3px rgba(255,255,200,0.35); }
-.narrative-star-shine.testimonial-star.alt-timing { /* behavior controlled by placement */ }
+.narrative-star-shine.testimonial-star.alt-timing { /* Controlled by placement delay */ }
 .narrative-connecting-dot { position:absolute; width: 7px; height: 7px; background-color: rgba(var(--rgb-secondary-vibrant-accent),0.3); border-radius:50%; opacity:0; animation: connectingDotAppear 1.5s ease-out forwards; }
 .narrative-converging-line { position: absolute; opacity: 0; animation-iteration-count: infinite; transform-origin: top center; }
 .narrative-converging-line.strong.action-line.path-forward { animation-name: pathForwardConvergeStrong; width: 5px; height: 210px; background: linear-gradient(to top, transparent, rgba(var(--rgb-secondary-vibrant-accent),0.8));}
@@ -474,7 +536,8 @@ img, svg { max-width: 100%; height: auto; display: block; }
     .narrative-voice-glow { width: 70px; height: 70px; }
 }
 
-/* PLACEMENT of ALL Narrative Elements */
+/* === PLACEMENT of ALL Narrative Elements === */
+/* Hero Section Placement */
 .hero-narrative-bg .narrative-cloud.style1.soft-haze { top: 8%; animation-delay: 0s; }
 .hero-narrative-bg .narrative-cloud.style2.gentle-drift { top: 62%; animation-delay: 8s; }
 .hero-narrative-bg .narrative-cloud.style3.high-wisps { top: 25%; animation-delay: 16s; }
@@ -486,6 +549,7 @@ img, svg { max-width: 100%; height: auto; display: block; }
 .hero-narrative-bg .narrative-light-mote:nth-of-type(2) { top: 60%; left: 85%; animation-delay: 3.5s; transform: scale(0.9);}
 .hero-narrative-bg .narrative-light-mote:nth-of-type(3) { top: 85%; left: 40%; animation-delay: 4.5s; }
 
+/* Pain Point Section Placement */
 .pain-narrative-bg .narrative-cloud.style2.dense.fractured-drift.uneasy-motion { top: 16%; animation-delay: 1.1s; }
 .pain-narrative-bg .narrative-cloud.style3.dense.tight-formation {top: 70%; animation-duration: 80s; animation-delay: 10s; background-color: rgba(var(--cloud-color-base), 0.6); }
 .pain-narrative-bg .narrative-blocked-wave.erratic-pulse.static-interference { top: 56%; left: 40%; transform-origin: center; animation-delay: 0.5s; }
@@ -494,20 +558,22 @@ img, svg { max-width: 100%; height: auto; display: block; }
 .pain-narrative-bg .narrative-shatter-particle:nth-of-type(1) {top: 30%; left: 70%; --shatter-x: 40px; --shatter-y: -50px; animation-delay: 2.2s;}
 .pain-narrative-bg .narrative-shatter-particle:nth-of-type(2) {top: 60%; left: 20%; --shatter-x: -30px; --shatter-y: 60px; animation-delay: 2.5s;}
 .pain-narrative-bg .narrative-dynamic-blockage-placeholder.tense-energy { top: 38%; left: 68%; animation-delay: 0.7s; }
-.pain-narrative-bg .narrative-tension-line.sharp-flicker { top: 54%; animation-delay: 1s; width: 40px;} /* If an animation like 'tensionLineAppear' is added, ensure it's defined and used. */
+.pain-narrative-bg .narrative-tension-line.sharp-flicker { top: 54%; animation-delay: 1s; width: 40px;}
 .pain-narrative-bg .narrative-clearing-element.decisive.focus-clear.hope-spark {top: 50%; left: 50%; animation-delay: 2s; }
 
+/* Benefits Section Placement */
 .benefits-narrative-bg .narrative-cloud.style1.bright.upward-drift.light-formation { top: 8%; animation-delay: 2.3s;}
 .benefits-narrative-bg .narrative-cloud.style3.bright.soft-fade-drift.dissolving { top: 70%; animation-delay: 12.8s;}
 .benefits-narrative-bg .narrative-flowing-wave.positive-flow.clarity-wave:nth-of-type(1) { top: 28%; left: 12%; animation-delay: 0.6s; }
 .benefits-narrative-bg .narrative-flowing-wave.positive-flow.clarity-wave.alt:nth-of-type(2) { top: 52%; left: 62%; animation-delay: 1.6s; }
-.benefits-narrative-bg .narrative-energy-wash.subtle-pulse.growth-pulse { animation-delay: 0.35s; } /* base class covers placement */
+.benefits-narrative-bg .narrative-energy-wash.subtle-pulse.growth-pulse { animation-delay: 0.35s; }
 .benefits-narrative-bg .narrative-flow-particle.benefit-particle.fast.energetic:nth-of-type(1) { bottom: 0%; left: 16%; animation-delay: 0.1s; }
 .benefits-narrative-bg .narrative-flow-particle.benefit-particle.energetic:nth-of-type(2) { bottom: 0%; left: 80%; animation-delay: 1.25s; }
 .benefits-narrative-bg .narrative-flow-particle.benefit-particle.slow.purposeful:nth-of-type(3) { bottom: 0%; left: 50%; animation-delay: 2.35s; }
 .benefits-narrative-bg .narrative-learning-glyph:nth-of-type(1) {top: 12%; right:8%; left: auto; animation-delay: 0.9s; transform: scale(1.15) rotate(-8deg);}
 .benefits-narrative-bg .narrative-learning-glyph:nth-of-type(2) {bottom: 8%; left:8%; animation-delay: 2.1s; transform: scale(0.9) rotate(15deg);}
 
+/* Quiz Section Placement */
 .quiz-narrative-bg .narrative-cloud.style1.wispy.thinking-cloud.insight-cloud { top: 75%; left: -158px; animation-delay: 3.3s; }
 .quiz-narrative-bg .narrative-path-sound-node.discovery-node.bright-node:nth-of-type(1) { top: 28%; left: 40%; animation-delay: 0.45s; }
 .quiz-narrative-bg .narrative-path-sound-node.discovery-node.bright-node.alt-pos:nth-of-type(2) { top: 60%; left: 68%; animation-delay: 1.25s; }
@@ -517,6 +583,7 @@ img, svg { max-width: 100%; height: auto; display: block; }
 .quiz-narrative-bg .narrative-question-mark-glyph:nth-of-type(1) {top:22%; left:72%; animation-delay:0.55s; transform:scale(1.15) rotate(12deg);}
 .quiz-narrative-bg .narrative-question-mark-glyph:nth-of-type(2) {bottom:22%; left:18%; animation-delay:1.55s; transform:scale(0.95) rotate(-12deg);}
 
+/* Teacher Section Placement */
 .teacher-narrative-bg .narrative-cloud.style3.calm.supportive-cloud.empathetic-aura-cloud { top: 15%; left: -108px; animation-delay: 5.3s; }
 @media (min-width: 860px) {
     .teacher-narrative-bg .narrative-guiding-aura.teacher-aura.radiating-support { left: calc(100% - 125px); top: 50%; transform: translate(-50%, -50%); animation-delay: 0.25s; }
@@ -535,7 +602,8 @@ img, svg { max-width: 100%; height: auto; display: block; }
     .teacher-narrative-bg .narrative-aura-ray.illuminating-ray:nth-of-type(3) { transform: rotate(130deg) translateX(65px); animation-delay: 1.35s; }
 }
 
-.testimonials-narrative-bg .narrative-cloud.style1.clear-sky.celebratory-cloud.beaming-sky { top: 8%; left: -160px; /* Ensure consistent animation start for drifting clouds */ animation-delay: 0.7s; }
+/* Testimonials Section Placement */
+.testimonials-narrative-bg .narrative-cloud.style1.clear-sky.celebratory-cloud.beaming-sky { top: 8%; left: -160px; animation-delay: 0.7s; }
 .testimonials-narrative-bg .narrative-voice-glow:nth-of-type(1) { top: 25%; left: 10%; animation-delay: 0.3s;}
 .testimonials-narrative-bg .narrative-voice-glow.delayed:nth-of-type(2) { top: 65%; right: 10%; left:auto; animation-delay: 2s; }
 .testimonials-narrative-bg .narrative-positive-sound-ripple.large.testimonial-ripple.resonating-success.prominent-ripple:nth-of-type(1) { top: 42%; left: 42%; animation-delay: 0.45s; }
@@ -548,6 +616,7 @@ img, svg { max-width: 100%; height: auto; display: block; }
 .testimonials-narrative-bg .narrative-connecting-dot:nth-of-type(2) {top:52%; left: 72%; animation-delay: 1.4s;}
 .testimonials-narrative-bg .narrative-connecting-dot:nth-of-type(3) {top:68%; left: 42%; animation-delay: 1.7s;}
 
+/* Final CTA Section Placement */
 .final-cta-narrative-bg .narrative-cloud.style2.sunset-glow.action-cloud.focused-sky { top: 18%; left: -208px; animation-delay: 1.15s; }
 .final-cta-narrative-bg .narrative-focused-soundwave.strong.final-wave.decisive-wave:nth-of-type(1) { top: 28%; animation-delay: 0.35s; }
 .final-cta-narrative-bg .narrative-focused-soundwave.strong.final-wave.decisive-wave.delayed:nth-of-type(2) { top: 65%; animation-delay: 1.15s; }
