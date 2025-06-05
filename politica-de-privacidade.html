@@ -5,94 +5,163 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Privacy Policy - Speak Up</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.7;
+        /* Global Resets and Base Styles */
+        html {
+            font-size: 100%;
+            scroll-behavior: smooth;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            background-color: #f8f9fa;
-            color: #333;
         }
+
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.7; /* Slightly more generous line-height for readability */
+            color: #1C1C1C;
+            background-color: #F8F9FA;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
+
+        /* Container for the policy content */
         .container {
             max-width: 800px;
-            margin: 40px auto;
-            padding: 30px;
-            background-color: #ffffff;
+            margin: 50px auto; /* Increased top/bottom margin slightly */
+            padding: 40px 50px; /* Increased side padding slightly */
+            background-color: #FFFFFF;
             border-radius: 8px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); /* Refined shadow */
         }
+
+        /* Headings */
         h1, h2, h3 {
             color: #007777; /* Darker Teal-Blue */
-            margin-top: 1.5em;
-            margin-bottom: 0.5em;
+            line-height: 1.3;
+            font-feature-settings: "kern"; /* Enables kerning */
         }
+
         h1 {
-            font-size: 2em;
-            border-bottom: 2px solid #007777;
-            padding-bottom: 0.3em;
+            font-size: 2.3em; /* Slightly larger H1 */
+            font-weight: 700; /* Bold */
+            border-bottom: 2px solid #EAEAEA; /* Softer border color */
+            padding-bottom: 0.5em;
+            margin-bottom: 1em; /* Ensure space after h1 */
             margin-top: 0;
         }
+
         h2 {
-            font-size: 1.5em;
+            font-size: 1.7em; /* Slightly larger H2 */
+            font-weight: 600; /* Semi-bold */
+            margin-top: 2.8em; /* More distinct separation for sections */
+            margin-bottom: 0.8em;
         }
+
         h3 {
-            font-size: 1.2em;
-            color: #005555; /* Slightly darker for subheadings */
+            font-size: 1.35em; /* Slightly larger H3 */
+            color: #005f5f; /* Slightly more saturated for sub-subheadings */
+            font-weight: 600; /* Semi-bold */
+            margin-top: 2.2em;
+            margin-bottom: 0.7em;
         }
+
+        /* Paragraphs and Lists */
         p {
-            margin-bottom: 1em;
+            margin-bottom: 1.3em;
         }
-        ul {
-            margin-bottom: 1em;
-            padding-left: 20px;
+
+        ul, ol {
+            margin-bottom: 1.3em;
+            padding-left: 28px; /* Standardized padding */
         }
+
         li {
-            margin-bottom: 0.5em;
+            margin-bottom: 0.7em;
         }
+
+        strong, b {
+            font-weight: 600; /* Consistent bolding */
+        }
+
+        /* "Last Updated" Date */
+        .last-updated {
+            font-style: italic;
+            color: #4A4A4A; /* Darker grey for better contrast */
+            margin-bottom: 2.8em;
+            font-size: 0.9em;
+            display: block; /* Ensure it takes its own line well */
+        }
+
+        /* Links */
         a {
             color: #007777;
             text-decoration: none;
+            transition: color 0.2s ease-in-out, border-color 0.2s ease-in-out;
         }
-        a:hover {
+
+        a:hover,
+        a:focus {
+            color: #005555; /* Darken on hover */
             text-decoration: underline;
+            outline: 2px solid transparent; /* For keyboard navigation, override default outline */
+            outline-offset: 2px;
         }
-        .last-updated {
-            font-style: italic;
-            color: #555;
-            margin-bottom: 2em;
-        }
+
+        /* Contact Info Section */
         .contact-info p {
-            margin-bottom: 0.5em;
+            margin-bottom: 0.6em;
         }
+        .contact-info strong {
+            margin-right: 0.3em;
+        }
+
+        /* Simple Navigation: Back Link */
         .back-link {
             display: inline-block;
-            margin-top: 2em;
-            padding: 10px 15px;
+            margin-top: 3.5em; /* More space above */
+            padding: 12px 24px; /* Balanced padding */
             background-color: #007777;
-            color: #ffffff;
-            border-radius: 5px;
+            color: #FFFFFF;
+            border: 1px solid #007777; /* Border same color as background */
+            border-radius: 6px; /* Slightly more pronounced rounding */
             text-decoration: none;
-            transition: background-color 0.3s ease;
+            font-weight: 600; /* Stronger weight */
+            font-size: 0.95em;
+            letter-spacing: 0.5px; /* Refined letter spacing */
+            text-align: center;
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out, transform 0.1s ease;
         }
-        .back-link:hover {
-            background-color: #005555;
-            text-decoration: none;
+
+        .back-link:hover,
+        .back-link:focus {
+            background-color: #005f5f; /* Darker teal on hover */
+            border-color: #005555; /* Even darker border on hover */
+            color: #FFFFFF;
+            text-decoration: none; /* Ensure no underline appears on button text */
+            transform: translateY(-1px); /* Slight lift effect */
         }
-        strong {
-            font-weight: 600;
+         .back-link:active {
+            transform: translateY(0px); /* Press down effect */
         }
+
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Privacy Policy for Speak Up</h1>
-        <p class="last-updated"><em>Last Updated: [Date of Last Update]</em></p>
+        <p class="last-updated">Last Updated: June 4, 2025</p>
 
         <h2>1. Introduction</h2>
         <p>Welcome to Speak Up! This Privacy Policy explains how Speak Up ("I," "me," "my") collects, uses, and protects your personal information when you visit my website at <a href="https://speakup-4ve.pages.dev/" target="_blank" rel="noopener noreferrer">https://speakup-4ve.pages.dev/</a> (the "Website") and use its features. This includes when you take our motivation quiz, or use links to contact me via WhatsApp or schedule appointments through Google Calendar. Your privacy is important to me, and I am committed to protecting your personal data.</p>
 
         <h2>2. Who I Am (Data Controller)</h2>
-        <p>Speak Up is a service provided by [Luiz Felipe Angelo Miranda], a freelance English professor based in Rio de Janeiro, Brazil. For the purposes of data protection law, particularly the Brazilian General Data Protection Law (LGPD), I am the controller of the personal data collected through this Website.</p>
+        <p>Speak Up is a service provided by <strong>Luiz Felipe Angelo Miranda</strong>, a freelance English professor based in Rio de Janeiro, Brazil. For the purposes of data protection law, particularly the Brazilian General Data Protection Law (LGPD), I am the controller of the personal data collected through this Website.</p>
 
         <h2>3. What Information I Collect</h2>
         <p>I collect certain personal information from you so I can provide my services and you can get the most out of your experience with Speak Up. This includes:</p>
@@ -197,7 +266,7 @@
         <h2>15. How to Contact Me</h2>
         <div class="contact-info">
             <p>If you have any questions, concerns, or requests regarding this Privacy Policy or your personal information, please feel free to contact me at:</p>
-            <p>Email: <a href="mailto:lfspeakup@gmail.com">lfspeakup@gmail.com</a></p>
+            <p><strong>Email:</strong> <a href="mailto:lfspeakup@gmail.com">lfspeakup@gmail.com</a></p>
         </div>
 
         <a href="/" class="back-link">Back to Homepage</a>
