@@ -1,3 +1,7 @@
+/* ADD THIS SINGLE RULE TO YOUR ORIGINAL CSS FILE */
+.animations-paused > * {
+    animation-play-state: paused !important;
+}
 /*
     ======================================
     Speak Up - Final Corrected Stylesheet
