@@ -1,10 +1,8 @@
 /*
     ======================================
-    Speak Up - VALIDATED BASIC CSS
+    Speak Up - VALIDATED CSS (with Layout Fixes)
     ======================================
-    - VERSION 5.1 - THE VALIDATED RESET
-    - GOAL: To apply basic styling to ALL elements by fixing the syntax error.
-    - This file has been validated to ensure the browser can read it from top to bottom.
+    - VERSION 5.2 - The Layout Correction
 */
 
 :root {
@@ -37,21 +35,36 @@ img, svg { max-width: 100%; height: auto; display: block; }
 .logo-icon { width: 36px; height: 36px; margin-right: 8px; }
 .logo-text { font-size: 1.4rem; font-weight: 500; }
 .logo-text .up { font-weight: 700; color: var(--secondary-vibrant-accent); }
-.cta-button { display: inline-block; padding: 12px 28px; background-color: var(--primary-vibrant-accent); color: var(--main-text-color); text-decoration: none; font-weight: 600; border-radius: 8px; border: none; }
+.cta-button { display: inline-block; padding: 12px 28px; background-color: var(--primary-vibrant-accent); color: var(--main-text-color); text-decoration: none; font-weight: 600; border-radius: 8px; border: none; text-align: center; }
 .header-cta { padding: 8px 12px; font-size: 0.8rem; }
 
 /* === HERO SECTION === */
-.hero-section { background-color: var(--main-background); padding: 60px 0 20px; text-align: center; }
+.hero-section {
+    background-color: var(--main-background);
+    padding: 60px 0 20px;
+    text-align: center;
+    /* ADDED: Flexbox for vertical and horizontal centering */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
 .hero-content-wrapper { max-width: 700px; }
-.hero-title { font-size: 1.9rem; font-weight: 700; color: var(--primary-serious-color); margin-bottom: 12px; }
+.hero-title { font-size: 1.9rem; font-weight: 700; color: var(--primary-serious-color); margin-bottom: 12px; line-height: 1.3; }
 .desktop-break { display: none; }
 .hero-title .highlight-animated { color: var(--secondary-vibrant-accent); }
-.hero-subtitle { font-size: 0.95rem; color: var(--medium-grey-text); margin-bottom: 25px; }
+.hero-subtitle { font-size: 0.95rem; color: var(--medium-grey-text); margin-bottom: 25px; line-height: 1.65; }
 .cta-button-large { font-size: 1.1rem; padding: 15px 35px; }
 
 /* === PAIN POINT SECTION === */
-.pain-point-section { text-align: center; }
-.empathetic-text { font-size: 1.1rem; color: var(--medium-grey-text); max-width: 90%; margin: auto; }
+.pain-point-section {
+    text-align: center;
+    /* ADDED: Flexbox for centering */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.empathetic-text { font-size: 1.1rem; color: var(--medium-grey-text); max-width: 90%; margin: auto; line-height: 1.8; }
 
 /* === BENEFITS SECTION === */
 .benefits-section { background-color: var(--off-white-section-bg); }
@@ -59,7 +72,7 @@ img, svg { max-width: 100%; height: auto; display: block; }
 .benefit-item { display: flex; align-items: center; background-color: var(--white); padding: 20px 25px; border-radius: 12px; box-shadow: var(--shadow-md); }
 .benefit-box { width: 56px; height: 56px; background-image: linear-gradient(145deg, var(--primary-vibrant-accent), color-mix(in srgb, var(--primary-vibrant-accent) 80%, #A37800 20%)); display: flex; justify-content: center; align-items: center; margin-right: 20px; border-radius: 10px; flex-shrink: 0; }
 .benefit-box .checkmark-icon { width: 28px; height: 28px; color: var(--main-text-color); }
-.benefit-text { font-size: 1.05rem; font-weight: 500; }
+.benefit-text { font-size: 1.05rem; font-weight: 500; flex-grow: 1; }
 
 /* === ABOUT TEACHER SECTION === */
 .about-teacher-section { background-color: var(--off-white-section-bg); }
@@ -72,12 +85,16 @@ img, svg { max-width: 100%; height: auto; display: block; }
 /* === MEDIA QUERIES === */
 @media (min-width: 768px) {
     .section { padding: 80px 0; }
-    .hero-title { font-size: 2.7rem; }
+    .hero-title { font-size: 2.7rem; line-height: 1.25; }
     .desktop-break { display: block; }
+    .empathetic-text { font-size: 1.25rem; max-width: 780px; }
+    .benefit-box { width: 60px; height: 60px; }
+    .benefit-text { font-size: 1.1rem; }
 }
 
 @media (min-width: 860px) {
     .about-teacher-container { flex-direction: row; align-items: center; gap: 50px; }
     .bio-text-content { order: 1; text-align: left; }
     .teacher-photo-area { order: 2; margin: 0 0 0 auto; max-width: 250px; flex-shrink: 0; }
+    .bio-text-content p { font-size: 1.05rem; }
 }
