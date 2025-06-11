@@ -1,5 +1,5 @@
 /* =========================================================================
-   Speak Up - Professional Dark Theme v3.0
+   Speak Up - Professional Dark Theme v3.1 (Performance Tuned)
    ========================================================================= */
 
 /* --- 1. Global & Variables --- */
@@ -35,11 +35,12 @@
 }
 
 @keyframes background-blob-move {
-    0%   { transform: translate(var(--blob-x, 0%), var(--blob-y, 0%)) scale(1); }
-    25%  { transform: translate(calc(var(--blob-x, 0%) + 10%), calc(var(--blob-y, 0%) - 20%)) scale(1.1); }
-    50%  { transform: translate(calc(var(--blob-x, 0%) - 20%), calc(var(--blob-y, 0%) + 20%)) scale(0.9); }
-    75%  { transform: translate(calc(var(--blob-x, 0%) + 20%), calc(var(--blob-y, 0%) - 10%)) scale(1.2); }
-    100% { transform: translate(var(--blob-x, 0%), var(--blob-y, 0%)) scale(1); }
+    /* Integrates JS variables for smooth parallax */
+    0%   { transform: translate(var(--blob-x, 0vw), var(--blob-y, 0vh)) scale(1); }
+    25%  { transform: translate(calc(var(--blob-x, 0vw) + 10vw), calc(var(--blob-y, 0vh) - 20vh)) scale(1.1); }
+    50%  { transform: translate(calc(var(--blob-x, 0vw) - 20vw), calc(var(--blob-y, 0vh) + 20vh)) scale(0.9); }
+    75%  { transform: translate(calc(var(--blob-x, 0vw) + 20vw), calc(var(--blob-y, 0vh) - 10vh)) scale(1.2); }
+    100% { transform: translate(var(--blob-x, 0vw), var(--blob-y, 0vh)) scale(1); }
 }
 
 /* --- 2. Base & Typography --- */
@@ -55,13 +56,13 @@ body {
     position: relative;
 }
 
-/* Atmospheric Blobs (re-tuned for dark mode) */
+/* Atmospheric Blobs (Optimized for performance) */
 body::before, body::after {
     content: '';
     position: fixed;
     z-index: -1;
     border-radius: 50%;
-    filter: blur(80px); /* More blur for a softer feel */
+    filter: blur(60px); /* REDUCED BLUR for better performance */
     will-change: transform;
 }
 body::before {
@@ -105,8 +106,9 @@ h1, h2, h3 { font-family: var(--font-heading); color: var(--color-heading); line
 .sticky-header {
     position: sticky;
     top: 0; width: 100%;
-    background-color: rgba(17, 32, 36, 0.7); /* Dark, transparent */
-    backdrop-filter: blur(12px);
+    /* OPTIMIZED: Using a solid, translucent color is much faster than backdrop-filter */
+    background-color: rgba(17, 32, 36, 0.85); 
+    /* backdrop-filter: blur(12px); <-- This was the performance bottleneck */
     z-index: 100;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     height: var(--header-height);
@@ -116,7 +118,7 @@ h1, h2, h3 { font-family: var(--font-heading); color: var(--color-heading); line
 .logo-icon { width: 40px; }
 .logo-text { font-size: 1.5rem; font-weight: 600; margin-left: 12px; }
 .logo-text .up { color: var(--color-primary-vibrant); font-weight: 700; }
-.header-cta { font-size: 0.9rem; padding: 10px 20px; color: #112024;} /* Adjusting header CTA text color */
+.header-cta { font-size: 0.9rem; padding: 10px 20px; color: #112024;}
 
 /* --- 5. Sections --- */
 /* Hero */
@@ -140,7 +142,7 @@ h1, h2, h3 { font-family: var(--font-heading); color: var(--color-heading); line
     transition: background-color 0.3s ease, transform 0.3s ease;
 }
 .benefit-item:hover { background-color: rgba(0, 160, 154, 0.1); transform: translateY(-5px); }
-.benefit-box { /* The box itself can be the accent */
+.benefit-box {
     flex-shrink: 0; width: 50px; height: 50px; border-radius: 50%;
     background-color: var(--color-primary-vibrant);
     display: flex; align-items: center; justify-content: center;
@@ -152,13 +154,16 @@ h1, h2, h3 { font-family: var(--font-heading); color: var(--color-heading); line
 .about-teacher-container { display: flex; align-items: center; gap: 60px; }
 .teacher-photo-area { flex-basis: 300px; flex-shrink: 0; }
 .teacher-face-svg {
+    width: 100%; /* Makes image fill its container */
+    height: auto;
+    object-fit: cover;
     border-radius: 50%;
     border: 3px solid var(--color-accent);
     box-shadow: var(--shadow-glow-lg);
 }
 
 /* Testimonials */
-.testimonial-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
+#testimonials .testimonial-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
 .testimonial-card {
     background: var(--color-surface-dark);
     padding: 40px; border-radius: var(--border-radius);
@@ -186,7 +191,7 @@ h1, h2, h3 { font-family: var(--font-heading); color: var(--color-heading); line
 /* --- 6. Media Queries & Animation Logic --- */
 @media (max-width: 768px) {
     .section { padding: 60px 0; }
-    #about-teacher .about-teacher-container { flex-direction: column; text-align: center; }
+    .about-teacher-container { flex-direction: column; text-align: center; }
 }
 
 @media (max-width: 480px) {
@@ -197,6 +202,8 @@ h1, h2, h3 { font-family: var(--font-heading); color: var(--color-heading); line
     animation: slide-up-fade-in 1s cubic-bezier(0.19, 1, 0.22, 1) forwards;
 }
 
-/* Add a bit of creative stagger for lists */
-.benefit-item.in-view:nth-child(2), .testimonial-card.in-view:nth-child(2) { animation-delay: 0.15s; }
-.benefit-item.in-view:nth-child(3), .testimonial-card.in-view:nth-child(3) { animation-delay: 0.3s; }
+/* Stagger list item animations */
+.benefit-item.in-view:nth-child(2), 
+.testimonial-card.in-view:nth-child(2) { animation-delay: 0.15s; }
+.benefit-item.in-view:nth-child(3), 
+.testimonial-card.in-view:nth-child(3) { animation-delay: 0.3s; }
