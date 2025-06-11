@@ -1,121 +1,449 @@
-/* =========================================================================
-   Speak Up - v5.0 (Final Precision Build)
+ with absolute clarity.
+
+Here is the **single, definitive, and correct** `css/style.css` file./* =========================================================================
+   Speak Up - v6.0 (Final Stable Build)
    ========================================================================= */
 
 /* --- 1. Global & Variables --- */
 :root {
-    --color-background-dark: #112024; --color-surface-dark: #1A2C30;
-    --color-primary-vibrant: #00A09A; --color-accent: #FDB813;
-    --color-text-main: #E2E8F0; --color-text-muted: #94A3B8; --color-heading: #FFFFFF;
-    --font-primary: 'Inter', -apple-system, sans-serif; --font-heading: 'Poppins', var(--font-primary);
-    --shadow-glow-lg: 0 0 25px -5px rgba(253, 184, 19, 0.4);
-    --border-radius: 12px; --header-height: 70px;
-    --rgb-accent: 253, 184, 19;
-}
+    --color This is the only one you need.
 
-@keyframes slide-up-fade-in {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+---
+
+### Your Final and Only Correct `css/style.css`-background-dark: #112024;
+    --color-surface-dark: #1 File (v6.0 - Final)
+
+This version is the "golden master." It includes every fix and bestA2C30;
+    --color-primary-vibrant: #00A09A;
+    --color-accent: #FDB813;
+    --color-text-main: # practice we've established:
+- The performance-first fixed background.
+- The `transition`-based animation system thatE2E8F0;
+    --color-text-muted: #94A3B8;
+    --color-heading: #FFFFFF;
+    --font-primary: 'Inter', -apple-system solves the "Initial Animation State Flash" bug.
+- The `:visited` link color fix for the footer.
+-, sans-serif;
+    --font-heading: 'Poppins', var(--font-primary);
+    --shadow-glow-lg: 0 0 25px -5px rgba(253,  The accessibility `prefers-reduced-motion` media query to disable animations for users who need it.
+- Staggered animations for list items.
+
+**Action:** Please delete the entire content of your `css/style.css` file184, 19, 0.4);
+    --border-radius: 12px;
+    --header-height: 70px;
+    --rgb-accent: 253 and replace it with this single block of code.
+
+```css
+/* =========================================================================
+   Speak Up - v6.0 (Final Stable Build)
+   ========================================================================= */
+
+/* --- 1. Global, 184, 19;
 }
 
 /* --- 2. Base & Typography --- */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0; & Variables --- */
+:root {
+    --color-background-dark: #112024;
+    --color-surface-dark: #1A2C30;
+    --color-primary-vibrant: #00A09A;
+    --color-accent: #FDB81
+    padding: 0;
+}
 html {
     scroll-behavior: smooth;
     background-color: var(--color-background-dark);
     background-image: 
-        radial-gradient(circle at 80% 90%, rgba(var(--rgb-accent), 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 80% 90%, rgba(var(--rgb-accent), 0.12) 0%, transparent3;
+    --color-text-main: #E2E8F0;
+    --color-text-muted: #94A3B8;
+    --color-heading: #FFFFFF;
+    --font-primary: 'Inter', -apple-system, sans-serif;
+    --font-heading: 40%),
         radial-gradient(circle at 20% 10%, rgba(0, 160, 154, 0.15) 0%, transparent 40%);
     background-repeat: no-repeat;
-    background-attachment: fixed;
+    background-attachment: fixed; /* High-performance background */
 }
-body {
-    font-family: var(--font-primary); line-height: 1.7; color: var(--color-text-main);
-    background-color: transparent; -webkit-font-smoothing: antialiased; overflow-x: hidden;
+ 'Poppins', var(--font-primary);
+    --shadow-glow-lg: 0 0 25px -5px rgba(253, 184, 19, 0.4);
+    --border-radius: 12px;
+    --header-height: 70pxbody {
+    font-family: var(--font-primary);
+    line-height: 1.7;
+    color: var(--color-text-main);
+    background-color: transparent;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
 }
-h1, h2, h3 { font-family: var(--font-heading); color: var(--color-heading); line-height: 1.3; }
+h1, h2, h3 {;
+    --rgb-accent: 253, 184, 19;
+}
+
+/* --- 2. Base & Typography --- */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+    font-family: var(--font-heading);
+    color: var(--color-heading);
+    line-height: 1.3;
+}
 
 /* --- 3. Layout & Components --- */
-.container { width: 90%; max-width: 1100px; margin: 0 auto; }
-.section { padding: 100px 0; }
-.section-title { font-size: clamp(2.2rem, 5vw, 3rem); text-align: center; margin-bottom: 60px; }
-.section-title .highlight { color: var(--color-primary-vibrant); }
+.container {
+    width: 90%;
+    max-width: 1100px;
+    margin:html {
+    scroll-behavior: smooth;
+    background-color: var(--color-background-dark);
+    background-image: 
+        radial-gradient(circle at 80% 90%, rgba(var(--rgb-accent), 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 20% 10%, rgba(0, 160, 1 0 auto;
+}
+.section {
+    padding: 100px 0;
+}
+.section-title {
+    font-size: clamp(2.2rem, 5vw, 3rem);
+    text-align: center;
+    margin-bottom: 60px;
+}
+.section-title .highlight {
+    color: var(--color-primary-vibrant);
+}
+54, 0.15) 0%, transparent 40%);
+    background-repeat: no-repeat;
+    background-attachment: fixed; /* High-performance background */
+}
+body {
+    font-family: var(--font-primary);
+    line-height: 1.7;
+    color: var(--color-text-main);
+    background-color: transparent;
+    -webkit-font-smoothing: ant.cta-button {
+    display: inline-block;
+    padding: 14px 32px;
+    background-color: var(--color-accent);
+    color: #112024;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.05rem;
+    border-radius: var(--border-radius);
+    transition: transform 0ialiased;
+    overflow-x: hidden;
+}
+h1, h2, h3 {
+    font-family: var(--font-heading);
+    color: var(--color-heading);
+    line-height: 1.3;
+}
+
+/* --- 3. Layout & Components --- */
+.container {
+    width: 90%;
+    max-width: 1100px;
+    margin: 0 auto;.2s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 15px -3px rgba(var(--rgb-accent), 0.2);
+}
+.cta-button:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 8px 25px -5px rgba(var(--rgb-
+}
+.section {
+    padding: 100px 0;
+}
+.section-title {
+    font-size: clamp(2.2rem, 5vw, 3rem);
+    text-align: center;
+    margin-bottom: 60px;
+}
+.section-title .highlight {
+    color: var(--color-primary-vibrant);
+}
 .cta-button {
-    display: inline-block; padding: 14px 32px; background-color: var(--color-accent);
-    color: #112024; text-decoration: none; font-weight: 700; font-size: 1.05rem;
+    display: inline-block;
+    padding: 14px 32px;
+    accent), 0.3);
+}
+
+/* --- 4. Header & Hero --- */
+.sticky-header {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+    background-color: rgba(17, 32, 36, 0.85);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    height: varbackground-color: var(--color-accent);
+    color: #112024;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.05rem;
     border-radius: var(--border-radius);
     transition: transform 0.2s ease, box-shadow 0.3s ease;
     box-shadow: 0 4px 15px -3px rgba(var(--rgb-accent), 0.2);
 }
-.cta-button:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 8px 25px -5px rgba(var(--rgb-accent), 0.3); }
+.cta-(--header-height);
+}
+.sticky-header .container, .logo-area {
+    display: flex;
+    align-items: center;
+}
+.sticky-header .container {
+    justify-content: space-between;
+    height: 100%;
+}
+.logo-area {
+    text-decoration: none;
+    color: var(--color-heading);
+}
+.logo-icon {
+    width: 40px;
+}
+.logo-text {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-left: button:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 8px 25px -5px rgba(var(--rgb-accent), 0.3);
+}
 
 /* --- 4. Header & Hero --- */
 .sticky-header {
-    position: sticky; top: 0; width: 100%; z-index: 100;
-    background-color: rgba(17, 32, 36, 0.85);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1); height: var(--header-height);
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+    background-color: rgba(17, 32, 36,12px;
 }
-.sticky-header .container, .logo-area { display: flex; align-items: center; }
-.sticky-header .container { justify-content: space-between; height: 100%;}
-.logo-area { text-decoration: none; color: var(--color-heading); }
-.logo-icon { width: 40px; }
-.logo-text { font-size: 1.5rem; font-weight: 600; margin-left: 12px; }
-.logo-text .up { color: var(--color-primary-vibrant); font-weight: 700; }
-.header-cta { font-size: 0.9rem; padding: 10px 20px;}
-.hero-section { display: flex; align-items: center; text-align: center; min-height: calc(90vh - var(--header-height)); }
-.hero-title { font-size: clamp(2.5rem, 6vw, 4.2rem); margin-bottom: 1.5rem; letter-spacing: -1px;} /* Restored this style */
-.hero-subtitle { font-size: 1.25rem; color: var(--color-text-muted); max-width: 680px; margin: 0 auto 3rem; } /* Restored this style */
-.hero-cta { padding: 18px 44px; font-size: 1.15rem; } /* This makes the hero CTA button larger */
+.logo-text .up {
+    color: var(--color-primary-vibrant);
+    font-weight: 700;
+}
+.header-cta {
+    font-size: 0.9rem;
+    padding: 10px 20px;
+}
+.hero-section {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    min-height: calc(90vh - var(--header-height));
+}
+. 0.85);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    height: var(--header-height);
+}
+.sticky-header .container, .logo-area {
+    display: flex;
+    align-items: center;
+}
+.sticky-header .container {
+    justify-content: space-between;
+    height: 100%;
+}
+.logo-area {
+    text-decoration: nonehero-title {
+    font-size: clamp(2.5rem, 6vw, 4.2rem);
+    margin-bottom: 1.5rem;
+    letter-spacing: -1px;
+}
+.hero-subtitle {
+    font-size: 1.25rem;
+    color: var(--color-text-muted);
+    max-width: 680px;
+    margin: 0 auto 3rem;
+}
+.hero-cta {
+    padding: 18;
+    color: var(--color-heading);
+}
+.logo-icon {
+    width: 40px;
+}
+.logo-text {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-left: 12px;
+}
+.logo-text .up {
+    color: var(--color-primary-vibrant);
+    font-weight: 700;
+}
+.header-cta {
+    font-size: 0px 44px;
+    font-size: 1.15rem;
+}
 
-/* --- 5. Sections --- */
+/* --- 5. Content Sections --- */
 #pain-point { text-align: center; }
 .empathetic-text { font-size: 1.5rem; max-width: 750px; margin: 0 auto; color: var(--color-text-muted); line-height: 1.6; }
-#benefits .benefit-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
+#benefits .benefit-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(320.9rem;
+    padding: 10px 20px;
+}
+.hero-section {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    min-height: calc(90vh - var(--header-height));
+}
+.hero-title {
+    font-size: clamp(2.5rem, 6vw, 4.2rem);
+    margin-bottom: 1.5rem;
+    letter-spacing: -1px;
+}
+.hero-subtitle {
+    font-size: 1.25rem;
+    color: varpx, 1fr)); gap: 30px; }
 .benefit-item {
     background: var(--color-surface-dark); padding: 30px; border: 1px solid rgba(255,255,255,0.1);
     border-radius: var(--border-radius); display: flex; gap: 20px;
     transition: background-color 0.3s ease, transform 0.3s ease;
+}
+.benefit-item:hover { background-(--color-text-muted);
+    max-width: 680px;
+    margin: 0 auto 3rem;
+}
+.hero-cta {
+    padding: 18px 44px;
+    font-size: 1.15rem;
+}
+
+/* --- 5. Content Sections --- */
+#pain-point { text-align: center; }
+.empathetic-text { font-size: 1.5rem; max-width: 750px; margin: 0 autocolor: rgba(0, 160, 154, 0.1); transform: translateY(-5px); }
+.benefit-box {
+    flex-shrink: 0; width: 50px; height: 50px; border-radius: 50%; background-color: var(--color-primary-vibrant);
+    display: flex; align-items: center; justify-content: center;
+}
+.benefit-box .checkmark-icon { width: 28px; height: 28px; color: #FFF; }
+.benefit-text { align-self: center; font-size: 1.1; color: var(--color-text-muted); line-height: 1.6; }
+#benefits .benefit-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
+.benefit-item {
+    background: var(--color-surface-dark); padding: 30px; border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--border-radius); display: flex; gap: 20px;
+    transition: background-color 0.3s easerem; font-weight: 500; }
+.about-teacher-container { display: flex; align-items: center; gap: 60px; }
+.teacher-photo-area { flex-basis: 300px; flex-shrink: 0; }
+.teacher-face-svg { width: 100%; height: auto; object-fit: cover; border-radius: 50%; border: 3px solid var(--color-accent); box-shadow: var(--shadow-glow-lg);}
+#testimonials .testimonial, transform 0.3s ease;
 }
 .benefit-item:hover { background-color: rgba(0, 160, 154, 0.1); transform: translateY(-5px); }
 .benefit-box {
     flex-shrink: 0; width: 50px; height: 50px; border-radius: 50%; background-color: var(--color-primary-vibrant);
     display: flex; align-items: center; justify-content: center;
 }
-.benefit-box .checkmark-icon { width: 28px; height: 28px; color: #FFF; }
-.benefit-text { align-self: center; font-size: 1.1rem; font-weight: 500; }
-.about-teacher-container { display: flex; align-items: center; gap: 60px; }
-.teacher-photo-area { flex-basis: 300px; flex-shrink: 0; }
-.teacher-face-svg { width: 100%; height: auto; object-fit: cover; border-radius: 50%; border: 3px solid var(--color-accent); box-shadow: var(--shadow-glow-lg);}
-#testimonials .testimonial-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
+.benefit-box-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
 .testimonial-card {
     background: var(--color-surface-dark); padding: 40px; border-radius: var(--border-radius);
     border: 1px solid rgba(255, 255, 255, 0.1); position: relative;
 }
-.testimonial-card .polished-quote { position: absolute; top: 15px; right: 25px; font-size: 6rem; line-height: 1; color: var(--color-primary-vibrant); opacity: 0.05;}
+.testimonial-card .polished-quote { position: absolute; top: 15px; right: 25px; font-size: 6rem .checkmark-icon { width: 28px; height: 28px; color: #FFF; }
+.benefit-text { align-self: center; font-size: 1.1rem; font-weight: 500; }
+.about-teacher-container { display: flex; align-items: center; gap: 60px; }
+.teacher-photo-area { flex-basis: 300px; flex-shrink: 0; }
+.teacher-face-svg { width: 100%; height: auto; object-fit: cover; border-radius: 50%; border: 3px; line-height: 1; color: var(--color-primary-vibrant); opacity: 0.05;}
 .testimonial-quote-text { margin-bottom: 1.5rem; color: var(--color-text-muted); font-size: 1.1rem;}
 .testimonial-author { font-weight: 600; color: var(--color-heading); }
 #final-cta, .post-quiz-cta-container { text-align: center; }
-.reassurance-text, .button-subtext { opacity: 0.8; margin-top: 1.5rem; }
+.reassurance-text, .button-subtext { solid var(--color-accent); box-shadow: var(--shadow-glow-lg);}
+#testimonials .testimonial-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
+.testimonial-card {
+    background: var(--color-surface-dark); padding: 40px; border-radius: var(--border-radius);
+    border: 1px solid rgba(255, 255, 25 opacity: 0.8; margin-top: 1.5rem; }
 
-/* --- 6. Animation Logic --- */
+/* --- 6. Footer --- */
+.site-footer { background: #000; color: var(--color-text-muted); padding: 40px 0; text-align: center; }
+.site-footer a,
+.site-footer a:visited { /* Fixed the purple visited link */
+    color: var(--color-text-main); 
+    text-decoration: none;
+}
+.site-footer a:hover { color5, 0.1); position: relative;
+}
+.testimonial-card .polished-quote { position: absolute; top: 15px; right: 25px; font-size: 6rem; line-height: 1; color: var(--color-primary-vibrant); opacity: 0.05;}
+.testimonial-quote-text { margin-bottom: 1.5rem; color: var(--color-text-muted); font-size: 1.1rem;}
+.testimonial-author { font-weight: : var(--color-accent); }
 
-/* THE FOUC FIX: Directly hide the elements that will be animated */
+/* --- 7. Animation System --- */
+/* Directly set the starting state for all elements that will animate */
 .animate-me {
     opacity: 0;
-    transform: translateY(20px); /* Start slightly lower */
+    transform: translateY(20px);
+    transition: opacity 0.8s cubic-bezier(0.19, 1, 0.22, 1), 
+                transform 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+    will-change: opacity600; color: var(--color-heading); }
+#final-cta, .post-quiz-cta-container { text-align: center; }
+.reassurance-text, .button-subtext { opacity: 0.8; margin-top: 1.5rem; }
+
+/* --- 6. Footer --- */
+.site-footer { background: #000; color: var(--color-text-muted); padding: 40px 0; text-align: center; }
+.site-footer a,
+, transform;
 }
 
-/* When JS adds .in-view, the animation plays */
+/* Add staggered delays for list items */
+.benefit-item.animate-me:nth-of-type(2), 
+.testimonial-card.animate-me:nth-of-type(2) {
+    transition-delay: 0.15s;
+}
+.benefit-item.animate-me:nth-of-type(3), 
+.testimonial-card.animate-me:nth-of-type(3) {
+    transition-delay: 0.3s;
+}
+
+.site-footer a:visited { /* Fixed the purple visited link */
+    color: var(--color-text-main); 
+    text-decoration: none;
+}
+.site-footer a:hover { color: var(--color-accent); }
+
+/* --- 7. Animation System --- */
+
+/* Directly set the starting state for all elements that will animate */
+.animate-me {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s cubic-bezier(0.19, 1, /* When JS adds .in-view, transition to the final state */
 .animate-me.in-view {
-    animation: slide-up-fade-in 1s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+    opacity: 1;
+    transform: translateY(0);
 }
 
-/* Stagger list item animations for a pleasing cascade effect */
-.benefit-item.animate-me.in-view:nth-of-type(2), 
-.testimonial-card.animate-me.in-view:nth-of-type(2) { animation-delay: 0.15s; }
+/* --- 8. Media Queries & Accessibility --- */
+@media (max-width: 768px) {
+    .section { padding: 60px 0; }
+    .about-teacher-container { flex-direction: column; text-align: center; }
+}
 
-.benefit-item.animate-me.in-view:nth-of-type(3), 
-.testimonial-card.animate-me.in-view:nth-of-type(3) { animation-delay: 0.3s; }
+@media (max-width: 480px) {
+    .logo-text { display: none; }
+}
 
-@media (max-width: 768px) { .section { padding: 60px 0; } .about-teacher-container { flex-direction: column; text-align: center; }}
-@media (max-width: 480px) { .logo-text { display: none; }}
+/* Turn off all animations if the user prefers reduced0.22, 1), 
+                transform 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+    will-change: opacity, transform;
+}
+
+/* Add staggered delays for list items */
+.benefit-item.animate-me:nth-of-type(2), 
+.testimonial-card.animate-me:nth-of-type(2) {
+    transition-delay: 0.15s;
+}
+.benefit-item.animate-me:nth-of-type(3), 
+.testimonial-card.animate-me:nth-of motion */
+@media (prefers-reduced-motion: reduce) {
+    .animate-me {
+        transition: none; /* Turn off transitions */
+        opacity: 1;       /* Make them visible */
+        transform: none;  /* Remove any transforms */
+    }
+
+    .cta-button:hover { /* Also disable hover effects */
+        transform: none;
+    }
+}
