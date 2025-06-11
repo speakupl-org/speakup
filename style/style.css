@@ -3,12 +3,13 @@
     Speak Up - Final Optimized Stylesheet
     ======================================
     - Author: Professor Luiz / AI Assistant
-    - Version: 3.0 (Canvas-Driven)
+    - Version: 3.1 (Corrected)
     - Notes:
         - This file defines the appearance of all content and major animated elements.
         - The majority of background "particle" effects are now rendered on a <canvas>
           element by js/script.js for maximum performance.
-        - Only a few key narrative elements remain as styled DIVs.
+        - Crucial `.in-view` animation styles have been restored to ensure content
+          becomes visible on scroll.
 */
 
 /* --- Global Styles & Variables --- */
@@ -86,27 +87,41 @@ img, svg, canvas { max-width: 100%; height: auto; display: block; }
 .logo-text .up { font-weight: 700; color: var(--secondary-vibrant-accent);}
 .header-cta { padding: 8px 12px; font-size: 0.8rem; flex-shrink: 1; text-align: center;}
 
-/* === Page-Load Content Animations === */
+/* === Animation Control & Page-Load Visibility === */
+/* Initial state for elements that will be animated on scroll */
 .animated-title, .animated-text, .benefit-item, .testimonial-card,
 .tally-form-wrapper, .post-quiz-cta-container, .blockage-element,
 .animated-teacher-frame, .final-cta-button {
     opacity: 0;
     transform: translateY(25px);
-    transition: opacity 0.65s ease-out, transform 0.65s ease-out;
+    transition: opacity 0.65s ease-out, transform 0.65s ease-out; /* Fallback */
 }
+
+/* 
+    CORRECTION: This block defines what happens when JavaScript
+    adds the .in-view class to an element.
+*/
 .in-view {
     opacity: 1 !important;
     transform: translateY(0) !important;
 }
-.tally-form-wrapper.in-view {
-    animation: slideUpFadeIn 0.85s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards,
-               tallyFormGlow 2.5s ease-in-out 0.85s infinite;
+.animated-title.in-view, .animated-text.in-view,
+.benefit-item.in-view, .testimonial-card.in-view,
+.blockage-element.in-view {
+    animation: slideUpFadeIn 0.85s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+.post-quiz-cta-container.in-view {
+    animation: slideUpFadeIn 0.85s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s forwards;
+}
+.animated-teacher-frame.in-view {
+    animation: teacherFrameReveal 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s forwards;
 }
 .final-cta-button.in-view {
-    animation: slideUpFadeInToPulseStart 0.8s ease-out forwards,
-               pulseGlow 2.2s ease-in-out 1.1s infinite;
+    animation: slideUpFadeInToPulseStart 0.8s ease-out forwards, pulseGlow 2.2s ease-in-out 1.1s infinite;
 }
-.animated-teacher-frame.in-view { animation: teacherFrameReveal 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s forwards; }
+.tally-form-wrapper.in-view {
+    animation: slideUpFadeIn 0.85s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards, tallyFormGlow 2.5s ease-in-out 0.85s infinite;
+}
 
 /* === Narrative Background & Canvas System === */
 .narrative-background {
@@ -139,7 +154,6 @@ img, svg, canvas { max-width: 100%; height: auto; display: block; }
 .narrative-question-mark-glyph { position: absolute; font-size: 24px; color: rgba(var(--rgb-primary-serious-color), 0.06); animation: questionMarkAppear 4s infinite ease-out alternate; font-family: serif; font-weight: bold; }
 .narrative-guiding-aura.radiating-support { position: absolute; animation: radiatingSupportPulse 7s infinite ease-in-out; width: 230px; height: 230px; border-radius: 50%; background: radial-gradient(circle, rgba(var(--rgb-primary-vibrant-accent),0) 0%, rgba(var(--rgb-primary-vibrant-accent),0.02) 35%, rgba(var(--rgb-primary-vibrant-accent),0.09) 65%, rgba(var(--rgb-primary-vibrant-accent),0) 100%); top: 50%; left: 50%; transform: translate(-50%, -50%); }
 .narrative-teacher-soundwave.gentle { position: absolute; width: 100px; height: 100px; border: 1.5px solid rgba(var(--rgb-primary-vibrant-accent), 0.18); border-radius: 50%; opacity: 0; animation: teachingWaveGentle 5.8s infinite ease-in-out 0.5s; top: 50%; left: 50%; transform: translate(-50%, -50%); }
-
 
 /* === Section-Specific Styles === */
 
