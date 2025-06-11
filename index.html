@@ -5,20 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Speak Up - Fale Inglês com Confiança</title>
 
-    <!-- Google Fonts -->
+    <!-- Optimized Font Loading -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<!-- START: FULLY OPTIMIZED FONT LOADING BLOCK -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    
+    <!-- FOUC (Flash of Unstyled Content) Fix: Hide body until CSS is loaded -->
+    <style>body { visibility: hidden; opacity: 0; transition: opacity 0.5s ease-in-out; }</style>
 
-<!-- 1. Preconnect to the font servers to speed up initial connection -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-<!-- 2. The font stylesheet link itself, with display=swap -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
-
-<!-- END: OPTIMIZED FONT LOADING BLOCK -->
-    <!-- Your Refactored Stylesheet -->
+    <!-- Your Main Stylesheet -->
     <link rel="stylesheet" href="css/style.css">
 
     <!-- Google tag (gtag.js) -->
@@ -88,7 +83,7 @@
             </div>
         </section>
 
-        <!-- Quiz Section (Simplified for clarity) -->
+        <!-- Quiz Section -->
         <section id="quiz" class="section">
             <div class="container">
                 <h2 class="section-title">Qual Seu Maior Desafio com o Inglês?</h2>
@@ -166,7 +161,7 @@
         var d=document,w="https://tally.so/widgets/embed.js",v=function(){"undefined"!=typeof Tally?Tally.loadEmbeds():d.querySelectorAll("iframe[data-tally-src]:not([src])").forEach((function(e){e.src=e.dataset.tallySrc}))};if("undefined"!=typeof Tally)v();else if(d.querySelector('script[src="'+w+'"]')==null){var s=d.createElement("script");s.src=w,s.onload=v,s.onerror=v,d.body.appendChild(s);}
     </script>
     
-    <!-- Your Main JS File (Controls Animations & Interactions) -->
+    <!-- Your Main JS File -->
     <script defer src="js/main.js"></script>
 
 </body>
