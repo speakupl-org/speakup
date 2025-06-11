@@ -286,3 +286,68 @@ a { color: var(--color-primary-vibrant); text-decoration: none; }
     h2 { font-size: 1.8rem; }
     .testimonial-grid { grid-template-columns: 1fr; } /* Stack testimonials */
 }
+/* =========================================================================
+   9. Story Page Styles (minha-jornada.html)
+   ========================================================================= */
+
+.story-container {
+    padding: 100px 0;
+}
+
+/* The header of the story page, for the main title and intro */
+.story-header {
+    text-align: center;
+    padding-bottom: 60px;
+}
+.story-header .container {
+    max-width: 800px; /* Wider container for the intro */
+}
+.story-title {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    margin-bottom: 1.5rem;
+}
+.story-intro {
+    font-size: clamp(1.2rem, 3vw, 1.5rem);
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    max-width: 65ch;
+    margin: 0 auto;
+}
+
+/* The main body of text, optimized for reading */
+.story-body .container {
+    max-width: 75ch; /* Optimal line length for long-form reading */
+}
+.story-body p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+}
+.story-body p + p {
+    margin-top: -0.5rem; /* Tighten up consecutive paragraphs a bit */
+}
+.story-heading {
+    text-align: left; /* Different from homepage */
+    font-size: 2rem;
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid rgba(var(--rgb-primary), 0.2);
+    padding-bottom: 0.5rem;
+}
+.pull-quote {
+    font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+    font-style: italic;
+    color: var(--color-heading);
+    border-left: 3px solid var(--color-accent);
+    padding-left: 2rem;
+    margin: 3rem 0;
+    line-height: 1.6;
+}
+
+/* Responsive adjustments for the story page */
+@media (max-width: 768px) {
+    .story-body .container {
+        max-width: 90%; /* Use more of the screen on mobile */
+    }
+    .pull-quote { margin: 2rem 0; }
+}
