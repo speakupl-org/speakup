@@ -242,7 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- Keep your existing helpers ---
-    document.getElementById('current-year').textContent = new Date().getFullYear();
+    //document.getElementById('current-year').textContent = new Date().getFullYear();
     document.querySelectorAll('a[href^="#"]').forEach(anchor => { /* smooth scroll logic */ });
     (function(){ /* Tally.so script logic */ })();
 });
