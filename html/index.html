@@ -4,31 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Speak Up - Conquiste a Fluência Definitiva</title>
-    
-    <!-- FONT OPTIMIZATION: Preconnect and preload the font file for faster loading -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Use 'display=swap' to prevent a flash of invisible text -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Link to the external CSS file -->
     <link rel="stylesheet" href="css/style.css">
-
-    <!-- Google tag (gtag.js) - Unchanged -->
-    <script async src="https://www.googletagmanager/gtag/js?id=G-QLJX45J0F3"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-QLJX45J0F3');
-    </script>
 </head>
 <body>
-
-    <!-- Sticky Header - Unchanged -->
+    <!-- HEADER -->
     <header class="sticky-header">
         <div class="container">
-            <a href="#hero" class="logo-area" aria-label="Speak Up Homepage">
+            <a href="#hero" class="logo-area">
                 <img src="images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon">
                 <span class="logo-text">Speak <span class="up">Up</span></span>
             </a>
@@ -37,113 +20,57 @@
     </header>
 
     <main>
-        <section id="hero" class="hero-section" data-section-id="hero">
-            <div class="narrative-background hero-narrative-bg">
-                <!-- LEVEL 3 CANVAS: All those particle divs are replaced by this single canvas -->
-                <canvas class="narrative-canvas" id="hero-canvas"></canvas>
-            </div>
-            <div class="hero-background-shape">
-                 <!-- SVG Content... Unchanged -->
-                <svg viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg"><path d="M0,160 C120,120 240,120 360,140 C480,160 600,200 720,190 C840,180 960,120 1080,110 C1200,100 1320,140 1440,160 L1440,320 L0,320 Z" fill-opacity="0.04"></path><path d="M0,220 C100,200 200,150 300,160 C400,170 500,230 600,240 C700,250 800,210 900,190 C1000,170 1100,170 1200,200 C1300,230 1440,220 1440,220 L1440,320 L0,320 Z" fill-opacity="0.06"></path></svg>
-            </div>
+        <!-- HERO SECTION -->
+        <section id="hero" class="hero-section">
             <div class="hero-content-wrapper container">
-                <!-- Content Unchanged -->
                 <h1 class="hero-title">Chegou a Sua Vez de Conquistar a <span class="highlight-animated">Fluência Definitiva</span>: <br class="desktop-break">Speak Up e Comunique-se com o Mundo!</h1>
                 <p class="hero-subtitle">Aprenda a se expressar em inglês com naturalidade e confiança através de um método de apoio, desenhado para brasileiros.</p>
                 <a href="https://wa.me/5521975046106" target="_blank" class="cta-button cta-button-large hero-cta">Sua Aula Intro Grátis!</a>
             </div>
         </section>
 
-        <div class="narrative-transition-element-area">
-             <!-- Static elements stay -->
-            <div class="narrative-bridge-dot subtle-fade"></div>
-            <div class="narrative-bridge-dot subtle-fade"></div>
-            <div class="narrative-bridge-dot subtle-fade"></div>
-        </div>
-
-        <section id="pain-point" class="pain-point-section section" data-section-id="pain">
-            <div class="narrative-background pain-narrative-bg">
-                 <!-- LEVEL 3 CANVAS -->
-                <canvas class="narrative-canvas" id="pain-canvas"></canvas>
-            </div>
+        <!-- PAIN POINT SECTION -->
+        <section id="pain-point" class="pain-point-section section">
             <div class="container">
-                <!-- Content Unchanged -->
-                <div class="pain-point-visual"><div class="blockage-element"></div></div>
-                <p class="empathetic-text animated-text">Muitos brasileiros dedicam anos ao estudo do inglês, mas sentem um bloqueio na hora de falar. Se essa é a sua realidade, o "Speak Up" está aqui para mudar essa história e mostrar um caminho eficaz para a fluência.</p>
+                <p class="empathetic-text">Muitos brasileiros dedicam anos ao estudo do inglês, mas sentem um bloqueio na hora de falar. Se essa é a sua realidade, o "Speak Up" está aqui para mudar essa história e mostrar um caminho eficaz para a fluência.</p>
+            </div>
+        </section>
+
+        <!-- BENEFITS SECTION -->
+        <section id="benefits" class="benefits-section section">
+            <div class="container">
+                <h2 class="section-title">Com a Speak Up, <span class="highlight">você vai:</span></h2>
+                <div class="benefit-list">
+                    <div class="benefit-item">
+                        <div class="benefit-box"><svg class="checkmark-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M9.00004 16.17L4.83004 12L3.41004 13.41L9.00004 19L21 7.00001L19.59 5.59001L9.00004 16.17Z"/></svg></div>
+                        <span class="benefit-text">Ter Conversas Reais, Foco na Prática!</span>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-box"><svg class="checkmark-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M9.00004 16.17L4.83004 12L3.41004 13.41L9.00004 19L21 7.00001L19.59 5.59001L9.00004 16.17Z"/></svg></div>
+                        <span class="benefit-text">Desenvolver Fluência Natural e Fluida.</span>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-box"><svg class="checkmark-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M9.00004 16.17L4.83004 12L3.41004 13.41L9.00004 19L21 7.00001L19.59 5.59001L9.00004 16.17Z"/></svg></div>
+                        <span class="benefit-text">Receber Feedback que Fortalece Sua Confiança.</span>
+                    </div>
+                </div>
             </div>
         </section>
         
-        <section id="benefits" class="benefits-section section" data-section-id="benefits">
-            <div class="narrative-background benefits-narrative-bg">
-                <!-- LEVEL 3 CANVAS -->
-                <canvas class="narrative-canvas" id="benefits-canvas"></canvas>
-            </div>
-            <div class="container">
-                <!-- Content Unchanged -->
-                <h2 class="section-title animated-title">Com a Speak Up, <span class="highlight">você vai:</span></h2>
-                <div class="benefit-list"><!-- benefit items unchanged --></div>
-            </div>
-        </section>
-
-        <!-- The rest of the sections don't need particle systems, so no canvas needed -->
-        <section id="quiz" class="quiz-section section" data-section-id="quiz">
-            <div class="narrative-background quiz-narrative-bg">
-                <!-- Kept a few simple, performant cloud divs here -->
-                <div class="narrative-cloud style1 wispy thinking-cloud"></div>
-                <div class="narrative-question-mark-glyph" style="top: 22%; left: 72%; animation-delay: 0.5s;">?</div>
-                <div class="narrative-question-mark-glyph" style="top: 78%; left: 18%; animation-delay: 1.5s;">?</div>
-            </div>
-            <div class="container">
-                <!-- Quiz content unchanged -->
-            </div>
-        </section>
-
+        <!-- ABOUT TEACHER SECTION -->
         <section id="about-teacher" class="about-teacher-section section">
-            <!-- Background effects here are more specific, so keep them as divs -->
-            <div class="narrative-background teacher-narrative-bg">
-                <div class="narrative-guiding-aura teacher-aura radiating-support"></div>
-                <div class="narrative-teacher-soundwave gentle teaching-wave encouraging-vibration"></div>
-            </div>
             <div class="container about-teacher-container">
-                <div class="bio-text-content" id="teacherBioText">
-                    <!-- Content Unchanged -->
+                <div class="bio-text-content">
+                    <h2 class="section-title">Sobre o <span class="highlight">Professor Luiz</span></h2>
+                    <p>Olá! Sou o Luiz, e minha maior dedicação é ajudar brasileiros como você a descobrir o prazer e a confiança de se comunicar em inglês...</p>
                 </div>
-                <div class="teacher-photo-area animated-teacher-frame" id="teacherPhoto">
-                    <!-- IMAGE OPTIMIZATION: Added loading="lazy" -->
-                    <img src="images/Face.svg" alt="Ilustração do Professor Luiz" class="teacher-face-svg" loading="lazy">
+                <div class="teacher-photo-area">
+                    <img src="images/Face.svg" alt="Ilustração do Professor Luiz" class="teacher-face-svg">
                 </div>
             </div>
         </section>
         
-        <section id="testimonials" class="testimonials-section section" data-section-id="testimonials">
-            <div class="narrative-background testimonials-narrative-bg">
-                 <!-- LEVEL 3 CANVAS for stars/sparkles -->
-                <canvas class="narrative-canvas" id="testimonials-canvas"></canvas>
-            </div>
-             <div class="container">
-                 <!-- Content Unchanged -->
-            </div>
-        </section>
-
-        <section id="final-cta" class="final-cta-section section" data-section-id="final-cta">
-             <div class="narrative-background final-cta-narrative-bg">
-                <!-- Using canvas for the arrows/sparks -->
-                <canvas class="narrative-canvas" id="final-cta-canvas"></canvas>
-             </div>
-             <div class="final-cta-background-animation"></div>
-            <div class="container final-cta-content-container">
-                 <!-- Content Unchanged -->
-            </div>
-        </section>
-
     </main>
-
-    <footer class="site-footer">
-        <!-- Unchanged -->
-    </footer>
-    
-    <!-- One single script file at the end -->
     <script src="js/script.js"></script>
-
 </body>
 </html>
