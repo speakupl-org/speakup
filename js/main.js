@@ -1,4 +1,4 @@
-// js/main.js - Professional Dark Theme v3.0
+// js/main.js - v3.1 Performance-Tuned
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -9,42 +9,61 @@ document.addEventListener('DOMContentLoaded', () => {
         animationsEnabled = !reducedMotionQuery.matches;
     });
 
-    /* --- REVEAL ON SCROLL --- */
+    /* --- REVEAL ON SCROLL (Observer) --- */
     const animatedElements = document.querySelectorAll(
         '.hero-title, .hero-subtitle, .hero-cta, .empathetic-text, .section-title, ' +
         '.benefit-item, .about-teacher-container, .testimonial-card, .tally-form-wrapper, ' +
         '.post-quiz-cta-container, .final-cta-title, .reassurance-text'
     );
     
-    // Create one observer for all elements
-    if (animationsEnabled && animatedElements.length > 0) {
+    if (animationsEnabled) {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('in-view');
-                    observer.unobserve(entry.target); // Unobserve after animating
+                    observer.unobserve(entry.target);
                 }
             });
         }, { threshold: 0.1 });
 
         animatedElements.forEach(el => observer.observe(el));
     } else {
-        animatedElements.forEach(el => el.classList.add('in-view')); // Make visible without animation
+        animatedElements.forEach(el => el.classList.add('in-view'));
     }
     
-    /* --- INTERACTIVE PARALLAX --- */
+    /* --- OPTIMIZED PARALLAX WITH requestAnimationFrame --- */
     const body = document.body;
+    let lastScrollY = window.scrollY;
+    let ticking = false;
 
-    function handleScroll() {
+    function handleParallax() {
         if (!animationsEnabled) return;
-        const scrollPercent = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+
+        // Calculate how much to move based on the last known scroll position
+        const scrollPercent = lastScrollY / (document.documentElement.scrollHeight - window.innerHeight);
         
-        // You can tweak these values to change the speed and direction of the blobs
-        body.style.setProperty('--blob-x', `${scrollPercent * -50}vw`);
-        body.style.setProperty('--blob-y', `${scrollPercent * 30}vh`);
+        const blobX = scrollPercent * -50;
+        const blobY = scrollPercent * 30;
+        
+        body.style.setProperty('--blob-x', `${blobX}vw`);
+        body.style.setProperty('--blob-y', `${blobY}vh`);
     }
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    // This function will be called on every scroll, but it's very cheap
+    function onScroll() {
+        lastScrollY = window.scrollY; // Update our scroll position
+
+        // If a frame request isn't already scheduled, schedule one.
+        if (!ticking) {
+            window.requestAnimationFrame(() => {
+                handleParallax(); // Run our expensive function
+                ticking = false; // Allow the next frame to be requested
+            });
+            ticking = true; // Mark that we have a frame request pending
+        }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
 
     /* --- UPDATE FOOTER YEAR --- */
     const yearSpan = document.getElementById('current-year');
