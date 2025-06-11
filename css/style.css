@@ -351,3 +351,119 @@ a { color: var(--color-primary-vibrant); text-decoration: none; }
     }
     .pull-quote { margin: 2rem 0; }
 }
+/* =========================================================================
+   10. Method Page Styles (o-metodo.html)
+   ========================================================================= */
+
+/* A reusable style for the header of our internal pages */
+.page-header {
+    text-align: center;
+    padding: 80px 0;
+}
+.page-header .page-title {
+    font-size: clamp(2.5rem, 6vw, 3.8rem);
+    margin-bottom: 1.5rem;
+}
+.page-header .page-subtitle {
+    font-size: clamp(1.1rem, 2.5vw, 1.25rem);
+    color: var(--color-text-muted);
+    max-width: 70ch;
+    margin: 0 auto;
+}
+
+/* The main section containing all the pillars */
+.method-pillars .container {
+    display: flex;
+    flex-direction: column;
+    gap: 100px; /* Space between each pillar */
+}
+
+.pillar-item {
+    display: flex;
+    align-items: center;
+    gap: clamp(30px, 8vw, 100px);
+}
+
+/* This simple, powerful selector alternates the layout for visual rhythm */
+.pillar-item:nth-of-type(even) {
+    flex-direction: row-reverse;
+}
+
+.pillar-image-area {
+    flex: 2; /* Gives more space to the image */
+    max-width: 450px;
+}
+.pillar-image-area img {
+    width: 100%;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-subtle);
+}
+
+.pillar-text-content {
+    flex: 3; /* Gives more space to the text */
+}
+
+.pillar-number {
+    display: inline-block;
+    background-color: var(--color-primary-vibrant);
+    color: var(--color-background-dark);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+.pillar-item:nth-of-type(2) .pillar-number { background-color: var(--color-accent); }
+.pillar-item:nth-of-type(3) .pillar-number { background-color: var(--color-heading); }
+
+.pillar-title {
+    text-align: left; /* Override default centered h2 */
+    margin-bottom: 1rem;
+    font-size: 2.2rem;
+}
+.pillar-text-content p {
+    font-size: 1.1rem;
+    color: var(--color-text-muted);
+    max-width: 55ch;
+}
+
+/* The powerful summary statement at the end */
+.method-summary {
+    background-color: var(--color-surface-dark);
+    padding: 80px 0;
+    text-align: center;
+}
+.summary-title {
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    margin-bottom: 1rem;
+}
+.method-summary p {
+    color: var(--color-text-muted);
+    font-size: 1.2rem;
+    max-width: 60ch;
+    margin: 0 auto;
+}
+
+
+/* --- Responsive adjustments for Method Page --- */
+@media (max-width: 768px) {
+    .pillar-item,
+    .pillar-item:nth-of-type(even) {
+        flex-direction: column; /* Stack image on top of text */
+        gap: 30px;
+    }
+    .pillar-image-area {
+        max-width: 100%;
+        padding: 0 10%;
+    }
+    .pillar-title {
+        text-align: center;
+    }
+    .pillar-text-content {
+        text-align: center;
+    }
+    .pillar-text-content p {
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
