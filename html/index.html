@@ -5,13 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Speak Up - Conquiste a Fluência Definitiva</title>
     
-    <!-- FONT OPTIMIZATION: Preconnect and preload the font file for faster loading -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Use 'display=swap' to prevent a flash of invisible text -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Link to the external CSS file -->
     <link rel="stylesheet" href="css/style.css">
 
     <!-- Google tag (gtag.js) -->
@@ -38,10 +35,7 @@
 
     <main>
         <!-- Hero Section: Aspiration, Potential -->
-        <section id="hero" class="hero-section" data-section-id="hero">
-            <div class="narrative-background hero-narrative-bg">
-                <canvas class="narrative-canvas" id="hero-canvas"></canvas>
-            </div>
+        <section id="hero" class="hero-section">
             <div class="hero-background-shape">
                 <svg viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg"><path d="M0,160 C120,120 240,120 360,140 C480,160 600,200 720,190 C840,180 960,120 1080,110 C1200,100 1320,140 1440,160 L1440,320 L0,320 Z" fill-opacity="0.04"></path><path d="M0,220 C100,200 200,150 300,160 C400,170 500,230 600,240 C700,250 800,210 900,190 C1000,170 1100,170 1200,200 C1300,230 1440,220 1440,220 L1440,320 L0,320 Z" fill-opacity="0.06"></path></svg>
             </div>
@@ -59,11 +53,8 @@
             <div class="narrative-bridge-dot subtle-fade"></div>
         </div>
 
-        <!-- Pain Point & Solution Introduction Section: Frustration, Blockage -->
-        <section id="pain-point" class="pain-point-section section" data-section-id="pain">
-            <div class="narrative-background pain-narrative-bg">
-                <canvas class="narrative-canvas" id="pain-canvas"></canvas>
-            </div>
+        <!-- Pain Point & Solution Introduction Section -->
+        <section id="pain-point" class="pain-point-section section">
             <div class="container">
                 <div class="pain-point-visual">
                     <div class="blockage-element"></div>
@@ -72,11 +63,8 @@
             </div>
         </section>
 
-        <!-- Benefits Section: Positive Flow, Learning -->
-        <section id="benefits" class="benefits-section section" data-section-id="benefits">
-            <div class="narrative-background benefits-narrative-bg">
-                <canvas class="narrative-canvas" id="benefits-canvas"></canvas>
-            </div>
+        <!-- Benefits Section -->
+        <section id="benefits" class="benefits-section section">
             <div class="container">
                 <h2 class="section-title animated-title">Com a Speak Up, <span class="highlight">você vai:</span></h2>
                 <div class="benefit-list">
@@ -102,29 +90,13 @@
             </div>
         </section>
 
-        <!-- Self-Assessment/Mini-Quiz Section -->
-        <section id="quiz" class="quiz-section section" data-section-id="quiz">
-            <div class="narrative-background quiz-narrative-bg">
-                <div class="narrative-cloud style1 wispy thinking-cloud" style="top: 15%; left: 5%; animation-delay: 0.2s;"></div>
-                <div class="narrative-cloud style1 wispy thinking-cloud" style="top: 75%; left: 60%; animation-delay: 1.2s;"></div>
-                <div class="narrative-question-mark-glyph" style="top: 22%; left: 72%; animation-delay: 0.5s;">?</div>
-                <div class="narrative-question-mark-glyph" style="top: 78%; left: 18%; animation-delay: 1.5s;">?</div>
-            </div>
+        <!-- Mini-Quiz Section -->
+        <section id="quiz" class="quiz-section section">
             <div class="container">
                 <h2 class="section-title animated-title">Qual Seu Maior Desafio Para Falar Inglês com Confiança?</h2>
-
                 <div class="tally-form-wrapper">
-                    <iframe data-tally-src="https://tally.so/embed/wagb99?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1"
-                            loading="lazy"
-                            width="100%"
-                            height="307"
-                            frameborder="0"
-                            marginheight="0"
-                            marginwidth="0"
-                            title="Um breve quiz interativo">
-                    </iframe>
+                    <iframe data-tally-src="https://tally.so/embed/wagb99?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="307" frameborder="0" marginheight="0" marginwidth="0" title="Um breve quiz interativo"></iframe>
                 </div>
-
                 <div class="post-quiz-cta-container">
                     <a href="https://calendar.app.google/LkJdDyb1hmmWUsWz8" target="_blank" class="cta-button cta-button-large quiz-whatsapp-cta">
                         Agende Aqui!
@@ -133,15 +105,9 @@
                 </div>
             </div>
         </section>
-        
-        <script>var d=document,w="https://tally.so/widgets/embed.js",v=function(){"undefined"!=typeof Tally?Tally.loadEmbeds():d.querySelectorAll("iframe[data-tally-src]:not([src])").forEach((function(e){e.src=e.dataset.tallySrc}))};if("undefined"!=typeof Tally)v();else if(d.querySelector('script[src="'+w+'"]')==null){var s=d.createElement("script");s.src=w,s.onload=v,s.onerror=v,d.body.appendChild(s);}</script>
 
         <!-- About Professor Luiz Section -->
         <section id="about-teacher" class="about-teacher-section section">
-            <div class="narrative-background teacher-narrative-bg">
-                <div class="narrative-guiding-aura teacher-aura radiating-support"></div>
-                <div class="narrative-teacher-soundwave gentle teaching-wave"></div>
-            </div>
             <div class="container about-teacher-container">
                 <div class="bio-text-content" id="teacherBioText">
                     <h2 class="section-title animated-title">Sobre o <span class="highlight">Professor Luiz</span></h2>
@@ -154,10 +120,7 @@
         </section>
 
         <!-- Testimonials Section -->
-        <section id="testimonials" class="testimonials-section section" data-section-id="testimonials">
-             <div class="narrative-background testimonials-narrative-bg">
-                <canvas class="narrative-canvas" id="testimonials-canvas"></canvas>
-            </div>
+        <section id="testimonials" class="testimonials-section section">
             <div class="container">
                 <h2 class="section-title animated-title">O Que os Alunos Dizem <span class="section-subtitle highlight-text-main"></span></h2>
                 <div class="testimonial-grid">
@@ -181,10 +144,7 @@
         </section>
 
         <!-- Final Call to Action Section -->
-        <section id="final-cta" class="final-cta-section section" data-section-id="final-cta">
-             <div class="narrative-background final-cta-narrative-bg">
-                <canvas class="narrative-canvas" id="final-cta-canvas"></canvas>
-             </div>
+        <section id="final-cta" class="final-cta-section section">
              <div class="final-cta-background-animation"></div>
             <div class="container final-cta-content-container">
                 <h2 class="final-cta-title animated-title">Pronto(a) para Finalmente Falar Inglês com Confiança?</h2>
