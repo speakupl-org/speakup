@@ -710,9 +710,53 @@ html.menu-open {
 }
 
 
-/* --- 4. Responsive Design: Graceful Degradation on Mobile --- */
-/* On smaller screens, the complex sticky effect is disabled, and content
-   is presented in a simple, readable, stacked format. */
+/* --- 3D SCENE SETUP --- */
+.pillar-visuals-col {
+    /* (existing styles like width, height, top can remain) */
+    /* Add perspective to the parent to create the 3D 'world' */
+    perspective: 1200px;
+    display: flex; /* Using flex to help center the scene */
+    justify-content: center;
+    align-items: center;
+}
+
+.scene-3d {
+    width: 200px; /* The size of our 3D object */
+    height: 200px;
+    position: relative;
+    transform-style: preserve-3d;
+}
+
+.object-3d {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    transform-style: preserve-3d;
+    /* We will animate this element's transform with GSAP */
+    transform: translateZ(-100px); /* Initial position */
+}
+
+.face {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px); /* Glassmorphism effect */
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    line-height: 200px;
+}
+
+/* Position each face to form a cube */
+.face.front  { transform: rotateY(  0deg) translateZ(100px); }
+.face.back   { transform: rotateY(180deg) translateZ(100px); }
+.face.right  { transform: rotateY( 90deg) translateZ(100px); }
+.face.left   { transform: rotateY(-90deg) translateZ(100px); }
+.face.top    { transform: rotateX( 90deg) translateZ(100px); }
+.face.bottom { transform: rotateX(-90deg) translateZ(100px); }
    
 @media (max-width: 768px) {
     .scrolly-container {
