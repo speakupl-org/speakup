@@ -12,23 +12,18 @@
 </head>
 <body>
 
-    <!-- =========================================================================
-       HEADER - Consistent across all pages
-       ========================================================================= -->
-    <header class="site-header">
+<!-- ======================================================= -->
+<!-- Step 1: Replace your old header with this new one       -->
+<!-- ======================================================= -->
+<header class="site-header">
     <div class="container header-container">
         <a href="index.html" class="logo-area" aria-label="Speak Up Homepage">
             <img src="images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon">
             <span class="logo-text">Speak <span class="up">Up</span></span>
         </a>
 
-        <!-- Mobile Menu Button -->
-        <button class="mobile-nav-toggle" aria-controls="primary-navigation" aria-expanded="false">
-            <span class="sr-only">Menu</span>
-        </button>
-
-        <!-- Primary Navigation -->
-        <nav class="main-nav" id="primary-navigation">
+        <!-- Desktop Navigation & CTA -->
+        <nav class="main-nav-desktop">
             <ul>
                 <li><a href="o-metodo.html">O Método</a></li>
                 <li><a href="minha-jornada.html">Minha Jornada</a></li>
@@ -36,13 +31,45 @@
                 <li><a href="contato.html">Contato</a></li>
             </ul>
         </nav>
-        
-        <!-- This is a separate container for the desktop button -->
         <div class="header-cta-container">
-             <a href="contato.html" class="cta-button header-cta">Agende uma Conversa</a>
+            <a href="contato.html" class="cta-button header-cta">Agende uma Conversa</a>
         </div>
+        
+        <!-- Mobile-Only Hamburger Button -->
+        <button class="mobile-nav-toggle" aria-controls="mobile-menu" aria-expanded="false">
+            <span class="sr-only">Menu</span>
+        </button>
     </div>
 </header>
+
+<!-- ======================================================= -->
+<!-- Step 2: ADD this new menu screen right after the header -->
+<!-- ======================================================= -->
+<div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+    <div class="mobile-menu-header">
+        <a href="index.html" class="logo-area" aria-label="Speak Up Homepage">
+            <img src="images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon">
+            <span class="logo-text">Speak <span class="up">Up</span></span>
+        </a>
+        <!-- The JS will also listen for clicks on this button -->
+        <button class="mobile-nav-toggle close-button" aria-controls="mobile-menu" aria-expanded="true">
+             <span class="sr-only">Close Menu</span>
+        </button>
+    </div>
+    <nav class="main-nav-mobile">
+        <ul>
+            <li><a href="index.html">Início</a></li>
+            <li><a href="o-metodo.html">O Método</a></li>
+            <li><a href="minha-jornada.html">Minha Jornada</a></li>
+            <li><a href="recursos.html">Recursos</a></li>
+            <li><a href="contato.html">Contato</a></li>
+        </ul>
+    </nav>
+    <div class="mobile-menu-action-box">
+        <a href="contato.html" class="cta-button">Agende uma Conversa</a>
+        <a href="https://wa.me/5521975046106" target="_blank" rel="noopener noreferrer" class="link-subtle">Conversar no WhatsApp</a>
+    </div>
+</div>
 
     <main>
         <!-- =========================================================================
