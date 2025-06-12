@@ -1099,3 +1099,43 @@ body.no-scroll {
         gap: 40px;
     }
 }
+/* =========================================================================
+   15. HELPER STYLES FOR "IGLOO" JS ANIMATIONS
+   ========================================================================= */
+
+/* For the image zoom/pan effect */
+.pillar-image-scaler {
+    width: 100%;
+    height: 100%;
+    /* This will contain the scaled-up image */
+    overflow: hidden; 
+}
+.pillar-image-scaler img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* For the slide-in text animation */
+.text-anim-wrapper {
+    /* Helps browser optimize the animation by anticipating transform changes */
+    will-change: transform;
+}
+
+/* For the final "Exit" animation */
+.summary-thumbnail-placeholder {
+    /* Define the size and look of the final thumbnail */
+    width: 300px;
+    max-width: 60%;
+    aspect-ratio: 4 / 3;
+    margin: 0 auto 2rem;
+    border-radius: 8px;
+    overflow: hidden;
+    /* This is a key part for the Flip animation to work seamlessly */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+/* This class will be added by JS to hide the original visuals col during the Flip transition */
+.pillar-visuals-col.is-exiting {
+    visibility: hidden;
+}
