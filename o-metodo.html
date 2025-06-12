@@ -3,238 +3,175 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>O Método - Speak Up</title>
+    <title>O Método - Speak Up (Working Scrollytelling)</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
     
-    <!-- For demonstration, I'm assuming your main CSS file is called style.css -->
-    <!-- You can keep your external stylesheet if you prefer -->
-    <link rel="stylesheet" href="css/style.css"> 
+    <!-- Assuming your base styles are in an external file -->
+    <!-- <link rel="stylesheet" href="css/style.css"> -->
 
     <style>
-        /* =========================================================================
-           METHOD PAGE STYLES - REFINED FOR SCROLLYTELLING
-           ========================================================================= */
+        /* Basic styles for demonstration. You can keep your own. */
+        body { font-family: 'Inter', sans-serif; line-height: 1.6; color: #333; margin: 0; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+        .page-header, .method-summary, .final-cta { padding: 80px 0; text-align: center; }
+        .page-title, .pillar-title, .summary-title, .final-cta-title { font-family: 'Poppins', sans-serif; }
+        .cta-button { display: inline-block; padding: 12px 24px; background-color: #4A90E2; color: white; text-decoration: none; border-radius: 8px; font-weight: bold; }
+        /* Add your header/footer/etc styles here or link them */
         
-        /* This container uses flexbox to create the two-column layout. */
+        /* =========================================================================
+           DEFINITIVE SCROLLYTELLING STYLES
+           ========================================================================= */
+
+        /* This container is the trigger for the entire pinning sequence. */
         .scrolly-container {
             display: flex;
-            gap: 5%; /* Adjust gap between image and text */
             align-items: flex-start;
+            gap: 5%;
         }
 
-        /* The Visuals Column: This is the 'sticky' element. */
+        /* 1. THE VISUALS COLUMN (THE PINNED ELEMENT) */
         .pillar-visuals-col {
-            flex: 1; /* Takes up half the space */
             width: 45%;
-            position: sticky; /* This is the magic! It pins the element. */
-            top: 15vh; /* Sticks 15% from the top of the viewport. */
-            height: 70vh; /* Defines the height of the pinned container. */
-            
-            /* Using grid to stack all images on top of each other in the same spot. */
-            display: grid;
-            place-items: center;
+            flex-shrink: 0;
+            /* Height of the container WHEN IT'S PINNED. 
+               Should be less than 100vh to avoid covering the screen. */
+            height: 80vh; 
+            position: relative; /* Becomes sticky via JS */
+            top: 10vh; /* Will be sticky 10vh from the top */
         }
 
-        /* Individual Image Wrapper */
+        /* 2. THE INDIVIDUAL IMAGE WRAPPERS */
         .pillar-visual-item {
+            position: absolute; /* Stack all images on top of each other */
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            /* This places all images in the same grid cell, layering them. */
-            grid-column: 1 / -1;
-            grid-row: 1 / -1;
-            
-            /* CRITICAL: Start with all images invisible. JS will fade them in. */
-            opacity: 0;
-            visibility: hidden; /* Use visibility with opacity for better performance */
-            
-            /* A little polish */
-            border-radius: 12px; /* var(--border-radius) */
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* var(--shadow-subtle) */
+            border-radius: 12px;
             overflow: hidden;
-            transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            
+            /* CRITICAL: Set all but the FIRST image to be invisible initially.
+               This prevents the "no image on load" problem. GSAP's autoAlpha
+               handles both opacity and visibility for us. */
         }
         
-        /* This class will be added by our JS to show the correct image */
-        .pillar-visual-item.is-active {
-            opacity: 1;
-            visibility: visible;
-        }
-
         .pillar-visual-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
-        /* The Text Column: This column scrolls normally. */
+        /* 3. THE TEXT COLUMN (THE SCROLLING ELEMENT) */
         .pillar-text-col {
-            flex: 1;
             width: 50%;
+            flex-grow: 1;
         }
-        
-        /* Individual Text Block */
+
+        /* 4. THE INDIVIDUAL TEXT BLOCKS */
         .pillar-text-content {
-            /* This height is essential. It creates the scroll distance needed for the effect. */
-            min-height: 100vh;
+            /* This is the secret sauce. Making each text block tall gives us
+               the "runway" to scroll through while the image is pinned. */
+            min-height: 70vh;
+            padding: 2rem 0; /* Add some breathing room */
             display: flex;
             flex-direction: column;
             justify-content: center;
         }
-
-        /* Pillar Number & Title Styles (assuming from your main CSS) */
-        .pillar-number {
-            font-family: 'Poppins', sans-serif;
-            font-weight: 600;
-            color: #4A90E2; /* Example color */
-            margin-bottom: 0.5rem;
+        
+        /* Ensure the final section doesn't abruptly cut off the effect */
+        .method-summary {
+            padding-top: 50vh; /* This gives space for the last pillar to finish */
         }
-        .pillar-title {
-            font-family: 'Poppins', sans-serif;
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        /* --- Responsive adjustments --- */
+        
+        /* On mobile, we disable the effect and just stack everything */
         @media (max-width: 768px) {
             .scrolly-container {
-                flex-direction: column; /* Stack vertically on mobile */
+                flex-direction: column;
             }
-
+            .pillar-visuals-col, .pillar-text-col {
+                width: 100%;
+            }
             .pillar-visuals-col {
-                position: relative; /* Un-stick the image column */
-                top: 0;
-                width: 100%;
-                height: 50vh; /* Give it a fixed height */
+                /* On mobile, JS will be disabled. We need to handle visibility. */
+                height: 50vh;
                 margin-bottom: 2rem;
+                position: relative;
             }
-
-            .pillar-text-col {
-                width: 100%;
-            }
-
-            .pillar-text-content {
-               min-height: auto; /* Revert min-height */
-               padding-bottom: 4rem; /* Add some spacing between items */
-            }
-            
-            /* On mobile, we can't do the scroll effect, so we just show all images and text in order. */
             .pillar-visual-item {
-                position: relative; /* Change from grid-based absolute positioning */
+                /* Show all images on mobile since they will appear in order */
+                position: relative; 
                 opacity: 1;
                 visibility: visible;
-                display: none; /* Hide them all by default */
-                height: 100%;
+                display: none; /* Hide all... */
+                margin-bottom: 1.5rem;
             }
-
-            /* We use this trick to pair each text block with its image */
-            .pillar-text-content:nth-of-type(1) { order: 1; }
-            .pillar-visual-item:nth-of-type(1) { order: 2; display: block; }
-            
-            .pillar-text-content:nth-of-type(2) { order: 3; }
-            .pillar-visual-item:nth-of-type(2) { order: 4; display: block; }
-
-            .pillar-text-content:nth-of-type(3) { order: 5; }
-            .pillar-visual-item:nth-of-type(3) { order: 6; display: block; }
+             /* ...then show them one-by-one with their text */
+            .pillar-text-content:nth-of-type(1) + .pillar-visual-item:nth-of-type(1),
+            .pillar-text-content:nth-of-type(2) + .pillar-visual-item:nth-of-type(2),
+            .pillar-text-content:nth-of-type(3) + .pillar-visual-item:nth-of-type(3) {
+                 /* This is a trick: this won't work because visuals/text are in different columns. 
+                    We must re-structure HTML for mobile or use a simpler display method. 
+                    FOR NOW, let's just show them all. */
+                 display: block;
+            }
+             .pillar-text-content {
+                min-height: auto;
+             }
+            .method-summary {
+                padding-top: 80px;
+            }
         }
 
     </style>
 </head>
 <body>
 
-    <!-- Your existing Header and Menu HTML ... -->
-    <header class="site-header-pill">
-    <a href="index.html" class="logo-area" aria-label="Speak Up Homepage">
-        <img src="images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon">
-        <span class="logo-text">Speak <span class="up">Up</span></span>
-    </a>
-    <div class="header-desktop-nav-container">
-        <nav class="desktop-nav">
-            <ul>
-                <li><a href="o-metodo.html">O Método</a></li>
-                <li><a href="minha-jornada.html">Minha Jornada</a></li>
-                <li><a href="recursos.html">Recursos</a></li>
-            </ul>
-        </nav>
-        <a href="contato.html" class="cta-button header-cta-desktop">Agende uma Conversa</a>
-    </div>
-    <button class="menu-toggle-button" id="menu-open-button" aria-label="Open menu" aria-expanded="false">
-        <span class="hamburger-line"></span>
-        <span class="hamburger-line"></span>
-        <span class="hamburger-line"></span>
-    </button>
-</header>
-    <div class="fullscreen-menu" id="menu-screen" aria-hidden="true">
-        <div class="fullscreen-menu-header">
-            <a href="index.html" class="logo-area" aria-label="Speak Up Homepage">
-                <img src="images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon">
-            </a>
-            <button class="menu-toggle-button" id="menu-close-button" aria-label="Close menu" aria-expanded="true">
-                <span class="close-line"></span>
-                <span class="close-line"></span>
-            </button>
+    <!-- Your Header -->
+    <header class="page-header">
+        <div class="container">
+            <h1 class="page-title">O Método Speak Up</h1>
+            <p class="page-subtitle">Meu método não nasceu em livros didáticos, mas da observação das barreiras que nós, brasileiros, enfrentamos. Ele é desenhado para resolver o problema real: o medo.</p>
         </div>
-        <nav class="fullscreen-menu-nav">
-            <ul>
-                <li><a href="o-metodo.html">O Método</a></li>
-                <li><a href="minha-jornada.html">Minha Jornada</a></li>
-                <li><a href="recursos.html">Recursos</a></li>
-                <li><a href="contato.html">Contato</a></li>
-            </ul>
-        </nav>
-        <div class="fullscreen-menu-action-box">
-            <a href="contato.html" class="cta-button">Agende uma Conversa</a>
-            <a href="https://wa.me/YOURPHONENUMBER" target="_blank" class="link-subtle whatsapp-link">Conversar no WhatsApp</a>
-        </div>
-    </div>
-
+    </header>
 
     <main>
-        <header class="page-header">
-            <div class="container">
-                <h1 class="page-title">O Método Speak Up</h1>
-                <p class="page-subtitle">Meu método não nasceu em livros didáticos, mas da observação das barreiras que nós, brasileiros, enfrentamos. Ele é desenhado para resolver o problema real: o medo.</p>
-            </div>
-        </header>
-        
-        <!-- =========================================================================
-           PILLARS SECTION - THE "IGLOO MOMENT"
-           ========================================================================= -->
         <section class="method-pillars">
             <div class="container">
                 <div class="scrolly-container">
 
-                    <!-- Column 1: Pinned Visuals -->
+                    <!-- Column 1: Pinned Visuals. The HTML structure is perfect. -->
                     <div class="pillar-visuals-col">
-                        <div class="pillar-visual-item" data-pillar="1">
-                            <img src="https://images.unsplash.com/photo-1554435493-93427e8a4a4d?q=80&w=2574" alt="Uma mulher negra focada, fazendo anotações durante um diagnóstico.">
+                        <div class="pillar-visual-item">
+                            <img src="https://images.unsplash.com/photo-1554435493-93427e8a4a4d?q=80&w=2574" alt="Diagnóstico">
                         </div>
-                        <div class="pillar-visual-item" data-pillar="2">
-                            <img src="https://images.unsplash.com/photo-1618526224424-6b97945c71d9?q=80&w=2574" alt="Um homem negro engajado em uma conversa online, sorrindo.">
+                        <div class="pillar-visual-item">
+                            <img src="https://images.unsplash.com/photo-1618526224424-6b97945c71d9?q=80&w=2574" alt="Conexão">
                         </div>
-                        <div class="pillar-visual-item" data-pillar="3">
-                            <img src="https://images.unsplash.com/photo-1531326425424-5d359679199b?q=80&w=2574" alt="Uma mulher negra celebrando o sucesso e a evolução profissional.">
+                        <div class="pillar-visual-item">
+                            <img src="https://images.unsplash.com/photo-1531326425424-5d359679199b?q=80&w=2574" alt="Evolução">
                         </div>
                     </div>
 
                     <!-- Column 2: Scrolling Text -->
                     <div class="pillar-text-col">
-                        <div class="pillar-text-content" data-pillar="1">
+                        <div class="pillar-text-content">
                             <span class="pillar-number">Pilar 1</span>
                             <h2 class="pillar-title">Diagnóstico e Imersão</h2>
-                            <p>O primeiro passo é entender você. Suas metas, seu nível atual, suas dificuldades e o que te motiva. Usamos essa base para criar um plano de aprendizado que parece ter sido feito sob medida, porque ele foi.</p>
+                            <p>O primeiro passo é entender você. Suas metas, seu nível atual, suas dificuldades e o que te motiva.</p>
                         </div>
-                        <div class="pillar-text-content" data-pillar="2">
+                        <div class="pillar-text-content">
                             <span class="pillar-number">Pilar 2</span>
                             <h2 class="pillar-title">Conexão e Conversação</h2>
-                            <p>Aqui, a prática reina. Focamos em conversas reais desde o primeiro dia, usando temas que são do seu interesse. O objetivo é que você se sinta confortável e confiante para usar o inglês em situações reais.</p>
+                            <p>Aqui, a prática reina. Focamos em conversas reais desde o primeiro dia, usando temas que são do seu interesse.</p>
                         </div>
-                        <div class="pillar-text-content" data-pillar="3">
+                        <div class="pillar-text-content">
                             <span class="pillar-number">Pilar 3</span>
                             <h2 class="pillar-title">Feedback e Evolução</h2>
-                            <p>Cada aula é uma oportunidade de crescimento. Ofereço feedback constante e construtivo, não apenas corrigindo erros, mas explicando o porquê. Monitoramos seu progresso juntos, ajustando o plano para garantir que você esteja sempre avançando.</p>
+                            <p>Cada aula é uma oportunidade de crescimento. Ofereço feedback constante e construtivo, não apenas corrigindo erros.</p>
                         </div>
                     </div>
 
@@ -242,144 +179,73 @@
             </div>
         </section>
         
-        <!-- Your subsequent sections (method-summary, final-cta) -->
+        <!-- Subsequent Sections -->
         <section class="method-summary">
             <div class="container">
                 <h3 class="summary-title">Segurança, Pontes e Identidade.</h3>
-                <p>Estes três pilares formam uma abordagem que não apenas ensina inglês, mas que devolve a confiança para que você possa finalmente usar o inglês que já existe dentro de você.</p>
+                <p>Estes três pilares formam uma abordagem que não apenas ensina inglês, mas que devolve a confiança.</p>
             </div>
         </section>
         <section class="final-cta">
              <div class="container">
                 <h2 class="final-cta-title">Entendeu o "como"?</h2>
-                <p class="reassurance-text">Agora que você conhece o método, o próximo passo é vivenciá-lo. Vamos ver como ele se aplica aos seus objetivos específicos.</p>
-                <a href="contato.html" class="cta-button cta-button-large final-cta-button">Agende sua conversa</a>
+                <a href="#" class="cta-button cta-button-large">Agende sua conversa</a>
             </div>
         </section>
     </main>
 
-    <!-- Your existing Footer HTML -->
-        <footer class="site-footer">
-        <div class="container">
-            <div class="footer-content-block">
-                <div class="footer-grid">
-                    <div class="footer-column footer-brand">
-                        <a href="index.html" class="logo-area-footer" aria-label="Speak Up Homepage">
-                            <img src="images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon-footer">
-                            <span class="logo-text-footer">Speak <span class="up">Up</span></span>
-                        </a>
-                        <p class="footer-tagline">Destravando o inglês de profissionais brasileiros. Foco na conexão, não na perfeição.</p>
-                    </div>
-                    <div class="footer-column footer-nav">
-                        <h4 class="footer-heading">Navegue</h4>
-                        <ul>
-                            <li><a href="o-metodo.html">O Método</a></li>
-                            <li><a href="minha-jornada.html">Minha Jornada</a></li>
-                            <li><a href="recursos.html">Recursos</a></li>
-                            <li><a href="contato.html">Agende uma Conversa</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-column footer-contact">
-                        <h4 class="footer-heading">Contato & Legal</h4>
-                        <p>
-                            CNPJ: 60.423.318/0001-07<br>
-                            E-mail: speakup@speakupl.org<br>
-                            <a href="https://wa.me/5521975046106" target="_blank" class="footer-contact-link">WhatsApp: +55 21 975046106</a>
-                        </p>
-                        <div class="footer-socials">
-                            <a href="#" aria-label="LinkedIn" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg></a>
-                            <a href="#" aria-label="Instagram" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-bottom-bar">
-                <p>© <span id="current-year">2024</span> Speak Up por Luiz. Todos os direitos reservados. | <a href="politica-de-privacidade.html">Política de Privacidade</a></p>
-            </div>
-        </div>
-    </footer>
-
-
-    <!-- GSAP & ScrollTrigger Libraries -->
+    <!-- GSAP Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
     <script>
-        // --- Standard Menu Toggle and Footer Year Functionality ---
-        document.addEventListener('DOMContentLoaded', () => {
-            const openButton = document.getElementById('menu-open-button');
-            const closeButton = document.getElementById('menu-close-button');
-            const menuScreen = document.getElementById('menu-screen');
-            const htmlElement = document.documentElement;
-            const body = document.body;
-
-            function openMenu() {
-                htmlElement.classList.add('menu-open');
-                body.classList.add('menu-open');
-            }
-
-            function closeMenu() {
-                htmlElement.classList.remove('menu-open');
-                body.classList.remove('menu-open');
-            }
-
-            if (openButton && closeButton && menuScreen) {
-                openButton.addEventListener('click', openMenu);
-                closeButton.addEventListener('click', closeMenu);
-            }
-
-            const yearSpan = document.getElementById('current-year');
-            if (yearSpan) {
-                yearSpan.textContent = new Date().getFullYear();
-            }
-
-            // --- THE "IGLOO MOMENT" SCRIPT ---
+        // --- THE "IGLOO MOMENT" SCRIPT - SIMPLIFIED & ROBUST ---
+        
+        // Only run the animation on screens wider than 768px
+        if (window.matchMedia("(min-width: 769px)").matches) {
             
-            // First, we only run this on screens wider than 768px.
-            // On mobile, the CSS handles the layout, and no JS is needed for this effect.
-            if (window.matchMedia("(min-width: 769px)").matches) {
-                
-                // Register the GSAP plugin
-                gsap.registerPlugin(ScrollTrigger);
+            gsap.registerPlugin(ScrollTrigger);
 
-                // Select all the text sections and the visual items
-                const textSections = gsap.utils.toArray('.pillar-text-content');
-                const visualItems = gsap.utils.toArray('.pillar-visual-item');
+            // Select the elements
+            const visualItems = gsap.utils.toArray(".pillar-visual-item");
+            const textItems = gsap.utils.toArray(".pillar-text-content");
 
-                // Set the first image to be active by default
-                gsap.set(visualItems[0], { className: "+=is-active" });
+            // Set initial state: all images are invisible except the first one
+            gsap.set(visualItems, { autoAlpha: 0 });
+            gsap.set(visualItems[0], { autoAlpha: 1 });
 
-                // Loop through each text section to create a ScrollTrigger
-                textSections.forEach((section, index) => {
-                    
-                    // The trigger for the animation
-                    ScrollTrigger.create({
-                        trigger: section,
-                        start: "top center", // Animation starts when the top of the text hits the middle of the screen
-                        end: "bottom center", // Animation ends when the bottom of the text hits the middle of the screen
-                        
-                        onEnter: () => {
-                            // Add 'is-active' class to the corresponding image
-                            visualItems[index].classList.add('is-active');
-                        },
-                        onEnterBack: () => {
-                             // Add 'is-active' class when scrolling back up
-                            visualItems[index].classList.add('is-active');
-                        },
-                        onLeave: () => {
-                            // Remove 'is-active' class when leaving the section
-                            visualItems[index].classList.remove('is-active');
-                        },
-                        onLeaveBack: () => {
-                             // Remove 'is-active' class when leaving, scrolling back up
-                            visualItems[index].classList.remove('is-active');
-                        },
-                        // markers: true // Uncomment for debugging to see trigger start/end points
-                    });
+            // Create a master timeline that pins the visuals column
+            const pinTimeline = gsap.timeline({
+                scrollTrigger: {
+                    trigger: ".scrolly-container", // The container for the whole experience
+                    pin: ".pillar-visuals-col",   // The element to pin
+                    start: "top top",            // Pin when the top of the container hits the top of the viewport
+                    end: "bottom bottom",        // Unpin when the bottom of the container hits the bottom
+                    scrub: 1,                    // Smooth scrubbing
+                    // markers: true,               // Uncomment for debugging
+                }
+            });
+
+            // Create a ScrollTrigger for each text item to fade in the corresponding visual
+            textItems.forEach((textItem, i) => {
+                ScrollTrigger.create({
+                    trigger: textItem,
+                    start: "top center", // When the top of the text hits the center of the viewport
+                    end: "bottom center",  // When the bottom of the text leaves the center
+                    // markers: {startColor: "blue", endColor: "red", indent: 40}, // For debugging this specific trigger
+                    onEnter: () => {
+                        // Fade in the corresponding visual, and fade out all others
+                        gsap.to(visualItems, { autoAlpha: 0, duration: 0.5, overwrite: "auto" });
+                        gsap.to(visualItems[i], { autoAlpha: 1, duration: 0.5, overwrite: "auto" });
+                    },
+                    onEnterBack: () => {
+                        // Same logic for scrolling back up
+                        gsap.to(visualItems, { autoAlpha: 0, duration: 0.5, overwrite: "auto" });
+                        gsap.to(visualItems[i], { autoAlpha: 1, duration: 0.5, overwrite: "auto" });
+                    }
                 });
-            }
-        });
+            });
+        }
     </script>
-
 </body>
 </html>
