@@ -922,3 +922,84 @@ body.no-scroll {
     white-space: nowrap;
     border-width: 0;
 }
+/* --- 8. Responsive Header Logic --- */
+
+/* Default styles for MOBILE (breakpoint is 992px) */
+/* Hide the desktop navigation container on smaller screens by default */
+.header-desktop-nav-container {
+    display: none;
+}
+
+/* We already have styles for the mobile menu-toggle-button, so it will show by default */
+
+
+/* Styles for DESKTOP (screens wider than 992px) */
+@media (min-width: 992px) {
+    
+    /* --- Show Desktop Navigation --- */
+    .header-desktop-nav-container {
+        display: flex;
+        align-items: center;
+        gap: 30px;
+    }
+
+    .desktop-nav ul {
+        display: flex;
+        list-style: none;
+        gap: 28px;
+        margin: 0;
+        padding: 0;
+    }
+
+    .desktop-nav a {
+        color: var(--color-text-main);
+        font-weight: 500;
+        font-size: 0.95rem;
+        text-decoration: none;
+        padding: 8px 4px;
+        position: relative;
+        transition: var(--transition-smooth);
+    }
+    
+    .desktop-nav a:hover {
+        color: var(--color-heading);
+    }
+
+    /* Animated underline effect on hover */
+    .desktop-nav a::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background-color: var(--color-primary-vibrant);
+        transition: width 0.3s ease;
+    }
+
+    .desktop-nav a:hover::after {
+        width: 100%;
+    }
+    
+    /* Style the desktop CTA button */
+    .header-cta-desktop {
+        padding: 10px 22px;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    /* --- Hide Mobile Hamburger --- */
+    .site-header-pill .menu-toggle-button {
+        display: none;
+    }
+}
+
+/* Minor adjustment for very large screens to give more space */
+@media (min-width: 1200px) {
+    .site-header-pill {
+        max-width: 1100px;
+    }
+    .desktop-nav ul {
+        gap: 40px;
+    }
+}
