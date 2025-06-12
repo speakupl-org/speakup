@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if(yearSpan){ yearSpan.textContent = new Date().getFullYear(); }
 
     // =========================================================================
-    // 3D SCROLLYTELLING - V4: PILLAR 3 FIX
+    // 3D SCROLLYTELLING - V5: LABEL-DRIVEN ARCHITECTURE
     // =========================================================================
 
     gsap.registerPlugin(ScrollTrigger);
@@ -29,60 +29,57 @@ document.addEventListener('DOMContentLoaded', function() {
             const textPillar2 = document.querySelector('[data-pillar="2"]');
             const textPillar3 = document.querySelector('[data-pillar="3"]');
             
-            // Initial states
-            gsap.set(actor3D, { rotationX: -10, rotationY: 20, scale: 1 });
+            // Set initial states explicitly for clarity.
+            // Pillar 1 is visible, the others are not.
+            gsap.set(actor3D, { rotationX: 0, rotationY: 0, scale: 1 });
+            gsap.set(textPillar1, { autoAlpha: 1 });
             gsap.set(textPillar2, { autoAlpha: 0 }); 
             gsap.set(textPillar3, { autoAlpha: 0 });
 
             // --- 2. THE MASTER TIMELINE ---
             const masterTimeline = gsap.timeline({
+                // The ScrollTrigger setup is the same, as the diagnostic proved it works.
                 scrollTrigger: {
                     trigger: ".scrolly-container",
                     pin: visualsCol,
                     start: "top top",
-                    // *** CHANGE #1: INCREASED SCROLL DURATION ***
-                    end: "+=6000",
+                    end: "+=4000", // A sufficient but not excessive length.
                     scrub: 1.2,
-                    // markers: true, // Keep this handy for debugging
+                    // markers: true,
                 }
             });
 
-            // --- 3. THE KEYFRAME ANIMATION ---
+            // --- 3. THE LABEL-DRIVEN CHOREOGRAPHY ---
 
-            // **KEYFRAME 1: Pillar 1 State**
-            masterTimeline.to({}, { duration: 1.5 }); // A bit more reading time
+            // --- SCENE 1: DIAGNOSIS ---
+            masterTimeline
+                .addLabel("scene1")
+                // The initial animation state for the cube for scene 1
+                .to(actor3D, { rotationY: 120, rotationX: 10, scale: 1.2, ease: "power2.inOut" })
+                // This empty tween creates a "pause" or "hold" for reading.
+                // It makes the timeline longer, giving the user time to scroll.
+                .to({}, {duration: 1});
 
 
-            // **TRANSITION from State 1 to State 2**
-            masterTimeline.add("state1_to_state2");
-            masterTimeline.to(textPillar1, { autoAlpha: 0, duration: 0.5 }, "state1_to_state2");
-            masterTimeline.to(textPillar2, { autoAlpha: 1, duration: 0.5 }, "state1_to_state2");
-            masterTimeline.to(actor3D, { 
-                rotationY: -120, 
-                rotationX: -20, 
-                scale: 1.2, 
-                duration: 4, 
-                ease: "power2.inOut"
-            }, "state1_to_state2");
+            // --- SCENE 2: CONVERSATION ---
+            masterTimeline
+                .addLabel("scene2")
+                // The transition to scene 2: fade out old text, fade in new text
+                .to(textPillar1, { autoAlpha: 0 }, "scene2")
+                .to(textPillar2, { autoAlpha: 1 }, "scene2")
+                // While the text cross-fades, the cube animates to its new state
+                .to(actor3D, { rotationY: -120, rotationX: -20, scale: 1.0, ease: "power2.inOut" }, "scene2")
+                .to({}, {duration: 1});
 
-            masterTimeline.to({}, { duration: 1.5 });
-            
-            
-            // **TRANSITION from State 2 to State 3**
-            masterTimeline.add("state2_to_state3");
-            masterTimeline.to(textPillar2, { autoAlpha: 0, duration: 0.5 }, "state2_to_state3");
-            masterTimeline.to(textPillar3, { autoAlpha: 1, duration: 0.5 }, "state2_to_state3");
-            masterTimeline.to(actor3D, { 
-                rotationY: 0, 
-                rotationX: 0, 
-                scale: 1.1,
-                duration: 4, 
-                ease: "power3.inOut" 
-            }, "state2_to_state3");
-            
-            // ** CHANGE #2: ADJUSTED FINAL PAUSE **
-            // We ensure there's a "pause" to hold the final state.
-            masterTimeline.to({}, { duration: 2.5 }); 
+
+            // --- SCENE 3: EVOLUTION ---
+            masterTimeline
+                .addLabel("scene3")
+                .to(textPillar2, { autoAlpha: 0 }, "scene3")
+                .to(textPillar3, { autoAlpha: 1 }, "scene3")
+                // The cube resolves to its final hero state
+                .to(actor3D, { rotationY: 0, rotationX: 0, scale: 1.1, ease: "power3.inOut" }, "scene3")
+                .to({}, {duration: 1.5}); // A longer final hold
         },
 
         "(max-width: 768px)": function() {
