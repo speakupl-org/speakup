@@ -592,7 +592,7 @@ a { color: var(--color-primary-vibrant); text-decoration: none; }
     align-self: flex-start;
 }
 /* =========================================================================
-   13. Mobile Navigation System (FINAL - v2.0)
+   13. Mobile Navigation System (FINAL - v3.0 - The Liberation Build)
    ========================================================================= */
 
 .mobile-nav-toggle {
@@ -600,88 +600,85 @@ a { color: var(--color-primary-vibrant); text-decoration: none; }
 }
 
 @media (max-width: 1024px) {
+
+    /* THE CRITICAL FIX: Liberate the menu from its sticky parent on mobile */
+    .sticky-header {
+        position: static; /* No longer sticky */
+    }
     
     /* The Slide-in Menu Panel */
     .main-nav {
-        display: flex; /* CRITICAL FIX: Tell the panel to be a flex container */
-        flex-direction: column; /* Now it knows how to stack items */
-        justify-content: center; /* Vertically center the link list */
-        gap: 3rem;
-
+        display: flex;
+        flex-direction: column;
+        justify-content: center; /* Center the UL vertically */
+        align-items: center; /* Center the UL horizontally */
+        
         position: fixed;
         z-index: 1000;
-        inset: 0 0 0 30%; /* top, right, bottom, left */
+        inset: 0; /* A shorthand for top:0, right:0, bottom:0, left:0 */
         
-        padding: 2rem;
         background: hsl(0 0% 10% / 0.9);
         backdrop-filter: blur(1rem);
         -webkit-backdrop-filter: blur(1rem);
         
+        /* Start hidden to the right */
         transform: translateX(100%);
         transition: transform 350ms ease-out;
     }
 
     .main-nav[data-visible="true"] {
-        transform: translateX(0%);
+        transform: translateX(0%); /* Slide into view */
     }
 
-    /* The List of Links inside the Menu */
+    /* The List of Links */
     .main-nav ul {
-        display: flex; /* CRITICAL FIX: Tell the list to ALSO be a flex container */
+        display: flex;
         flex-direction: column;
         align-items: center;
         gap: 2.5rem;
         list-style: none;
         padding: 0;
+        margin: 0;
+        text-align: center;
     }
 
     /* The Individual Links */
     .main-nav ul a {
         color: var(--color-heading);
-        font-size: 1.3rem;
+        font-size: 1.5rem; /* Larger, tappable links */
         font-weight: 600;
         text-decoration: none;
     }
     
     .header-cta {
-        display: none; /* Hide the desktop CTA button to save space */
+        display: none;
     }
 
-    /* The Hamburger Button itself */
+    /* The Hamburger Button */
     .mobile-nav-toggle {
         display: block;
-        position: fixed; /* Changed to fixed to stay put during scroll */
+        position: fixed; /* Fixed so it stays in place even if the header scrolls away */
         z-index: 9999;
         background: transparent;
         border: 0;
-        aspect-ratio: 1;
-        top: 1.75rem; /* Adjusted for better placement */
+        top: 1.75rem;
         right: 2rem;
         width: 1.5rem;
+        aspect-ratio: 1;
         cursor: pointer;
+
+        /* Re-add the hamburger icon styles directly within this media query */
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        background-size: 100%;
+        background-repeat: no-repeat;
     }
 
-    /* --- Hamburger Icon & Animation --- */
-    .mobile-nav-toggle::before,
-    .mobile-nav-toggle::after,
-    .mobile-nav-toggle span {
-        content: '';
-        position: absolute;
-        left: 0; /* ensure alignment */
-        height: 2px;
-        width: 1.5rem;
-        background-color: var(--color-heading);
-        border-radius: 100vw;
-        transition: transform 350ms ease-out, opacity 350ms ease-out;
+    /* Switch to a close icon when the menu is open */
+    .mobile-nav-toggle[aria-expanded="true"] {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M6 6l18 18M24 6L6 24'/%3e%3c/svg%3e");
     }
-    /* ... Hamburger animation rules remain the same ... */
-    .mobile-nav-toggle::before { transform: translateY(-6px); }
-    .mobile-nav-toggle::after { transform: translateY(6px); }
-    .mobile-nav-toggle[aria-expanded="true"]::before { transform: translateY(0px) rotate(45deg); }
-    .mobile-nav-toggle[aria-expanded="true"] span { opacity: 0; }
-    .mobile-nav-toggle[aria-expanded="true"]::after { transform: translateY(0px) rotate(-45deg); }
 
-} 
+} /* This is the end of the @media query block */
 /* =========================================================================
    14. Accessibility & Utilities
    ========================================================================= */
