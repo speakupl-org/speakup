@@ -951,35 +951,28 @@ body.no-scroll {
         padding: 0;
     }
 
+    /* --- NEW "GHOST PILL" HOVER EFFECT --- */
     .desktop-nav a {
         color: var(--color-text-main);
         font-weight: 500;
         font-size: 0.95rem;
         text-decoration: none;
-        padding: 8px 4px;
-        position: relative;
-        transition: var(--transition-smooth);
+        
+        /* 1. Create the pill shape with padding and border-radius */
+        padding: 8px 16px; /* More horizontal padding for a nice pill shape */
+        border-radius: 20px; /* This makes the corners fully rounded */
+        
+        /* 2. Ensure smooth transition for background and text color */
+        transition: background-color 0.3s ease, color 0.3s ease;
     }
     
     .desktop-nav a:hover {
-        color: var(--color-heading);
+        /* 3. On hover, change the text and background color */
+        color: var(--color-heading); /* Makes text brighter on hover */
+        background-color: var(--color-surface-dark); /* The subtle, darker pill appears */
     }
 
-    /* Animated underline effect on hover */
-    .desktop-nav a::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 0;
-        height: 2px;
-        background-color: var(--color-primary-vibrant);
-        transition: width 0.3s ease;
-    }
-
-    .desktop-nav a:hover::after {
-        width: 100%;
-    }
+    /* No ::after rules are needed anymore! */
     
     /* Style the desktop CTA button */
     .header-cta-desktop {
