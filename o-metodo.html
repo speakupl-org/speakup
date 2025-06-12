@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- A more benefit-driven title for better SEO and user understanding -->
     <title>Fluência e Confiança: O Método Speak Up</title> 
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,7 +14,7 @@
 <body>
 
 <!-- =========================================================================
-   PART 1: THE SPEAK UP "FLOATING PILL" HEADER (FROM YOUR ORIGINAL CODE - UNCHANGED)
+   PART 1: HEADER (Unchanged)
    ========================================================================= -->
 <header class="site-header-pill">
     <a href="index.html" class="logo-area" aria-label="Speak Up Homepage">
@@ -40,7 +39,7 @@
 </header>
 
 <!-- =========================================================================
-   PART 2: THE "SPEAK UP BRAND WORLD" MENU SCREEN (FROM YOUR ORIGINAL CODE - UNCHANGED)
+   PART 2: FULLSCREEN MENU (Unchanged)
    ========================================================================= -->
 <div class="fullscreen-menu" id="menu-screen" aria-hidden="true">
     <div class="fullscreen-menu-header">
@@ -68,7 +67,7 @@
 
 <main>
     <!-- =========================================================================
-       PAGE HEADER - Revised text to set a stronger narrative tone
+       PAGE HEADER (Unchanged)
        ========================================================================= -->
     <header class="page-header">
         <div class="container">
@@ -78,52 +77,57 @@
     </header>
     
     <!-- =========================================================================
-       PILLARS SECTION - THIS IS THE CORE OF OUR "IGLOO" EFFECT
-       The structure is intentionally kept the same. It's the ideal setup for a 
-       pinned-element scroll animation.
+       PILLARS SECTION - UPDATED FOR THE "IGLOO" EFFECT
        ========================================================================= -->
     <section class="method-pillars">
         <div class="container">
-            <!-- This parent container is essential for the layout -->
             <div class="scrolly-container">
 
                 <!-- Column 1: Pinned Visuals -->
-                <!-- This column will be set to position: sticky in CSS. -->
                 <div class="pillar-visuals-col">
-                    <!-- NEW IMAGE 1: Suggests deep listening and analysis. -->
+                    <!-- UPDATE: Each image is now wrapped in a 'pillar-image-scaler' div. -->
+                    <!-- This allows us to scale the image *inside* its container for the zoom effect. -->
                     <div class="pillar-visual-item" data-pillar="1">
-                        <img src="https://images.unsplash.com/photo-1543269865-cbf427effbad?q=80&w=2670" alt="Mulher focada em uma conversa, representando o diagnóstico e a escuta ativa.">
+                        <div class="pillar-image-scaler">
+                            <img src="https://images.unsplash.com/photo-1543269865-cbf427effbad?q=80&w=2670" alt="Mulher focada em uma conversa, representando o diagnóstico e a escuta ativa.">
+                        </div>
                     </div>
-                    <!-- NEW IMAGE 2: Captures authentic, confident connection. -->
                     <div class="pillar-visual-item" data-pillar="2">
-                        <img src="https://images.unsplash.com/photo-1557862921-37829c790f19?q=80&w=2671" alt="Dois profissionais conversando com confiança, representando a conexão e a prática.">
+                        <div class="pillar-image-scaler">
+                            <img src="https://images.unsplash.com/photo-1557862921-37829c790f19?q=80&w=2671" alt="Dois profissionais conversando com confiança, representando a conexão e a prática.">
+                        </div>
                     </div>
-                    <!-- NEW IMAGE 3: Shows pride and successful evolution. -->
                     <div class="pillar-visual-item" data-pillar="3">
-                        <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2671" alt="Grupo de pessoas celebrando, simbolizando o sucesso e a evolução.">
+                        <div class="pillar-image-scaler">
+                            <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2671" alt="Grupo de pessoas celebrando, simbolizando o sucesso e a evolução.">
+                        </div>
                     </div>
                 </div>
 
                 <!-- Column 2: Scrolling Text -->
-                <!-- The JS will track when each of these text blocks enters the viewport -->
                 <div class="pillar-text-col">
-                    <!-- Pillar 1 Text: Sharpened for impact -->
+                    <!-- UPDATE: Each block of text is now wrapped in a 'text-anim-wrapper' div. -->
+                    <!-- This allows us to animate the entire text block sliding in/out. -->
                     <div class="pillar-text-content" data-pillar="1">
-                        <span class="pillar-number">Pilar 1</span>
-                        <h2 class="pillar-title">Diagnóstico e Imersão</h2>
-                        <p>Primeiro, eu escuto. Entendemos suas metas, barreiras e o que te move. A partir daqui, criamos um plano de imersão focado, feito unicamente para você.</p>
+                        <div class="text-anim-wrapper">
+                            <span class="pillar-number">Pilar 1</span>
+                            <h2 class="pillar-title">Diagnóstico e Imersão</h2>
+                            <p>Primeiro, eu escuto. Entendemos suas metas, barreiras e o que te move. A partir daqui, criamos um plano de imersão focado, feito unicamente para você.</p>
+                        </div>
                     </div>
-                    <!-- Pillar 2 Text: Sharpened for impact -->
                     <div class="pillar-text-content" data-pillar="2">
-                        <span class="pillar-number">Pilar 2</span>
-                        <h2 class="pillar-title">Conexão e Conversação</h2>
-                        <p>A prática é a prioridade. Desde o primeiro dia, focamos em conversas reais sobre temas do seu universo, transformando teoria em confiança prática.</p>
+                        <div class="text-anim-wrapper">
+                            <span class="pillar-number">Pilar 2</span>
+                            <h2 class="pillar-title">Conexão e Conversação</h2>
+                            <p>A prática é a prioridade. Desde o primeiro dia, focamos em conversas reais sobre temas do seu universo, transformando teoria em confiança prática.</p>
+                        </div>
                     </div>
-                    <!-- Pillar 3 Text: Sharpened for impact -->
                     <div class="pillar-text-content" data-pillar="3">
-                        <span class="pillar-number">Pilar 3</span>
-                        <h2 class="pillar-title">Feedback e Evolução</h2>
-                        <p>Cada aula é um passo à frente. Meu feedback é constante e construtivo. Juntos, ajustamos o plano para garantir que sua evolução nunca pare.</p>
+                        <div class="text-anim-wrapper">
+                            <span class="pillar-number">Pilar 3</span>
+                            <h2 class="pillar-title">Feedback e Evolução</h2>
+                            <p>Cada aula é um passo à frente. Meu feedback é constante e construtivo. Juntos, ajustamos o plano para garantir que sua evolução nunca pare.</p>
+                        </div>
                     </div>
                 </div>
 
@@ -132,17 +136,21 @@
     </section>
     
     <!-- =========================================================================
-       SUMMARY - REVISED TEXT
+       SUMMARY - UPDATED FOR THE "IGLOO" EFFECT
        ========================================================================= -->
     <section class="method-summary">
         <div class="container">
+            <!-- UPDATE: Added a placeholder div. -->
+            <!-- This is the "landing spot" for the final image when it animates and shrinks. -->
+            <div class="summary-thumbnail-placeholder"></div>
+            
             <h3 class="summary-title">Confiança, Clareza e Conexão.</h3>
             <p>Estes três pilares formam uma jornada que não apenas ensina inglês, mas te devolve a segurança para se expressar no mundo.</p>
         </div>
     </section>
 
     <!-- =========================================================================
-       FINAL CTA - Original code, unchanged.
+       FINAL CTA (Unchanged)
        ========================================================================= -->
     <section class="final-cta">
          <div class="container">
@@ -155,7 +163,7 @@
 </main>
 
 <!-- =========================================================================
-   FOOTER - Original code, unchanged.
+   FOOTER (Unchanged)
    ========================================================================= -->
 <footer class="site-footer">
     <div class="container">
@@ -185,12 +193,8 @@
                         <a href="https://wa.me/5521975046106" target="_blank" class="footer-contact-link">WhatsApp: +55 21 975046106</a>
                     </p>
                     <div class="footer-socials">
-                        <a href="#" aria-label="LinkedIn" target="_blank">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
-                        </a>
-                        <a href="#" aria-label="Instagram" target="_blank">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-                        </a>
+                        <a href="#" aria-label="LinkedIn" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg></a>
+                        <a href="#" aria-label="Instagram" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
                     </div>
                 </div>
             </div>
@@ -204,8 +208,10 @@
 <!-- These are essential for the animation. They must be loaded before your main.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<!-- UPDATE: Added the GSAP Flip Plugin. This is required for the "Exit" animation. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Flip.min.js"></script>
 
-<!-- Your main JS file where we will add the GSAP code -->
+<!-- Your main JS file where you will write the new GSAP code -->
 <script defer src="js/main.js"></script>
 
 </body>
