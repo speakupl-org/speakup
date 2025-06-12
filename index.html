@@ -24,17 +24,14 @@
                 <img src="images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon">
                 <span class="logo-text">Speak <span class="up">Up</span></span>
             </a>
-<!-- ADD THIS BUTTON -->
-<button class="mobile-nav-toggle" aria-controls="primary-navigation" aria-expanded="false">
-    <span class="sr-only">Menu</span>
-</button>
-<!-- And ADD AN ID to the nav element -->
-<nav class="main-nav" id="primary-navigation">
-    <ul>
-        <!-- your links here -->
-    </ul>
-</nav>
-            <nav class="main-nav"> <!-- Using a proper NAV element -->
+
+            <!-- The Hamburger Menu Button (Correctly placed) -->
+            <button class="mobile-nav-toggle" aria-controls="primary-navigation" aria-expanded="false">
+                <span class="sr-only">Menu</span>
+            </button>
+            
+            <!-- THE SINGLE, CORRECT NAVIGATION -->
+            <nav class="main-nav" id="primary-navigation">
                 <ul>
                     <li><a href="o-metodo.html">O Método</a></li>
                     <li><a href="minha-jornada.html">Minha Jornada</a></li>
@@ -42,6 +39,8 @@
                     <li><a href="contato.html">Contato</a></li>
                 </ul>
             </nav>
+
+            <!-- The Desktop CTA Button (Will be hidden on mobile by CSS) -->
             <a href="contato.html" class="cta-button header-cta">Agende uma Conversa</a>
         </div>
     </header>
