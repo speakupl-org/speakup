@@ -217,6 +217,99 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
-    <script defer src="js/main.js"></script>
+        <!-- (Your footer HTML is here) -->
+    </footer>
+
+    <!-- GSAP & ScrollTrigger Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+    <!-- 
+      =====================================================================
+      THE DEFINITIVE JAVASCRIPT BLOCK - ALL LOGIC IS NOW HERE
+      =====================================================================
+    -->
+    <script>
+        // --- Menu Toggle Functionality ---
+        const openButton = document.getElementById('menu-open-button');
+        const closeButton = document.getElementById('menu-close-button');
+        const menuScreen = document.getElementById('menu-screen');
+        const htmlElement = document.documentElement;
+        const body = document.body;
+
+        function openMenu() {
+            htmlElement.classList.add('menu-open');
+            body.classList.add('menu-open');
+        }
+
+        function closeMenu() {
+            htmlElement.classList.remove('menu-open');
+            body.classList.remove('menu-open');
+        }
+
+        if (openButton && closeButton && menuScreen) {
+            openButton.addEventListener('click', openMenu);
+            closeButton.addEventListener('click', closeMenu);
+            menuScreen.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', closeMenu);
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && body.classList.contains('menu-open')) {
+                    closeMenu();
+                }
+            });
+        }
+
+        // --- Footer Current Year ---
+        const yearSpan = document.getElementById('current-year');
+        if (yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+
+        // --- THE IGLOO MOMENT: Corrected and Working ---
+        // We run this code directly. No 'defer' or 'DOMContentLoaded' needed since the script is at the end of the body.
+        
+        // Register the ScrollTrigger plugin with GSAP
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Select all the text sections and the visual containers using GSAP's utility function
+        const textSections = gsap.utils.toArray('.pillar-text-content');
+        const visualItems = gsap.utils.toArray('.pillar-visual-item');
+
+        // Make sure the very first image is visible when the page section comes into view.
+        // This prevents a "flash" of empty space.
+        gsap.set(visualItems[0], { autoAlpha: 1 });
+
+        // Loop through each text section to create an animation trigger
+        textSections.forEach((section, index) => {
+            const correspondingVisual = visualItems[index];
+
+            ScrollTrigger.create({
+                trigger: section, // The text block is the trigger
+                start: "top center", // Animation starts when the top of the text hits the middle of the screen
+                end: "bottom center", // Animation ends when the bottom of the text hits the middle of the screen
+                
+                onEnter: () => {
+                    // Fade in the correct image
+                    gsap.to(correspondingVisual, { autoAlpha: 1, duration: 0.5 });
+                },
+                onEnterBack: () => {
+                    // Fade in the correct image when scrolling back up
+                    gsap.to(correspondingVisual, { autoAlpha: 1, duration: 0.5 });
+                },
+                onLeave: () => {
+                    // Fade out the image as we leave it (unless it's the last one)
+                    if (index < visualItems.length - 1) { // Prevents the last image from disappearing too early
+                        gsap.to(correspondingVisual, { autoAlpha: 0, duration: 0.5 });
+                    }
+                },
+                onLeaveBack: () => {
+                     // Fade out the image as we scroll back up past it
+                    gsap.to(correspondingVisual, { autoAlpha: 0, duration: 0.5 });
+                }
+            });
+        });
+
+    </script>
 </body>
 </html>
