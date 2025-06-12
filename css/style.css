@@ -1103,17 +1103,18 @@ body.no-scroll {
    15. HELPER STYLES FOR "IGLOO" JS ANIMATIONS
    ========================================================================= */
 
-/* For the image zoom/pan effect */
+/* For the image zoom/pan effect within its container */
 .pillar-image-scaler {
     width: 100%;
     height: 100%;
-    /* This will contain the scaled-up image */
-    overflow: hidden; 
+    overflow: hidden; /* This will contain the scaled-up image */
+    will-change: transform;
 }
 .pillar-image-scaler img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    will-change: transform;
 }
 
 /* For the slide-in text animation */
@@ -1122,7 +1123,7 @@ body.no-scroll {
     will-change: transform;
 }
 
-/* For the final "Exit" animation */
+/* For the final "Exit" animation using GSAP Flip */
 .summary-thumbnail-placeholder {
     /* Define the size and look of the final thumbnail */
     width: 300px;
@@ -1131,11 +1132,25 @@ body.no-scroll {
     margin: 0 auto 2rem;
     border-radius: 8px;
     overflow: hidden;
-    /* This is a key part for the Flip animation to work seamlessly */
+    /* This box-shadow should match the pinned visual for a seamless transition */
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 
-/* This class will be added by JS to hide the original visuals col during the Flip transition */
+/* CRITICAL: This class is added by JS to hide the original visuals column 
+   during the Flip transition, preventing a "ghost" image from appearing. */
 .pillar-visuals-col.is-exiting {
     visibility: hidden;
+}
+
+/* And replace your old `.pillar-text-content` with this to ensure proper spacing on mobile */
+@media (max-width: 768px) {
+    /* (keep your other mobile styles) */
+    .pillar-text-content {
+       min-height: auto;      /* Remove the massive desktop height */
+       padding-bottom: 4rem; /* Add some space between sections */
+       text-align: left; /* Or center, depending on your design */
+    }
+    .pillar-text-content:last-of-type {
+        padding-bottom: 0;
+    }
 }
