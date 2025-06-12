@@ -2,7 +2,8 @@
    Speak Up v6.0 - "The Empathy Build"
    CSS built for the new brand philosophy.
    ========================================================================= */
-
+/* ADD THIS LINE AT THE TOP OF YOUR CSS FILE */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;700&family=Poppins:wght@600;700&display=swap');
 /* --- 1. Global & Variables --- */
 :root {
     --color-background-dark: #112024; /* Deep, focused, calm */
@@ -694,9 +695,12 @@ html.menu-open {
 /* --- 3. The Scrolling Text Column (The "Trigger" Part) --- */
 /* This column on the right will scroll normally. */
 
+/* MODIFY IT TO LOOK LIKE THIS */
 .pillar-text-col {
     flex: 1;
-    width: 50%; 
+    width: 50%;
+    /* Add this to give the text column some breathing room */
+    padding-left: 2rem; 
 }
 
 /* IMPORTANT: Each text block MUST have significant height. 
@@ -709,6 +713,53 @@ html.menu-open {
     justify-content: center;
 }
 
+/*
+   ADD THIS ENTIRE NEW BLOCK OF CODE
+   A good place is right after your .pillar-text-content rule.
+*/
+
+/* NEW: Constrain the width of the text block for readability */
+.text-anim-wrapper {
+    max-width: 45ch; /* Limits width to about 45 characters */
+}
+
+/* NEW STYLES for text elements */
+.pillar-number {
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #43a8b4; /* <<< IMPORTANT: CHANGE THIS to your brand's accent color! */
+    display: block; /* Ensures it's on its own line */
+}
+
+/* NEW: The decorative line */
+.pillar-line {
+    width: 60px;
+    height: 3px;
+    background-color: #43a8b4; /* <<< IMPORTANT: USE THE SAME ACCENT COLOR! */
+    margin: 1.5rem 0;
+    /* Start the line scaled to zero so we can animate it in */
+    transform: scaleX(0);
+    transform-origin: left;
+}
+
+.pillar-title {
+    /* The new "Hero" font for our titles */
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.8rem, 5vw, 4rem); /* Responsive font size */
+    font-weight: 700;
+    line-height: 1.1;
+    color: #f0f0f0; /* A bright, near-white */
+    margin: 0;
+}
+
+.pillar-paragraph {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    margin-top: 1.5rem;
+    color: #a0a0a0; /* A softer, less-bright gray for depth */
+}
 
 /* --- 3D SCENE SETUP --- */
 .pillar-visuals-col {
