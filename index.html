@@ -16,22 +16,37 @@
 <body>
 
     <!-- =========================================================================
-       HEADER - The consistent navigation for all pages
+       PART 1: THE SPEAK UP "FLOATING PILL" HEADER
+       This is the user's first impression. It's always visible.
        ========================================================================= -->
-    <header class="site-header">
-    <div class="container header-container">
+    <header class="site-header-pill">
         <a href="index.html" class="logo-area" aria-label="Speak Up Homepage">
             <img src="images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon">
             <span class="logo-text">Speak <span class="up">Up</span></span>
         </a>
-
-        <!-- Mobile Menu Button -->
-        <button class="mobile-nav-toggle" aria-controls="primary-navigation" aria-expanded="false">
-            <span class="sr-only">Menu</span>
+        <button class="menu-toggle-button" id="menu-open-button" aria-label="Open menu" aria-expanded="false">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
         </button>
+    </header>
 
-        <!-- Primary Navigation -->
-        <nav class="main-nav" id="primary-navigation">
+    <!-- =========================================================================
+       PART 2: THE "SPEAK UP BRAND WORLD" MENU SCREEN
+       This is the full-screen overlay that appears on tap.
+       ========================================================================= -->
+    <div class="fullscreen-menu" id="menu-screen" aria-hidden="true">
+        <div class="fullscreen-menu-header">
+            <a href="index.html" class="logo-area" aria-label="Speak Up Homepage">
+                <img src="images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon">
+            </a>
+            <button class="menu-toggle-button" id="menu-close-button" aria-label="Close menu" aria-expanded="true">
+                <span class="close-line"></span>
+                <span class="close-line"></span>
+            </button>
+        </div>
+
+        <nav class="fullscreen-menu-nav">
             <ul>
                 <li><a href="o-metodo.html">O Método</a></li>
                 <li><a href="minha-jornada.html">Minha Jornada</a></li>
@@ -39,13 +54,12 @@
                 <li><a href="contato.html">Contato</a></li>
             </ul>
         </nav>
-        
-        <!-- This is a separate container for the desktop button -->
-        <div class="header-cta-container">
-             <a href="contato.html" class="cta-button header-cta">Agende uma Conversa</a>
+
+        <div class="fullscreen-menu-action-box">
+            <a href="contato.html" class="cta-button">Agende uma Conversa</a>
+            <a href="https://wa.me/YOURPHONENUMBER" target="_blank" class="link-subtle whatsapp-link">Conversar no WhatsApp</a>
         </div>
     </div>
-</header>
 
     <main>
 
