@@ -28,8 +28,11 @@
             <!-- The Hamburger Menu Button (Correctly placed) -->
             <button class="mobile-nav-toggle" aria-controls="primary-navigation" aria-expanded="false">
     <span class="sr-only">Menu</span>
-    <span class="hamburger-icon" aria-hidden="true"></span>
-    <span class="close-icon" aria-hidden="true"></span>
+    <!-- This structure allows for cleaner icon switching with CSS -->
+    <span class="icon-container" aria-hidden="true">
+        <span class="icon-hamburger"></span>
+        <span class="icon-close"></span>
+    </span>
 </button>
             
             <!-- THE SINGLE, CORRECT NAVIGATION -->
