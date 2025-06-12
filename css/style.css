@@ -220,7 +220,7 @@ body.menu-open .fullscreen-menu {
     transition: opacity 0.4s ease, transform 0.4s ease, visibility 0s 0s;
 }
 /* Prevent body scroll when menu is open */
-body.menu-open {
+html.menu-open {
     overflow: hidden;
 }
 
