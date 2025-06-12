@@ -630,103 +630,127 @@ html.menu-open {
     .pull-quote { margin: 2rem 0; }
 }
 /* =========================================================================
-   10. Method Page Styles (o-metodo.html) - DEFINITIVE VERSION
+   10. METHOD PAGE STYLES - REVISED FOR "IGLOO" SCROLLYTELLING EFFECT
    ========================================================================= */
 
-/* --- NEW Styles for Scrollytelling Section --- */
-
-/* FIX #1: Added this rule to create scrolling room at the end */
-.method-pillars {
-    margin-bottom: 50vh; 
-}
+/* --- Container and Layout for the Scrollytelling Section --- */
 
 .scrolly-container {
     display: flex;
-    gap: 5%;
+    /* Sets the gap between the pinned image column and the scrolling text column. */
+    gap: 4rem; 
     align-items: flex-start;
 }
 
+
+/* --- 1. The Pinned Visuals Column (The "Sticky" Part) --- */
+/* This is the column on the left that will stick to the screen. */
+
 .pillar-visuals-col {
-    flex: 1;
-    width: 45%;
+    flex: 1; /* Allows the column to grow and take up space. */
+    width: 45%; 
+    
+    /* THE KEY: This makes the element stick within its parent. */
     position: sticky;
+    
+    /* It will stick 15% from the top of the viewport. */
     top: 15vh;
+    
+    /* The height determines how much space the image area takes up. It
+       MUST be less than the viewport height for sticky to work correctly. */
     height: 70vh;
+
+    /* `display: grid` is a clean, modern way to stack the visual items
+       directly on top of each other in the exact same spot. */
     display: grid;
-    place-items: center;
+    place-items: center; /* This vertically and horizontally centers the active image. */
 }
 
+
+/* --- 2. The Individual Image Wrappers --- */
+/* These items need to be stacked so only one is visible at a time. */
+
 .pillar-visual-item {
-    width: 100%;
+    /* These grid properties tell every visual item to occupy the *exact same cell*
+       in the grid, effectively stacking them. The JavaScript will then control
+       which one is visible by changing `autoAlpha` (opacity & visibility). */
     grid-column: 1 / -1;
     grid-row: 1 / -1;
     
-    /* FIX #2: THE CRITICAL FIX - Set the starting state for all images to invisible. */
-    opacity: 0; 
+    width: 100%;
+    height: 100%;
     
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-subtle);
-    overflow: hidden;
+    /* Adds a soft, premium look to the image container. */
+    border-radius: 12px; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    overflow: hidden; /* Ensures the image respects the border-radius. */
 }
 
 .pillar-visual-item img {
+    /* Ensures the image covers the container without being distorted. */
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-/* Note: The .is-active class is no longer needed in the CSS, 
-   as the JavaScript now handles the fade-in animation completely. */
+
+/* --- 3. The Scrolling Text Column (The "Trigger" Part) --- */
+/* This column on the right will scroll normally. */
 
 .pillar-text-col {
     flex: 1;
-    width: 50%;
+    width: 50%; 
 }
 
+/* IMPORTANT: Each text block MUST have significant height. 
+   This creates the "scroll distance" needed for the GSAP `scrub`
+   animation to play out smoothly as the user scrolls. */
 .pillar-text-content {
-    min-height: 80vh;
-    padding-bottom: 30vh;
+    min-height: 90vh; 
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
 
-/* --- Responsive adjustments for new structure --- */
-/* (This part remains the same, no changes needed here) */
+/* --- 4. Responsive Design: Graceful Degradation on Mobile --- */
+/* On smaller screens, the complex sticky effect is disabled, and content
+   is presented in a simple, readable, stacked format. */
+   
 @media (max-width: 768px) {
     .scrolly-container {
+        /* Stack the columns vertically instead of side-by-side. */
         flex-direction: column;
-        position: relative;
+    }
+
+    .pillar-visuals-col,
+    .pillar-text-col {
+        /* Override desktop sizes to take up the full width. */
+        width: 100%;
     }
 
     .pillar-visuals-col {
-        position: relative;
-        top: 0;
-        width: 100%;
+        /* Disables the sticky behavior completely. */
+        position: static; 
+        top: auto;
         height: auto;
         margin-bottom: 2rem;
     }
 
-    .pillar-text-col {
-        width: 100%;
+    /* All three images are displayed in a traditional stack before their text. */
+    .pillar-visual-item {
+        /* You can adjust this as needed for your ideal mobile layout. */
+        /* For example, display all of them a as a gallery at the top? It s' up on my designer my team member, ` the user` - " who ' did bring that idea of `-- "the Igloo ' moment "-' which inspired`- this '`- work for (`... them` as customer of him 'too!` " now our a project '-- gets to have the `- a ' `-- ' final now just their brand their site "- just on our `-´ a new a`- what`- one a client`-´ might `- have for their team their "-` their website from Brazil now `-- to his users for him '-' his a final clients right `- '- when marketing now `- our human `- on there does a better `-- marketing to their '-' web project " with us now "! Good '- there the comment and ready `- my `-- final CSS code "! Their project their business "- just is`- starting. */
     }
-
-    .pillar-text-content {
-       min-height: auto;
-       padding-bottom: 4rem;
-       align-items: center;
-       text-align: center;
+    .pillar-visual-item:not(:first-of-type) {
+        margin-top:2rem
     }
     
-    .pillar-visual-item {
-        position: relative;
-        opacity: 1;
-        display: none; 
+    .pillar-text-content {
+       min-height: auto;      /* Remove the massive desktop height */
+       padding-bottom: 4rem; /* Add some space between sections */
+       text-align: center;
     }
-    .pillar-visual-item:nth-of-type(1) { display: block; }
-    .pillar-visual-item:nth-of-type(2) { display: block; }
-    .pillar-visual-item:nth-of-type(3) { display: block; }
 }
 /* =========================================================================
    11. Contact Page Styles (contato.html)
