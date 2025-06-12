@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
 
-    // --- Menu Toggle Functionality (Kept from original) ---
+    // --- Menu Toggle Functionality (Kept from original, no changes needed) ---
     const openButton = document.getElementById('menu-open-button');
     const closeButton = document.getElementById('menu-close-button');
     const menuScreen = document.getElementById('menu-screen');
@@ -36,70 +36,70 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // --- Footer Current Year (Kept from original) ---
+    // --- Footer Current Year (Kept from original, no changes needed) ---
     const yearSpan = document.getElementById('current-year');
     if (yearSpan) {
         yearSpan.textContent = new Date().getFullYear();
     }
 
-    // --- NEW: Igloo-style Scrollytelling for "O Método" page ---
-    // First, check if GSAP and the necessary elements are on the page
+    // =========================================================================
+    // NEW: "IGLOO-STYLE" SCROLLYTELLING FOR "O MÉTODO" PAGE
+    // This logic replaces the old onEnter/onLeave triggers.
+    // =========================================================================
+
+    // First, check if GSAP and the necessary container exist on the page
     if (typeof gsap !== 'undefined' && document.querySelector('.scrolly-container')) {
         
         // Register the ScrollTrigger plugin with GSAP
         gsap.registerPlugin(ScrollTrigger);
 
-        // Select all the text sections and the visual containers
+        // Select all the pillar text sections and the corresponding visual items
         const textSections = gsap.utils.toArray('.pillar-text-content');
         const visualItems = gsap.utils.toArray('.pillar-visual-item');
 
-        // Loop through each text section to create a trigger for it
+        // ==== Initial State ====
+        // Set the first pillar to be visible initially, and all others to be invisible.
+        // We use autoAlpha for performance (it handles both opacity and visibility).
+        gsap.set(visualItems[0], { autoAlpha: 1 });
+        gsap.set(visualItems.slice(1), { autoAlpha: 0 });
+
+
+        // Create a unique transition animation for each pillar text section
         textSections.forEach((section, index) => {
-            const correspondingVisual = visualItems[index];
+            // We only need to create transitions INTO sections 2 and 3. Section 1 is the starting point.
+            if (index > 0) {
 
-            // Create a ScrollTrigger for each section
-            ScrollTrigger.create({
-                trigger: section, // The element that triggers the animation
-                start: "top center", // When the top of the section hits the center of the viewport
-                end: "bottom center", // When the bottom of the section hits the center of the viewport
-                
-                // On entering the trigger area (scrolling down)
-                onEnter: () => {
-                    // Make the corresponding visual active
-                    gsap.to(correspondingVisual, { autoAlpha: 1 });
-                },
+                // Create a GSAP Timeline for the specific transition
+                const timeline = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: section, // The element that triggers the animation (e.g., Pillar 2's text)
+                        start: "top 80%", // The animation starts when the top of the section is 80% down the viewport
+                        end: "top 30%",   // The animation is complete when the top is 30% down the viewport
+                        
+                        // THIS IS THE KEY: `scrub` links the animation progress directly to the scrollbar.
+                        scrub: true,
+                        
+                        // Uncomment the line below to see the start/end trigger points for debugging
+                        // markers: true,
+                    }
+                });
 
-                // On leaving the trigger area (scrolling down past it)
-                onLeave: () => {
-                     // Fade it out
-                    gsap.to(correspondingVisual, { autoAlpha: 0 });
-                },
-
-                // On re-entering the trigger area (scrolling back up)
-                onEnterBack: () => {
-                    // Make the corresponding visual active again
-                    gsap.to(correspondingVisual, { autoAlpha: 1 });
-                },
-
-                // On leaving the trigger area (scrolling back up past it)
-                onLeaveBack: () => {
-                    // Fade it out
-                    gsap.to(correspondingVisual, { autoAlpha: 0 });
-                },
-                
-                // Optional: for debugging. Shows the start/end trigger points
-                // markers: true 
-            });
+                // ==== Define the Animation Sequence ====
+                // Use the timeline to choreograph the transition.
+                timeline
+                    // 1. Fade OUT the PREVIOUS pillar's visual and subtly scale it down.
+                    .to(visualItems[index - 1], {
+                        autoAlpha: 0, 
+                        scale: 0.98 
+                    })
+                    // 2. Fade IN the CURRENT pillar's visual. Start it slightly scaled up for a feeling of depth.
+                    // The '<' position parameter means "start at the same time as the previous animation".
+                    .fromTo(visualItems[index], 
+                        { autoAlpha: 0, scale: 1.02 }, 
+                        { autoAlpha: 1, scale: 1 }, 
+                        '<'
+                    );
+            }
         });
-
-        // Ensure the very first visual is visible when the page loads
-        if (visualItems.length > 0) {
-            ScrollTrigger.create({
-                 trigger: ".scrolly-container",
-                 start: "top bottom",
-                 onEnter: () => gsap.set(visualItems[0], { autoAlpha: 1 }),
-                 onLeaveBack: () => gsap.set(visualItems[0], { autoAlpha: 0 })
-            })
-        }
     }
 });
