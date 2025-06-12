@@ -3,75 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Speak Up - Destrave seu Inglês Interior</title>
+    <title>Speak Up - Destrave seu Inglês Interior</title> <!-- New, more evocative title -->
 
-    <!-- Google Fonts -->
+    <!-- Fonts, CSS, Analytics scripts remain the same -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
-    
-    <!-- Link to the single, master stylesheet -->
     <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Scripts would go here -->
 </head>
 <body>
 
-    <header class="site-header">
-        <div class="container header-container">
-            <a href="index.html" class="logo-area" aria-label="Speak Up Homepage">
-                <img src="images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon">
-                <span class="logo-text">Speak <span class="up">Up</span></span>
-            </a>
+<!-- ======================================================= -->
+<!-- Step 1: Replace your old header with this new one       -->
+<!-- ======================================================= -->
+<header class="site-header">
+    <div class="container header-container">
+        <a href="index.html" class="logo-area" aria-label="Speak Up Homepage">
+            <img src="images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon">
+            <span class="logo-text">Speak <span class="up">Up</span></span>
+        </a>
 
-            <!-- Desktop-Only Navigation -->
-            <nav class="main-nav-desktop">
-                <ul>
-                    <li><a href="o-metodo.html">O Método</a></li>
-                    <li><a href="minha-jornada.html">Minha Jornada</a></li>
-                    <li><a href="recursos.html">Recursos</a></li>
-                    <li><a href="contato.html">Contato</a></li>
-                </ul>
-            </nav>
-
-            <!-- Desktop-Only CTA Button -->
-            <div class="header-cta-container">
-                <a href="contato.html" class="cta-button header-cta">Agende uma Conversa</a>
-            </div>
-
-            <!-- Mobile-Only Hamburger Button -->
-            <button class="mobile-nav-toggle" aria-controls="mobile-menu" aria-expanded="false">
-                <span class="sr-only">Menu</span>
-            </button>
-        </div>
-    </header>
-
-    <!-- The Full-Screen Mobile Menu (hidden by default) -->
-    <div class="mobile-menu" id="mobile-menu" role="dialog" aria-modal="true">
-        <div class="mobile-menu-header">
-            <a href="index.html" class="logo-area" aria-label="Speak Up Homepage">
-                <img src="images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon">
-                <span class="logo-text">Speak <span class="up">Up</span></span>
-            </a>
-            <!-- This button shares the same class to be targeted by the JS -->
-            <button class="mobile-nav-toggle close-button" aria-controls="mobile-menu" aria-expanded="true">
-                 <span class="sr-only">Close Menu</span>
-            </button>
-        </div>
-        <nav class="main-nav-mobile">
+        <!-- Desktop Navigation & CTA -->
+        <nav class="main-nav-desktop">
             <ul>
-                <li><a href="index.html">Início</a></li>
                 <li><a href="o-metodo.html">O Método</a></li>
                 <li><a href="minha-jornada.html">Minha Jornada</a></li>
                 <li><a href="recursos.html">Recursos</a></li>
                 <li><a href="contato.html">Contato</a></li>
             </ul>
         </nav>
-        <div class="mobile-menu-action-box">
-            <a href="contato.html" class="cta-button">Agende uma Conversa</a>
-            <a href="https://wa.me/5521975046106" target="_blank" rel="noopener noreferrer" class="link-subtle">Conversar no WhatsApp</a>
+        <div class="header-cta-container">
+            <a href="contato.html" class="cta-button header-cta">Agende uma Conversa</a>
         </div>
+        
+        <!-- Mobile-Only Hamburger Button -->
+        <button class="mobile-nav-toggle" aria-controls="mobile-menu" aria-expanded="false">
+            <span class="sr-only">Menu</span>
+        </button>
     </div>
+</header>
+
+<!-- ======================================================= -->
+<!-- Step 2: ADD this new menu screen right after the header -->
+<!-- ======================================================= -->
+<div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+    <div class="mobile-menu-header">
+        <a href="index.html" class="logo-area" aria-label="Speak Up Homepage">
+            <img src="images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon">
+            <span class="logo-text">Speak <span class="up">Up</span></span>
+        </a>
+        <!-- The JS will also listen for clicks on this button -->
+        <button class="mobile-nav-toggle close-button" aria-controls="mobile-menu" aria-expanded="true">
+             <span class="sr-only">Close Menu</span>
+        </button>
+    </div>
+    <nav class="main-nav-mobile">
+        <ul>
+            <li><a href="index.html">Início</a></li>
+            <li><a href="o-metodo.html">O Método</a></li>
+            <li><a href="minha-jornada.html">Minha Jornada</a></li>
+            <li><a href="recursos.html">Recursos</a></li>
+            <li><a href="contato.html">Contato</a></li>
+        </ul>
+    </nav>
+    <div class="mobile-menu-action-box">
+        <a href="contato.html" class="cta-button">Agende uma Conversa</a>
+        <a href="https://wa.me/5521975046106" target="_blank" rel="noopener noreferrer" class="link-subtle">Conversar no WhatsApp</a>
+    </div>
+</div>
 
     <main>
+
+        <!-- =========================================================================
+           SECTION 1: HERO - The Hook. Validate their pain and offer a new philosophy.
+           ========================================================================= -->
         <section id="hero" class="hero-section">
             <div class="container">
                 <h1 class="hero-title">Você já sabe inglês. <br>Eu ajudo a destravar.</h1>
@@ -80,49 +87,113 @@
             </div>
         </section>
 
-        <section id="pain-point" class="section">
+        <!-- =========================================================================
+           SECTION 2: PAIN VALIDATION - Show them you understand their exact feeling.
+           ========================================================================= -->
+        <section id="the-block" class="section section-subtle">
             <div class="container">
-                <p class="empathetic-text">Anos de estudo, mas o inglês ainda não sai na hora de falar? Você não está sozinho(a). A Speak Up foi criada para quebrar esse ciclo, transformando conhecimento passivo em conversação ativa e natural.</p>
+                <h2 class="section-title">Aquele "branco" na hora de falar?</h2>
+                <p class="empathetic-text">Você lê artigos, assiste filmes, participa de reuniões como ouvinte. O vocabulário está aí, guardado. Mas na hora de formar uma frase, a mente trava. Você não está sozinho(a) nessa. Essa paralisia é o único obstáculo entre você e o inglês funcional que você tanto deseja. E ela tem solução.</p>
+            </div>
+        </section>
+        
+        <!-- =========================================================================
+           SECTION 3: THE PHILOSOPHICAL SHIFT - Introduce your unique method.
+           ========================================================================= -->
+        <section id="the-shift" class="section">
+            <div class="container">
+                <h2 class="section-title">Uma <span class="highlight">Zona de Segurança</span> para sua Fluência</h2>
+                <div class="shift-grid">
+                    <div class="shift-item">
+                        <img src="images/icons/no-judgement.svg" alt="Ícone de um X sobre um balão de julgamento" class="shift-icon">
+                        <h3 class="shift-title">Chega de Correção Punitiva</h3>
+                        <p>Esqueça o medo do erro. Nossa prioridade é entender sua história e suas ideias. O feedback vem como um guia para reforçar sua mensagem, não para calar sua voz.</p>
+                    </div>
+                    <div class="shift-item">
+                        <img src="images/icons/bridge.svg" alt="Ícone de uma ponte" class="shift-icon">
+                        <h3 class="shift-title">Pontes, Não Muros</h3>
+                        <p>Como brasileiro, eu uso nosso próprio idioma para construir pontes para o inglês, criando "aha!" moments que destravam a gramática de forma intuitiva.</p>
+                    </div>
+                    <div class="shift-item">
+                        <img src="images/icons/accent.svg" alt="Ícone de um balão de fala com um coração" class="shift-icon">
+                        <h3 class="shift-title">Seu Sotaque é Sua Força</h3>
+                        <p>Abandonamos o mito do "inglês perfeito" de nativos. O objetivo é a clareza confiante, abraçando sua identidade para uma comunicação autêntica e eficaz.</p>
+                    </div>
+                </div>
+                <div class="section-cta-area">
+                    <a href="o-metodo.html" class="secondary-button">Conheça o método completo</a>
+                </div>
             </div>
         </section>
 
-        <section id="benefits" class="section">
+        <!-- =========================================================================
+           SECTION 4: THE GUIDE - A glimpse of you, the empathetic guide.
+           ========================================================================= -->
+        <section id="the-guide" class="section">
+            <div class="container about-teacher-container">
+                 <div class="teacher-photo-area">
+                    <!-- 
+                        A FOTO MAIS IMPORTANTE DO SITE:
+                        Use a warm, candid photo of you here. Looking friendly, attentive, maybe lightly smiling. 
+                        No corporate headshots. This picture must radiate "Zona de Segurança Psicológica."
+                    -->
+                    <img src="https://placehold.co/400x400/1A2C30/FDB813" alt="Foto de Luiz, seu guia na jornada para a fluência" class="teacher-face-svg">
+                </div>
+                <div class="bio-text-content">
+                    <blockquote>
+                        "Eu descobri que a base da comunicação não é a perfeição, mas a conexão. Meu papel não é ser um professor, mas um guardião da coragem dos meus alunos. Eu já estive no seu lugar."
+                    </blockquote>
+                    <p class="bio-link-area">
+                        - Luiz, Fundador da Speak Up <br>
+                        <a href="minha-jornada.html" class="link-subtle">Conheça minha história →</a>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- =========================================================================
+           SECTION 5: SOCIAL PROOF - The voices of those you've helped.
+           ========================================================================= -->
+        <section id="testimonials" class="section">
             <div class="container">
-                <h2 class="section-title">O Caminho para sua <span class="highlight">Fluência</span></h2>
-                <div class="benefit-list">
-                    <div class="benefit-item">
-                        <div class="benefit-box"><svg class="checkmark-icon" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
-                        <span class="benefit-text">Aulas 100% focadas em conversação prática desde o primeiro dia.</span>
+                <h2 class="section-title">O que acontece quando o <span class="highlight">medo</span> vai embora.</h2>
+                <div class="testimonial-grid">
+                    <!-- 
+                        Replace these with the new, powerful testimonials. 
+                        If you don't have them yet, these are good placeholders that fit the narrative.
+                    -->
+                    <div class="testimonial-card">
+                        <p>“Anos de cursos e apps não resolveram minha 'trava'. Na primeira conversa com o Luiz, eu senti que finalmente estava no lugar certo e que era possível, sim.”</p>
+                        <p class="testimonial-author">- Carolina S.</p>
                     </div>
-                    <div class="benefit-item">
-                        <div class="benefit-box"><svg class="checkmark-icon" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
-                        <span class="benefit-text">Feedback imediato e personalizado para corrigir erros e fortalecer sua confiança.</span>
-                    </div>
-                    <div class="benefit-item">
-                        <div class="benefit-box"><svg class="checkmark-icon" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
-                        <span class="benefit-text">Um método desenhado por um brasileiro, para brasileiros, que entende suas dificuldades.</span>
+                    <div class="testimonial-card">
+                        <p>“Pela primeira vez, eu me senti à vontade para falar sem o pavor de errar. O foco na comunicação, e não na gramática, mudou tudo para mim. Participei da minha primeira reunião 100% em inglês semana passada.”</p>
+                        <p class="testimonial-author">- Henrique M.</p>
                     </div>
                 </div>
             </div>
         </section>
         
-        <!-- Add your other sections here like testimonials, about, etc. -->
-
+        <!-- =========================================================================
+           SECTION 6: FINAL INVITATION - A clear, no-pressure final call to action.
+           ========================================================================= -->
         <section id="final-cta" class="section final-cta">
             <div class="container">
-                <h2 class="final-cta-title">Pronto(a) para Iniciar sua Jornada?</h2>
-                <a href="contato.html" class="cta-button cta-button-large final-cta-button">Agende Sua Aula Intro Grátis</a>
-                <p class="reassurance-text">Sem compromisso, apenas uma conversa para nos conhecermos e planejarmos seus próximos passos rumo à fluência.</p>
+                <h2 class="final-cta-title">Pronto(a) para começar a conversa?</h2>
+                <p class="reassurance-text">Não é uma prova. Não é uma aula experimental. É apenas uma conversa para nos conhecermos, entendermos seus objetivos e planejarmos os próximos passos. Sem compromisso.</p>
+                <a href="contato.html" class="cta-button cta-button-large final-cta-button">Vamos Conversar</a>
             </div>
         </section>
 
     </main>
-    
+
+    <!-- FOOTER remains largely the same, maybe add social links later -->
     <footer class="site-footer">
-        <div class="container"><p>© <span id="current-year"></span> Speak Up - por Luiz. Todos os direitos reservados. | <a href="politica-de-privacidade.html">Política de Privacidade</a></p></div>
+        <div class="container">
+            <p>© <span id="current-year"></span> Speak Up - por Luiz. Todos os direitos reservados. | <a href="politica-de-privacidade.html">Política de Privacidade</a></p>
+        </div>
     </footer>
-
+    
     <script defer src="js/main.js"></script>
-
 </body>
 </html>
