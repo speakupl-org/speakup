@@ -650,9 +650,6 @@ html.menu-open {
     flex: 1; /* Allows the column to grow and take up space. */
     width: 45%; 
     
-    /* THE KEY: This makes the element stick within its parent. */
-    position: sticky;
-    
     /* It will stick 15% from the top of the viewport. */
     top: 15vh;
     
