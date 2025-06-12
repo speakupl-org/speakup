@@ -103,8 +103,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     // Get the initial state of the 3D actor
                     const state = Flip.getState(actor3D, {props: "scale,opacity"});
                     
-                    // Move the actor to the thumbnail placeholder in the DOM
-                    summaryThumbnail.appendChild(actor3D);
+                    // in your main.js
+document.querySelector(".summary-thumbnail-clipper").appendChild(actor3D);
                     
                     // Animate from the initial state to the new state
                     Flip.from(state, {
