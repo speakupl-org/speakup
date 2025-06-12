@@ -83,26 +83,20 @@
         <div class="container">
             <div class="scrolly-container">
 
-                <!-- Column 1: Pinned Visuals -->
-                <div class="pillar-visuals-col">
-                    <!-- UPDATE: Each image is now wrapped in a 'pillar-image-scaler' div. -->
-                    <!-- This allows us to scale the image *inside* its container for the zoom effect. -->
-                    <div class="pillar-visual-item" data-pillar="1">
-                        <div class="pillar-image-scaler">
-                            <img src="https://images.unsplash.com/photo-1543269865-cbf427effbad?q=80&w=2670" alt="Mulher focada em uma conversa, representando o diagnóstico e a escuta ativa.">
-                        </div>
-                    </div>
-                    <div class="pillar-visual-item" data-pillar="2">
-                        <div class="pillar-image-scaler">
-                            <img src="https://images.unsplash.com/photo-1557862921-37829c790f19?q=80&w=2671" alt="Dois profissionais conversando com confiança, representando a conexão e a prática.">
-                        </div>
-                    </div>
-                    <div class="pillar-visual-item" data-pillar="3">
-                        <div class="pillar-image-scaler">
-                            <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2671" alt="Grupo de pessoas celebrando, simbolizando o sucesso e a evolução.">
-                        </div>
-                    </div>
-                </div>
+             <!-- Column 1: Pinned 3D Visual -->
+<div class="pillar-visuals-col">
+    <div class="scene-3d">
+        <div class="object-3d" id="actor-3d">
+            <!-- The 6 faces of our starting cube -->
+            <div class="face front"></div>
+            <div class="face back"></div>
+            <div class="face right"></div>
+            <div class="face left"></div>
+            <div class="face top"></div>
+            <div class="face bottom"></div>
+        </div>
+    </div>
+</div>
 
                 <!-- Column 2: Scrolling Text -->
                 <div class="pillar-text-col">
