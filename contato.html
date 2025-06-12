@@ -15,31 +15,34 @@
     <!-- =========================================================================
        HEADER - Consistent across all pages
        ========================================================================= -->
-    <header class="sticky-header">
-        <div class="container">
-            <a href="index.html" class="logo-area" aria-label="Speak Up Homepage">
-                <img src="images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon">
-                <span class="logo-text">Speak <span class="up">Up</span></span>
-            </a>
-            <button class="mobile-nav-toggle" aria-controls="primary-navigation" aria-expanded="false">
-    <span class="sr-only">Menu</span>
-    <!-- This structure allows for cleaner icon switching with CSS -->
-    <span class="icon-container" aria-hidden="true">
-        <span class="icon-hamburger"></span>
-        <span class="icon-close"></span>
-    </span>
-</button>
-            <nav class="main-nav" id="primary-navigation">
-                <ul>
-                    <li><a href="o-metodo.html">O Método</a></li>
-                    <li><a href="minha-jornada.html">Minha Jornada</a></li>
-                    <li><a href="recursos.html">Recursos</a></li>
-                    <li><a href="contato.html">Contato</a></li>
-                </ul>
-            </nav>
-            <a href="contato.html" class="cta-button header-cta">Agende uma Conversa</a>
+    <header class="site-header">
+    <div class="container header-container">
+        <a href="index.html" class="logo-area" aria-label="Speak Up Homepage">
+            <img src="images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon">
+            <span class="logo-text">Speak <span class="up">Up</span></span>
+        </a>
+
+        <!-- Mobile Menu Button -->
+        <button class="mobile-nav-toggle" aria-controls="primary-navigation" aria-expanded="false">
+            <span class="sr-only">Menu</span>
+        </button>
+
+        <!-- Primary Navigation -->
+        <nav class="main-nav" id="primary-navigation">
+            <ul>
+                <li><a href="o-metodo.html">O Método</a></li>
+                <li><a href="minha-jornada.html">Minha Jornada</a></li>
+                <li><a href="recursos.html">Recursos</a></li>
+                <li><a href="contato.html">Contato</a></li>
+            </ul>
+        </nav>
+        
+        <!-- This is a separate container for the desktop button -->
+        <div class="header-cta-container">
+             <a href="contato.html" class="cta-button header-cta">Agende uma Conversa</a>
         </div>
-    </header>
+    </div>
+</header>
 
     <main>
         <!-- =========================================================================
