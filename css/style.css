@@ -33,6 +33,7 @@
 html {
     scroll-behavior: smooth;
     background-color: var(--color-background-dark);
+    overflow-x: hidden;
 }
 body {
     font-family: var(--font-primary);
