@@ -253,8 +253,9 @@ a { color: var(--color-primary-vibrant); text-decoration: none; }
 }
 #final-cta .final-cta-button { font-size: 1.25rem; padding: 20px 50px; }
 
-/* ADD THIS NEW RULE */
+/* Modify the rule to look like this: */
 .final-cta {
+    padding: 100px 0; /* This adds the breathing room */
     text-align: center;
 }
 
