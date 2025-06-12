@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
 
-    // --- Menu Toggle and Footer Year Code (Unchanged) ---
+    // --- Menu Toggle and Footer Code (Unchanged) ---
     const openButton = document.getElementById('menu-open-button');
     const closeButton = document.getElementById('menu-close-button');
     const menuScreen = document.getElementById('menu-screen');
@@ -23,123 +23,103 @@ document.addEventListener('DOMContentLoaded', function() {
         openButton.addEventListener('click', openMenu);
         closeButton.addEventListener('click', closeMenu);
     }
-    
+
     const yearSpan = document.getElementById('current-year');
     if (yearSpan) {
-        yearSpan.textContent = new new Date().getFullYear();
+        yearSpan.textContent = new Date().getFullYear();
     }
 
-
     // =========================================================================
-    // "IGLOO-STYLE" SCROLLYTELLING - DEPLOYED REFINEMENTS
+    // "IGLOO-STYLE" SCROLLYTELLING - FINAL IMPLEMENTATION
     // =========================================================================
     const scrollyContainer = document.querySelector('.scrolly-container');
     if (scrollyContainer) {
-        
+
         gsap.registerPlugin(ScrollTrigger, Flip);
 
         ScrollTrigger.matchMedia({
 
             // --- DESKTOP ANIMATIONS (screen width > 768px) ---
             "(min-width: 769px)": function() {
-                
+
                 // --- 1. SETUP & SELECTORS ---
                 const visualItems = gsap.utils.toArray('.pillar-visual-item');
-                const textSections = gsap.utils.toArray('.pillar-text-content');
+                const imageScalers = gsap.utils.toArray('.pillar-image-scaler');
+                const textWrappers = gsap.utils.toArray('.text-anim-wrapper');
                 
-                // Set initial states. All images are hidden except the first.
-                gsap.set(visualItems, { autoAlpha: 0, zIndex: 0 });
-                gsap.set(visualItems[0], { autoAlpha: 1, zIndex: 1 });
-
-                // --- 2. MAIN NARRATIVE TRANSITIONS (Pillar to Pillar) ---
-                // We create a separate timeline for EACH transition. This gives us
-                // isolated control and prevents animation conflicts.
-                
-                // Loop through each text section to create a trigger for it
-                textSections.forEach((section, i) => {
-                    // We don't need a trigger for the very last section, as it will be
-                    // handled by the final "Exit" animation.
-                    if (i < textSections.length - 1) {
-                        
-                        const textWrapper = section.querySelector('.text-anim-wrapper');
-                        const currentVisual = visualItems[i];
-                        const nextVisual = visualItems[i + 1];
-
-                        // Create a timeline for the transition from section i to i+1
-                        const tl = gsap.timeline({
-                            scrollTrigger: {
-                                trigger: section,
-                                start: "bottom bottom", // Start when the bottom of the text hits the bottom of the screen
-                                end: "bottom top",    // End when the bottom of the text hits the top
-                                scrub: 1,
-                                // markers: true, // Uncomment to debug
-                            }
-                        });
-
-                        // Animate OUT the current content
-                        tl.to(textWrapper, { 
-                              yPercent: -20, 
-                              autoAlpha: 0, 
-                              ease: "power1.in" 
-                          }, 0) // The '0' at the end means "start at the beginning of the timeline"
-                          .to(currentVisual, { 
-                              autoAlpha: 0,
-                              zIndex: 0,
-                              duration: 0.3 // A quick fade
-                          }, 0);
-
-                        // Animate IN the next visual
-                        if (nextVisual) {
-                            tl.to(nextVisual, {
-                                autoAlpha: 1,
-                                zIndex: 1, // Bring the new visual to the front
-                                duration: 0.3
-                            }, 0.05); // Start this slightly after the fade out begins for a smooth cross-fade
-                        }
-                    }
-                });
-
-
-                // --- 3. THE "EXIT" ANIMATION (The Flip) ---
                 const visualsColumn = document.querySelector('.pillar-visuals-col');
                 const summarySection = document.querySelector('.method-summary');
                 const placeholder = document.querySelector('.summary-thumbnail-placeholder');
                 const lastVisual = visualItems[visualItems.length - 1];
 
-                // Create a dedicated timeline for the exit animation
-                const exitTimeline = gsap.timeline({
+                // --- 2. INITIAL STATE ---
+                gsap.set(visualsColumn, { autoAlpha: 1 });
+                gsap.set(visualItems, { autoAlpha: 0 });
+                gsap.set(visualItems[0], { autoAlpha: 1 });
+                gsap.set(textWrappers, { autoAlpha: 0, y: 30 }); // Start text off-screen
+
+                // --- 3. MASTER TIMELINE ---
+                const masterTimeline = gsap.timeline({
                     scrollTrigger: {
-                        trigger: summarySection,
-                        start: "top 85%", // Start when the summary section is nearing the viewport
-                        end: "top top",   // End when the top of the section hits the top of the viewport
-                        scrub: 1,
-                        // markers: {startColor: "purple", endColor: "purple"} // Uncomment to debug
+                        trigger: scrollyContainer,
+                        start: "top top",
+                        end: "bottom bottom",
+                        scrub: 1.2,
+                        // markers: true,
                     }
                 });
 
-                // Get the state of the image BEFORE we move it
+                // --- SCENE 1: Intro ---
+                masterTimeline
+                    .to(textWrappers[0], { autoAlpha: 1, y: 0, ease: 'power2.out' })
+                    .to({}, { duration: 1 }); // Pause for reading
+
+                // --- SCENE 2: Transition 1 -> 2 ---
+                masterTimeline
+                    .to(textWrappers[0], { autoAlpha: 0, y: -30, ease: 'power2.in' }, "trans_1_start")
+                    .to(imageScalers[0], { scale: 1.8, x: '-20%', y: '10%', ease: 'power2.inOut' }, "trans_1_start")
+                    .to(visualItems[0], { autoAlpha: 0, ease: 'power1.inOut' }, "trans_1_start")
+                    
+                    .fromTo(visualItems[1], 
+                        { autoAlpha: 0, scale: 1.1 },
+                        { autoAlpha: 1, scale: 1, ease: 'power2.out' }, "trans_1_start")
+                    .to(textWrappers[1], { autoAlpha: 1, y: 0, ease: 'power2.out' }, ">-0.4")
+                    
+                    .to({}, { duration: 1 }); // Pause
+
+                // --- SCENE 3: Transition 2 -> 3 ---
+                masterTimeline
+                    .to(textWrappers[1], { autoAlpha: 0, y: -30, ease: 'power2.in' }, "trans_2_start")
+                    .to(visualItems[1], { autoAlpha: 0, ease: 'power1.inOut' }, "trans_2_start")
+                    
+                    .fromTo(visualItems[2], 
+                        { autoAlpha: 0, y: 30 }, 
+                        { autoAlpha: 1, y: 0, ease: 'power2.out' }, "trans_2_start")
+                    .to(textWrappers[2], { autoAlpha: 1, y: 0, ease: 'power2.out' }, ">-0.4")
+                    
+                    .to({}, { duration: 1 }); // Final pause
+
+                // --- 4. EXIT ANIMATION (using Flip) ---
+                const exitTimeline = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: summarySection,
+                        start: "top 75%",
+                        end: "top top",
+                        scrub: 1,
+                    }
+                });
+
                 const state = Flip.getState(lastVisual, { props: "transform,opacity" });
-                
-                // Move the image to its final container so Flip can calculate the end state
                 placeholder.appendChild(lastVisual);
-                
-                // Animate from the previous state to the new one
+
                 exitTimeline.add(
                     Flip.from(state, {
                         scale: true,
-                        ease: "power2.inOut",
-                        // THE CRITICAL FIX: Use callbacks to hide the original container
-                        // during the animation to prevent a "ghost" image.
+                        ease: "power1.inOut",
                         onEnter: () => visualsColumn.classList.add('is-exiting'),
                         onLeaveBack: () => visualsColumn.classList.remove('is-exiting')
                     })
                 );
-
-            }, // end of desktop function
-            
-            "(max-width: 768px)": function() { 
-                // On mobile, we do nothing. The content will just stack naturally.
-                // The complex JS is not needed and would be poor for performance/UX.
             }
         });
     }
