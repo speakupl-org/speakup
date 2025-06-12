@@ -1,125 +1,133 @@
 document.addEventListener('DOMContentLoaded', function() {
 
     // --- Menu Toggle and Footer Code (Unchanged) ---
+    // (Your existing, working menu code remains here)
     const openButton = document.getElementById('menu-open-button');
     const closeButton = document.getElementById('menu-close-button');
     const menuScreen = document.getElementById('menu-screen');
     const htmlElement = document.documentElement;
     const body = document.body;
-
-    function openMenu() {
-        htmlElement.classList.add('menu-open');
-        body.classList.add('menu-open');
-        menuScreen.setAttribute('aria-hidden', 'false');
-    }
-
-    function closeMenu() {
-        htmlElement.classList.remove('menu-open');
-        body.classList.remove('menu-open');
-        menuScreen.setAttribute('aria-hidden', 'true');
-    }
-
-    if (openButton && closeButton && menuScreen) {
-        openButton.addEventListener('click', openMenu);
-        closeButton.addEventListener('click', closeMenu);
-    }
-
+    function openMenu(){ htmlElement.classList.add('menu-open'); body.classList.add('menu-open'); menuScreen.setAttribute('aria-hidden', 'false');}
+    function closeMenu(){ htmlElement.classList.remove('menu-open'); body.classList.remove('menu-open'); menuScreen.setAttribute('aria-hidden', 'true');}
+    if(openButton){openButton.addEventListener('click', openMenu);closeButton.addEventListener('click', closeMenu);}
     const yearSpan = document.getElementById('current-year');
-    if (yearSpan) {
-        yearSpan.textContent = new Date().getFullYear();
-    }
-
+    if(yearSpan){yearSpan.textContent = new Date().getFullYear();}
+    
+    
     // =========================================================================
-    // "IGLOO-STYLE" SCROLLYTELLING - FINAL IMPLEMENTATION
+    // "IGLOO-STYLE" SCROLLYTELLING - SENIOR ORCHESTRATION
     // =========================================================================
+    
     const scrollyContainer = document.querySelector('.scrolly-container');
     if (scrollyContainer) {
-
+        
         gsap.registerPlugin(ScrollTrigger, Flip);
 
         ScrollTrigger.matchMedia({
 
             // --- DESKTOP ANIMATIONS (screen width > 768px) ---
             "(min-width: 769px)": function() {
-
+                
                 // --- 1. SETUP & SELECTORS ---
+                const visualsColumn = document.querySelector('.pillar-visuals-col');
                 const visualItems = gsap.utils.toArray('.pillar-visual-item');
                 const imageScalers = gsap.utils.toArray('.pillar-image-scaler');
-                const textWrappers = gsap.utils.toArray('.text-anim-wrapper');
+                const textSections = gsap.utils.toArray('.pillar-text-content');
                 
-                const visualsColumn = document.querySelector('.pillar-visuals-col');
-                const summarySection = document.querySelector('.method-summary');
-                const placeholder = document.querySelector('.summary-thumbnail-placeholder');
-                const lastVisual = visualItems[visualItems.length - 1];
-
                 // --- 2. INITIAL STATE ---
-                gsap.set(visualsColumn, { autoAlpha: 1 });
-                gsap.set(visualItems, { autoAlpha: 0 });
-                gsap.set(visualItems[0], { autoAlpha: 1 });
-                gsap.set(textWrappers, { autoAlpha: 0, y: 30 }); // Start text off-screen
+                // Set initial properties for a clean starting point.
+                gsap.set(visualItems, { autoAlpha: 0, zIndex: 1 });
+                gsap.set(visualItems[0], { autoAlpha: 1, zIndex: 5 }); // First image is on top
+                gsap.set(textSections, { autoAlpha: 0, y: 50 }); // Text starts faded out and below
 
-                // --- 3. MASTER TIMELINE ---
+                // --- 3. THE MASTER TIMELINE (Orchestration Hub) ---
+                // This single timeline controls the entire scroll-driven story.
                 const masterTimeline = gsap.timeline({
                     scrollTrigger: {
                         trigger: scrollyContainer,
                         start: "top top",
                         end: "bottom bottom",
                         scrub: 1.2,
-                        // markers: true,
+                        pin: visualsColumn, // << GSAP handles the pinning for perfect sync
+                        pinSpacing: true,
+                        // markers: true, // For debugging
                     }
                 });
 
-                // --- SCENE 1: Intro ---
+                // --- Scene 1: Animate in the first block of text ---
                 masterTimeline
-                    .to(textWrappers[0], { autoAlpha: 1, y: 0, ease: 'power2.out' })
-                    .to({}, { duration: 1 }); // Pause for reading
+                    .to(textSections[0], { autoAlpha: 1, y: 0, duration: 1, ease: 'power2.out' })
+                    .to({}, {duration: 2}); // Add a "pause" to let the user read before scrolling more
 
-                // --- SCENE 2: Transition 1 -> 2 ---
+                // --- Transition 1: From Pillar 1 to Pillar 2 ---
                 masterTimeline
-                    .to(textWrappers[0], { autoAlpha: 0, y: -30, ease: 'power2.in' }, "trans_1_start")
-                    .to(imageScalers[0], { scale: 1.8, x: '-20%', y: '10%', ease: 'power2.inOut' }, "trans_1_start")
-                    .to(visualItems[0], { autoAlpha: 0, ease: 'power1.inOut' }, "trans_1_start")
+                    // Fade out the first text block
+                    .to(textSections[0], { autoAlpha: 0, y: -50, duration: 1, ease: 'power2.in' }, 'scene1_end')
                     
+                    // The cinematic image transition
+                    .to(visualItems[0], { autoAlpha: 0, duration: 0.5 }, 'scene1_end')
                     .fromTo(visualItems[1], 
-                        { autoAlpha: 0, scale: 1.1 },
-                        { autoAlpha: 1, scale: 1, ease: 'power2.out' }, "trans_1_start")
-                    .to(textWrappers[1], { autoAlpha: 1, y: 0, ease: 'power2.out' }, ">-0.4")
+                        { autoAlpha: 0, zIndex: 6, scale: 1.2, xPercent: -20 }, 
+                        { autoAlpha: 1, scale: 1, xPercent: 0, duration: 1.5, ease: 'power3.out' }, 
+                        'scene1_end')
                     
-                    .to({}, { duration: 1 }); // Pause
+                    // Fade in the second text block
+                    .to(textSections[1], { autoAlpha: 1, y: 0, duration: 1, ease: 'power2.out' }, 'scene1_end+=1')
+                    .to({}, {duration: 2}); // Reading pause
 
-                // --- SCENE 3: Transition 2 -> 3 ---
+                // --- Transition 2: From Pillar 2 to Pillar 3 ---
                 masterTimeline
-                    .to(textWrappers[1], { autoAlpha: 0, y: -30, ease: 'power2.in' }, "trans_2_start")
-                    .to(visualItems[1], { autoAlpha: 0, ease: 'power1.inOut' }, "trans_2_start")
-                    
-                    .fromTo(visualItems[2], 
-                        { autoAlpha: 0, y: 30 }, 
-                        { autoAlpha: 1, y: 0, ease: 'power2.out' }, "trans_2_start")
-                    .to(textWrappers[2], { autoAlpha: 1, y: 0, ease: 'power2.out' }, ">-0.4")
-                    
-                    .to({}, { duration: 1 }); // Final pause
+                    // Fade out the second text block
+                    .to(textSections[1], { autoAlpha: 0, y: -50, duration: 1, ease: 'power2.in' }, 'scene2_end')
 
-                // --- 4. EXIT ANIMATION (using Flip) ---
+                    // The cinematic image transition
+                    .to(visualItems[1], { autoAlpha: 0, duration: 0.5 }, 'scene2_end')
+                    .fromTo(visualItems[2],
+                         { autoAlpha: 0, zIndex: 7, yPercent: 20 },
+                         { autoAlpha: 1, yPercent: 0, duration: 1.5, ease: 'power3.out' }, 
+                         'scene2_end')
+
+                    // Fade in the third text block
+                    .to(textSections[2], { autoAlpha: 1, y: 0, duration: 1, ease: 'power2.out' }, 'scene2_end+=1')
+                    .to({}, {duration: 2}); // Final reading pause
+                    
+
+                // --- 4. THE EXIT ANIMATION (The Flawless Hand-off) ---
+                // This runs independently, triggered by the next section.
+                const summarySection = document.querySelector('.method-summary');
+                const placeholder = document.querySelector('.summary-thumbnail-placeholder');
+                const lastVisual = visualItems[visualItems.length - 1];
+                
                 const exitTimeline = gsap.timeline({
                     scrollTrigger: {
                         trigger: summarySection,
-                        start: "top 75%",
-                        end: "top top",
+                        start: "top 80%", // Start when summary section is 80% from top
+                        end: "top top", // End when it hits the very top
                         scrub: 1,
+                        // markers: { startColor: "purple", endColor: "purple" }
                     }
                 });
 
-                const state = Flip.getState(lastVisual, { props: "transform,opacity" });
+                // Get state BEFORE moving the element
+                const state = Flip.getState(lastVisual, {props: "transform, opacity, box-shadow"});
+                
+                // Move element to its final container
                 placeholder.appendChild(lastVisual);
-
+                
+                // Animate from the captured state to the new one
                 exitTimeline.add(
                     Flip.from(state, {
                         scale: true,
-                        ease: "power1.inOut",
+                        ease: "power2.inOut",
+                        // This prevents the "ghost" image during transition
                         onEnter: () => visualsColumn.classList.add('is-exiting'),
                         onLeaveBack: () => visualsColumn.classList.remove('is-exiting')
                     })
                 );
+            }, // end of desktop function
+            
+            "(max-width: 768px)": function() { 
+                // On mobile, do nothing. Content will stack naturally.
             }
         });
     }
