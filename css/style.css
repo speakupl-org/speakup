@@ -592,71 +592,58 @@ a { color: var(--color-primary-vibrant); text-decoration: none; }
     align-self: flex-start;
 }
 /* =========================================================================
-   13. Mobile Navigation System (THE FINAL BUILD)
+   13. Mobile Navigation System (THE HEADER MORPH - FINAL BUILD)
    ========================================================================= */
 
+/* Hide hamburger on desktop */
 .mobile-nav-toggle {
     display: none;
 }
 
+/* Stop page scroll when menu is open */
+body.no-scroll {
+    overflow: hidden;
+}
+
 @media (max-width: 1024px) {
 
-    /* --- Stage 1: Setup the Header for Mobile --- */
+    /* --- Stage 1: Setup Header and Default Menu State --- */
 
-    /* Ensure consistent height, even when we make it static */
+    /* Ensure the header is the top layer, but below the menu button */
     .sticky-header {
-        position: static;
-        height: var(--header-height); 
-    }
-
-    /* Use Flexbox to align logo and hamburger button */
-    .sticky-header .container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        height: 100%;
+        z-index: 1000; 
     }
     
-    /* We don't need the nav taking up space in the static header */
+    .mobile-nav-toggle {
+        display: block; /* Make it visible */
+        z-index: 1001; /* Must be on top of the sticky header */
+    }
+
+    /* Hide the desktop nav by default */
     .main-nav {
+        display: none; 
+    }
+    
+    .header-cta {
         display: none;
     }
 
-    /* Show the hamburger and hide the desktop CTA */
-    .mobile-nav-toggle { display: block; }
-    .header-cta { display: none; }
-
-
-    /* --- Stage 2: Define the OPEN Menu State --- */
+    /* --- Stage 2: The OPEN Menu State --- */
     
-    /*
-     * The `data-visible` attribute is added by JS.
-     * This rule finds the nav when it's meant to be open.
-    */
     .main-nav[data-visible="true"] {
-        display: flex; /* NOW it becomes visible, as a flex container */
+        display: flex; /* Makes the panel visible */
         flex-direction: column;
-        justify-content: center; /* Vertically centers the content */
-        
-        position: fixed;
-        z-index: 1000;
-        inset: 0; /* Cover the entire screen */
+        justify-content: center; /* Vertically center links */
 
-        /* THE KEY FIX: An opaque background. Hides everything underneath. */
-        background-color: var(--color-background-dark); 
-        
-        /* Animation: still slides in from the right */
-        transform: translateX(0);
-        animation: slide-in 350ms ease-out;
+        /* Positioning to take over the screen BELOW the header */
+        position: fixed;
+        inset: var(--header-height) 0 0 0; /* top, right, bottom, left */
+
+        /* Opaque background so page content is invisible */
+        background-color: var(--color-background-dark);
     }
     
-    @keyframes slide-in {
-        from { transform: translateX(100%); }
-        to { transform: translateX(0); }
-    }
-
-    /* --- Stage 3: Style the Content INSIDE the open menu --- */
-
+    /* The List and Links inside the open menu */
     .main-nav[data-visible="true"] ul {
         list-style: none;
         padding: 0;
@@ -669,50 +656,73 @@ a { color: var(--color-primary-vibrant); text-decoration: none; }
         color: var(--color-heading);
         font-size: 1.5rem;
         font-weight: 600;
-        padding: 1rem 2rem; /* Generous, tappable area */
+        padding: 1rem 2rem; /* Make it easily tappable */
     }
 
-    /* --- Stage 4: Style the Hamburger Button --- */
-    
-    .mobile-nav-toggle {
-        position: absolute; /* Relative to the .container */
-        z-index: 9999;
-        top: 50%;
-        transform: translateY(-50%); /* Perfectly center vertically */
-        right: 1.5rem; 
+    /* --- Stage 3: Hamburger Button Styling --- */
 
+    .mobile-nav-toggle {
+        position: absolute; /* Relative to the header container */
+        top: 50%;
+        transform: translateY(-50%);
+        right: 1.5rem;
         background: transparent;
         border: 0;
+        height: 1.5rem;
         width: 1.5rem;
-        aspect-ratio: 1;
         cursor: pointer;
     }
+    .icon-container {
+        position: relative;
+        height: 100%;
+        width: 100%;
+        display: block;
+    }
     
-    /* Make the button a flex container to center the icon lines */
-    .mobile-nav-toggle span { display: none; } /* The .sr-only text */
-    
-    .mobile-nav-toggle .hamburger-icon,
-    .mobile-nav-toggle .close-icon {
+    /* Style the hamburger lines */
+    .icon-hamburger::before,
+    .icon-hamburger::after {
+        content: '';
         position: absolute;
-        inset: 0;
-        background-size: 100%;
-        background-repeat: no-repeat;
-        background-position: center;
+        left: 0;
+        height: 2px;
+        width: 100%;
+        background-color: var(--color-heading);
+        border-radius: 99px;
+        transition: transform 300ms ease;
     }
+    .icon-hamburger::before { top: 2px; }
+    .icon-hamburger::after { bottom: 2px; }
     
-    .mobile-nav-toggle .hamburger-icon {
-        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    /* Style the X icon lines */
+    .icon-close::before,
+    .icon-close::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        height: 2px;
+        width: 100%;
+        background-color: var(--color-heading);
+        border-radius: 99px;
     }
-
-    .mobile-nav-toggle .close-icon {
-         background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M6 6l18 18M24 6L6 24'/%3e%3c/svg%3e");
-    }
+    .icon-close::before { transform: rotate(45deg); }
+    .icon-close::after { transform: rotate(-45deg); }
     
-    /* Toggle visibility of the icons based on the aria-expanded state */
-    .mobile-nav-toggle[aria-expanded="false"] .close-icon { display: none; }
-    .mobile-nav-toggle[aria-expanded="true"] .hamburger-icon { display: none; }
+    /* --- Stage 4: Icon Switching Logic --- */
+    
+    /* Hide the X by default */
+    .mobile-nav-toggle[aria-expanded="false"] .icon-close {
+        display: none;
+    }
+    /* Hide the hamburger when menu is open */
+    .mobile-nav-toggle[aria-expanded="true"] .icon-hamburger {
+        display: none;
+    }
+    /* Hide the word "Menu" from our accessible span */
+    .sr-only { display: none; }
 
-} /* This is the end of the @media query block */
+}
 /* =========================================================================
    14. Accessibility & Utilities
    ========================================================================= */
