@@ -268,13 +268,6 @@ a { color: var(--color-primary-vibrant); text-decoration: none; }
     border-top: 1px solid rgba(255,255,255,0.1);
 }
 
-/* --- 8. Responsive Design --- */
-@media (max-width: 1024px) {
-    /* Hide nav for smaller screens. This would be controlled by JS for a hamburger menu. */
-    .main-nav { display: none; } 
-    /* This is a temporary measure for Tier 1. In Tier 2/3, we'd add the hamburger. */
-}
-
 @media (max-width: 768px) {
     .section { padding: 80px 0; }
     .hero-title br { display: block; } /* Show the intended line break on mobile */
@@ -596,4 +589,57 @@ a { color: var(--color-primary-vibrant); text-decoration: none; }
     color: var(--color-accent);
     font-weight: 600;
     align-self: flex-start;
+}
+/* =========================================================================
+   13. Mobile Navigation System
+   ========================================================================= */
+
+.mobile-nav-toggle {
+    display: none; /* Hidden on desktop by default */
+}
+
+@media (max-width: 1024px) {
+    .main-nav {
+        /*
+          The Mobile Menu itself
+        */
+        position: fixed;
+        z-index: 1000;
+        inset: 0 0 0 30%; /* top, right, bottom, left */
+        flex-direction: column;
+        padding: min(20rem, 15vh) 2rem;
+        background-color: hsl(0 0% 10% / 0.9); /* A slightly translucent dark */
+        backdrop-filter: blur(1rem);
+        transform: translateX(100%);
+        transition: transform 350ms ease-out;
+    }
+    
+    .main-nav[data-visible="true"] {
+        transform: translateX(0%);
+    }
+
+    .main-nav ul {
+        flex-direction: column;
+        gap: 3rem;
+    }
+    
+    .header-cta {
+        display: none; /* Hide the header button on mobile to save space */
+    }
+
+    /* 
+      The Hamburger Button
+    */
+    .mobile-nav-toggle {
+        display: block;
+        position: absolute;
+        z-index: 9999;
+        background: transparent;
+        border: 0;
+        aspect-ratio: 1;
+        top: 2rem;
+        right: 2rem;
+        width: 1.5rem;
+        cursor: pointer;
+    }
 }
