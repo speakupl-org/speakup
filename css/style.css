@@ -247,7 +247,7 @@ a { color: var(--color-primary-vibrant); text-decoration: none; }
 
 /* Final CTA Section (#final-cta) */
 .final-cta-title { font-size: clamp(2rem, 5vw, 2.8rem); }
-#final-cta .reassurance-text { 
+.final-cta .reassurance-text { 
     max-width: 500px; margin: 1.5rem auto 2.5rem;
     color: var(--color-text-muted);
 }
