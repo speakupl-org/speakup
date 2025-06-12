@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if(yearSpan){ yearSpan.textContent = new Date().getFullYear(); }
 
     // =========================================================================
-    // 3D SCROLLYTELLING - PHASE 2.5: REFINED CHOREOGRAPHY
+    // 3D SCROLLYTELLING - V3: CORRECTED CHOREOGRAPHY
     // =========================================================================
 
     gsap.registerPlugin(ScrollTrigger);
@@ -41,60 +41,43 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
 
-            // --- 3. BUILD THE UPGRADED ANIMATION SEQUENCE ---
+            // --- 3. BUILD THE ROBUST ANIMATION SEQUENCE ---
+            // Animate IN the first text section
+            const firstSectionElements = textSections[0].querySelectorAll(".pillar-number, .pillar-line, .pillar-title, .pillar-paragraph");
+            masterTimeline
+                .to(textSections[0].querySelector('.pillar-line'), { scaleX: 1, duration: 0.8, ease: "power3.out" })
+                .from(firstSectionElements, {
+                    autoAlpha: 0, y: 60, rotationX: -45, stagger: 0.1, duration: 1, ease: "power2.out"
+                }, "<"); // Start at the same time as the line animation
 
-            // For each text section, we create a function to generate its animation.
-            // This is a more scalable and readable "modular" approach.
-            textSections.forEach((section, index) => {
-                const number = section.querySelector('.pillar-number');
-                const line = section.querySelector('.pillar-line');
-                const title = section.querySelector('.pillar-title');
-                const paragraph = section.querySelector('.pillar-paragraph');
-                
-                // Add a label for the start of the current pillar's animations
-                masterTimeline.addLabel(`act${index + 1}_start`);
+            // Animate the CUBE for Act 1
+            masterTimeline.to(actor3D, { 
+                rotationY: 120, rotationX: 10, scale: 1.2, duration: 2, ease: "power2.inOut" 
+            }, "<"); // Also start at the same time
 
-                // Animate OUT the PREVIOUS text section, if it exists (i.e., if index > 0)
-                if (index > 0) {
-                    const prevSection = textSections[index - 1];
-                    const prevElements = prevSection.querySelectorAll(".pillar-number, .pillar-line, .pillar-title, .pillar-paragraph");
-                    masterTimeline.to(prevElements, { 
-                        autoAlpha: 0, 
-                        y: -50, 
-                        stagger: 0.05, 
-                        duration: 0.5 
-                    }, `act${index + 1}_start`);
-                }
+            masterTimeline.to({}, { duration: 1.5 }); // Reading Pause
 
-                // Animate IN the CURRENT text section
-                masterTimeline
-                    .from([number, title, paragraph], {
-                        autoAlpha: 0,
-                        y: 60,
-                        rotationX: -45, // NEW: Adds the 3D text rotation effect
-                        stagger: 0.1,
-                        duration: 1,
-                        ease: "power2.out"
-                    }, `act${index + 1}_start`)
-                    .to(line, { // Animate the decorative line
-                        scaleX: 1,
-                        duration: 0.8,
-                        ease: "power3.out"
-                    }, `act${index + 1}_start+=0.2`); // Start the line animation slightly after text starts
 
-                // Animate the 3D CUBE for each corresponding pillar
-                if (index === 0) { // Act 1
-                    masterTimeline.to(actor3D, { rotationY: 120, rotationX: 10, scale: 1.2, duration: 2, ease: "power2.inOut" }, `act${index + 1}_start`);
-                } else if (index === 1) { // Act 2
-                    masterTimeline.to(actor3D, { rotationY: -120, rotationX: -20, scale: 1, duration: 2, ease: "power2.inOut" }, `act${index + 1}_start`);
-                } else if (index === 2) { // Act 3
-                    masterTimeline.to(actor3D, { rotationY: 0, rotationX: 0, scale: 1.1, duration: 2, ease: "power3.inOut" }, `act${index + 1}_start`);
-                }
-                
-                // Add the reading pause
-                masterTimeline.to({}, { duration: (index === 2) ? 2.0 : 1.5 });
-            });
+            // Animate the transition between Pillar 1 and Pillar 2
+            const secondSectionElements = textSections[1].querySelectorAll(".pillar-number, .pillar-line, .pillar-title, .pillar-paragraph");
+            masterTimeline.addLabel("p1_to_p2");
+            masterTimeline.to(firstSectionElements, { autoAlpha: 0, y: -50, stagger: 0.05, duration: 0.5 }, "p1_to_p2");
+            masterTimeline.to(actor3D, { rotationY: -120, rotationX: -20, scale: 1, duration: 2, ease: "power2.inOut" }, "p1_to_p2");
+            masterTimeline.to(textSections[1].querySelector('.pillar-line'), { scaleX: 1, duration: 0.8, ease: "power3.out" }, "p1_to_p2+=1");
+            masterTimeline.from(secondSectionElements, { autoAlpha: 0, y: 60, rotationX: -45, stagger: 0.1, duration: 1, ease: "power2.out" }, "<");
+            
+            masterTimeline.to({}, { duration: 1.5 }); // Reading Pause
 
+            
+            // Animate the transition between Pillar 2 and Pillar 3
+            const thirdSectionElements = textSections[2].querySelectorAll(".pillar-number, .pillar-line, .pillar-title, .pillar-paragraph");
+            masterTimeline.addLabel("p2_to_p3");
+            masterTimeline.to(secondSectionElements, { autoAlpha: 0, y: -50, stagger: 0.05, duration: 0.5 }, "p2_to_p3");
+            masterTimeline.to(actor3D, { rotationY: 0, rotationX: 0, scale: 1.1, duration: 2, ease: "power3.inOut" }, "p2_to_p3");
+            masterTimeline.to(textSections[2].querySelector('.pillar-line'), { scaleX: 1, duration: 0.8, ease: "power3.out" }, "p2_to_p3+=1");
+            masterTimeline.from(thirdSectionElements, { autoAlpha: 0, y: 60, rotationX: -45, stagger: 0.1, duration: 1, ease: "power2.out" }, "<");
+            
+            masterTimeline.to({}, { duration: 2.0 }); // Final reading pause
         },
 
         "(max-width: 768px)": function() {
