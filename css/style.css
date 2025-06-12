@@ -107,13 +107,26 @@ a { color: var(--color-primary-vibrant); text-decoration: none; }
    ========================================================================= */
 
 /* --- Default Desktop State --- */
+.site-header {/* =========================================================================
+   5. Header & "Brand World" Menu System (DEFINITIVE BUILD - v1.1)
+   ========================================================================= */
+
+/* --- Step 1: Adjust the Global Variable for a Thinner Header --- */
+:root {
+    /* ...your other variables... */
+    --header-height: 65px; /* Changed from 75px */
+    /* ...your other variables... */
+}
+
+
+/* --- Step 2: Define the Complete Header & Desktop Navigation Styles --- */
 .site-header {
-    position: sticky;
-    top: 10px; /* Space from top for the "float" effect */
+    position: sticky; /* Sticky on ALL screen sizes */
+    top: 10px;
     z-index: 1000;
-    margin: 0 10px; /* Space from sides for the "float" effect */
+    margin: 0 10px;
     border-radius: 20px;
-    background-color: rgba(17, 32, 36, 0.75); /* Your dark color w/ transparency */
+    background-color: rgba(17, 32, 36, 0.75);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -122,27 +135,47 @@ a { color: var(--color-primary-vibrant); text-decoration: none; }
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: var(--header-height);
+    height: var(--header-height); /* Now uses the new 65px value */
+    padding: 0 1rem;
 }
+.logo-area {
+    text-decoration: none;
+    color: var(--color-heading);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.logo-icon {
+    height: 40px; /* THIS IS THE CRITICAL FIX for the giant logo */
+    width: auto;
+}
+.logo-text { font-size: 1.5rem; font-weight: 600; }
+.logo-text .up { color: var(--color-primary-vibrant); font-weight: 700; }
+
 .main-nav-desktop ul { display: flex; list-style: none; gap: 30px; }
+.header-cta { font-size: 0.9rem; padding: 10px 20px; }
+
+
+/* --- Step 3: Define the Mobile Menu & Toggle (Hidden by default) --- */
 .mobile-nav-toggle { display: none; }
-.mobile-menu { display: none; } /* Mobile menu is hidden by default */
+.mobile-menu { display: none; }
 
 
-/* --- Mobile State (the "menu-is-open" controls everything) --- */
-
+/* --- Step 4: Define the Mobile-Specific Styles & Overrides --- */
 @media (max-width: 1024px) {
 
-    /* --- Stage 1: Adjust the Desktop View --- */
+    /* Hide desktop elements */
     .main-nav-desktop, .header-cta-container { display: none; }
-    .mobile-nav-toggle { display: block; }
-    
-    .site-header { margin: 0 10px; /* Adjust margin for mobile */ }
 
-    /* --- Stage 2: The Hamburger Button --- */
+    /* Show and style the hamburger button */
     .mobile-nav-toggle {
-        background: transparent; border: 0; cursor: pointer;
-        width: 1.5rem; height: 1.5rem; position: relative;
+        display: block;
+        background: transparent;
+        border: 0;
+        cursor: pointer;
+        width: 1.5rem;
+        height: 1.5rem;
+        position: relative;
     }
     .mobile-nav-toggle::before, .mobile-nav-toggle::after {
         content: ''; position: absolute; left: 0; width: 100%; height: 2px;
@@ -151,63 +184,33 @@ a { color: var(--color-primary-vibrant); text-decoration: none; }
     .mobile-nav-toggle::before { transform: translateY(-5px); }
     .mobile-nav-toggle::after { transform: translateY(5px); }
 
-    /* --- Stage 3: The Full-Screen Menu (Hidden by default) --- */
-    .mobile-menu {
-        display: flex; /* It's now a flex container for its children */
+    /* OPEN STATE: Triggered by the JS */
+    body.menu-is-open {
+        overflow: hidden;
+    }
+    body.menu-is-open .mobile-menu {
+        display: flex;
         flex-direction: column;
-        
         position: fixed;
-        inset: 0; /* Cover the whole screen */
+        inset: 0;
         z-index: 2000;
-        background-color: var(--color-background-dark); /* Your SOLID dark bg */
-
-        /* Optional: Add your "brand asset" as a background image */
-        /* background-image: url('../images/brand-asset.svg'); */
-        /* background-repeat: no-repeat; */
-        /* background-position: bottom right; */
-        
-        /* Animation: starts invisible, will fade in */
-        visibility: hidden;
-        opacity: 0;
+        background-color: var(--color-background-dark);
+        visibility: visible;
+        opacity: 1;
         transition: opacity 300ms ease, visibility 300ms;
     }
-
-    /* --- Stage 4: THE OPEN STATE (JS adds .menu-is-open to the BODY) --- */
-
-    body.menu-is-open {
-        overflow: hidden; /* Lock page scroll */
-    }
+    body.menu-is-open .site-header .mobile-nav-toggle::before { transform: rotate(45deg); }
+    body.menu-is-open .site-header .mobile-nav-toggle::after { transform: rotate(-45deg); }
     
-    body.menu-is-open .mobile-menu {
-        visibility: visible;
-        opacity: 1; /* Fade the menu in */
-    }
-
-    /* Animate the hamburger on the main header to an X */
-    body.menu-is-open .site-header .mobile-nav-toggle::before { transform: rotate(45deg) translateY(0); }
-    body.menu-is-open .site-header .mobile-nav-toggle::after { transform: rotate(-45deg) translateY(0); }
-
-
-    /* --- Stage 5: Styling Content INSIDE the open menu --- */
-    
+    /* Styling for the content INSIDE the open menu */
     .mobile-menu-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        height: var(--header-height);
-        padding: 0 1rem; /* Adjust padding to match container */
+        display: flex; justify-content: space-between; align-items: center;
+        height: var(--header-height); padding: 0 1.5rem;
     }
-    
-    /* Make the X button a perfect cross */
-    .mobile-menu .close-button::before,
-    .mobile-menu .close-button::after { transform: rotate(45deg); }
+    .mobile-menu .close-button::before, .mobile-menu .close-button::after { transform: rotate(45deg); }
     .mobile-menu .close-button::after { transform: rotate(-45deg); }
-
     .main-nav-mobile {
-        flex-grow: 1; /* Takes up the middle space */
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        flex-grow: 1; display: flex; justify-content: center; align-items: center;
     }
     .main-nav-mobile ul {
         list-style: none; padding: 0; margin: 0; text-align: center;
@@ -217,14 +220,9 @@ a { color: var(--color-primary-vibrant); text-decoration: none; }
         display: block; font-size: 2rem; color: var(--color-heading); padding: 0.5rem;
     }
     .mobile-menu-action-box {
-        background-color: var(--color-surface-dark);
-        border-radius: var(--border-radius);
-        padding: 2rem;
-        margin: 1.5rem;
-        text-align: center;
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
+        background-color: var(--color-surface-dark); border-radius: var(--border-radius);
+        padding: 2rem; margin: 1.5rem; text-align: center;
+        display: flex; flex-direction: column; gap: 1.5rem;
     }
 }
 
