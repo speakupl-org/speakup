@@ -1,29 +1,26 @@
-// js/main.js - THE FINAL VERSION
+// js/main.js - FINAL "BRAND WORLD" BUILD
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- Definitive Mobile Navigation System --- //
-    const mainNav = document.getElementById('primary-navigation');
-    const navToggle = document.querySelector('.mobile-nav-toggle');
+    const menuToggleButtons = document.querySelectorAll('.mobile-nav-toggle');
+    const body = document.body;
 
-    if (navToggle) {
-        navToggle.addEventListener('click', () => {
-            const isVisible = mainNav.hasAttribute('data-visible');
-    
-            if (!isVisible) {
-                mainNav.setAttribute('data-visible', 'true');
-                navToggle.setAttribute('aria-expanded', 'true');
-                document.body.classList.add('no-scroll'); // CRITICAL: Stop body scroll
-            } else {
-                mainNav.removeAttribute('data-visible');
-                navToggle.setAttribute('aria-expanded', 'false');
-                document.body.classList.remove('no-scroll'); // CRITICAL: Allow body scroll again
-            }
+    menuToggleButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            // Toggle the master class on the body
+            body.classList.toggle('menu-is-open');
+            
+            // Toggle ARIA attributes for accessibility
+            const isOpened = body.classList.contains('menu-is-open');
+            button.setAttribute('aria-expanded', isOpened);
+
+            // Set the ARIA attribute on the close button's sibling toggle
+            // to ensure they stay in sync.
+            menuToggleButtons.forEach(b => b.setAttribute('aria-expanded', isOpened));
         });
-    }
+    });
 
-    // --- Other scripts like animations or footer year would go here --- //
-    // --- Update Footer Year --- //
+    // Update Footer Year
     const yearSpan = document.getElementById('current-year');
     if (yearSpan) {
         yearSpan.textContent = new Date().getFullYear();
