@@ -705,12 +705,20 @@ html.menu-open {
 
 /* IMPORTANT: Each text block MUST have significant height. 
    This creates the "scroll distance" needed for the GSAP `scrub`
-   animation to play out smoothly as the user scrolls. */
+/* in your style.css */
 .pillar-text-content {
-    min-height: 90vh; 
+    /* We no longer need a massive min-height. We'll use padding to create space. */
+    /* This creates natural scroll distance between text blocks. */
+    padding-top: 15vh;
+    padding-bottom: 25vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
+}
+
+/* Let's remove the bottom padding on the very last text section */
+.pillar-text-content:last-of-type {
+    padding-bottom: 15vh;
 }
 
 /*
