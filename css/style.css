@@ -643,3 +643,27 @@ a { color: var(--color-primary-vibrant); text-decoration: none; }
         cursor: pointer;
     }
 }
+/* --- Hamburger Icon Animation --- */
+.mobile-nav-toggle::before,
+.mobile-nav-toggle::after,
+.mobile-nav-toggle span {
+    content: '';
+    position: absolute;
+    height: 2px;
+    width: 1.5rem;
+    background-color: var(--color-heading);
+    border-radius: 100vw;
+    transition: transform 350ms ease-out, opacity 350ms ease-out;
+}
+.mobile-nav-toggle::before { transform: translateY(-6px); }
+.mobile-nav-toggle::after { transform: translateY(6px); }
+
+.mobile-nav-toggle[aria-expanded="true"]::before {
+    transform: translateY(0px) rotate(45deg);
+}
+.mobile-nav-toggle[aria-expanded="true"] span {
+    opacity: 0;
+}
+.mobile-nav-toggle[aria-expanded="true"]::after {
+    transform: translateY(0px) rotate(-45deg);
+}
