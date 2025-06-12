@@ -19,7 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-
     // The existing footer year code should follow
     const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     // ...etc
