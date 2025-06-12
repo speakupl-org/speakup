@@ -20,7 +20,7 @@
     --shadow-subtle: 0 4px 12px rgba(0, 0, 0, 0.2);
 
     --border-radius: 12px;
-    --header-height: 75px;
+    --header-height: 65px;
     --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     
     /* RGB values for gradient alpha */
