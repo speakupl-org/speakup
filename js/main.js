@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if(yearSpan){yearSpan.textContent = new Date().getFullYear();}
 
     // =========================================================================
-    // "IGLOO-STYLE" SCROLLYTELLING - ROCKET MODE ORCHESTRATION
+    // "IGLOO-STYLE" SCROLLYTELLING - SENIOR ARCHITECT MODE
     // =========================================================================
     
     const scrollyContainer = document.querySelector('.scrolly-container');
@@ -27,60 +27,72 @@ document.addEventListener('DOMContentLoaded', function() {
             // --- DESKTOP ANIMATIONS (screen width > 768px) ---
             "(min-width: 769px)": function() {
                 
-                // --- 1. SETUP & SELECTORS ---
+                // --- 1. SETUP: TARGETS AND UTILITIES ---
                 const visualsColumn = document.querySelector('.pillar-visuals-col');
                 const visualItems = gsap.utils.toArray('.pillar-visual-item');
-                const imageScalers = gsap.utils.toArray('.pillar-image-scaler');
-                // Select individual components for staggered animations
-                const textWrappers = gsap.utils.toArray('.text-anim-wrapper');
-                
-                // --- 2. ADVANCED ANIMATION HELPER FUNCTIONS ---
-                // Using functions makes the main timeline cleaner and more powerful.
+                const textSections = gsap.utils.toArray('.pillar-text-content');
 
+                // --- 2. SOPHISTICATION LAYER 1: CURSOR PARALLAX ---
+                // Create a super-efficient "setter" for the parallax effect.
+                const xTo = gsap.quickTo(visualsColumn, "x", { duration: 0.8, ease: "power3" });
+                const yTo = gsap.quickTo(visualsColumn, "y", { duration: 0.8, ease: "power3" });
+
+                window.addEventListener("mousemove", e => {
+                    const { clientX, clientY } = e;
+                    const x = gsap.utils.mapRange(0, window.innerWidth, -20, 20, clientX);
+                    const y = gsap.utils.mapRange(0, window.innerHeight, -20, 20, clientY);
+                    xTo(x);
+                    yTo(y);
+                });
+                
+                // --- 3. ARCHITECTURE: DYNAMIC ANIMATION FUNCTIONS ---
                 /**
-                 * Creates a sophisticated, staggered animation for a text block entering the view.
-                 * @param {number} index - The index of the text block to animate.
-                 * @returns {gsap.core.Timeline}
+                 * Creates a sophisticated text-in animation using 3D perspective.
+                 * @param {number} index - The index of the text block to animate in.
+                 * @returns {gsap.core.Timeline} A GSAP Timeline instance.
                  */
-                functioncreateTextInAnimation(index) {
-                    const el = textWrappers[index];
-                    const [number, line, title, paragraph] = [
-                        el.querySelector('.pillar-number'),
-                        el.querySelector('.pillar-line'),
-                        el.querySelector('.pillar-title'),
-                        el.querySelector('.pillar-paragraph')
-                    ];
+                function createTextInAnimation(index) {
+                    const el = textSections[index];
+                    const headline = el.querySelector('h2');
+                    const paragraph = el.querySelector('p');
                     
                     const tl = gsap.timeline();
-                    tl.fromTo(number, { autoAlpha: 0, y: 60 }, { autoAlpha: 1, y: 0, duration: 1, ease: 'expo.out' })
-                      .to(line, { scaleX: 1, duration: 0.8, ease: 'power4.out' }, "-=0.8")
-                      .fromTo(title, { autoAlpha: 0, y: 50 }, { autoAlpha: 1, y: 0, duration: 1, ease: 'expo.out' }, "-=0.6")
-                      .fromTo(paragraph, { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 0.9, ease: 'power2.out' }, "-=0.7");
+                    // Animate in with rotation from a 3D perspective.
+                    tl.from([headline, paragraph], {
+                        autoAlpha: 0,
+                        y: 80,
+                        rotationX: -90,
+                        stagger: 0.1,
+                        duration: 1.5,
+                        ease: 'expo.out'
+                    });
                     
                     return tl;
                 }
-                
+
                 /**
-                 * Creates an animation for a text block exiting the view.
-                 * @param {number} index - The index of the text block.
-                 * @returns {gsap.core.Timeline}
+                 * Creates a graceful text-out animation.
+                 * @param {number} index - The index of the text block to animate out.
+                 * @returns {gsap.core.Timeline} A GSAP Timeline instance.
                  */
                 function createTextOutAnimation(index) {
-                    const el = textWrappers[index];
-                    return gsap.to(el, { autoAlpha: 0, y: -40, duration: 0.7, ease: 'power2.in' });
+                    const el = textSections[index];
+                    return gsap.to(el.querySelectorAll('h2, p'), {
+                        autoAlpha: 0,
+                        y: -80,
+                        stagger: 0.05,
+                        duration: 1.0,
+                        ease: 'expo.in'
+                    });
                 }
-
-                // --- 3. INITIAL STATE - SET ONCE, NEVER TOUCHED AGAIN ---
-                gsap.set(visualItems, { autoAlpha: 0 });
-                gsap.set(visualItems[0], { autoAlpha: 1 });
-                gsap.set(textWrappers, { autoAlpha: 0 }); // Everything starts hidden
-
+                
                 // --- 4. THE GRAND MASTER TIMELINE ---
+                gsap.set(visualItems.slice(1), { autoAlpha: 0 }); // Hide all but the first image
                 const masterTimeline = gsap.timeline({
                     scrollTrigger: {
                         trigger: scrollyContainer,
                         start: "top top",
-                        end: "+=6000", // Massive scroll length for smooth pacing
+                        end: "+=5000",
                         scrub: 1.2,
                         pin: visualsColumn,
                         pinSpacing: true,
@@ -88,60 +100,53 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 });
 
-                // --- SEQUENCE 1: Pillar 1 Appears and Breathes ---
-                masterTimeline.add(createTextInAnimation(0))
-                    // Let the image subtly zoom and drift while user reads. This is KEY to sophistication.
-                    .to(imageScalers[0], { scale: 1.1, rotation: -1, x: '-5%', duration: 4, ease: 'power1.inOut' }, '<')
-                    .to({}, {duration: 2}); // Extended reading pause
+                // --- Sequence 1: Arrival ---
+                masterTimeline.add(createTextInAnimation(0));
+                masterTimeline.to({}, {duration: 1.0}); // Reading pause
 
-                // --- SEQUENCE 2: Cinematic Transition to Pillar 2 ---
-                masterTimeline.addLabel('trans_1_start')
-                    .add(createTextOutAnimation(0))
-                    // Animate visual frame and scaler separately for a 3D feel
-                    .to(visualItems[0], { autoAlpha: 0, scale: 0.9, duration: 1.5, ease: 'power3.inOut' }, 'trans_1_start')
-                    .to(imageScalers[0], { rotation: -3, scale: 1.2, duration: 1.5 }, 'trans_1_start') // Continue animating the old image as it leaves
-                    // The next visual enters with opposite motion
-                    .fromTo(visualItems[1],
-                        { autoAlpha: 0, scale: 1.1, xPercent: 10, rotation: 5 },
-                        { autoAlpha: 1, scale: 1, xPercent: 0, rotation: 0, duration: 2, ease: 'expo.out' }, 'trans_1_start+=0.5')
-                    .add(createTextInAnimation(1), '>-=1.0') // Text animates in while visual is still settling
-                    .to({}, {duration: 2});
+                // --- Sequence 2: Transition to Pillar 2 ---
+                masterTimeline.addLabel('p1_to_p2');
+                masterTimeline.add(createTextOutAnimation(0), 'p1_to_p2');
+                // SOPHISTICATION LAYER 2: CINEMATIC DEPTH OF FIELD + 3D ROTATION
+                masterTimeline.to(visualItems[0].querySelector('img'), { filter: 'blur(20px)', scale: 1.2, duration: 1.5, ease: 'power2.in' }, 'p1_to_p2');
+                masterTimeline.to(visualItems[0], { rotationY: 45, autoAlpha: 0, duration: 1.5, ease: 'power2.in'}, 'p1_to_p2');
+                masterTimeline.from(visualItems[1], { rotationY: -45, autoAlpha: 0, duration: 1.5, ease: 'power2.out' }, 'p1_to_p2+=0.5');
+                masterTimeline.from(visualItems[1].querySelector('img'), { filter: 'blur(20px)', scale: 1.2, duration: 1.5, ease: 'power2.out' }, 'p1_to_p2+=0.5');
+                masterTimeline.add(createTextInAnimation(1), 'p1_to_p2+=1');
+                masterTimeline.to({}, {duration: 1.0});
 
-                // --- SEQUENCE 3: A Different, Cleaner Transition to Pillar 3 ---
-                masterTimeline.addLabel('trans_2_start')
-                    .add(createTextOutAnimation(1))
-                    // A faster, more direct visual change this time, for pacing variety
-                    .to(visualItems[1], { autoAlpha: 0, duration: 1.0, ease: 'power2.inOut'}, 'trans_2_start')
-                    .fromTo(visualItems[2],
-                         { autoAlpha: 0, yPercent: 5 },
-                         { autoAlpha: 1, yPercent: 0, duration: 1.5, ease: 'power3.out' }, 'trans_2_start+=0.5')
-                    .add(createTextInAnimation(2), '>-=1.0')
-                    .to({}, {duration: 3}); // A very long final pause, holding the last scene perfectly stable
-
-                // --- 5. THE DECOUPLED EXIT: The final, flawless hand-off ---
+                // --- Sequence 3: Transition to Pillar 3 ---
+                masterTimeline.addLabel('p2_to_p3');
+                masterTimeline.add(createTextOutAnimation(1), 'p2_to_p3');
+                // A different, faster transition for variety.
+                masterTimeline.to(visualItems[1], { autoAlpha: 0, scale: 0.95, duration: 1.0, ease: 'power2.inOut'}, 'p2_to_p3');
+                masterTimeline.from(visualItems[2], { autoAlpha: 0, scale: 1.05, duration: 1.0, ease: 'power2.inOut' }, 'p2_to_p3+=0.2');
+                masterTimeline.add(createTextInAnimation(2), 'p2_to_p3+=1');
+                masterTimeline.to({}, {duration: 2.0}); // Longer final pause
+                
+                // --- 5. THE FLAWLESS, DECOUPLED EXIT ---
                 const summarySection = document.querySelector('.method-summary');
                 const placeholder = document.querySelector('.summary-thumbnail-placeholder');
                 const lastVisual = visualItems[visualItems.length - 1];
-                
-                Flip.fit(placeholder, lastVisual, { scale: true, fitChild: lastVisual.querySelector('img') });
 
                 const exitTimeline = gsap.timeline({
                     scrollTrigger: {
                         trigger: summarySection,
-                        start: "top 70%", // Start later to guarantee the hand-off is safe
+                        start: "top 70%",
                         end: "top top",
                         scrub: 1,
                     }
                 });
                 
-                exitTimeline.add(
-                    Flip.from(Flip.getState(lastVisual), {
-                        scale: true,
-                        ease: "power2.inOut",
-                        onEnter: () => visualsColumn.classList.add('is-exiting'),
-                        onLeaveBack: () => visualsColumn.classList.remove('is-exiting')
-                    })
-                );
+                // GSAP Flip will handle the complex transition seamlessly.
+                const state = Flip.getState(lastVisual, {props: "transform, opacity, filter"});
+                placeholder.appendChild(lastVisual);
+                exitTimeline.add(Flip.from(state, {
+                    scale: true,
+                    ease: "power2.inOut",
+                    onEnter: () => visualsColumn.classList.add('is-exiting'),
+                    onLeaveBack: () => visualsColumn.classList.remove('is-exiting')
+                }));
             }
         });
     }
