@@ -617,7 +617,21 @@ a { color: var(--color-primary-vibrant); text-decoration: none; }
     .main-nav[data-visible="true"] {
         transform: translateX(0%);
     }
+/* ADD THESE NEW RULES INSIDE THE @media BLOCK */
+    .main-nav ul {
+        flex-direction: column;
+        align-items: center; /* Center the links */
+        text-align: center;
+        gap: 3rem; /* Increase space between links vertically */
+        width: 100%; /* Make sure it takes up the menu's width */
+    }
 
+    .main-nav ul a {
+        font-size: 1.5rem; /* Make the links bigger and easier to tap */
+        font-weight: 600;
+        width: 100%; /* Make the whole area tappable */
+    }
+/* The other mobile styles continue after this */
     .main-nav ul {
         flex-direction: column;
         gap: 3rem;
