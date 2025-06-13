@@ -1,27 +1,49 @@
 /*
 ========================================================================================
-   THE DEFINITIVE COVENANT BUILD v30.2 - "Keystone" Correction
+   THE DEFINITIVE COVENANT BUILD v30.3 - "Synch-Lock" Protocol
    
-   This build corrects the primary document architecture and refines the "Aegis"
-   protocol to guarantee final-state visibility. The system is now structurally
-   and functionally complete.
+   This build implements the Synch-Lock initialization sequence to guarantee
+   all page assets are loaded and the DOM is stable before animation setup.
+   This protocol eliminates layout-shift-based calculation errors and
+   provides more robust error reporting for missing elements. The system
+   is now architecturally sound from initialization to execution.
 ========================================================================================
 */
 
-// Oracle Forensic Logger v2.0 - "Aegis" Telemetry Upgrade
+// Oracle Forensic Logger v2.0 - With live parsing from getProperty
 const Oracle = {
-    log: (el, label) => { /* ... no changes here ... */ },
-    group: (label) => { /* ... no changes here ... */ },
-    groupEnd: () => { /* ... no changes here ... */ },
-    report: (message) => { /* ... no changes here ... */ },
-    warn: (message) => { /* ... no changes here ... */ }
+    log: (el, label) => {
+        if (!el) { console.error(`%c[ORACLE LOG: ${label}] ERROR - Element is null.`, 'color: #BF616A;'); return; }
+        const rect = el.getBoundingClientRect();
+        const style = window.getComputedStyle(el);
+        const transform = {
+            scale: gsap.getProperty(el, "scale"),
+            rotationX: gsap.getProperty(el, "rotationX"),
+            rotationY: gsap.getProperty(el, "rotationY"),
+            x: gsap.getProperty(el, "x"),
+            y: gsap.getProperty(el, "y")
+        };
+        console.log(
+            `%c[ORACLE LOG: ${label}]`, 'color: #D81B60; font-weight: bold;',
+            `\n  - ID: #${el.id}`,
+            `\n  - Size: { W: ${rect.width.toFixed(1)}, H: ${rect.height.toFixed(1)} }`,
+            `\n  - Position: { X: ${transform.x.toFixed(1)}, Y: ${transform.y.toFixed(1)} }`,
+            `\n  - Rotation: { X: ${transform.rotationX.toFixed(1)}, Y: ${transform.rotationY.toFixed(1)} }`,
+            `\n  - Scale: ${transform.scale.toFixed(2)}`,
+            `\n  - Opacity: ${style.opacity}`, `| Visibility: ${style.visibility}`
+        );
+    },
+    group: (label) => console.group(`%c[ORACLE ACTION: ${label}]`, 'color: #A3BE8C; font-weight:bold;'),
+    groupEnd: () => console.groupEnd(),
+    report: (message) => console.log(`%c[CITADEL REPORT]`, 'color: #88C0D0; font-weight: bold;', message),
+    warn: (message) => console.warn(`%c[CITADEL WARNING]`, 'color: #EBCB8B;', message)
 };
 
 
 function setupAnimations() {
     gsap.registerPlugin(ScrollTrigger, Flip);
     console.clear();
-    Oracle.report('GSAP Covenant Build v30.2 Initialized. [KEYSTONE CORRECTION]');
+    Oracle.report('GSAP Covenant Build v30.3 Initialized. [SYNCH-LOCK]');
 
     const ctx = gsap.context(() => {
         const elements = {
@@ -35,9 +57,12 @@ function setupAnimations() {
             stuntActorFaces: gsap.utils.toArray('#actor-3d-stunt-double .face:not(.front)')
         };
 
-        if (Object.values(elements).some(el => !el || (Array.isArray(el) && !el.length))) {
-            Oracle.warn('CITADEL ABORT: Critical elements missing from DOM.');
-            return;
+        // --- SYNCH-LOCK UPGRADE: Enhanced Element Verification ---
+        for (const [key, el] of Object.entries(elements)) {
+            if (!el || (Array.isArray(el) && !el.length)) {
+                Oracle.warn(`CITADEL ABORT: Critical element "${key}" not found in DOM.`);
+                return; // Halt execution
+            }
         }
         Oracle.report("Citadel reports all elements located and verified.");
 
@@ -60,7 +85,6 @@ function setupAnimations() {
                     }
                 });
                 tl.to(elements.heroActor, { rotationY: 120, rotationX: 10, scale: 1.1, ease: "none" }, 0)
-                  /* ... rest of timeline is unchanged ... */
                   .to(elements.textPillars[0], { autoAlpha: 0, y: -30 }, 0)
                   .from(elements.textPillars[1], { autoAlpha: 0, y: 30 }, 0)
                   .to(elements.heroActor, { rotationY: -120, rotationX: -20, scale: 1.2, ease: "none" }, 1)
@@ -88,8 +112,6 @@ function setupAnimations() {
                         Oracle.log(elements.stuntActor, "2. Stunt Double Pre-Animation State");
                         Oracle.report("3. Initiating surgical FLIP animation...");
 
-                        // --- KEYSTONE CORRECTION ---
-                        // Ensure the stunt double is and remains visible throughout the animation.
                         gsap.set(elements.stuntActor, { autoAlpha: 1 });
                         
                         Flip.from(endState, {
@@ -117,13 +139,13 @@ function setupAnimations() {
                         });
                     },
                     onLeaveBack: () => {
-                        if (!isSwapped) return;
+                        if (isSwapped) return;
                         isSwapped = false;
                         Oracle.group('AEGIS REVERSE INITIATED');
                         
                         elements.stuntActor.classList.remove('is-logo-final-state');
                         gsap.set(elements.stuntActorFaces, { opacity: 1 });
-                        gsap.set(elements.stuntActor, { autoAlpha: 0 }); // Use autoAlpha for consistency
+                        gsap.set(elements.stuntActor, { autoAlpha: 0 });
                         
                         gsap.set(elements.heroActor, { autoAlpha: 1 });
                         
@@ -138,3 +160,43 @@ function setupAnimations() {
 
     return ctx;
 }
+
+
+// --- CITADEL v30.3 - SYNCH-LOCK INITIALIZATION PROTOCOL ---
+
+function setupSiteLogic(){
+    const e = document.getElementById("menu-open-button"),
+          t = document.getElementById("menu-close-button"),
+          n = document.getElementById("menu-screen"),
+          o = document.documentElement;
+
+    if(e && t && n){
+        e.addEventListener("click", () => o.classList.add("menu-open"));
+        t.addEventListener("click", () => o.classList.remove("menu-open"));
+    }
+    
+    const c = document.getElementById("current-year");
+    if(c) c.textContent = (new Date).getFullYear();
+    
+    Oracle.report("Site logic initialized.");
+}
+
+function initialAnimationSetup() {
+    // We confirm the libraries are present on the window object one last time.
+    if (window.gsap && window.ScrollTrigger && window.Flip) {
+        setupAnimations();
+        
+        // Redundant but powerful: command a final recalibration after setup is complete.
+        ScrollTrigger.refresh();
+        Oracle.report("ScrollTrigger recalibrated to final document layout.");
+    } else {
+        Oracle.warn("GSAP libraries failed to load. Animations aborted.");
+    }
+}
+
+// 1. Setup non-animation logic as soon as the DOM is ready.
+document.addEventListener("DOMContentLoaded", setupSiteLogic);
+
+// 2. Wait for EVERYTHING (images, fonts, etc.) to fully load before setting up complex animations.
+// This prevents layout shifts from breaking ScrollTrigger's initial calculations.
+window.addEventListener("load", initialAnimationSetup);
