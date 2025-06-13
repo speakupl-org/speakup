@@ -1,150 +1,73 @@
-// main.js (Final Architectural Version, based on evidence)
+// in main.js
 
-document.addEventListener('DOMContentLoaded', function () {
-    // --- Menu & Footer code (unchanged) ---
-    const openButton = document.getElementById('menu-open-button');
-    const closeButton = document.getElementById('menu-close-button');
-    const menuScreen = document.getElementById('menu-screen');
-    const htmlElement = document.documentElement;
-    const body = document.body;
+function setupAnimations() {
+    gsap.registerPlugin(ScrollTrigger, Flip);
 
-    function openMenu() {
-        htmlElement.classList.add('menu-open');
-        body.classList.add('menu-open');
-        menuScreen.setAttribute('aria-hidden', 'false');
-    }
+    const ctx = gsap.context(() => {
+        ScrollTrigger.matchMedia({
+            "(min-width: 769px)": function () {
 
-    function closeMenu() {
-        htmlElement.classList.remove('menu-open');
-        body.classList.remove('menu-open');
-        menuScreen.setAttribute('aria-hidden', 'true');
-    }
+                // --- 1. SELECTORS (Unchanged) ---
+                const visualsCol = document.querySelector(".pillar-visuals-col");
+                const textCol = document.querySelector(".pillar-text-col");
+                const actor3D = document.getElementById("actor-3d");
+                const textPillars = gsap.utils.toArray('.pillar-text-content');
+                const summaryContainer = document.querySelector(".method-summary");
+                const summaryClipper = document.querySelector(".summary-thumbnail-clipper");
 
-    if (openButton && closeButton && menuScreen) {
-        openButton.addEventListener('click', openMenu);
-        closeButton.addEventListener('click', closeMenu);
-    }
+                if (!visualsCol || !textCol || !actor3D) { return; }
 
-    const yearSpan = document.getElementById('current-year');
-    if (yearSpan) {
-        yearSpan.textContent = new Date().getFullYear();
-    }
+                // --- 2. ESTABLISH THE INITIAL STATE ---
+                // Set the starting visual state before any animation happens.
+                // This guarantees the page loads with Pillar 1's text visible and the cube correctly rotated.
+                gsap.set(textPillars[0], { autoAlpha: 1 });
+                gsap.set(textPillars.slice(1), { autoAlpha: 0 }); // Hide others
+                gsap.set(actor3D, { rotationY: 20, rotationX: -15, scale: 1 });
 
-    function setupAnimations() {
-        gsap.registerPlugin(ScrollTrigger, Flip);
 
-        const ctx = gsap.context(() => {
-            ScrollTrigger.matchMedia({
-                "(min-width: 769px)": function () {
+                // --- 3. CREATE THE MASTER "ANIMATION MENU" TIMELINE ---
+                // This is the core of our new architecture. It's paused by default.
+                // It does NOT have a scrollTrigger. It's just a definition of states.
+                // We use .to() tweens with absolute positions for perfect state control.
+                const masterTimeline = gsap.timeline({ paused: true });
 
-                    const visualsCol = document.querySelector(".pillar-visuals-col");
-                    const textCol = document.querySelector(".pillar-text-col");
-                    const actor3D = document.getElementById("actor-3d");
-                    const textPillars = gsap.utils.toArray('.pillar-text-content');
-                    const summaryContainer = document.querySelector(".method-summary");
-                    const summaryClipper = document.querySelector(".summary-thumbnail-clipper");
+                // --- Scene 1: Transition to Pillar 1 state ---
+                // We add a label to mark the start of this scene's animation.
+                masterTimeline
+                    .addLabel("pillar1")
+                    .to(actor3D, { rotationY: 120, rotationX: 10, scale: 1.1, ease: "power1.inOut" }, 0)
+                    .to(textPillars[0], { autoAlpha: 1 }, 0);
 
-                    if (!visualsCol || !textCol || !actor3D) { return; }
-                    
-                    // --- 1. DECOUPLED PINNING ---
-                    // This trigger's ONLY job is to pin the visuals column. No animation.
-                    ScrollTrigger.create({
-                        trigger: textCol,
-                        pin: visualsCol,
-                        start: "top top",
-                        end: "bottom bottom"
-                    });
-                    
-                    // --- 2. THE MASTER "ANIMATION MENU" TIMELINE (PAUSED) ---
-                    const masterTimeline = gsap.timeline({ paused: true });
 
-                    masterTimeline
-                        // State for Pillar 1
-                        .addLabel("pillar1")
-                        .to(textPillars[0], { autoAlpha: 1 })
-                        .fromTo(actor3D, { rotationY: 20, rotationX: -15, scale: 1 }, { rotationY: 120, rotationX: 10, scale: 1.1, ease: "power1.inOut" }, "<")
+                // --- Scene 2: Transition to Pillar 2 state ---
+                masterTimeline
+                    .addLabel("pillar2")
+                    // The '1' below is an absolute position. This animation starts at the 1-second mark of the timeline.
+                    .to(actor3D, { rotationY: -120, rotationX: -20, scale: 1.2, ease: "power1.inOut" }, 1) 
+                    .to(textPillars[0], { autoAlpha: 0 }, 1) // Fade out old text
+                    .to(textPillars[1], { autoAlpha: 1 }, 1); // Fade in new text
 
-                        // State for Pillar 2
-                        .addLabel("pillar2")
-                        .to(textPillars[0], { autoAlpha: 0 })
-                        .to(textPillars[1], { autoAlpha: 1 }, "<")
-                        .to(actor3D, { rotationY: -120, rotationX: -20, scale: 1.2, ease: "power1.inOut" }, "<")
-                        
-                        // State for Pillar 3
-                        .addLabel("pillar3")
-                        .to(textPillars[1], { autoAlpha: 0 })
-                        .to(textPillars[2], { autoAlpha: 1 }, "<")
-                        .to(actor3D, { rotationY: 0, rotationX: 0, scale: 1, ease: "power1.inOut" }, "<");
-                    
-                    // --- 3. INDIVIDUAL TRIGGERS FOR EACH PILLAR ---
-                    // This is the core of the new architecture.
-                    textPillars.forEach((pillar, i) => {
-                        ScrollTrigger.create({
-                            trigger: pillar,
-                            start: "top center",
-                            end: "bottom center",
-                            onEnter: () => masterTimeline.tweenTo(`pillar${i + 1}`, {duration: 0.8, ease: "power1.inOut"}),
-                            onEnterBack: () => masterTimeline.tweenTo(`pillar${i + 1}`, {duration: 0.8, ease: "power1.inOut"})
-                        });
-                    });
 
-                    // --- 4. The "Igloo" Exit Animation ---
-                    let isFlipped = false;
-                    ScrollTrigger.create({
-                        trigger: summaryContainer,
-                        start: "top center",
-                        onEnter: () => {
-                            if (!isFlipped) {
-                                isFlipped = true;
-                                masterTimeline.pause(); // Pause the main timeline to prevent conflicts
-                                const state = Flip.getState(actor3D, { props: "scale" });
-                                summaryClipper.appendChild(actor3D);
-                                visualsCol.classList.add('is-exiting');
-                                Flip.from(state, {
-                                    duration: 0.8,
-                                    ease: "power2.inOut",
-                                    scale: true,
-                                });
-                            }
-                        },
-                        onLeaveBack: () => {
-                            if (isFlipped) {
-                                isFlipped = false;
-                                const state = Flip.getState(actor3D);
-                                visualsCol.appendChild(actor3D);
-                                visualsCol.classList.remove('is-exiting');
-                                Flip.from(state, {
-                                    duration: 0.8,
-                                    ease: "power2.out",
-                                    onComplete: () => {
-                                        // Resume the master timeline and sync it to the last pillar state
-                                        masterTimeline.play().tweenTo("pillar3");
-                                    }
-                                });
-                            }
-                        }
-                    });
+                // --- Scene 3: Transition to Pillar 3 state ---
+                masterTimeline
+                    .addLabel("pillar3")
+                    .to(actor3D, { rotationY: 0, rotationX: 0, scale: 1, ease: "power1.inOut" }, 2)
+                    .to(textPillars[1], { autoAlpha: 0 }, 2)
+                    .to(textPillars[2], { autoAlpha: 1 }, 2);
 
-                },
+                
+                // ---- WE WILL STOP HERE FOR NOW ----
+                // The next steps will be to add the decoupled pin and the individual triggers
+                // that will control this masterTimeline. But first, we must have a perfect "menu" of animations.
 
-                "(max-width: 768px)": function () {
-                    // On mobile, just make sure everything is visible and reset.
-                    gsap.set(textPillars, { autoAlpha: 1 });
-                    gsap.set(actor3D, { clearProps: "all" });
-                }
-            });
+
+            }, // End of desktop matchMedia
+
+            "(max-width: 768px)": function () {
+                // ... (mobile code remains the same)
+            }
         });
+    });
 
-        return () => ctx.revert();
-    }
-
-    function initialCheck() {
-        if (window.gsap && window.ScrollTrigger && window.Flip) {
-            setupAnimations();
-        } else {
-            setTimeout(initialCheck, 100);
-        }
-    }
-    
-    initialCheck();
-});
+    return () => ctx.revert();
+}
