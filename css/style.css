@@ -701,53 +701,63 @@ html.menu-open {
 .face.bottom { transform: rotateX(-90deg) translateZ(100px); }
 
 
-/* --- 3. The Scrolling Text Column --- */
+/* --- 3. The Scrolling Text Column (The "Trigger" Part) --- */
 .pillar-text-col {
     flex: 1;
     width: 50%;
-    padding-left: 2rem; 
+    padding-left: 2rem;
 }
 
+/* ==================================================================
+   THIS IS THE CORRECTED CODE WITH THE FOUC FIX
+   ==================================================================
+*/
+
+/* STEP 1: Hide ALL text sections by default. */
 .pillar-text-content {
     padding-top: 15vh;
     padding-bottom: 25vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    /* FOUC FIX: Hide all text sections by default. GSAP will reveal them. */
+
+    /* This makes them invisible instantly */
     opacity: 0;
     visibility: hidden;
 }
 
-/* FOUC FIX: Show the first section on page load */
+/* STEP 2: Make an EXCEPTION for the very first text section. */
 .pillar-text-content:first-of-type {
+    /* This makes it visible on page load */
     opacity: 1;
     visibility: visible;
 }
 
+/* Let's remove the bottom padding on the very last text section */
 .pillar-text-content:last-of-type {
     padding-bottom: 15vh;
 }
 
-/* --- 4. Text Content & Art Direction --- */
+/* Constrain the width of the text block for readability */
 .text-anim-wrapper {
     max-width: 45ch;
-    will-change: opacity, transform;
 }
 
+/* NEW STYLES for text elements */
 .pillar-number {
     font-size: 1rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: #43a8b4; 
+    color: #43a8b4; /* <<< IMPORTANT: CHANGE THIS to your brand's accent color! */
     display: block;
 }
 
+/* The decorative line starts scaled to zero */
 .pillar-line {
     width: 60px;
     height: 3px;
-    background-color: #43a8b4; 
+    background-color: #43a8b4; /* <<< IMPORTANT: USE THE SAME ACCENT COLOR! */
     margin: 1.5rem 0;
     transform: scaleX(0);
     transform-origin: left;
@@ -755,10 +765,10 @@ html.menu-open {
 
 .pillar-title {
     font-family: 'Playfair Display', serif;
-    font-size: clamp(2.8rem, 5vw, 4rem); 
+    font-size: clamp(2.8rem, 5vw, 4rem);
     font-weight: 700;
     line-height: 1.1;
-    color: #f0f0f0; 
+    color: #f0f0f0;
     margin: 0;
 }
 
