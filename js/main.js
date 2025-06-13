@@ -1,16 +1,17 @@
 /*
 ========================================================================================
-   THE DEFINITIVE COVENANT BUILD v30.3.1 - "The Restoration"
+   THE DEFINITIVE COVENANT BUILD v33.0 - "The Pantheon" Protocol
    
-   All subsequent protocols (v31, v32) are abandoned as failed paradigms. This
-   build restores the last stable architecture, v30.3 "Synch-Lock", and applies
-   the one critical logic fix required for its perfection. The comprehensive
-   Oracle logging is restored, the multi-trigger system is restored, and the
-   reverse-scroll logic is now structurally sound.
+   The Monolith architecture is purged. The Pantheon restores the multi-trigger
+   paradigm, acknowledging that specialized systems are superior. One master timeline
+   governs the 3D actor, while discrete, independent ScrollTriggers now govern
+   each text transition, resolving all previous animation failures. The Oracle is
+   upgraded to v3.3, with new sensors to monitor text visibility, ensuring total
+   system awareness. The stable handoff protocol from v30.3.1 is restored.
 ========================================================================================
 */
 
-// Oracle Forensic Logger v2.0 - RESTORED to full telemetry mode
+// Oracle Forensic Logger v3.3 - "The Pantheon" Edition
 const Oracle = {
     log: (el, label) => {
         if (!el) { console.error(`%c[ORACLE LOG: ${label}] ERROR - Element is null.`, 'color: #BF616A;'); return; }
@@ -19,17 +20,12 @@ const Oracle = {
         const transform = {
             scale: gsap.getProperty(el, "scale"),
             rotationX: gsap.getProperty(el, "rotationX"),
-            rotationY: gsap.getProperty(el, "rotationY"),
-            x: gsap.getProperty(el, "x"),
-            y: gsap.getProperty(el, "y")
+            rotationY: gsap.getProperty(el, "rotationY")
         };
         console.log(
             `%c[ORACLE LOG: ${label}]`, 'color: #D81B60; font-weight: bold;',
-            `\n  - ID: #${el.id}`,
-            `\n  - Size: { W: ${rect.width.toFixed(1)}, H: ${rect.height.toFixed(1)} }`,
-            `\n  - Position: { X: ${transform.x.toFixed(1)}, Y: ${transform.y.toFixed(1)} }`,
-            `\n  - Rotation: { X: ${transform.rotationX.toFixed(1)}, Y: ${transform.rotationY.toFixed(1)} }`,
-            `\n  - Scale: ${transform.scale.toFixed(2)}`,
+            `\n  - ID: ${el.id || el.className}`,
+            `\n  - Transform: { RotX: ${transform.rotationX.toFixed(1)}, RotY: ${transform.rotationY.toFixed(1)}, Scale: ${transform.scale.toFixed(2)} }`,
             `\n  - Opacity: ${style.opacity}`, `| Visibility: ${style.visibility}`
         );
     },
@@ -43,14 +39,14 @@ const Oracle = {
 function setupAnimations() {
     gsap.registerPlugin(ScrollTrigger, Flip);
     console.clear();
-    Oracle.report('GSAP Covenant Build v30.3.1 Initialized. [RESTORATION]');
+    Oracle.report('GSAP Covenant Build v33.0 Initialized. [THE PANTHEON]');
 
     const ctx = gsap.context(() => {
         const elements = {
             heroActor: document.getElementById('actor-3d'),
             stuntActor: document.getElementById('actor-3d-stunt-double'),
             placeholder: document.getElementById('summary-placeholder'),
-            textPillars: gsap.utils.toArray('.pillar-text-content'),
+            pillars: gsap.utils.toArray('.pillar-text-content'),
             visualsCol: document.querySelector('.pillar-visuals-col'),
             textCol: document.querySelector('.pillar-text-col'),
             handoffPoint: document.getElementById('handoff-point'),
@@ -59,52 +55,68 @@ function setupAnimations() {
 
         for (const [key, el] of Object.entries(elements)) {
             if (!el || (Array.isArray(el) && !el.length)) {
-                Oracle.warn(`CITADEL ABORT: Critical element "${key}" not found in DOM.`);
-                return;
+                Oracle.warn(`PANTHEON ABORT: Critical element "${key}" not found.`); return;
             }
         }
-        Oracle.report("Citadel reports all elements located and verified.");
+        Oracle.report("Pantheon components verified.");
 
         let isSwapped = false;
 
         ScrollTrigger.matchMedia({
             '(min-width: 769px)': () => {
-                const tl = gsap.timeline({
+                // --- PANTHEON DEITY 1: The 3D Actor Master ---
+                const masterTl = gsap.timeline({
                     scrollTrigger: {
                         trigger: elements.textCol,
                         pin: elements.visualsCol,
                         start: 'top top',
-                        end: `bottom bottom-=${window.innerHeight * 0.2}`, // Adjusted for smoother end
-                        scrub: 0.8,
-                        onUpdate: (self) => {
-                            // Oracle logging is restored
-                            if (self.progress > 0 && self.progress < 1) {
-                                Oracle.log(elements.heroActor, "Live Hero Scrub");
-                            }
+                        end: 'bottom bottom',
+                        scrub: 1,
+                        onUpdate: () => {
+                             // This trigger is now solely responsible for the 3D actor
+                            Oracle.log(elements.heroActor, "Live Hero Scrub");
                         }
                     }
                 });
-                tl.to(elements.heroActor, { rotationY: 120, rotationX: 10, scale: 1.1, ease: "none" })
-                  .to(elements.textPillars[0], { autoAlpha: 0, y: -30 }, "<")
-                  .from(elements.textPillars[1], { autoAlpha: 0, y: 30 }, "<")
-                  .to(elements.heroActor, { rotationY: -120, rotationX: -20, scale: 1.2, ease: "none" })
-                  .to(elements.textPillars[1], { autoAlpha: 0, y: -30 }, "<")
-                  .from(elements.textPillars[2], { autoAlpha: 0, y: 30 }, "<");
+                masterTl.to(elements.heroActor, { rotationY: 120, rotationX: 10, scale: 1.1, ease: "none" })
+                        .to(elements.heroActor, { rotationY: -120, rotationX: -20, scale: 1.2, ease: "none" });
 
-                Oracle.report("Immutable timeline forged and telemetry online.");
+                // --- PANTHEON DEITY 2 & 3: The Text Transition Gods ---
+                elements.pillars.forEach((pillar, index) => {
+                    if (index < elements.pillars.length - 1) {
+                        const nextPillar = elements.pillars[index + 1];
+                        gsap.timeline({
+                            scrollTrigger: {
+                                trigger: nextPillar,
+                                start: "top 80%", // Animate when the next pillar is 80% from the top
+                                end: "top 40%", // Finish when it's 40%
+                                scrub: true,
+                                onUpdate: (self) => {
+                                    console.groupCollapsed(`Text Transition Log (Pillar ${index+1} -> ${index+2})`);
+                                    Oracle.log(pillar, `Pillar ${index+1}`);
+                                    Oracle.log(nextPillar, `Pillar ${index+2}`);
+                                    console.groupEnd();
+                                }
+                            }
+                        })
+                        .to(pillar, { autoAlpha: 0, y: -40, ease: "power1.in" })
+                        .from(nextPillar, { autoAlpha: 0, y: 40, ease: "power1.in" }, "<");
+                    }
+                });
+
+                Oracle.report("Pantheon of timelines forged and telemetry online.");
                 
                 elements.placeholder.appendChild(elements.stuntActor);
 
+                // --- PANTHEON DEITY 4: The Handoff Governor ---
                 ScrollTrigger.create({
                     trigger: elements.handoffPoint,
                     start: 'top 70%',
                     onEnter: () => {
-                        if (isSwapped) return;
-                        isSwapped = true;
+                        if (isSwapped) return; isSwapped = true;
                         Oracle.group('BAIT & SWITCH INITIATED');
                         
-                        // Disable the main scroller to prevent conflicts
-                        tl.scrollTrigger.disable();
+                        masterTl.scrollTrigger.disable();
 
                         const startState = Flip.getState(elements.heroActor);
                         Oracle.log(elements.heroActor, "1. Hero State at Handoff (Frozen)");
@@ -137,8 +149,6 @@ function setupAnimations() {
                         });
                     },
                     onLeaveBack: () => {
-                        // THE RESTORATION FIX: This logic is now correct.
-                        // We only proceed if the swap HAS happened.
                         if (isSwapped) {
                             isSwapped = false;
                             Oracle.group('REVERSE HANDOFF INITIATED');
@@ -147,10 +157,8 @@ function setupAnimations() {
                             gsap.set(elements.stuntActorFaces, { clearProps: "all" });
                             gsap.set(elements.stuntActor, { autoAlpha: 0 });
                             
-                            // Re-enable the scroller BEFORE setting the hero's alpha
-                            // so it can take back control of the state immediately.
-                            tl.scrollTrigger.enable();
-                            tl.scrollTrigger.update(); // Force an update to sync
+                            masterTl.scrollTrigger.enable();
+                            masterTl.scrollTrigger.update();
 
                             Oracle.log(elements.stuntActor, "Stunt Double Reset & Hidden");
                             Oracle.log(elements.heroActor, "Hero Actor control returned to timeline");
@@ -162,17 +170,14 @@ function setupAnimations() {
         });
     });
 
-    return ctx; // CRITICAL: This was missing in the failed Monolith build
+    return ctx;
 }
 
 
-// --- CITADEL v30.3.1 - SYNCH-LOCK INITIALIZATION PROTOCOL ---
+// --- INITIALIZATION PROTOCOL (v33.0) ---
 function setupSiteLogic(){
     const e=document.getElementById("menu-open-button"),t=document.getElementById("menu-close-button"),n=document.getElementById("menu-screen"),o=document.documentElement;
-    if(e && t && n){
-        e.addEventListener("click",()=>o.classList.add("menu-open"));
-        t.addEventListener("click",()=>o.classList.remove("menu-open"));
-    }
+    if(e && t && n){e.addEventListener("click",()=>o.classList.add("menu-open"));t.addEventListener("click",()=>o.classList.remove("menu-open"));}
     const c=document.getElementById("current-year");
     if(c)c.textContent=(new Date).getFullYear();
     Oracle.report("Site logic initialized.");
