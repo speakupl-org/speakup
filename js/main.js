@@ -17,22 +17,23 @@ const Oracle = {
         verbosity: 1, // Default verbosity level: 1 = collapsed, 2 = expanded
     },
     
-    // NEW: Initialization method to set configuration from URL or localStorage
-    init: () => {
-        // Priority 2: Check localStorage for a persistent setting
-        const storedVerbosity = localStorage.getItem('oracleVerbosity');
-        if (storedVerbosity !== null) {
-            Oracle.config.verbosity = parseInt(storedVerbosity, 10);
+    // INSTRUMENTED VERSION OF Oracle.scan
+    scan: (label, data) => {
+        // PROBE 4: Check verbosity AT THE MOMENT OF THE SCAN.
+        if (!window.scanCheck) { // This will only log once to avoid clutter
+            console.log(`%c[DIAGNOSTIC SCAN CHECK] At first scan, verbosity = ${Oracle.config.verbosity}`, 'color: orange; font-weight: bold; font-size: 14px;');
+            window.scanCheck = true;
         }
 
-        // Priority 1: Check URL parameters to override for the current session
-        const urlParams = new URLSearchParams(window.location.search);
-        const urlVerbosity = urlParams.get('oracle_verbosity');
-        if (urlVerbosity !== null) {
-            Oracle.config.verbosity = parseInt(urlVerbosity, 10);
-            localStorage.setItem('oracleVerbosity', urlVerbosity); // Store for convenience
-            Oracle.report(`URL override detected. Verbosity set to ${Oracle.config.verbosity}.`);
+        if (Oracle.config.verbosity < 1) return; 
+
+        const groupMethod = Oracle.config.verbosity >= 2 ? console.group : console.groupCollapsed;
+
+        groupMethod(`%c[ORACLE SCAN @ ${Oracle._timestamp()}: ${label}]`, 'color: #B48EAD; font-weight: normal;');
+        for (const key in data) {
+            console.log(`%c  - ${key}:`, 'color: #88C0D0;', data[key]);
         }
+        console.groupEnd();
     },
     
     _timestamp: () => new Date().toLocaleTimeString('en-US', { hour12: false }),
@@ -62,10 +63,16 @@ const Oracle = {
         console.groupEnd();
     },
     
+        // INSTRUMENTED VERSION OF Oracle.scan
     scan: (label, data) => {
-        if (Oracle.config.verbosity < 1) return; // Suppress on quiet mode
+        // PROBE 4: Check verbosity AT THE MOMENT OF THE SCAN.
+        if (!window.scanCheck) { // This will only log once to avoid clutter
+            console.log(`%c[DIAGNOSTIC SCAN CHECK] At first scan, verbosity = ${Oracle.config.verbosity}`, 'color: orange; font-weight: bold; font-size: 14px;');
+            window.scanCheck = true;
+        }
 
-        // Dynamic group method based on verbosity level
+        if (Oracle.config.verbosity < 1) return; 
+
         const groupMethod = Oracle.config.verbosity >= 2 ? console.group : console.groupCollapsed;
 
         groupMethod(`%c[ORACLE SCAN @ ${Oracle._timestamp()}: ${label}]`, 'color: #B48EAD; font-weight: normal;');
