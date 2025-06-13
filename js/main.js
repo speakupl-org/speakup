@@ -1,19 +1,18 @@
 /*
-========================================================================
-   STABLE DEBUGGING BUILD v6.0 - Unified Trigger + Perfected Sync
-========================================================================
+===========================================================================
+   STABLE DEBUGGING BUILD v7.0 - State Injection & Authoritative Sync
+===========================================================================
 */
 function setupAnimations() {
     gsap.registerPlugin(ScrollTrigger, Flip);
 
     console.clear();
-    console.log('%cGSAP Stable Debug Build v6.0 Initialized.', 'color: #88c0d0; font-weight: bold;');
+    console.log('%cGSAP Stable Debug Build v7.0 Initialized.', 'color: #88c0d0; font-weight: bold;');
     
-    // Enabling markers is great for debugging the trigger points.
     ScrollTrigger.defaults({ markers: true });
 
     const ctx = gsap.context(() => {
-        // --- Element Selection & Guards ---
+        // --- Element Selection & Guards (Unchanged) ---
         const visualsCol = document.querySelector('.pillar-visuals-col');
         const scene3D = document.querySelector('.scene-3d');
         const textCol = document.querySelector('.pillar-text-col');
@@ -33,14 +32,12 @@ function setupAnimations() {
             return;
         }
         
-        // This is our master state variable. It's the traffic cop for the relay race.
         let isFlipped = false;
 
         ScrollTrigger.matchMedia({
             '(min-width: 769px)': () => {
                 
-                // --- 1. The Main Scrollytelling Timeline (The "Scrub") ---
-                // This part remains the same as your logic.
+                // --- 1. The Main Scrollytelling Timeline (Unchanged) ---
                 gsap.set(textPillars, { autoAlpha: 0 });
                 gsap.set(textPillars[0], { autoAlpha: 1 });
 
@@ -49,11 +46,11 @@ function setupAnimations() {
                 });
                 
                 const states = [
-                    { rotationY: 20, rotationX: -15, scale: 1.0 }, // Start state after intro
-                    { rotationY: 120, rotationX: 10, scale: 1.1 },  // Pillar 2
-                    { rotationY: -120, rotationX: -20, scale: 1.2 } // Pillar 3
+                    { rotationY: 20, rotationX: -15, scale: 1.0 },
+                    { rotationY: 120, rotationX: 10, scale: 1.1 },
+                    { rotationY: -120, rotationX: -20, scale: 1.2 }
                 ];
-
+                
                 tl.to(actor3D, { ...states[0], duration: 1 })
                   .to(textPillars[0], { autoAlpha: 1 }, '<')
                   .to(textPillars[0], { autoAlpha: 0, duration: 0.5 }, '+=0.5')
@@ -62,111 +59,84 @@ function setupAnimations() {
                   .to(textPillars[1], { autoAlpha: 0, duration: 0.5 }, '+=0.5')
                   .to(actor3D, { ...states[2], duration: 1 }, '<')
                   .to(textPillars[2], { autoAlpha: 1, duration: 0.5 }, '<')
-                  .addLabel("finalState") // CRUCIAL label for the sync process
+                  .addLabel("finalState")
                   .to(textPillars[2], { autoAlpha: 0, duration: 0.5 }, '+=0.5')
                   .to(actor3D, { rotationY: 0, rotationX: 0, scale: 1.0, duration: 1 }, '<');
 
                 const mainScrub = ScrollTrigger.create({
-                    trigger: textCol,
-                    pin: visualsCol,
-                    start: 'top top',
-                    end: 'bottom bottom',
-                    animation: tl,
-                    scrub: 0.8,
-                    invalidateOnRefresh: true,
+                    trigger: textCol, pin: visualsCol, start: 'top top', end: 'bottom bottom',
+                    animation: tl, scrub: 0.8, invalidateOnRefresh: true,
                 });
 
-                // --- 2. The Handoff Trigger (The "Relay Zone") ---
-                // This is our UNIFIED trigger. It handles both going down and coming back up.
+                // --- 2. The Unified Handoff Trigger (Logic inside is new) ---
                 ScrollTrigger.create({
                     trigger: summaryContainer,
-                    start: 'top center', // Fires when the top of summary hits the center of the viewport
-                    // We can add an end to define a "zone", but for onEnter/onLeaveBack, start is often enough.
-                    // Let's keep it simple first. end: 'bottom center' 
-
-                    // PHASE 2: The Handoff (Scrolling Down)
+                    start: 'top center',
+                    
+                    // onEnter (Flip Down) logic is solid, no changes needed.
                     onEnter: () => {
-                        console.group('%cEVENT: onEnter (Handoff to Summary)', 'color: #A3BE8C; font-weight:bold;');
-                        if (isFlipped) { 
-                            console.warn('ABORTED: Animation is already flipped. No action taken.');
-                            console.groupEnd(); 
-                            return; 
-                        }
-                        isFlipped = true; // Set state immediately to prevent race conditions
+                        if (isFlipped) return;
+                        isFlipped = true;
                         
-                        // Update Dashboard
+                        console.group('%cEVENT: onEnter (Handoff to Summary)', 'color: #A3BE8C; font-weight:bold;');
                         lastEventEl.textContent = 'onEnter (Flip Down)';
                         flipStatusEl.textContent = 'FLIPPED';
                         scrubStatusEl.textContent = 'DISABLED';
                         
-                        console.log('1. Disabling main scrub.');
                         mainScrub.disable();
-                        
-                        console.log('2. Recording FLIP state and moving element in DOM.');
                         const state = Flip.getState(actor3D);
                         summaryClipper.appendChild(actor3D);
                         
-                        console.log('3. Initiating FLIP animation.');
                         Flip.from(state, {
-                            duration: 0.8,
-                            ease: 'power2.inOut',
-                            scale: true, // Important to animate scale as well as transform
-                            onComplete: () => {
-                                console.log('4. Flip DOWN complete.');
-                                // After flipping, the cube is controlled by normal CSS in the thumbnail.
-                                // We can clear props to be safe, but Flip is usually good about this.
-                                console.groupEnd();
-                            }
+                            duration: 0.8, ease: 'power2.inOut', scale: true,
+                            onComplete: () => { console.log('Flip DOWN complete.'); console.groupEnd(); }
                         });
                     },
 
-                    // PHASE 3: The Return Journey (Scrolling Up)
+                    // onLeaveBack (Return Journey) with NEW Authoritative Sync
                     onLeaveBack: () => {
-                        console.group('%cEVENT: onLeaveBack (Return to Scroller)', 'color: #EBCB8B; font-weight:bold;');
-                        if (!isFlipped) {
-                            console.warn('ABORTED: Animation is not in flipped state. No action taken.');
-                            console.groupEnd();
-                            return;
-                        }
+                        if (!isFlipped) return;
                         
-                        // Update Dashboard
+                        console.group('%cEVENT: onLeaveBack (Return to Scroller)', 'color: #EBCB8B; font-weight:bold;');
                         lastEventEl.textContent = 'onLeaveBack (Flip Up)';
                         flipStatusEl.textContent = 'TRANSITIONING...';
 
-                        console.log('1. Recording FLIP state and moving element back to scroller DOM.');
-                        const state = Flip.getState(actor3D, {props: "transform,opacity"}); // only grab what's needed
+                        const state = Flip.getState(actor3D, {props: "transform,opacity"});
                         scene3D.appendChild(actor3D);
 
-                        console.log('2. Initiating FLIP animation (return trip).');
                         Flip.from(state, {
-                            duration: 0.8,
-                            ease: 'power2.out',
-                            scale: true,
+                            duration: 0.8, ease: 'power2.out', scale: true,
                             onComplete: () => {
-                                console.log('%c3. Flip UP complete. Initiating the 3-Step-Sync.', 'color: #BF616A; font-weight:bold');
+                                console.log('%cFlip UP complete. Initiating Authoritative 4-Step Sync...', 'color: #BF616A; font-weight:bold');
                                 
-                                // YOUR PERFECT 3-STEP SYNC LOGIC
-                                console.log(`   SYNC 1: Clearing inline transform styles left by Flip.`);
-                                // Flip leaves a `transform` style on the element. We MUST clear it
-                                // so that the GSAP timeline can take full control again.
+                                // THE BULLETPROOF 4-STEP SYNC
+                                console.log(`SYNC 1: Clearing inline 'transform' from Flip animation.`);
                                 gsap.set(actor3D, { clearProps: "transform" });
 
-                                console.log(`   SYNC 2: Seeking master timeline to the correct 'finalState'.`);
-                                // This is the magic. We force the timeline to the exact progress
-                                // it should be at when the handoff happens. No more jumps.
-                                tl.seek("finalState");
-
-                                console.log(`   SYNC 3: Re-enabling the main scrub now that state is synced.`);
+                                console.log(`SYNC 2: Re-enabling the main scrub controller.`);
                                 mainScrub.enable();
-                                
-                                isFlipped = false; // The baton has been passed back. Update the state.
-
-                                // Update Dashboard
                                 scrubStatusEl.textContent = 'ENABLED';
-                                flipStatusEl.textContent = 'In Scroller';
-                                lastEventEl.textContent = 'Sync Complete';
+
+                                console.log(`SYNC 3: Calculating target scroll position for 'finalState'.`);
+                                // Get progress of the label (e.g., 0.7273)
+                                const finalStateProgress = tl.labels.finalState / tl.duration();
+                                // Calculate the exact scroll pixel value that corresponds to that progress
+                                const targetScrollPos = mainScrub.start + (mainScrub.end - mainScrub.start) * finalStateProgress;
+                                console.log(`   - Timeline Progress at 'finalState': ${finalStateProgress.toFixed(4)}`);
+                                console.log(`   - Target Scroll Position: ${targetScrollPos.toFixed(2)}px`);
                                 
-                                console.log('SYNC COMPLETE: The relay race is ready for another lap.');
+                                console.log(`SYNC 4: Forcing ScrollTrigger to the target position (State Injection).`);
+                                // This is the magic! We command the controller, not the animation.
+                                mainScrub.scroll(targetScrollPos);
+                                // For good measure, force a refresh to ensure all calculations are up-to-date.
+                                ScrollTrigger.refresh();
+
+                                isFlipped = false;
+                                
+                                console.log(`VERIFICATION: Current rotation is now: ${gsap.getProperty(actor3D, "rotationY").toFixed(2)}`);
+                                flipStatusEl.textContent = 'In Scroller';
+                                lastEventEl.textContent = 'Authoritative Sync Complete';
+                                console.log('AUTHORITATIVE SYNC COMPLETE.');
                                 console.groupEnd();
                             }
                         });
@@ -176,28 +146,14 @@ function setupAnimations() {
         });
     });
 
-    // Return a cleanup function that GSAP will call when the context is reverted
     return () => ctx.revert();
 }
 
-// Keep your initial loader logic as it is perfectly fine.
+
+// Your initial loader and other functions remain perfectly fine.
 function initialCheck() {
-    if (window.gsap && window.ScrollTrigger && window.Flip) {
-        setupAnimations();
-    } else {
-        let i = 0, max = 30, t = setInterval(() => {
-            i++;
-            if (window.gsap && window.ScrollTrigger && window.Flip) {
-                clearInterval(t);
-                setupAnimations();
-            } else if (i >= max) {
-                clearInterval(t);
-                console.error("GSAP libraries failed to load after 3 seconds.");
-            }
-        }, 100);
-    }
+    // unchanged...
+    if (window.gsap && window.ScrollTrigger && window.Flip) { setupAnimations(); }
+    else { let i = 0, max = 30, t = setInterval(() => { i++; if(window.gsap && window.ScrollTrigger && window.Flip) { clearInterval(t); setupAnimations(); } else if (i>=max) { clearInterval(t); console.error("GSAP load fail");}},100); }
 }
 document.addEventListener('DOMContentLoaded', initialCheck);
-
-// You can keep the menu/footer JS as is, it doesn't interfere.
-// The code here focuses only on the animation setup.
