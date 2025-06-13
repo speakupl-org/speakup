@@ -1,6 +1,7 @@
 /*
 =================================================================
-   ULTIMATE DEBUGGING BUILD v3.0 - With Live Dashboard
+   Definitive Version 5.0 (Architectural Fix)
+   This version uses two separate triggers to eliminate race conditions.
 =================================================================
 */
 document.addEventListener('DOMContentLoaded', () => {
@@ -37,11 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function setupAnimations() {
     gsap.registerPlugin(ScrollTrigger, Flip);
 
-    console.clear();
-    console.log('%cGSAP Ultimate Debug Build v3.0 Initialized.', 'color: #88c0d0; font-weight: bold;');
-
     const ctx = gsap.context(() => {
-        // --- Element & Dashboard Declarations ---
         const visualsCol = document.querySelector('.pillar-visuals-col');
         const scene3D = document.querySelector('.scene-3d');
         const textCol = document.querySelector('.pillar-text-col');
@@ -50,14 +47,8 @@ function setupAnimations() {
         const summaryContainer = document.querySelector('.method-summary');
         const summaryClipper = document.querySelector('.summary-thumbnail-clipper');
 
-        // Dashboard Elements
-        const flipStatusEl = document.getElementById('debug-flip-status');
-        const scrubStatusEl = document.getElementById('debug-scrub-status');
-        const progressEl = document.getElementById('debug-timeline-progress');
-        const lastEventEl = document.getElementById('debug-last-event');
-
-        if (!visualsCol || !textCol || !actor3D || !summaryContainer || !flipStatusEl) {
-            console.error('Scrollytelling aborted: One or more required elements are missing.');
+        if (!visualsCol || !scene3D || !textCol || !actor3D || !summaryContainer || !summaryClipper || !textPillars.length) {
+            console.error('Scrollytelling animations aborted: One or more required elements are missing.');
             return;
         }
 
@@ -65,11 +56,10 @@ function setupAnimations() {
 
         ScrollTrigger.matchMedia({
             '(min-width: 769px)': () => {
-                // Standard setup
                 gsap.set(textPillars, { autoAlpha: 0 });
                 gsap.set(textPillars[0], { autoAlpha: 1 });
 
-                // Line animations (unchanged)
+                // Line animations are fine
                 textPillars.forEach(pillar => {
                     const line = pillar.querySelector('.pillar-line');
                     if (!line) return;
@@ -82,93 +72,62 @@ function setupAnimations() {
                     });
                 });
 
-                // Main timeline with dashboard update
-                const tl = gsap.timeline({
-                    onUpdate: () => {
-                        if (progressEl) progressEl.textContent = `${tl.progress().toFixed(4)}`;
-                    }
-                });
-                
                 const states = [
                     { rotationY: 20, rotationX: -15, scale: 1.0 },
                     { rotationY: 120, rotationX: 10, scale: 1.1 },
                     { rotationY: -120, rotationX: -20, scale: 1.2 }
                 ];
-                
-                tl.to(actor3D, states[0], 0)
-                  .to(textPillars[0], { autoAlpha: 1 }, 0)
-                  .to(textPillars[0], { autoAlpha: 0 }, 1)
-                  .to(actor3D, { ...states[1], duration: 1}, 1)
-                  .to(textPillars[1], { autoAlpha: 1 }, 1)
-                  .to(textPillars[1], { autoAlpha: 0 }, 2)
-                  .to(actor3D, { ...states[2], duration: 1 }, 2)
-                  .to(textPillars[2], { autoAlpha: 1 }, 2)
-                  .addLabel("finalState", 3) // Add label at 3 seconds
-                  .to(textPillars[2], { autoAlpha: 0 }, 3)
-                  .to(actor3D, { rotationY: 0, rotationX: 0, scale: 1.0, duration: 1 }, 3);
+
+                const tl = gsap.timeline({ defaults: { duration: 1, ease: 'power2.inOut' } });
+                tl.to(actor3D, states[0])
+                    .to(textPillars[0], { autoAlpha: 1 }, '<') 
+                    .to(textPillars[0], { autoAlpha: 0 })
+                    .to(textPillars[1], { autoAlpha: 1 }, '<')
+                    .to(actor3D, states[1], '<')
+                    .to(textPillars[1], { autoAlpha: 0 })
+                    .to(textPillars[2], { autoAlpha: 1 }, '<')
+                    .to(actor3D, states[2], '<')
+                    // This label marks the exact state for Pillar 3 alignment
+                    .addLabel('finalState') 
+                    .to(textPillars[2], { autoAlpha: 0 })
+                    .to(actor3D, { rotationY: 0, rotationX: 0, scale: 1.0 }, '<');
 
                 const mainScrub = ScrollTrigger.create({
-                    trigger: textCol,
-                    pin: visualsCol,
-                    start: 'top top',
-                    end: `+=${tl.duration() * 500}`, // End based on timeline duration
-                    animation: tl,
-                    scrub: 0.8,
-                    invalidateOnRefresh: true,
+                    trigger: textCol, pin: visualsCol, start: 'top top', end: 'bottom bottom',
+                    animation: tl, scrub: 0.8, invalidateOnRefresh: true,
                 });
 
-                // --- ARCHITECTURAL FIX: TWO SEPARATE TRIGGERS ---
-                // This prevents the onEnter/onLeaveBack race condition.
-
+                // --- ARCHITECTURAL FIX: TWO SEPARATE TRIGGERS FOR STABILITY ---
+                
                 // TRIGGER 1: Handles flipping DOWN into the summary.
                 ScrollTrigger.create({
                     trigger: summaryContainer,
-                    start: 'top 80%', // Trigger earlier to give Flip time
+                    start: 'top center',
                     onEnter: () => {
-                        console.groupCollapsed('%cEVENT: onEnter (DOWN)', 'color: #A3BE8C; font-weight:bold;');
-                        lastEventEl.textContent = 'onEnter (Down)';
-                        if (isFlipped) {
-                            console.warn('ABORTED: isFlipped is already true.');
-                            console.groupEnd();
-                            return;
-                        }
+                        if (isFlipped) return;
                         isFlipped = true;
-                        flipStatusEl.textContent = 'FLIPPED';
-
-                        mainScrub.disable();
-                        scrubStatusEl.textContent = 'DISABLED';
-                        console.log('Scrub disabled.');
                         
+                        mainScrub.disable();
                         visualsCol.classList.add('is-exiting');
                         const state = Flip.getState(actor3D);
                         summaryClipper.appendChild(actor3D);
                         
                         Flip.from(state, {
                             duration: 0.8, ease: 'power2.inOut', scale: true,
-                            onComplete: () => {
-                                gsap.set(actor3D, { clearProps: 'all' });
-                                console.log('Flip DOWN complete.');
-                                console.groupEnd();
-                            }
+                            onComplete: () => gsap.set(actor3D, { clearProps: 'all' })
                         });
                     }
                 });
 
                 // TRIGGER 2: Handles flipping UP back into the scroller.
+                // It triggers when the BOTTOM of the text column re-enters the viewport.
                 ScrollTrigger.create({
-                    trigger: summaryContainer, // Use the same element for symmetry
-                    start: 'top 80%',
-                    onLeaveBack: () => {
-                        console.group('%cEVENT: onLeaveBack (UP)', 'color: #EBCB8B; font-weight:bold;');
-                        lastEventEl.textContent = 'onLeaveBack (Up)';
-                        if (!isFlipped) {
-                            console.warn('ABORTED: isFlipped is already false.');
-                            console.groupEnd();
-                            return;
-                        }
+                    trigger: textCol,
+                    start: 'bottom bottom', 
+                    onEnterBack: () => {
+                        if (!isFlipped) return;
                         isFlipped = false;
-                        flipStatusEl.textContent = 'TRANSITIONING...';
-
+                        
                         visualsCol.classList.remove('is-exiting');
                         const state = Flip.getState(actor3D);
                         scene3D.appendChild(actor3D);
@@ -176,33 +135,32 @@ function setupAnimations() {
                         Flip.from(state, {
                             duration: 0.8, ease: 'power2.out', scale: true,
                             onComplete: () => {
-                                console.log('Flip UP complete. Starting 3-step sync.');
-                                
-                                // THE BULLETPROOF 3-STEP SYNC
-                                console.log(`1. actor3D transform before clear: ${gsap.getProperty(actor3D, "transform")}`);
+                                // THE BULLETPROOF 3-STEP SYNC FOR PERFECT ALIGNMENT
+                                // Step 1: Clear Flip's transform styles.
                                 gsap.set(actor3D, { clearProps: "transform" });
-                                console.log('1. clearProps("transform") complete.');
-                                
-                                console.log(`2. Timeline progress before force: ${tl.progress().toFixed(4)}`);
-                                tl.progress(1); // Force progress to the end
-                                console.log(`2. Timeline progress FORCED to ${tl.progress().toFixed(4)}`);
-
+                                // Step 2: Set the timeline to the Pillar 3 state.
+                                tl.seek('finalState');
+                                // Step 3: Re-enable the scroller.
                                 mainScrub.enable();
-                                scrubStatusEl.textContent = 'ENABLED';
-                                console.log('3. Scrub re-enabled.');
-                                
-                                flipStatusEl.textContent = 'In Scroller';
-                                console.log('SYNC COMPLETE');
-                                console.groupEnd();
                             }
                         });
                     }
                 });
             },
-            '(max-width: 768px)': () => { /* mobile cleanup */ }
+
+            '(max-width: 768px)': () => {
+                ScrollTrigger.getAll().forEach(st => st.kill());
+                gsap.killTweensOf([actor3D, ...textPillars, '.pillar-line']);
+                gsap.set([actor3D, ...textPillars, '.pillar-line'], { clearProps: 'all' });
+                if (scene3D && !scene3D.contains(actor3D)) {
+                    if (summaryClipper) summaryClipper.innerHTML = '';
+                    scene3D.appendChild(actor3D);
+                }
+                if (visualsCol) visualsCol.classList.remove('is-exiting');
+                isFlipped = false;
+            }
         });
     });
-
     return () => ctx.revert();
 }
 
