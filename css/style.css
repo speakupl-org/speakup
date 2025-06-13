@@ -1511,32 +1511,38 @@ body.scroll-locked {
     visibility: hidden; /* Start invisible */
 }
 /* =========================================================================
-   V30 "THE CITADEL" PROTOCOL - ESSENTIAL STYLES
+   V30.1 "AEGIS" PROTOCOL - ESSENTIAL STYLES
    ========================================================================= */
 
-/* The stunt double starts invisible and ready for JS control */
+/* The stunt double starts invisible, ready for JS control */
 #actor-3d-stunt-double {
     visibility: hidden;
+    /* This ensures it can be a child of the placeholder and fill it */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
 
-/* 
-This class is added by JS to the stunt-double to transform it.
-We use high specificity to override any other styles. 
-*/
+/* This class is now added onComplete for the final morph */
 #actor-3d-stunt-double.is-logo-final-state {
     transform-style: flat;
-    transform: none !important; /* Forces it flat */
+    /* Overriding any leftover 3D transform from the Flip animation */
+    transform: none !important; 
 }
 
 #actor-3d-stunt-double.is-logo-final-state .face {
     background: transparent !important;
     border: none !important;
+    transition: background 0.3s ease, border 0.3s ease; /* Smooth transition */
 }
 
 #actor-3d-stunt-double.is-logo-final-state .face.front {
+    /* We ensure only the front face is visible and transformed into the logo */
     transform: none !important;
     opacity: 1 !important;
-    background-image: url('../images/logo.svg'); /* CRITICAL: YOUR LOGO PATH */
+    background-image: url('../images/logo.svg'); /* Path seems correct. Verify it. */
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
