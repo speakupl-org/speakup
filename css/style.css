@@ -1235,8 +1235,8 @@ body.no-scroll {
 
 /* The Outer Wrapper: Handles ONLY size and position. NO flattening properties here. */
 .summary-thumbnail-placeholder {
-    width: 150px;
-    max-width: 40%;
+    width: 250px;
+    max-width: 50%;
     aspect-ratio: 1 / 1;
     margin: 0 auto 2rem;
     position: relative; /* Good practice for containing positioned children */
