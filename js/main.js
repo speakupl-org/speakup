@@ -65,27 +65,25 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // --- 3. SCENE-BASED ANIMATIONS ---
                 textPillars.forEach((pillar, i) => {
-                    let pillarTimeline = gsap.timeline({
-                        scrollTrigger: {
-                            trigger: pillar,
-                            start: "top center+=10%",
-                            end: "bottom center-=10%",
-                            scrub: 1,
-                            onEnter: () => gsap.to(pillar, { autoAlpha: 1, duration: 0.5 }),
-                            onLeave: () => gsap.to(pillar, { autoAlpha: 0, duration: 0.5 }),
-                            onEnterBack: () => gsap.to(pillar, { autoAlpha: 1, duration: 0.5 }),
-                            onLeaveBack: () => gsap.to(pillar, { autoAlpha: 0, duration: 0.5 }),
-                        }
-                    });
-                    
-                    if (i === 0) {
-                        pillarTimeline.to(actor3D, { rotationY: 120, rotationX: 10, scale: 1.1, ease: "power2.inOut" });
-                    } else if (i === 1) {
-                        pillarTimeline.to(actor3D, { rotationY: -120, rotationX: -20, scale: 1.2, ease: "power2.inOut" });
-                    } else if (i === 2) {
-                        pillarTimeline.to(actor3D, { rotationY: 0, rotationX: 0, scale: 1, ease: "power3.inOut" });
-                    }
-                });
+    let pillarTimeline = gsap.timeline({
+        scrollTrigger: {
+            trigger: pillar,
+            start: "top center+=10%",
+            end: "bottom center-=10%",
+            scrub: 1.5, // <-- KNOB 1: Increased for a more buttery feel
+            // ... onEnter/onLeave callbacks remain the same
+        }
+    });
+    
+    // KNOB 2: Let's use a more pronounced ease for a premium feel
+    if (i === 0) {
+        pillarTimeline.to(actor3D, { rotationY: 120, rotationX: 10, scale: 1.1, ease: "power3.inOut" });
+    } else if (i === 1) {
+        pillarTimeline.to(actor3D, { rotationY: -120, rotationX: -20, scale: 1.2, ease: "power3.inOut" });
+    } else if (i === 2) {
+        pillarTimeline.to(actor3D, { rotationY: 0, rotationX: 0, scale: 1, ease: "expo.inOut" }); // <-- Dramatic final ease
+    }
+});
                 
                 // --- 4. THE "IGLOO" EXIT/RETURN ANIMATION (Fully Robust) ---
                 let isFlipped = false; 
@@ -113,13 +111,13 @@ document.addEventListener('DOMContentLoaded', function () {
                             isFlipped = false;
                             const state = Flip.getState(actor3D, {props: "scale,opacity"});
                             visualsCol.appendChild(actor3D);
-                            Flip.from(state, {
-                                duration: 1.2,
-                                ease: "power2.inOut",
-                                scale: true,
-                                onStart: () => {
-                                    visualsCol.classList.remove('is-exiting');
-                                }
+                            // In the Flip.from(...) calls for both onEnter and onLeaveBack:
+Flip.from(state, {
+    duration: 1.2,
+    ease: "expo.inOut", // <-- Use a matching or complementary ease
+    scale: true,
+    // ...
+});
                             });
                         }
                     }
