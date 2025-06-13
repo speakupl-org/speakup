@@ -1,217 +1,185 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fluência e Confiança: O Método Speak Up</title> 
+document.addEventListener('DOMContentLoaded', function () {
+    // --- Menu & Footer code (unchanged) ---
+    const openButton = document.getElementById('menu-open-button');
+    const closeButton = document.getElementById('menu-close-button');
+    const menuScreen = document.getElementById('menu-screen');
+    const htmlElement = document.documentElement;
+    const body = document.body;
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
-    
-</head>
-<body>
+    function openMenu() {
+        htmlElement.classList.add('menu-open');
+        body.classList.add('menu-open');
+        menuScreen.setAttribute('aria-hidden', 'false');
+    }
 
-<!-- =========================================================================
-   PART 1: HEADER (Unchangeed)
-   ========================================================================= -->
-<header class="site-header-pill">
-    <a href="index.html" class="logo-area" aria-label="Speak Up Homepage">
-        <img src="images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon">
-        <span class="logo-text">Speak <span class="up">Up</span></span>
-    </a>
-    <div class="header-desktop-nav-container">
-        <nav class="desktop-nav">
-            <ul>
-                <li><a href="o-metodo.html">O Método</a></li>
-                <li><a href="minha-jornada.html">Minha Jornada</a></li>
-                <li><a href="recursos.html">Recursos</a></li>
-            </ul>
-        </nav>
-        <a href="contato.html" class="cta-button header-cta-desktop">Agende uma Conversa</a>
-    </div>
-    <button class="menu-toggle-button" id="menu-open-button" aria-label="Open menu" aria-expanded="false">
-        <span class="hamburger-line"></span>
-        <span class="hamburger-line"></span>
-        <span class="hamburger-line"></span>
-    </button>
-</header>
+    function closeMenu() {
+        htmlElement.classList.remove('menu-open');
+        body.classList.remove('menu-open');
+        menuScreen.setAttribute('aria-hidden', 'true');
+    }
 
-<!-- =========================================================================
-   PART 2: FULLSCREEN MENU (Unchanged)
-   ========================================================================= -->
-<div class="fullscreen-menu" id="menu-screen" aria-hidden="true">
-    <div class="fullscreen-menu-header">
-        <a href="index.html" class="logo-area" aria-label="Speak Up Homepage">
-            <img src="images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon">
-        </a>
-        <button class="menu-toggle-button" id="menu-close-button" aria-label="Close menu" aria-expanded="true">
-            <span class="close-line"></span>
-            <span class="close-line"></span>
-        </button>
-    </div>
-    <nav class="fullscreen-menu-nav">
-        <ul>
-            <li><a href="o-metodo.html">O Método</a></li>
-            <li><a href="minha-jornada.html">Minha Jornada</a></li>
-            <li><a href="recursos.html">Recursos</a></li>
-            <li><a href="contato.html">Contato</a></li>
-        </ul>
-    </nav>
-    <div class="fullscreen-menu-action-box">
-        <a href="contato.html" class="cta-button">Agende uma Conversa</a>
-        <a href="https://wa.me/YOURPHONENUMBER" target="_blank" class="link-subtle whatsapp-link">Conversar no WhatsApp</a>
-    </div>
-</div>
+    if (openButton && closeButton && menuScreen) {
+        openButton.addEventListener('click', openMenu);
+        closeButton.addEventListener('click', closeMenu);
+    }
 
-<main>
-    <!-- =========================================================================
-       PAGE HEADER (Unchanged)
-       ========================================================================= -->
-    <header class="page-header">
-        <div class="container">
-            <h1 class="page-title">Um Método Para Quem Fala</h1>
-            <p class="page-subtitle">Não se trata de aprender mais regras. Trata-se de destravar a confiança para usar o inglês que já existe em você. Vamos focar no que realmente importa: a sua voz.</p>
-        </div>
-    </header>
-    
-    <!-- =========================================================================
-       PILLARS SECTION - UPDATED FOR THE "IGLOO" EFFECT
-       ========================================================================= -->
-    <section class="method-pillars">
-        <div class="container">
-            <div class="scrolly-container">
+    const yearSpan = document.getElementById('current-year');
+    if (yearSpan) {
+        yearSpan.textContent = new Date().getFullYear();
+    }
 
-             <!-- Column 1: Pinned 3D Visual -->
-<div class="pillar-visuals-col">
-    <div class="scene-3d">
-        <div class="object-3d" id="actor-3d">
-            <!-- The 6 faces of our starting cube -->
-            <div class="face front"></div>
-            <div class="face back"></div>
-            <div class="face right"></div>
-            <div class="face left"></div>
-            <div class="face top"></div>
-            <div class="face bottom"></div>
-        </div>
-    </div>
-</div>
+    // --- ANIMATION LOGIC ---
+    function setupAnimations() {
+        gsap.registerPlugin(ScrollTrigger, Flip);
 
-                <!-- Column 2: Scrolling Text - UPGRADED FOR ART DIRECTION -->
-<div class="pillar-text-col">
-    <!-- Pillar 1 -->
-    <div class="pillar-text-content" data-pillar="1">
-        <div class="text-anim-wrapper">
-            <span class="pillar-number">Pilar 1</span>
-            <div class="pillar-line"></div> <!-- ADD THIS LINE -->
-            <h2 class="pillar-title">Diagnóstico e Imersão</h2>
-            <p class="pillar-paragraph">Primeiro, eu escuto. Entendemos suas metas, barreiras e o que te move. A partir daqui, criamos um plano de imersão focado, feito unicamente para você.</p>
-        </div>
-    </div>
-    <!-- Pillar 2 -->
-    <div class="pillar-text-content" data-pillar="2">
-        <div class="text-anim-wrapper">
-            <span class="pillar-number">Pilar 2</span>
-            <div class="pillar-line"></div> <!-- ADD THIS LINE -->
-            <h2 class="pillar-title">Conexão e Conversação</h2>
-            <p class="pillar-paragraph">A prática é a prioridade. Desde o primeiro dia, focamos em conversas reais sobre temas do seu universo, transformando teoria em confiança prática.</p>
-        </div>
-    </div>
-    <!-- Pillar 3 -->
-    <div class="pillar-text-content" data-pillar="3">
-        <div class="text-anim-wrapper">
-            <span class="pillar-number">Pilar 3</span>
-            <div class="pillar-line"></div> <!-- ADD THIS LINE -->
-            <h2 class="pillar-title">Feedback e Evolução</h2>
-            <p class="pillar-paragraph">Cada aula é um passo à frente. Meu feedback é constante e construtivo. Juntos, ajustamos o plano para garantir que sua evolução nunca pare.</p>
-        </div>
-    </div>
-</div>
-    </section>
-    
-    <!-- =========================================================================
-       SUMMARY - UPDATED FOR THE "IGLOO" EFFECT
-       ========================================================================= -->
-    <section class="method-summary">
-        <div class="container">
-    <!-- UPDATE: We're adding a wrapper inside the placeholder. -->
-    <div class="summary-thumbnail-placeholder">
-        <div class="summary-thumbnail-clipper">
-            <!-- The 3D object will land here after the Flip animation, 
-                 but we don't put it here ourselves. -->
-        </div>
-    </div>
-    
-    <h3 class="summary-title">Confiança, Clareza e Conexão.</h3>
-    <p>Estes três pilares formam uma jornada que não apenas ensina inglês, mas te devolve a segurança para se expressar no mundo.</p>
-</div>
-    </section>
+        const ctx = gsap.context(() => {
+            // --- Element Validation ---
+            const visualsCol = document.querySelector(".pillar-visuals-col");
+            const textCol = document.querySelector(".pillar-text-col");
+            const actor3D = document.getElementById("actor-3d");
+            const textPillars = gsap.utils.toArray('.pillar-text-content');
+            const summaryContainer = document.querySelector(".method-summary");
+            const summaryClipper = document.querySelector(".summary-thumbnail-clipper");
 
-    <!-- =========================================================================
-       FINAL CTA (Unchanged)
-       ========================================================================= -->
-    <section class="final-cta">
-         <div class="container">
-            <h2 class="final-cta-title">Entendeu o "como"?</h2>
-            <p class="reassurance-text">Agora que você conhece o método, o próximo passo é vivenciá-lo. Vamos ver como ele se aplica aos seus objetivos específicos.</p>
-            <a href="contato.html" class="cta-button cta-button-large final-cta-button">Agende sua conversa</a>
-        </div>
-    </section>
+            if (!visualsCol || !textCol || !actor3D || !summaryContainer || !summaryClipper || textPillars.length === 0) {
+                console.error("Scrollytelling animations aborted: One or more required elements are missing from the DOM.");
+                return;
+            }
 
-</main>
+            let isFlipped = false;
 
-<!-- =========================================================================
-   FOOTER (Unchanged)
-   ========================================================================= -->
-<footer class="site-footer">
-    <div class="container">
-        <div class="footer-content-block">
-            <div class="footer-grid">
-                <div class="footer-column footer-brand">
-                    <a href="index.html" class="logo-area-footer" aria-label="Speak Up Homepage">
-                        <img src="images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon-footer">
-                        <span class="logo-text-footer">Speak <span class="up">Up</span></span>
-                    </a>
-                    <p class="footer-tagline">Destravando o inglês de profissionais brasileiros. Foco na conexão, não na perfeição.</p>
-                </div>
-                <div class="footer-column footer-nav">
-                    <h4 class="footer-heading">Navegue</h4>
-                    <ul>
-                        <li><a href="o-metodo.html">O Método</a></li>
-                        <li><a href="minha-jornada.html">Minha Jornada</a></li>
-                        <li><a href="recursos.html">Recursos</a></li>
-                        <li><a href="contato.html">Agende uma Conversa</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column footer-contact">
-                    <h4 class="footer-heading">Contato & Legal</h4>
-                    <p>
-                        CNPJ: 60.423.318/0001-07<br>
-                        E-mail: speakup@speakupl.org<br>
-                        <a href="https://wa.me/5521975046106" target="_blank" class="footer-contact-link">WhatsApp: +55 21 975046106</a>
-                    </p>
-                    <div class="footer-socials">
-                        <a href="#" aria-label="LinkedIn" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg></a>
-                        <a href="#" aria-label="Instagram" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="footer-bottom-bar">
-            <p>© <span id="current-year">2024</span> Speak Up por Luiz. Todos os direitos reservados. | <a href="politica-de-privacidade.html">Política de Privacidade</a></p>
-        </div>
-    </div>
-</footer>
+            ScrollTrigger.matchMedia({
+                // --- DESKTOP ANIMATIONS ---
+                "(min-width: 769px)": function () {
+                    gsap.set(textPillars, { autoAlpha: 0 });
+                    gsap.set(textPillars[0], { autoAlpha: 1 });
 
-<!-- These are essential for the animation. They must be loaded before your main.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<!-- UPDATE: Added the GSAP Flip Plugin. This is required for the "Exit" animation. -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Flip.min.js"></script>
+                    // Decorative line animations
+                    textPillars.forEach((pillar) => {
+                        const line = pillar.querySelector('.pillar-line');
+                        if (line) {
+                            ScrollTrigger.create({
+                                trigger: pillar,
+                                start: "top 60%",
+                                end: "bottom 40%",
+                                onEnter: () => gsap.to(line, { scaleX: 1, duration: 0.8, ease: "power4.out" }),
+                                onLeave: () => gsap.to(line, { scaleX: 0, transformOrigin: 'right', duration: 0.6, ease: "power4.in" }),
+                                onEnterBack: () => gsap.to(line, { scaleX: 1, transformOrigin: 'left', duration: 0.8, ease: "power4.out" }),
+                                onLeaveBack: () => gsap.to(line, { scaleX: 0, duration: 0.6, ease: "power4.in" })
+                            });
+                        }
+                    });
 
-<!-- Your main JS file where you will write the new GSAP code -->
-<script defer src="js/main.js"></script>
+                    // Master timeline for cube + text fades
+                    const masterTimeline = gsap.timeline({
+                        defaults: { duration: 1, ease: "power2.inOut" }
+                    });
 
-</body>
-</html>
+                    masterTimeline
+                        .to(actor3D, { rotationY: 20, rotationX: -15, scale: 1.0 })
+                        .to(textPillars[0], { autoAlpha: 1 }, "<")
+                        .to(textPillars[0], { autoAlpha: 0 })
+                        .to(textPillars[1], { autoAlpha: 1 }, "<")
+                        .to(actor3D, { rotationY: 120, rotationX: 10, scale: 1.1 }, "<")
+                        .to(textPillars[1], { autoAlpha: 0 })
+                        .to(textPillars[2], { autoAlpha: 1 }, "<")
+                        .to(actor3D, { rotationY: -120, rotationX: -20, scale: 1.2 }, "<")
+                        .addLabel("finalState")
+                        .to(textPillars[2], { autoAlpha: 0 })
+                        .to(actor3D, { rotationY: 0, rotationX: 0, scale: 1.0 }, "<");
+
+                    const mainScrubber = ScrollTrigger.create({
+                        trigger: textCol,
+                        pin: visualsCol,
+                        start: "top top",
+                        end: "bottom bottom",
+                        animation: masterTimeline,
+                        scrub: 0.8,
+                        invalidateOnRefresh: true,
+                    });
+
+                    // Smooth handoff logic with Flip
+                    ScrollTrigger.create({
+                        trigger: summaryContainer,
+                        start: "top center",
+                        onEnter: () => {
+                            if (!isFlipped) {
+                                isFlipped = true;
+                                mainScrubber.disable();
+
+                                const state = Flip.getState(actor3D, { props: "transform" });
+                                summaryClipper.appendChild(actor3D);
+                                visualsCol.classList.add('is-exiting');
+
+                                Flip.from(state, {
+                                    duration: 0.8,
+                                    ease: "power2.inOut",
+                                    absolute: true,
+                                    onComplete: () => gsap.set(actor3D, { clearProps: "transform" })
+                                });
+                            }
+                        },
+                        onLeaveBack: () => {
+                            if (isFlipped) {
+                                isFlipped = false;
+
+                                const state = Flip.getState(actor3D, { props: "transform" });
+                                visualsCol.appendChild(actor3D);
+                                visualsCol.classList.remove('is-exiting');
+
+                                Flip.from(state, {
+                                    duration: 0.8,
+                                    ease: "power2.out",
+                                    absolute: true,
+                                    onComplete: () => {
+                                        mainScrubber.enable();
+                                    }
+                                });
+                            }
+                        }
+                    });
+                },
+
+                // --- MOBILE CLEANUP ---
+                "(max-width: 768px)": function () {
+                    ScrollTrigger.getAll().forEach(st => st.kill());
+                    gsap.killTweensOf([actor3D, ...textPillars, '.pillar-line']);
+                    gsap.set(textPillars, { clearProps: "all" });
+                    gsap.set(actor3D, { clearProps: "all" });
+                    gsap.set('.pillar-line', { clearProps: "all" });
+
+                    if (visualsCol && !visualsCol.contains(actor3D)) {
+                        visualsCol.appendChild(actor3D);
+                    }
+                    visualsCol.classList.remove('is-exiting');
+                    isFlipped = false;
+                }
+            });
+        });
+
+        return () => ctx.revert();
+    }
+
+    // --- Readiness Gate ---
+    function initialCheck() {
+        if (window.gsap && window.ScrollTrigger && window.Flip) {
+            setupAnimations();
+        } else {
+            let attempts = 0;
+            const maxAttempts = 30;
+            const interval = setInterval(() => {
+                attempts++;
+                if (window.gsap && window.ScrollTrigger && window.Flip) {
+                    clearInterval(interval);
+                    setupAnimations();
+                } else if (attempts >= maxAttempts) {
+                    clearInterval(interval);
+                    console.error("GSAP plugins failed to load in time.");
+                }
+            }, 100);
+        }
+    }
+
+    initialCheck();
+});
+
