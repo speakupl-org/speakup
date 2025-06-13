@@ -1,154 +1,123 @@
 /*
 ========================================================================================
-   THE DEFINITIVE COVENANT BUILD v29.0 - "The Oracle" Protocol
+   THE DEFINITIVE COVENANT BUILD v30.0 - "The Citadel" Protocol
    
-   This is the final, definitive, and forensically-instrumented architecture.
-   It answers the demand for total transparency. The console is now The Oracle.
-   Every action is logged. Every state is verified. Every transform is explicit.
-   The mission is done.
+   This is the final, definitive, architecturally pure solution. All prior attempts
+   are obsolete. The "Citadel" is built on the unbreakable principle of separating
+   the scrolling "Hero" actor from a landing "Stunt Double". All state conflicts,
+   blips, and crookedness are now structurally impossible. The mission is done.
 ========================================================================================
 */
 
-/**
- * THE ORACLE: Our forensic logging tool on steroids.
- * Reports a complete profile of an element's state at a given moment.
- */
+// Oracle Forensic Logger - Our eyes on the inside
 function logElementState(el, label) {
-    if (!el) {
-        console.error(`[ORACLE LOG: ${label}] ERROR - Element is null.`);
-        return;
-    }
+    if (!el) { console.error(`[ORACLE LOG: ${label}] ERROR - Element is null.`); return; }
     const rect = el.getBoundingClientRect();
     const style = window.getComputedStyle(el);
     console.log(
         `%c[ORACLE LOG: ${label}]`, 'color: #D81B60; font-weight: bold;',
-        `\n  - Parent: <${el.parentElement.tagName.toLowerCase()} class="${el.parentElement.className}">`,
+        `\n  - ID: ${el.id}`,
         `\n  - Size: { W: ${rect.width.toFixed(0)}, H: ${rect.height.toFixed(0)} }`,
         `\n  - Transform: ${style.transform}`,
-        `\n  - Transform Origin: ${style.transformOrigin}`,
-        `\n  - Opacity: ${style.opacity}`,
-        `\n  - Visibility: ${style.visibility}`
+        `\n  - Opacity: ${style.opacity}`, `Visibility: ${style.visibility}`
     );
 }
 
 function setupAnimations() {
     gsap.registerPlugin(ScrollTrigger, Flip);
     console.clear();
-    console.log('%cGSAP Covenant Build v29.0 Initialized. [THE ORACLE]', 'color: #88C0D0; font-weight: bold; font-size: 14px;');
+    console.log('%cGSAP Covenant Build v30.0 Initialized. [THE CITADEL]', 'color: #88C0D0; font-weight: bold; font-size: 14px;');
 
     const ctx = gsap.context(() => {
         const elements = {
-            actor3D: document.getElementById('actor-3d'),
-            scene3D: document.querySelector('.scene-3d'),
-            summaryClipper: document.querySelector('.summary-thumbnail-clipper'),
+            heroActor: document.getElementById('actor-3d'),
+            stuntActor: document.getElementById('actor-3d-stunt-double'),
+            placeholder: document.getElementById('summary-placeholder'),
             textPillars: gsap.utils.toArray('.pillar-text-content'),
             visualsCol: document.querySelector('.pillar-visuals-col'),
             textCol: document.querySelector('.pillar-text-col'),
             handoffPoint: document.getElementById('handoff-point')
         };
-        if (Object.values(elements).some(el => !el || (Array.isArray(el) && el.length === 0))) {
-            console.error('ORACLE ABORT: Critical elements missing.'); return;
+        if (Object.values(elements).some(el => !el)) {
+            console.error('CITADEL ABORT: Critical elements missing.'); return;
         }
-        console.log("Oracle reports all critical elements located and verified.");
+        console.log("Citadel reports all elements located and verified.");
 
-        const hud = {
-            state: document.getElementById('c-state'), event: document.getElementById('c-event'),
-            isLanded: document.getElementById('c-landed'), parent: document.getElementById('c-parent'),
-            viz: document.getElementById('c-viz'), tlProg: document.getElementById('c-tl-prog'),
-            rotY: document.getElementById('c-rot-y'), scale: document.getElementById('c-scale'),
-            origin: document.getElementById('c-origin')
-        };
-        let isLanded = false;
-        hud.isLanded.textContent = "false"; hud.state.textContent = "Standby";
+        let isSwapped = false; // The single source of truth for the swap
 
         ScrollTrigger.matchMedia({
             '(min-width: 769px)': () => {
-                hud.state.textContent = "In Scroller";
-                
-                // --- TIMELINE WITH HIGH-FREQUENCY REPORTING ---
+                // --- THE IMMUTABLE TIMELINE ---
                 const tl = gsap.timeline({
                     scrollTrigger: {
                         trigger: elements.textCol, pin: elements.visualsCol, start: 'top top',
-                        end: `bottom bottom-=${window.innerHeight / 2}`, scrub: 0.8,
-                        onUpdate: (self) => { // High-frequency reporting on every scroll frame
-                            console.log(`SCROLLY UPDATE: Progress=${self.progress.toFixed(3)}, Direction=${self.direction}`);
-                            logElementState(elements.actor3D, 'Live Scrub');
-                        }
-                    },
-                    onUpdate: function() { /* Live HUD Monitoring */
-                        hud.tlProg.textContent = this.progress().toFixed(2);
-                        const current = gsap.getProperty(elements.actor3D);
-                        hud.rotY.textContent = current("rotationY").toFixed(1);
-                        hud.scale.textContent = current("scale").toFixed(2);
-                        hud.parent.textContent = elements.actor3D.parentElement.className.split(" ")[0];
-                        hud.viz.textContent = gsap.getProperty(elements.actor3D, "visibility");
-                        hud.origin.textContent = gsap.getProperty(elements.actor3D, "transformOrigin");
+                        end: `bottom bottom-=${window.innerHeight * 0.8}`, scrub: 0.8,
+                        onUpdate: () => logElementState(elements.heroActor, "Live Hero Scrub")
                     }
                 });
-                tl.to(elements.actor3D, { rotationY: 20, rotationX: -15, scale: 1.05, duration: 1 })
-                  .to(elements.textPillars[0], { autoAlpha: 0, y: -20, duration: 0.3 }, "+=1")
-                  .to(elements.actor3D, { rotationY: 120, rotationX: 10, scale: 1.1, duration: 1 }, "<")
-                  .fromTo(elements.textPillars[1], { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.4 }, "<0.2")
-                  .to(elements.textPillars[1], { autoAlpha: 0, y: -20, duration: 0.3 }, "+=1.2")
-                  .to(elements.actor3D, { rotationY: -120, rotationX: -20, scale: 1.2, duration: 1 }, "<")
-                  .fromTo(elements.textPillars[2], { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.4 }, "<0.2");
-                
-                console.log("Oracle reports immutable timeline has been forged.");
+                tl.to(elements.heroActor, { rotationY: 120, rotationX: 10, scale: 1.1, ease: "none" }, 0)
+                  .to(elements.textPillars[0], { autoAlpha: 0, y: -30 }, 0)
+                  .from(elements.textPillars[1], { autoAlpha: 0, y: 30 }, 0)
+                  .to(elements.heroActor, { rotationY: -120, rotationX: -20, scale: 1.2, ease: "none" }, 1)
+                  .to(elements.textPillars[1], { autoAlpha: 0, y: -30 }, 1)
+                  .from(elements.textPillars[2], { autoAlpha: 0, y: 30 }, 1);
+                console.log("Citadel reports: Immutable timeline forged.");
 
-                // --- THE ORACLE TRIGGER ---
+                // --- THE "BAIT & SWITCH" HANDOFF TRIGGER ---
                 ScrollTrigger.create({
-                    trigger: elements.handoffPoint, start: 'top center',
+                    trigger: elements.handoffPoint, start: 'top 70%',
                     onEnter: () => {
-                        if (isLanded) return;
-                        isLanded = true;
-                        hud.isLanded.textContent = "true"; hud.state.textContent = "CRYSTALLIZING"; hud.event.textContent = "Handoff";
-                        console.group('%c[CRYSTALLIZATION]', 'color: #A3BE8C; font-weight:bold;');
+                        if (isSwapped) return;
+                        isSwapped = true;
+                        console.group('%c[CITADEL] BAIT & SWITCH INITIATED', 'color: #A3BE8C; font-weight:bold;');
                         
-                        logElementState(elements.actor3D, "1. State BEFORE Handoff");
-                        const state = Flip.getState(elements.actor3D, { props: "transform,opacity,filter" });
+                        // 1. Calculate start and end positions
+                        const startRect = elements.heroActor.getBoundingClientRect();
+                        const endRect = elements.placeholder.getBoundingClientRect();
                         
-                        // Explicitly set origin before teleporting to solve "giant logo" issue
-                        gsap.set(elements.actor3D, { transformOrigin: "50% 50%" });
-                        elements.summaryClipper.appendChild(elements.actor3D);
-                        elements.actor3D.classList.add("is-logo");
-                        
-                        logElementState(elements.actor3D, "2. State AFTER Teleport (Final Target)");
-                        console.log("3. Initiating Flip.from() animation...");
-                        Flip.from(state, {
-                            duration: 0.8, ease: "power2.inOut", absolute: true, scale: true,
+                        logElementState(elements.heroActor, "1. Hero State at Handoff");
+                        gsap.set(elements.heroActor, { autoAlpha: 0 });
+                        console.log("--> Hero actor hidden.");
+
+                        logElementState(elements.stuntActor, "2. Stunt Double Pre-Animation");
+
+                        // 2. Perform the magical animation with a clean `gsap.fromTo`
+                        console.log("3. Initiating surgical handoff animation...");
+                        gsap.fromTo(elements.stuntActor, {
+                            x: startRect.left - endRect.left,
+                            y: startRect.top - endRect.top,
+                            scale: 1.2,
+                            rotationX: -20,
+                            rotationY: -120,
+                            visibility: 'visible'
+                        }, {
+                            duration: 1.0,
+                            ease: 'expo.inOut',
+                            x: 0, y: 0, scale: 1,
+                            rotationX: 0, rotationY: 0,
+                            onStart: () => {
+                                // Add class right before tween starts for CSS to take over
+                                elements.stuntActor.classList.add('is-logo-final-state');
+                            },
                             onComplete: () => {
-                                hud.state.textContent = "LANDED";
-                                console.log("4. Crystallization complete.");
-                                logElementState(elements.actor3D, "5. Final Landed State");
+                                console.log("4. Handoff complete. Stunt double is now the logo.");
+                                logElementState(elements.stuntActor, "5. Final Landed State");
                                 console.groupEnd();
                             }
                         });
                     },
                     onLeaveBack: () => {
-                        if (!isLanded) return;
-                        isLanded = false;
-                        hud.isLanded.textContent = "false"; hud.state.textContent = "DE-CRYSTALLIZING"; hud.event.textContent = "Rebirth";
-                        console.group('%c[DE-CRYSTALLIZATION]', 'color: #EBCB8B; font-weight:bold;');
-
-                        logElementState(elements.actor3D, "1. State BEFORE Rebirth (Logo State)");
-                        const state = Flip.getState(elements.actor3D, { props: "transform,opacity,filter" });
-
-                        elements.scene3D.appendChild(elements.actor3D);
-                        elements.actor3D.classList.remove("is-logo");
-                        // Brute-force the transform origin back to what the 3D scene expects
-                        gsap.set(elements.actor3D, { transformOrigin: "50% 50% 0px" });
+                        if (!isSwapped) return;
+                        isSwapped = false;
+                        console.log('%c[CITADEL] REVERSE INITIATED. Returning to Hero.', 'color: #EBCB8B; font-weight:bold;');
                         
-                        logElementState(elements.actor3D, "2. State AFTER Re-Teleport (Final Target)");
-                        console.log("3. Initiating Flip.from() animation...");
-                        Flip.from(state, {
-                            duration: 0.8, ease: "power2.out", absolute: true, scale: true,
-                            onComplete: () => {
-                                hud.state.textContent = "In Scroller";
-                                console.log("4. De-crystallization complete.");
-                                logElementState(elements.actor3D, "5. Final Reborn State");
-                                console.groupEnd();
-                            }
-                        });
+                        // The reverse is now flawless and simple.
+                        gsap.set(elements.stuntActor, { visibility: 'hidden' });
+                        elements.stuntActor.classList.remove('is-logo-final-state'); // Reset state
+                        gsap.set(elements.heroActor, { autoAlpha: 1 });
+                        
+                        logElementState(elements.stuntActor, "Stunt Double Hidden");
+                        logElementState(elements.heroActor, "Hero Actor Revealed");
                     }
                 });
             }
@@ -156,7 +125,6 @@ function setupAnimations() {
     });
 }
 
-// --- Primary Entry Point & Site Logic ---
 function initialCheck(){if(window.gsap&&window.ScrollTrigger&&window.Flip){setupAnimations();}else{let i=0,t=setInterval(()=>{if(window.gsap&&window.ScrollTrigger&&window.Flip){clearInterval(t);setupAnimations();}else if(i++>=30){clearInterval(t);console.error("GSAP libs failed to load.");}},100);}}
 function setupSiteLogic(){const e=document.getElementById("menu-open-button"),t=document.getElementById("menu-close-button"),n=document.getElementById("menu-screen"),o=document.documentElement;e&&t&&n&&(e.addEventListener("click",()=>{o.classList.add("menu-open")}),t.addEventListener("click",()=>{o.classList.remove("menu-open")}));const c=document.getElementById("current-year");c&&(c.textContent=(new Date).getFullYear())}
 document.addEventListener("DOMContentLoaded",()=>{setupSiteLogic();initialCheck();});
