@@ -5,7 +5,7 @@
    This build corrects a critical `SyntaxError` from v14.0 caused by a duplicate
    variable declaration (`states`). The robust "Rebirth Lock" logic remains identical
    and can now execute as intended, providing the definitive fix for the reverse-scroll
-   race condition. This is the final, working gear.
+   race condition. This is the final, working ge.
 ========================================================================================
 */
 
