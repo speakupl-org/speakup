@@ -1,19 +1,15 @@
 /*
 ========================================================================================
-   THE DEFINITIVE COVENANT BUILD v35.0 - "The Overlord" Protocol
+   THE DEFINITIVE COVENANT BUILD v36.0 - "The Overlord" Protocol Enhanced
    
-   All subsequent and prior protocols are superseded. The "Overlord" restores
-   and perfects the v33.0 "Pantheon" multi-trigger architecture. The Oracle is
-   upgraded to v35.0, providing unprecedented console AND HUD telemetry for
-   every critical system, including granular text visibility. The text animation
-   and handoff logic have been reinforced and perfected. This is the final and
-   most advanced form. We only go higher from here.
+   Building on v35.0, this version introduces deeper telemetry, advanced animations,
+   and modular architecture. The Oracle v36.0 now tracks scroll position, active pillars,
+   and more, with enhanced HUD and console reporting. Only sophistication—no shortcuts.
 ========================================================================================
 */
 
-// Oracle v35.0 - The "Omni-Oracle"
+// Oracle v36.0 - The "Omni-Oracle" Enhanced
 const Oracle = {
-    // RESTORED: Full, verbose console logger
     log: (el, label) => {
         if (!el) { console.error(`%c[ORACLE LOG: ${label}] ERROR - Element is null.`, 'color: #BF616A;'); return; }
         const style = window.getComputedStyle(el);
@@ -21,20 +17,20 @@ const Oracle = {
             scale: gsap.getProperty(el, "scale"),
             rotationX: gsap.getProperty(el, "rotationX"),
             rotationY: gsap.getProperty(el, "rotationY"),
+            z: gsKy.getProperty(el, "z")
         };
         console.log(
             `%c[ORACLE LOG: ${label}]`, 'color: #D81B60; font-weight: bold;',
             `\n  - ID: ${el.id || el.className}`,
-            `\n  - Transform: { RotX: ${transform.rotationX.toFixed(1)}, RotY: ${transform.rotationY.toFixed(1)}, Scale: ${transform.scale.toFixed(2)} }`,
-            `\n  - Opacity: ${style.opacity}`, `| Visibility: ${style.visibility}`
+            `\n  - Transform: { RotX: ${transform.rotationX.toFixed(1)}, RotY: ${transform.rotationY.toFixed(1)}, Scale: ${transform.scale.toFixed(2)}, Z: ${transform.z.toFixed(1)} }`,
+            `\n  - Opacity: ${style.opacity}`, `| Visibility: ${style.visibility}`,
+            `\n  - Scroll: ${(window.scrollY / document.body.scrollHeight * 100).toFixed(1)}%`
         );
     },
-    group: (label) => console.group(`%c[ORACLE ACTION: ${label}]`, 'color: #A3BE8C; font-weight:bold;'),
+    group: (label) => console.group(`%c[ORACLE ACTION: ${label}]`, 'color: #A3BE8C; font-weight: bold;'),
     groupEnd: () => console.groupEnd(),
     report: (message) => console.log(`%c[CITADEL REPORT]`, 'color: #88C0D0; font-weight: bold;', message),
     warn: (message) => console.warn(`%c[CITADEL WARNING]`, 'color: #EBCB8B;', message),
-
-    // NEW: Function to update any text field in the HUD
     updateHUD: (id, value, color = '#E5E9F0') => {
         const el = document.getElementById(id);
         if (el) {
@@ -44,132 +40,199 @@ const Oracle = {
     }
 };
 
+// Utility to safely get elements
+const getElement = (selector, isArray = false) => {
+    try {
+        const result = isArray ? gsap.utils.toArray(selector) : document.querySelector(selector);
+        if (!result || (isArray && !result.length)) throw new Error(`Element(s) not found: ${selector}`);
+        return result;
+    } catch (e) {
+        Oracle.warn(e.message);
+        return null;
+    }
+};
+
+// Hero actor animation setup
+const setupHeroActor = (elements, masterTl) => {
+    masterTl.to(elements.heroActor, {
+        rotationY: 120,
+        rotationX: 10,
+        scale: 1.1,
+        ease: "power2.inOut",
+        duration: 2
+    }).to(elements.heroActor, {
+        rotationY: -120,
+        rotationX: -20,
+        scale: 1.2,
+        ease: "power2.inOut",
+        duration: 2
+    });
+};
+
+// Text pillars animation with 3D effects
+const setupTextPillars = (elements) => {
+    elements.pillars.forEach((pillar, index) => {
+        const wrapper = elements.textWrappers[index];
+        if (index > 0) gsap.set(wrapper, { autoAlpha: 0, y: 40, rotationX: -15 });
+
+        if (index < elements.pillars.length - 1) {
+            const nextWrapper = elements.textWrappers[index + 1];
+            gsap.timeline({
+                scrollTrigger: {
+                    trigger: pillar,
+                    start: "top 80%",
+                    end: "+=120%",
+                    scrub: 1.5,
+                    onUpdate: (self) => {
+                        const progress = self.progress.toFixed(2);
+                        Oracle.updateHUD(`c-pillar${index+1}-opacity`, gsap.getProperty(wrapper, 'autoAlpha').toFixed(2));
+                        Oracle.updateHUD(`c-pillar${index+2}-opacity`, gsap.getProperty(nextWrapper, 'autoAlpha').toFixed(2));
+                        Oracle.updateHUD('c-active-pillar', `P${index + 1}`, '#A3BE8C');
+                        Oracle.updateHUD('c-scroll-progress', `${(self.progress * 100).toFixed(0)}%`);
+                    }
+                }
+            })
+            .to(wrapper, { autoAlpha: 0, y: -40, rotationX: 15, ease: "power2.in" })
+            .to(nextWrapper, { autoAlpha: 1, y: 0, rotationX: 0, ease: "power2.out" }, "<");
+        }
+    });
+};
+
+// Handoff mechanism with enhanced transition
+const setupHandoff = (elements, masterTl) => {
+    let isSwapped = false;
+    Oracle.updateHUD('c-swap-flag', 'FALSE', '#BF616A');
+
+    ScrollTrigger.create({
+        trigger: elements.handoffPoint,
+        start: 'top 70%',
+        onEnter: () => {
+            if (isSwapped) return;
+            isSwapped = true;
+            Oracle.updateHUD('c-swap-flag', 'TRUE', '#A3BE8C');
+            Oracle.updateHUD('c-event', 'HANDOFF');
+            Oracle.group('BAIT & SWITCH INITIATED');
+
+            masterTl.scrollTrigger.disable();
+
+            const startState = Flip.getState(elements.heroActor);
+            const endState = Flip.getState(elements.stuntActor);
+            Oracle.log(elements.heroActor, "Hero State (Pre-Swap)");
+
+            gsap.set(elements.stuntActor, { autoAlpha: 1 });
+            Flip.from(endState, {
+                targets: elements.stuntActor,
+                duration: 1.8,
+                ease: 'power4.inOut',
+                onStart: () => gsap.to(elements.heroActor, { autoAlpha: 0, scale: 0.95, duration: 0.5 }),
+                onEnter: targets => gsap.from(targets, { ...startState, rotationY: '+=30' }),
+                onComplete: () => {
+                    elements.stuntActor.classList.add('is-logo-final-state');
+                    Oracle.updateHUD('c-event', 'LANDED');
+                    Oracle.groupEnd();
+                }
+            });
+            gsap.to(elements.stuntActorFaces, { opacity: 0, duration: 0.6, ease: "power2.in", delay: 0.8 });
+        },
+        onLeaveBack: () => {
+            if (!isSwapped) return;
+            isSwapped = false;
+            Oracle.updateHUD('c-swap-flag', 'FALSE', '#BF616A');
+            Oracle.updateHUD('c-event', 'REVERSING');
+            Oracle.group('REVERSE HANDOFF INITIATED');
+
+            elements.stuntActor.classList.remove('is-logo-final-state');
+            gsap.set(elements.stuntActorFaces, { clearProps: "all" });
+            gsap.set(elements.stuntActor, { autoAlpha: 0 });
+
+            masterTl.scrollTrigger.enable();
+            masterTl.scrollTrigger.update();
+
+            Oracle.updateHUD('c-event', 'SCROLLING');
+            Oracle.groupEnd();
+        }
+    });
+};
+
+// Main animation setup
 function setupAnimations() {
     gsap.registerPlugin(ScrollTrigger, Flip);
     console.clear();
-    Oracle.report('GSAP Covenant Build v35.0 Initialized. [THE OVERLORD]');
+    Oracle.report('GSAP Covenant Build v36.0 Initialized. [THE OVERLORD ENHANCED]');
 
     const ctx = gsap.context(() => {
         const elements = {
-            heroActor: document.getElementById('actor-3d'),
-            stuntActor: document.getElementById('actor-3d-stunt-double'),
-            placeholder: document.getElementById('summary-placeholder'),
-            pillars: gsap.utils.toArray('.pillar-text-content'),
-            textWrappers: gsap.utils.toArray('.text-anim-wrapper'),
-            visualsCol: document.querySelector('.pillar-visuals-col'),
-            textCol: document.querySelector('.pillar-text-col'),
-            handoffPoint: document.getElementById('handoff-point'),
-            stuntActorFaces: gsap.utils.toArray('#actor-3d-stunt-double .face:not(.front)')
+            heroActor: getElement('#actor-3d'),
+            stuntActor: getElement('#actor-3d-stunt-double'),
+            placeholder: getElement('#summary-placeholder'),
+            pillars: getElement('.pillar-text-content', true),
+            textWrappers: getElement('.text-anim-wrapper', true),
+            visualsCol: getElement('.pillar-visuals-col'),
+            textCol: getElement('.pillar-text-col'),
+            handoffPoint: getElement('#handoff-point'),
+            stuntActorFaces: getElement('#actor-3d-stunt-double .face:not(.front)', true)
         };
 
-        for (const [key, el] of Object.entries(elements)) {
-            if (!el || (Array.isArray(el) && !el.length)) {
-                Oracle.warn(`OVERLORD ABORT: Critical element "${key}" not found.`); return;
-            }
+        if (Object.values(elements).some(el => !el)) {
+            Oracle.warn('OVERLORD ABORT: Missing critical elements.');
+            return;
         }
         Oracle.report("Overlord components verified.");
 
-        let isSwapped = false;
-        Oracle.updateHUD('c-swap-flag', 'FALSE', '#BF616A');
+        // Respect reduced motion preferences
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const scrubValue = prefersReducedMotion ? false : 1.5;
 
         ScrollTrigger.matchMedia({
-            '(min-width: 769px)': () => {
-                
-                // --- OVERLORD SYSTEM 1: The 3D Actor ---
+            '(min-width: 1025px)': () => {
                 const masterTl = gsap.timeline({
                     scrollTrigger: {
-                        trigger: elements.textCol, pin: elements.visualsCol,
-                        start: 'top top', end: 'bottom bottom', scrub: 1,
-                        onUpdate: () => {
+                        trigger: elements.textCol,
+                        pin: elements.visualsCol,
+                        start: 'top top',
+                        end: 'bottom bottom',
+                        scrub: scrubValue,
+                        onUpdate: (self) => {
                             Oracle.log(elements.heroActor, "Live Hero Scrub");
                             Oracle.updateHUD('c-rot-x', gsap.getProperty(elements.heroActor, "rotationX").toFixed(1));
                             Oracle.updateHUD('c-rot-y', gsap.getProperty(elements.heroActor, "rotationY").toFixed(1));
                             Oracle.updateHUD('c-scale', gsap.getProperty(elements.heroActor, "scale").toFixed(2));
+                            Oracle.updateHUD('c-scroll', `${(self.progress * 100).toFixed(0)}%`);
                         }
                     }
                 });
-                masterTl.to(elements.heroActor, { rotationY: 120, rotationX: 10, scale: 1.1, ease: "none" })
-                        .to(elements.heroActor, { rotationY: -120, rotationX: -20, scale: 1.2, ease: "none" });
 
-                // --- OVERLORD SYSTEM 2: The Text Pillars ---
-                elements.pillars.forEach((pillar, index) => {
-                    const pillarWrapper = elements.textWrappers[index];
-                    if (index > 0) { // All pillars except the first start invisible
-                        gsap.set(pillarWrapper, { autoAlpha: 0, y: 40 });
-                    }
-
-                    if (index < elements.pillars.length - 1) {
-                        const nextPillarWrapper = elements.textWrappers[index + 1];
-                        gsap.timeline({
-                            scrollTrigger: {
-                                trigger: pillar,
-                                start: "center center", // Trigger at the center of the pillar
-                                end: "+=100%", // Animate over the full height of the pillar
-                                scrub: true,
-                                onUpdate: () => {
-                                    // Live HUD updates for each text pillar's opacity
-                                    Oracle.updateHUD(`c-pillar${index+1}-opacity`, gsap.getProperty(pillarWrapper, 'alpha').toFixed(2));
-                                    Oracle.updateHUD(`c-pillar${index+2}-opacity`, gsap.getProperty(nextPillarWrapper, 'alpha').toFixed(2));
-                                }
-                            }
-                        })
-                        .to(pillarWrapper, { autoAlpha: 0, y: -40, ease: "power1.in" })
-                        .to(nextPillarWrapper, { autoAlpha: 1, y: 0, ease: "power1.out" }, "<");
-                    }
-                });
-                
-                Oracle.report("Overlord animation systems forged and telemetry online.");
-                
+                setupHeroActor(elements, masterTl);
+                setupTextPillars(elements);
                 elements.placeholder.appendChild(elements.stuntActor);
-
-                // --- OVERLORD SYSTEM 3: The Handoff Governor ---
-                ScrollTrigger.create({
-                    trigger: elements.handoffPoint, start: 'top 70%',
-                    onEnter: () => {
-                        if (isSwapped) return; isSwapped = true;
-                        Oracle.updateHUD('c-swap-flag', 'TRUE', '#A3BE8C');
-                        Oracle.updateHUD('c-event', 'HANDOFF');
-                        Oracle.group('BAIT & SWITCH INITIATED');
-                        
-                        masterTl.scrollTrigger.disable();
-
-                        const startState = Flip.getState(elements.heroActor);
-                        const endState = Flip.getState(elements.stuntActor);
-                        Oracle.log(elements.heroActor, "1. Hero State (Frozen)");
-
-                        gsap.set(elements.stuntActor, { autoAlpha: 1 });
-                        Flip.from(endState, {
-                            targets: elements.stuntActor,
-                            duration: 1.5, ease: 'power4.inOut',
-                            onStart: () => gsap.set(elements.heroActor, { autoAlpha: 0 }),
-                            onEnter: targets => gsap.from(targets, { ...startState }),
-                            onComplete: () => {
-                                elements.stuntActor.classList.add('is-logo-final-state');
-                                Oracle.updateHUD('c-event', 'LANDED');
-                                Oracle.groupEnd();
-                            }
-                        });
-                        gsap.to(elements.stuntActorFaces, { opacity: 0, duration: 0.5, ease: "power2.in", delay: 0.7 });
-                    },
-                    onLeaveBack: () => {
-                        if (isSwapped) {
-                            isSwapped = false;
-                            Oracle.updateHUD('c-swap-flag', 'FALSE', '#BF616A');
-                            Oracle.updateHUD('c-event', 'REVERSING');
-                            Oracle.group('REVERSE HANDOFF INITIATED');
-                            
-                            elements.stuntActor.classList.remove('is-logo-final-state');
-                            gsap.set(elements.stuntActorFaces, { clearProps: "all" });
-                            gsap.set(elements.stuntActor, { autoAlpha: 0 });
-                            
-                            masterTl.scrollTrigger.enable();
-                            masterTl.scrollTrigger.update();
-                            
-                            Oracle.updateHUD('c-event', 'SCROLLING');
-                            Oracle.groupEnd();
-                        }
+                setupHandoff(elements, masterTl);
+            },
+            '(min-width: 769px) and (max-width: 1024px)': () => {
+                const masterTl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: elements.textCol,
+                        pin: elements.visualsCol,
+                        start: 'top 10%',
+                        end: 'bottom bottom',
+                        scrub: scrubValue
                     }
                 });
+                masterTl.to(elements.heroActor, { rotationY: 90, scale: 1, ease: "power1.inOut" });
+                setupTextPillars(elements);
+                elements.placeholder.appendChild(elements.stuntActor);
+                setupHandoff(elements, masterTl);
+            },
+            '(max-width: 768px)': () => {
+                const masterTl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: elements.textCol,
+                        start: 'top 20%',
+                        end: 'bottom bottom',
+                        scrub: scrubValue
+                    }
+                });
+                masterTl.to(elements.heroActor, { scale: 0.9, ease: "none" });
+                setupTextPillars(elements);
             }
         });
     });
@@ -177,36 +240,21 @@ function setupAnimations() {
     return ctx;
 }
 
+// Initialization
+function setupSiteLogic() {
+    const menuOpen = getElement('#menu-open-button');
+    const menuClose = getElement('#menu-close-button');
+    const menuScreen = getElement('#menu-screen');
+    const root = document.documentElement;
 
-// --- HTML & INITIALIZATION PROTOCOL ---
-// You will need to update your HUD for the Overlord's advanced telemetry
-/*
-<!-- ======================= CEREBRO ORACLE HUD v35.0 "OVERLORD" ======================= -->
-<div id="cerebro-hud">
-    <h4>CEREBRO-HUD v35.0 [OVERLORD]</h4>
-    <div><span class="label">EVENT:</span><span id="c-event">AWAITING</span></div>
-    <div><span class="label">SWAP FLAG:</span><span id="c-swap-flag">FALSE</span></div>
-    <div class="divider"></div>
-    <div class="label" style="text-align:center;">- Live Transform (Hero) -</div>
-    <div><span class="label">Rot X:</span><span id="c-rot-x">--</span></div>
-    <div><span class="label">Rot Y:</span><span id="c-rot-y">--</span></div>
-    <div><span class="label">Scale:</span><span id="c-scale">--</span></div>
-    <div class="divider"></div>
-    <div class="label" style="text-align:center;">- Live Pillar Opacity -</div>
-    <div><span class="label">Pillar 1:</span><span id="c-pillar1-opacity">1.00</span></div>
-    <div><span class="label">Pillar 2:</span><span id="c-pillar2-opacity">0.00</span></div>
-    <div><span class="label">Pillar 3:</span><span id="c-pillar3-opacity">0.00</span></div>
-</div>
-<!-- ====================================================================================== -->
-*/
+    if (menuOpen && menuClose && menuScreen) {
+        menuOpen.addEventListener('click', () => root.classList.add('menu-open'));
+        menuClose.addEventListener('click', () => root.classList.remove('menu-open'));
+    }
 
+    const yearEl = getElement('#current-year');
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-// --- INITIALIZATION (v35.0) ---
-function setupSiteLogic(){
-    const e=document.getElementById("menu-open-button"),t=document.getElementById("menu-close-button"),n=document.getElementById("menu-screen"),o=document.documentElement;
-    if(e && t && n){e.addEventListener("click",()=>o.classList.add("menu-open"));t.addEventListener("click",()=>o.classList.remove("menu-open"));}
-    const c=document.getElementById("current-year");
-    if(c)c.textContent=(new Date).getFullYear();
     Oracle.report("Site logic initialized.");
 }
 
@@ -217,5 +265,6 @@ function initialAnimationSetup() {
         Oracle.warn("GSAP libraries failed to load. Animations aborted.");
     }
 }
-document.addEventListener("DOMContentLoaded",setupSiteLogic);
-window.addEventListener("load",initialAnimationSetup);
+
+document.addEventListener("DOMContentLoaded", setupSiteLogic);
+window.addEventListener("load", initialAnimationSetup);
