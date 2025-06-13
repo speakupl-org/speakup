@@ -1,47 +1,9 @@
-// main.js
-
-document.addEventListener('DOMContentLoaded', function () {
-    // --- Your Menu & Footer code remains untouched ---
-    const openButton = document.getElementById('menu-open-button');
-    const closeButton = document.getElementById('menu-close-button');
-    const menuScreen = document.getElementById('menu-screen');
-    const htmlElement = document.documentElement;
-    const body = document.body;
-
-    function openMenu() {
-        htmlElement.classList.add('menu-open');
-        body.classList.add('menu-open');
-        menuScreen.setAttribute('aria-hidden', 'false');
-    }
-
-    function closeMenu() {
-        htmlElement.classList.remove('menu-open');
-        body.classList.remove('menu-open');
-        menuScreen.setAttribute('aria-hidden', 'true');
-    }
-
-    if (openButton && closeButton && menuScreen) {
-        openButton.addEventListener('click', openMenu);
-        closeButton.addEventListener('click', closeMenu);
-    }
-
-    const yearSpan = document.getElementById('current-year');
-    if (yearSpan) {
-        yearSpan.textContent = new Date().getFullYear();
-    }
-
-    // --- The Robust Animation Setup Function ---
-    // We wrap ALL our GSAP logic in a single function.
-    function setupAnimations() {
-        
-        // Register the plugins now that we know they exist.
-        gsap.registerPlugin(ScrollTrigger, Flip);
-
-        ScrollTrigger.matchMedia({
+// in your main.js
+// This is the complete, corrected function for desktop.
 
             "(min-width: 769px)": function () {
 
-                // --- 1. SELECTORS & REFERENCES (The Robust Way) ---
+                // --- 1. SELECTORS & REFERENCES ---
                 const visualsCol = document.querySelector(".pillar-visuals-col");
                 const actor3D = document.getElementById("actor-3d");
                 const textPillars = gsap.utils.toArray('.pillar-text-content');
@@ -65,27 +27,29 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // --- 3. SCENE-BASED ANIMATIONS ---
                 textPillars.forEach((pillar, i) => {
-    let pillarTimeline = gsap.timeline({
-        scrollTrigger: {
-            trigger: pillar,
-            start: "top center+=10%",
-            end: "bottom center-=10%",
-            scrub: 1.5, // <-- KNOB 1: Increased for a more buttery feel
-            // ... onEnter/onLeave callbacks remain the same
-        }
-    });
-    
-    // KNOB 2: Let's use a more pronounced ease for a premium feel
-    if (i === 0) {
-        pillarTimeline.to(actor3D, { rotationY: 120, rotationX: 10, scale: 1.1, ease: "power3.inOut" });
-    } else if (i === 1) {
-        pillarTimeline.to(actor3D, { rotationY: -120, rotationX: -20, scale: 1.2, ease: "power3.inOut" });
-    } else if (i === 2) {
-        pillarTimeline.to(actor3D, { rotationY: 0, rotationX: 0, scale: 1, ease: "expo.inOut" }); // <-- Dramatic final ease
-    }
-});
+                    let pillarTimeline = gsap.timeline({
+                        scrollTrigger: {
+                            trigger: pillar,
+                            start: "top center+=10%",
+                            end: "bottom center-=10%",
+                            scrub: 1.5,
+                            onEnter: () => gsap.to(pillar, { autoAlpha: 1, duration: 0.5 }),
+                            onLeave: () => gsap.to(pillar, { autoAlpha: 0, duration: 0.5 }),
+                            onEnterBack: () => gsap.to(pillar, { autoAlpha: 1, duration: 0.5 }),
+                            onLeaveBack: () => gsap.to(pillar, { autoAlpha: 0, duration: 0.5 }),
+                        }
+                    });
+                    
+                    if (i === 0) {
+                        pillarTimeline.to(actor3D, { rotationY: 120, rotationX: 10, scale: 1.1, ease: "power3.inOut" });
+                    } else if (i === 1) {
+                        pillarTimeline.to(actor3D, { rotationY: -120, rotationX: -20, scale: 1.2, ease: "power3.inOut" });
+                    } else if (i === 2) {
+                        pillarTimeline.to(actor3D, { rotationY: 0, rotationX: 0, scale: 1, ease: "expo.inOut" });
+                    }
+                });
                 
-                // --- 4. THE "IGLOO" EXIT/RETURN ANIMATION (Fully Robust) ---
+                // --- 4. THE "IGLOO" EXIT/RETURN ANIMATION ---
                 let isFlipped = false; 
 
                 ScrollTrigger.create({
@@ -98,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             summaryClipper.appendChild(actor3D); 
                             Flip.from(state, {
                                 duration: 1.2,
-                                ease: "power2.inOut",
+                                ease: "expo.inOut", // Polished ease
                                 scale: true,
                                 onStart: () => {
                                     visualsCol.classList.add('is-exiting'); 
@@ -111,42 +75,18 @@ document.addEventListener('DOMContentLoaded', function () {
                             isFlipped = false;
                             const state = Flip.getState(actor3D, {props: "scale,opacity"});
                             visualsCol.appendChild(actor3D);
-                            // In the Flip.from(...) calls for both onEnter and onLeaveBack:
-Flip.from(state, {
-    duration: 1.2,
-    ease: "expo.inOut", // <-- Use a matching or complementary ease
-    scale: true,
-    // ...
-});
+                            
+                            // This is the block that had the syntax error.
+                            // Here is the fully corrected Flip.from() call.
+                            Flip.from(state, {
+                                duration: 1.2,
+                                ease: "expo.inOut",
+                                scale: true,
+                                onStart: () => {
+                                    visualsCol.classList.remove('is-exiting');
+                                }
                             });
                         }
                     }
                 });
             },
-
-            "(max-width: 768px)": function () {
-                gsap.set('.pillar-text-content', { autoAlpha: 1 });
-            }
-        });
-    } // End of setupAnimations function
-
-    // --- THE "READY CHECK" ---
-    // This is the most important part. We check if the main GSAP plugins
-    // have loaded and attached themselves to the window.
-    // We'll give it a couple of tries in case there's a slight delay.
-    
-    function initialCheck() {
-        if (window.gsap && window.ScrollTrigger && window.Flip) {
-            // All scripts are loaded and ready, let's set up the animations!
-            setupAnimations();
-        } else {
-            // One or more scripts are not ready yet. Let's wait a tiny bit and check again.
-            // This is a simple but effective fallback for slow network conditions.
-            setTimeout(initialCheck, 100);
-        }
-    }
-    
-    // Start the first check.
-    initialCheck();
-
-}); // End of DOMContentLoaded
