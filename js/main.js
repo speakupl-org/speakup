@@ -292,8 +292,6 @@ const setupHandoff = (elements, masterTl) => {
         }
     });
 };
-    });
-};
 
 // REVISED Main animation setup
 function setupAnimations() {
