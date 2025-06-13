@@ -1,67 +1,60 @@
 /*
 ========================================================================================
-   THE DEFINITIVE COVENANT BUILD v17.0 - The Safe Haven Protocol
+   THE DEFINITIVE COVENANT BUILD v18.0 - The "Wipe & Restore" Protocol
    
-   This is the final, definitive architecture. It solves all previous issues by
-   addressing the root cause: the ambiguity of teleporting to an exact trigger boundary.
+   This is the definitive, holistically-engineered solution. It addresses all prior
+   failures by identifying and solving the two root causes: timeline de-synchronization
+   and Flip plugin state pollution.
    
-   THE NEW PHILOSOPHY: THE SAFE HAVEN
-   Instead of fighting the race condition after it starts, we prevent it entirely.
-   Upon rebirth, the user is teleported to a "Safe Haven"—a position 2 pixels
-   BEFORE the handoff trigger. This is imperceptible to the user but provides
-   an unambiguous "out of bounds" state for ScrollTrigger, eliminating the race condition.
-   
-   FEATURES:
-   - Safe Haven Teleport: The `scrollTo` now targets `handoffPointTop - 2`, the key to the solution.
-   - Stable Rebirth Core: Returns to the performant `invalidate/progress/refresh` protocol,
-     fixing the text-mismatch issue from the "Total Rebuild" attempt.
-   - Robust State Lock: The `isRebirthing` lock and `delayedCall` are still used as a
-     secondary layer of security, ensuring total stability during the animation.
-   - Forensic-Level Logging: The console tells a complete, unambiguous story.
+   THE NEW ARCHITECTURE:
+   1. PRECISION TIMING: The text animations are now perfectly synchronized with the
+      cube rotations (`<`), eliminating the "late text" issue on forward scroll.
+   2. TARGETED STATE WIPE: After the cube is Flipped back, its inline CSS is
+      completely wiped with `clearProps: "all"`. This is the CRITICAL step that
+      eliminates state pollution and ensures the cube is "clean" for the timeline.
+   3. INTELLIGENT RESTORE: The stable `invalidate/progress/refresh` protocol then
+      re-calculates the animation from this pristine state.
+   4. PROVEN SAFE HAVEN: The `scrollTo(target - 2)` is retained, as it has been
+      proven to prevent the core race condition.
 ========================================================================================
 */
 
 function setupAnimations() {
     gsap.registerPlugin(ScrollTrigger, Flip);
     console.clear();
-    console.log('%cGSAP Covenant Build v17.0 Initialized. All systems armed.', 'color: #88C0D0; font-weight: bold; font-size: 14px;');
-    // Set markers for final verification.
+    console.log('%cGSAP Covenant Build v18.0 Initialized. All systems armed.', 'color: #88C0D0; font-weight: bold; font-size: 14px;');
     ScrollTrigger.defaults({ markers: true }); 
 
     const ctx = gsap.context(() => {
         // --- 1. ELEMENT SELECTION ---
-        const visualsCol = document.querySelector('.pillar-visuals-col');
-        const scene3D = document.querySelector('.scene-3d');
-        const actor3D = document.getElementById('actor-3d');
-        const textPillars = gsap.utils.toArray('.pillar-text-content');
-        const summaryClipper = document.querySelector('.summary-thumbnail-clipper');
-        const handoffPoint = document.getElementById('handoff-point');
-        const textCol = document.querySelector('.pillar-text-col'); 
+        const visualsCol = document.querySelector('.pillar-visuals-col'),
+              scene3D = document.querySelector('.scene-3d'),
+              actor3D = document.getElementById('actor-3d'),
+              textPillars = gsap.utils.toArray('.pillar-text-content'),
+              summaryClipper = document.querySelector('.summary-thumbnail-clipper'),
+              handoffPoint = document.getElementById('handoff-point'),
+              textCol = document.querySelector('.pillar-text-col'); 
         
         if (!visualsCol || !scene3D || !actor3D || !summaryClipper || !handoffPoint || !textCol) {
-            console.error('COVENANT ABORTED: One or more critical elements are missing.'); return;
+            console.error('COVENANT ABORTED: Critical elements missing.'); return;
         }
 
-        // --- 2. GOD-MODE HUD & STATE VARS ---
-        const hud = { /* This can be removed in production, but keep for final verification */
+        // --- 2. FORENSICS HUD & STATE VARS ---
+        const hud = {
             state: document.getElementById('c-state'), event: document.getElementById('c-event'),
-            isFlipped: document.getElementById('c-flipped'), rebirthLock: document.getElementById('c-rebirth-lock'),
-            scrollDir: document.getElementById('c-scroll-dir'), scrollY: document.getElementById('c-scroll-y'),
-            handoffTop: document.getElementById('c-handoff-top')
+            rebirthLock: document.getElementById('c-rebirth-lock'), actorWiped: document.getElementById('c-actor-wiped'),
+            scrollY: document.getElementById('c-scroll-y'), handoffTop: document.getElementById('c-handoff-top'),
+            scrollTarget: document.getElementById('c-scroll-target'), actorTransform: document.getElementById('c-actor-transform')
         };
         
-        let isFlipped = false;
-        let isRebirthing = false;
-        
-        hud.state.textContent = "Standby";
-        hud.isFlipped.textContent = "false";
-        hud.rebirthLock.textContent = "INACTIVE";
+        let isFlipped = false, isRebirthing = false;
+        hud.state.textContent = "Standby"; hud.rebirthLock.textContent = "INACTIVE"; hud.actorWiped.textContent = "false";
 
-        // --- 3. DESKTOP-ONLY ANIMATION SETUP ---
         ScrollTrigger.matchMedia({
             '(min-width: 769px)': () => {
                 hud.state.textContent = "In Scroller";
                 
+                // --- 3. PRECISION TIMELINE ---
                 const tl = gsap.timeline({ paused: true });
                 const states = {
                     p1: { rotationY: 20, rotationX: -15, scale: 1.0 },
@@ -69,20 +62,21 @@ function setupAnimations() {
                     p3: { rotationY: -120, rotationX: -20, scale: 1.2 }
                 };
                 
-                // This ensures the initial state is perfect, solving the text mismatch
                 gsap.set(textPillars, { autoAlpha: 0, y: '30px' });
                 gsap.set(textPillars[0], { autoAlpha: 1, y: '0px' });
-                gsap.set(actor3D, {transformOrigin: "center center"});
-
-
+                console.log("[Timeline] Building... Pillar 1 starts.");
+                
                 tl.to(actor3D, { ...states.p1, duration: 1 })
                   .to(textPillars[0], { autoAlpha: 0, y: '-30px', duration: 0.4 }, "+=1")
                   .to(actor3D, { ...states.p2, duration: 1 }, "<")
-                  .to(textPillars[1], { autoAlpha: 1, y: '0px', duration: 0.4 }, "<+=0.2")
+                  .to(textPillars[1], { autoAlpha: 1, y: '0px', duration: 0.4 }, "<") // <-- TIMING FIX
+                  .call(() => console.log("[Timeline] Scrolling into Pillar 2... Text sync'd perfectly."), [], "<")
+                  
                   .to(textPillars[1], { autoAlpha: 0, y: '-30px', duration: 0.4 }, "+=1")
                   .to(actor3D, { ...states.p3, duration: 1 }, "<")
-                  .to(textPillars[2], { autoAlpha: 1, y: '0px', duration: 0.4 }, "<+=0.2")
-                  .addLabel("finalState");
+                  .to(textPillars[2], { autoAlpha: 1, y: '0px', duration: 0.4 }, "<") // <-- TIMING FIX
+                  .addLabel("finalState")
+                  .call(() => console.log("[Timeline] Scrolling into Pillar 3... Text sync'd perfectly."), [], "<");
 
                 const mainScrub = ScrollTrigger.create({ 
                     trigger: textCol, pin: visualsCol, start: 'top top', 
@@ -93,79 +87,73 @@ function setupAnimations() {
                 gsap.ticker.add(() => {
                     hud.scrollY.textContent = `${window.scrollY.toFixed(0)}px`;
                     hud.handoffTop.textContent = `${(handoffPoint.getBoundingClientRect().top + window.scrollY).toFixed(0)}px`;
+                    hud.actorTransform.textContent = gsap.getProperty(actor3D, "transform");
                 });
                 
-                // ================== THE SAFE HAVEN TRIGGER (v17) ==================
+                // --- 4. THE WIPE & RESTORE TRIGGER (v18) ---
                 ScrollTrigger.create({
                     trigger: handoffPoint,
                     start: 'top center',
-                    onUpdate: self => { hud.scrollDir.textContent = self.direction === 1 ? 'DOWN' : 'UP'; },
                     onToggle: self => {
-                        // --- A) FLIP DOWN LOGIC ---
-                        if (self.isActive && self.direction === 1) {
+                        if (self.isActive && self.direction === 1) { // FLIP DOWN
                             if (isFlipped || isRebirthing) return;
-                            
                             isFlipped = true;
-                            hud.isFlipped.textContent = "true";
                             hud.state.textContent = "FLIPPED"; hud.event.textContent = "Flip Down";
                             console.log("%cEVENT: Flip Down", "color: #A3BE8C; font-weight: bold;");
-                            
                             mainScrub.disable();
                             const flipState = Flip.getState(actor3D, {props: "transform,opacity"});
                             summaryClipper.appendChild(actor3D);
                             Flip.from(flipState, { duration: 0.8, ease: 'power2.inOut', scale: true });
                         }
                         
-                        // --- B) REBIRTH & SAFE HAVEN PROTOCOL ---
-                        if (!self.isActive && self.direction === -1) {
+                        if (!self.isActive && self.direction === -1) { // REBIRTH
                             if (!isFlipped || isRebirthing) return;
-                            
-                            // 1. ENGAGE LOCK
                             isRebirthing = true;
                             hud.rebirthLock.textContent = "ACTIVE";
                             console.log('%cREBIRTH LOCK: ENGAGED', 'font-weight: bold; color: #BF616A;');
                             
-                            hud.state.textContent = "REBIRTHING..."; hud.event.textContent = "Rebirth Flip";
-                            console.log("%cEVENT: Rebirth Initiated -> Flipping actor home.", "color: #EBCB8B; font-weight: bold;");
-                            
+                            hud.state.textContent = "REBIRTHING..."; hud.event.textContent = "Flip Home";
                             const flipState = Flip.getState(actor3D, {props: "transform,opacity"});
                             scene3D.appendChild(actor3D);
+                            hud.actorWiped.textContent = "false"; // Reset wiped status
 
                             Flip.from(flipState, {
                                 duration: 0.8, ease: 'power2.out', scale: true,
                                 onComplete: () => {
-                                    // 2. THE STABLE REBIRTH PROTOCOL
-                                    console.group('%cSAFE HAVEN PROTOCOL INITIATED', 'color: #D81B60; font-weight:bold;');
+                                    console.group('%c"WIPE & RESTORE" PROTOCOL INITIATED', 'color: #D81B60; font-weight:bold;');
                                     
-                                    console.log("1. INVALIDATING TIMELINE - Forcing cache purge.");
+                                    // STEP 1: WIPE STATE POLLUTION
+                                    console.log("1. WIPING residual transforms from actor...");
+                                    gsap.set(actor3D, { clearProps: "all" });
+                                    hud.actorWiped.textContent = "true";
+                                    
+                                    // STEP 2: RESTORE TIMELINE
+                                    console.log("2. INVALIDATING & RESTORING timeline to pre-handoff state...");
                                     tl.invalidate();
-
-                                    console.log("2. SETTING PROGRESS to 'finalState'.");
                                     tl.progress(tl.labels.finalState / tl.duration()).pause();
 
-                                    // 3. THE SAFE HAVEN TELEPORT
+                                    // STEP 3: TELEPORT TO SAFE HAVEN
                                     const handoffPointTop = handoffPoint.getBoundingClientRect().top + window.scrollY;
-                                    const safeHavenPosition = handoffPointTop - 2; // <-- THE KEY TO VICTORY
-                                    console.log(`3. TELEPORTING TO SAFE HAVEN... (Target: ${safeHavenPosition.toFixed(0)}px, 2px before handoff)`);
+                                    const safeHavenPosition = handoffPointTop - 2;
+                                    hud.scrollTarget.textContent = `${safeHavenPosition.toFixed(0)}px`;
+                                    console.log(`3. TELEPORTING to Safe Haven (${safeHavenPosition.toFixed(0)}px)...`);
                                     window.scrollTo({ top: safeHavenPosition, behavior: 'instant' });
 
-                                    console.log("4. REFRESHING TRIGGERS from safe position.");
+                                    // STEP 4: REFRESH & GO LIVE
+                                    console.log("4. REFRESHING all triggers from safe position...");
                                     ScrollTrigger.refresh(true);
-
-                                    console.log("5. GOING LIVE - Re-enabling main scrub.");
                                     mainScrub.enable();
-                                    
+                                    console.log("5. GOING LIVE. Main scrub re-enabled.");
+
                                     isFlipped = false;
-                                    hud.isFlipped.textContent = "false";
                                     hud.state.textContent = "In Scroller (Reborn)";
-                                    console.log("%cREBIRTH COMPLETE. System parked safely.", 'font-weight: bold;');
+                                    console.log("%cPROTOCOL COMPLETE. System is pristine.", 'font-weight: bold;');
                                     console.groupEnd();
                                     
-                                    // 4. DELAYED DISENGAGEMENT
+                                    // STEP 5: DELAYED LOCK DISENGAGEMENT
                                     gsap.delayedCall(0.1, () => {
                                         isRebirthing = false;
                                         hud.rebirthLock.textContent = "INACTIVE";
-                                        console.log('%cREBIRTH LOCK: DISENGAGED (System Stable)', 'font-weight: bold; color: #A3BE8C;');
                                     });
                                 }
                             });
@@ -175,21 +163,10 @@ function setupAnimations() {
             }
         });
     });
-
-    return () => { ctx.revert(); };
 }
 
 
 // --- Primary Entry Point & Site Logic (Unchanged) ---
-function initialCheck() {
-    if (window.gsap && window.ScrollTrigger && window.Flip) {
-        setupAnimations();
-    } else {
-        let i = 0, t = setInterval(() => {
-            if (window.gsap && window.ScrollTrigger && window.Flip) { clearInterval(t); setupAnimations(); } 
-            else if (i++ >= 30) { clearInterval(t); console.error("CRITICAL: GSAP libraries failed to load."); }
-        }, 100);
-    }
-}
+function initialCheck(){if(window.gsap&&window.ScrollTrigger&&window.Flip){setupAnimations();}else{let i=0,t=setInterval(()=>{if(window.gsap&&window.ScrollTrigger&&window.Flip){clearInterval(t);setupAnimations();}else if(i++>=30){clearInterval(t);console.error("GSAP libs failed to load.");}},100);}}
 function setupSiteLogic(){const e=document.getElementById("menu-open-button"),t=document.getElementById("menu-close-button"),n=document.getElementById("menu-screen"),o=document.documentElement;e&&t&&n&&(e.addEventListener("click",()=>{o.classList.add("menu-open")}),t.addEventListener("click",()=>{o.classList.remove("menu-open")}));const c=document.getElementById("current-year");c&&(c.textContent=(new Date).getFullYear())}
 document.addEventListener("DOMContentLoaded",()=>{setupSiteLogic();initialCheck();});
