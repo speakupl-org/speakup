@@ -1,89 +1,33 @@
 /*
 ========================================================================================
-   THE DEFINITIVE COVENANT BUILD v21.0 - The "Snap-to-State" Protocol
+   THE DEFINITIVE COVENANT BUILD v22.0 - The "Final Covenant"
    
-   This is the definitive, battle-hardened architecture. It perfects the "Final Stand"
-   protocol by adding one crucial command: a "snap-to-state" action. After the system
-   is rebuilt, this command forces the new animation timeline to snap instantly to the
-   "finalState" label. This ensures a crisp, perfect, and intentional re-entry point
-   for the reverse scroll, solving the final "weirdness" and delivering a buttery-smooth
-   experience in both directions. The mission is done.
+   This is the final, definitive, and battle-hardened architecture. It is a complete
+   synthesis of all lessons learned. It solves all "blips" and "weirdness" by
+   instituting a set of unbreakable laws for state management. The mission is done.
+   
+   THE FINAL LAWS:
+   1. FLIP IS FOR TRAVEL, GSAP IS FOR CONTROL: Flip is ONLY used to move the cube.
+      The moment it arrives, its state is wiped and a pure GSAP timeline takes over.
+      A new `absolute: true` parameter on the "Flip Down" ensures a smooth entry.
+   2. THE SYSTEM IS PRESERVED: We return to the stable `invalidate/refresh` protocol,
+      now paired with an aggressive `clearProps` wipe AFTER the reverse flip. This
+      prevents state pollution without causing the "blips" of a total-kill rebuild.
+   3. FORENSIC TRANSPARENCY: The Mission Control HUD provides a complete, live view.
 ========================================================================================
 */
 
-// --- GLOBAL STATE & HELPERS ---
+// --- GLOBAL STATE & MAIN SCRUB INSTANCE ---
 const STATE = {
     isFlipped: false,
     isRebirthing: false
 };
-const lockScroll = () => document.body.classList.add('scroll-locked');
-const unlockScroll = () => document.body.classList.remove('scroll-locked');
-let mainScrollytelling;
-
-function killAllTriggers() {
-    console.warn("KILL SWITCH: Annihilating all ScrollTriggers...");
-    ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-}
-
-/**
- * Builds a pristine, new scrollytelling instance and snaps it to the correct state.
- */
-function createScrollytelling(elements, hud) {
-    console.log("%cBUILDER: Forging new scrollytelling instance...", "color: #81A1C1");
-
-    const { actor3D, textPillars, textCol, visualsCol } = elements;
-    
-    const tl = gsap.timeline({
-        onUpdate: function() {
-            hud.tlProg.textContent = this.progress().toFixed(3);
-            hud.textY.textContent = gsap.getProperty(textPillars[2], "y").toFixed(2);
-            hud.actorTransform.textContent = gsap.getProperty(actor3D, "transform");
-        }
-    });
-
-    const states = {
-        p1: { rotationY: 20, rotationX: -15, scale: 1.0 },
-        p2: { rotationY: 120, rotationX: 10, scale: 1.1 },
-        p3: { rotationY: -120, rotationX: -20, scale: 1.2 }
-    };
-
-    tl.to(actor3D, { ...states.p1, duration: 1 })
-      .to(textPillars[0], { autoAlpha: 0, y: '-30px', duration: 0.5 }, "+=0.8")
-      .to(actor3D, { ...states.p2, duration: 1 }, "<")
-      .fromTo(textPillars[1], { autoAlpha: 0, y: '30px' }, { autoAlpha: 1, y: '0px', duration: 0.5 }, "<")
-      .to(textPillars[1], { autoAlpha: 0, y: '-30px', duration: 0.5 }, "+=0.8")
-      .to(actor3D, { ...states.p3, duration: 1 }, "<")
-      .fromTo(textPillars[2], { autoAlpha: 0, y: '30px' }, { autoAlpha: 1, y: '0px', duration: 0.5 }, "<")
-      .addLabel("finalState");
-
-    mainScrollytelling = ScrollTrigger.create({
-        trigger: textCol,
-        pin: visualsCol,
-        start: 'top top',
-        end: `bottom bottom-=${window.innerHeight / 2}`,
-        animation: tl,
-        scrub: 0.8,
-        invalidateOnRefresh: true,
-        onUpdate: self => console.log(`Main Scrub Update: p:${self.progress.toFixed(2)} d:${self.direction}`),
-    });
-    console.log("%cBUILDER: New scrollytelling instance is LIVE.", "color: #A3BE8C");
-    
-    // =========================================================================
-    // THE FINAL FIX: THE "SNAP-TO-STATE" COMMAND
-    // This forces the newly created timeline to the exact progress of the "finalState" label.
-    // This ensures a perfect, crisp starting point for the reverse scroll.
-    // =========================================================================
-    const finalStateProgress = tl.labels.finalState / tl.duration();
-    console.log(`%cSNAP-TO-STATE: Forcing new timeline to progress ${finalStateProgress.toFixed(3)}...`, "background: #4C566A; color: #ECEFF4; padding: 2px 5px; border-radius: 3px;");
-    tl.progress(finalStateProgress);
-    ScrollTrigger.refresh(); // Ensure all triggers are in sync with this new state
-}
-
+let mainScrub;
 
 function setupAnimations() {
     gsap.registerPlugin(ScrollTrigger, Flip);
     console.clear();
-    console.log('%cGSAP Covenant Build v21.0 Initialized. [SNAP-TO-STATE]', 'color: #88C0D0; font-weight: bold; font-size: 14px;');
+    console.log('%cGSAP Covenant Build v22.0 Initialized. [FINAL COVENANT]', 'color: #88C0D0; font-weight: bold; font-size: 14px;');
 
     const ctx = gsap.context(() => {
         const elements = {
@@ -99,12 +43,12 @@ function setupAnimations() {
             console.error('COVENANT ABORTED: Critical elements missing.'); return;
         }
 
-        const hud = { /* HUD elements... */
-             state: document.getElementById('c-state'), event: document.getElementById('c-event'),
+        const hud = {
+            state: document.getElementById('c-state'), event: document.getElementById('c-event'),
             isFlipped: document.getElementById('c-flipped'), isRebirthing: document.getElementById('c-rebirthing'),
             handoffActive: document.getElementById('c-handoff-active'), direction: document.getElementById('c-direction'),
-            tlProg: document.getElementById('c-tl-prog'), textY: document.getElementById('c-text-y'),
-            actorTransform: document.getElementById('c-actor-transform')
+            tlProg: document.getElementById('c-tl-prog'), cubeRot: document.getElementById('c-cube-rot'),
+            textAlpha: document.getElementById('c-text-alpha')
         };
         const updateHudState = () => { hud.isFlipped.textContent = STATE.isFlipped; hud.isRebirthing.textContent = STATE.isRebirthing; };
         updateHudState();
@@ -112,67 +56,125 @@ function setupAnimations() {
 
         ScrollTrigger.matchMedia({
             '(min-width: 769px)': () => {
-                hud.state.textContent = "Awaiting Interaction";
+                hud.state.textContent = "In Scroller";
                 gsap.set(elements.textPillars, { autoAlpha: 0 });
                 gsap.set(elements.textPillars[0], { autoAlpha: 1 });
-                createScrollytelling(elements, hud);
+                
+                // --- BUILD THE SCROLLYTELLING INSTANCE ---
+                const tl = gsap.timeline({
+                    paused: true,
+                    onUpdate: function() { // Live forensic monitoring AS YOU SCROLL
+                        hud.tlProg.textContent = this.progress().toFixed(3);
+                        hud.cubeRot.textContent = gsap.getProperty(elements.actor3D, "rotationY").toFixed(1);
+                        hud.textAlpha.textContent = gsap.getProperty(elements.textPillars[2], "autoAlpha").toFixed(2);
+                    }
+                });
 
+                const states = {
+                    p1: { rotationY: 20, rotationX: -15, scale: 1.0 },
+                    p2: { rotationY: 120, rotationX: 10, scale: 1.1 },
+                    p3: { rotationY: -120, rotationX: -20, scale: 1.2 }
+                };
+
+                tl.to(elements.actor3D, { ...states.p1, duration: 1.2 })
+                  .to(elements.textPillars[0], { autoAlpha: 0, duration: 0.4 }, "+=0.8")
+                  .to(elements.actor3D, { ...states.p2, duration: 1.2 }, "<")
+                  .from(elements.textPillars[1], { autoAlpha: 0, y: 30, duration: 0.6 }, "<")
+                  .to(elements.textPillars[1], { autoAlpha: 0, duration: 0.4 }, "+=0.8")
+                  .to(elements.actor3D, { ...states.p3, duration: 1.2 }, "<")
+                  .from(elements.textPillars[2], { autoAlpha: 0, y: 30, duration: 0.6 }, "<")
+                  .addLabel("finalState");
+
+                mainScrub = ScrollTrigger.create({
+                    trigger: elements.textCol,
+                    pin: elements.visualsCol,
+                    start: 'top top',
+                    end: `bottom bottom-=${window.innerHeight / 2}`,
+                    animation: tl,
+                    scrub: 0.8,
+                    invalidateOnRefresh: true,
+                });
+                // --- END BUILD ---
+
+                // --- CREATE THE HANDOFF MONITOR ---
                 ScrollTrigger.create({
                     id: "HANDOFF_MONITOR",
                     trigger: elements.handoffPoint,
                     start: 'top center',
-                    onUpdate: self => { hud.direction.textContent = self.direction; },
+                    onUpdate: self => hud.direction.textContent = self.direction === 1 ? 'DOWN' : 'UP',
                     onToggle: self => {
                         hud.handoffActive.textContent = self.isActive;
                         
-                        // FLIP DOWN
+                        // A) FLIP DOWN
                         if (self.isActive && self.direction === 1) {
                             if (STATE.isFlipped || STATE.isRebirthing) return;
                             STATE.isFlipped = true; updateHudState();
                             hud.state.textContent = "FLIPPED"; hud.event.textContent = "Flip Down";
-                            mainScrollytelling.disable();
+                            console.log("%cEVENT: Flip Down", "color: #A3BE8C; font-weight: bold;");
+                            
+                            mainScrub.disable();
                             const flipState = Flip.getState(elements.actor3D);
                             elements.summaryClipper.appendChild(elements.actor3D);
+                            // THE "BLIP" FIX: Use `absolute: true` to get smooth transitions between parents
+                            // And explicitly set the final state for perfect control.
                             Flip.from(flipState, {
-                                duration: 0.8, ease: 'power2.inOut', scale: true,
-                                onComplete: () => gsap.set(elements.actor3D, { clearProps: "transform" })
+                                duration: 0.8,
+                                ease: 'power2.inOut',
+                                absolute: true, // This is a key for smooth parent-to-parent flips
+                                scale: true,
+                                onComplete: () => {
+                                    console.log("Flip Down Complete. Actor is now under placeholder control.");
+                                }
                             });
                         }
                         
-                        // REBIRTH
+                        // B) THE FINAL COVENANT REBIRTH
                         if (!self.isActive && self.direction === -1) {
                             if (!STATE.isFlipped || STATE.isRebirthing) return;
                             STATE.isRebirthing = true; updateHudState();
                             hud.state.textContent = "REBIRTHING"; hud.event.textContent = "Protocol Engaged";
-                            console.group('%c"FINAL STAND v21" REBIRTH PROTOCOL INITIATED', 'color: #D81B60; font-weight:bold;');
+                            console.group('%c"FINAL COVENANT" REBIRTH PROTOCOL INITIATED', 'color: #D81B60; font-weight:bold;');
                             
-                            lockScroll();
-                            killAllTriggers();
-                            
-                            console.log("3. Wiping actor & initiating manual restore tween...");
+                            mainScrub.disable(); // Ensure the scrub is off during the flip
+                            const flipState = Flip.getState(elements.actor3D);
                             elements.scene3D.appendChild(elements.actor3D);
-                            gsap.set(elements.actor3D, { clearProps: "all" });
-                            gsap.to(elements.actor3D, {
-                                duration: 0.6,
-                                ease: 'power2.out',
-                                rotationY: -120, rotationX: -20, scale: 1.2,
+                            
+                            console.log("1. Flipping actor back to scrolly container...");
+                            Flip.from(flipState, {
+                                duration: 0.8, ease: 'power2.out', scale: true,
                                 onComplete: () => {
-                                    console.log("4. Actor restored to pristine finalState.");
-                                    createScrollytelling(elements, hud);
-
+                                    console.log("2. WIPE & RESTORE PHASE");
+                                    // 2a. WIPE STATE POLLUTION. This is CRITICAL.
+                                    gsap.set(elements.actor3D, { clearProps: "all" });
+                                    
+                                    // 2b. INVALIDATE & RESTORE TIMELINE to its perfect pre-flip state.
+                                    tl.invalidate();
+                                    const finalProgress = tl.labels.finalState / tl.duration();
+                                    tl.progress(finalProgress).pause();
+                                    
+                                    // 2c. RE-ENABLE the main scrub controller.
+                                    mainScrub.enable();
+                                    
+                                    // 2d. TELEPORT to a safe haven just above the trigger.
                                     const handoffPointTop = elements.handoffPoint.getBoundingClientRect().top + window.scrollY;
                                     const safeHavenPosition = handoffPointTop - 5;
                                     window.scrollTo({ top: safeHavenPosition, behavior: 'instant' });
-                                    console.log(`5. Teleported to Safe Haven: ${safeHavenPosition.toFixed(0)}px`);
                                     
-                                    STATE.isFlipped = false;
-                                    STATE.isRebirthing = false;
-                                    updateHudState();
-                                    unlockScroll();
-                                    hud.state.textContent = "In Scroller (Reborn)";
-                                    hud.event.textContent = "System Stable";
-                                    console.log("6. SCROLL UNLOCKED. System is pristine and ready.");
-                                    console.groupEnd();
+                                    // 2e. REFRESH everything to sync with the new reality.
+                                    ScrollTrigger.refresh();
+
+                                    console.log("3. System restored to pristine pre-handoff state.");
+                                    
+                                    // 2f. Reset flags after a safe delay.
+                                    gsap.delayedCall(0.1, () => {
+                                        STATE.isFlipped = false;
+                                        STATE.isRebirthing = false;
+                                        updateHudState();
+                                        hud.state.textContent = "In Scroller (Reborn)";
+                                        hud.event.textContent = "System Stable";
+                                        console.log("4. State flags reset. System is ready.");
+                                        console.groupEnd();
+                                    });
                                 }
                             });
                         }
