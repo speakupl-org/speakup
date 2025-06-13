@@ -89,11 +89,11 @@ document.addEventListener('DOMContentLoaded', () => {
             .to(textPillars[1], { autoAlpha: 0 })
             .to(textPillars[2], { autoAlpha: 1 }, '<')
             .to(actor3D, states[2], '<')
-            // Label at end of pillar3
-            .addLabel('finalState')
+            .addLabel('finalState') // label after Pillar 3
             .to(textPillars[2], { autoAlpha: 0 })
-            .to(actor3D, { rotationY:0, rotationX:0, scale:1.0 }, '<');
+            .to(actor3D, { rotationY: 0, rotationX: 0, scale: 1.0 }, '<');
 
+          // Scrubber
           const mainScrub = ScrollTrigger.create({
             trigger: textCol,
             pin: visualsCol,
@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
             invalidateOnRefresh: true,
           });
 
-          // Smooth Flip handoff (only block changed)
+          // Smooth Flip handoff (defensive)
           ScrollTrigger.create({
             trigger: summaryContainer,
             start: 'top center',
@@ -137,8 +137,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 ease: 'power2.out',
                 scale: true,
                 onComplete: () => {
-                  // sync timeline playhead
+                  // 1. Clear Flip inline transform
+                  gsap.set(actor3D, { clearProps: 'transform' });
+                  // 2. Sync timeline
                   tl.seek('finalState');
+                  // 3. Re-enable scrub
                   mainScrub.enable();
                 }
               });
@@ -166,7 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return () => ctx.revert();
   }
 
-  // load and run
+  // Initial check
   function initialCheck() {
     if (window.gsap && window.ScrollTrigger && window.Flip) {
       setupAnimations();
