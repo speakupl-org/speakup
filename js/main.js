@@ -1,28 +1,27 @@
 /*
 ========================================================================================
-   THE DEFINITIVE COVENANT BUILD v36.1 - "The Overlord" Protocol Enhanced
+   THE DEFINITIVE COVENANT BUILD v36.2 - "The Overlord" Protocol Enhanced
    
-   Build v36.1 rectifies a critical perception failure in the Oracle's logging
-   subroutine and enhances its reporting verbosity. The Omni-Oracle now delivers
-   flawless, detailed telemetry on all observed phenomena, ensuring total operational
-   awareness. Sophistication is the only path forward.
+   Build v36.2 addresses a critical logic conflict in the handoff protocol by
+   implementing a fully synchronized timeline. Telemetry is now deeper, tracking
+   the discrete lifecycle of pillar animations. The result is superior stability and
+   flawless operational awareness. All systems are refined for absolute sophistication.
 ========================================================================================
 */
 
-// Oracle v36.1 - The "Omni-Oracle" Enhanced
+// Oracle v36.2 - The "Omni-Oracle" Enhanced
 const Oracle = {
     log: (el, label) => {
-        if (!el) { 
-            console.error(`%c[ORACLE LOG: ${label}]%c ERROR - Target element is null or undefined. Observation aborted.`, 'color: #D81B60; font-weight: bold;', 'color: #BF616A;'); 
-            return; 
+        if (!el) {
+            console.error(`%c[ORACLE LOG: ${label}]%c ERROR - Target element is null or undefined. Observation aborted.`, 'color: #D81B60; font-weight: bold;', 'color: #BF616A;');
+            return;
         }
         const style = window.getComputedStyle(el);
-        // Corrected gsKy to gsap
         const transform = {
             scale: gsap.getProperty(el, "scale"),
             rotationX: gsap.getProperty(el, "rotationX"),
             rotationY: gsap.getProperty(el, "rotationY"),
-            z: gsap.getProperty(el, "z") 
+            z: gsap.getProperty(el, "z")
         };
         const box = el.getBoundingClientRect();
         console.log(
@@ -46,7 +45,6 @@ const Oracle = {
         }
     }
 };
-
 
 // Utility to safely get elements
 const getElement = (selector, isArray = false) => {
@@ -77,7 +75,7 @@ const setupHeroActor = (elements, masterTl) => {
     });
 };
 
-// Text pillars animation with 3D effects
+// Text pillars animation with ENHANCED 3D effects and telemetry
 const setupTextPillars = (elements) => {
     elements.pillars.forEach((pillar, index) => {
         const wrapper = elements.textWrappers[index];
@@ -89,10 +87,13 @@ const setupTextPillars = (elements) => {
                 scrollTrigger: {
                     trigger: pillar,
                     start: "top 80%",
-                    end: "+=120%",
+                    end: "top 30%", // Make the transition quicker
                     scrub: 1.5,
+                    onEnter: () => Oracle.report(`Pillar ${index + 1} transition entering viewport.`),
+                    onLeave: () => Oracle.report(`Pillar ${index + 1} transition complete.`),
+                    onEnterBack: () => Oracle.report(`Pillar ${index + 1} transition re-entering viewport (reverse).`),
+                    onLeaveBack: () => Oracle.report(`Pillar ${index + 1} reverse transition complete.`),
                     onUpdate: (self) => {
-                        const progress = self.progress.toFixed(2);
                         Oracle.updateHUD(`c-pillar${index+1}-opacity`, gsap.getProperty(wrapper, 'autoAlpha').toFixed(2));
                         Oracle.updateHUD(`c-pillar${index+2}-opacity`, gsap.getProperty(nextWrapper, 'autoAlpha').toFixed(2));
                         Oracle.updateHUD('c-active-pillar', `P${index + 1}`, '#A3BE8C');
@@ -106,65 +107,64 @@ const setupTextPillars = (elements) => {
     });
 };
 
-// Handoff mechanism with enhanced transition and logging
+// --- REFACTOR: Handoff mechanism re-architected to a synchronized timeline ---
 const setupHandoff = (elements, masterTl) => {
-    let isSwapped = false;
-    Oracle.updateHUD('c-swap-flag', 'FALSE', '#BF616A');
+    // This timeline will hold the entire handoff animation. It starts paused.
+    const handoffTl = gsap.timeline({
+        paused: true,
+        onStart: () => {
+             Oracle.group('BAIT & SWITCH INITIATED');
+             Oracle.updateHUD('c-swap-flag', 'TRUE', '#A3BE8C');
+             Oracle.updateHUD('c-event', 'HANDOFF');
+        },
+        onReverseComplete: () => {
+             Oracle.group('REVERSE HANDOFF COMPLETE');
+             Oracle.updateHUD('c-swap-flag', 'FALSE', '#BF616A');
+             Oracle.updateHUD('c-event', 'SCROLLING');
+             Oracle.groupEnd();
+        },
+        onComplete: () => {
+            Oracle.log(elements.stuntActor, "Stunt Double State (Post-Swap)");
+            Oracle.updateHUD('c-event', 'LANDED');
+            Oracle.groupEnd();
+        }
+    });
 
+    // We define the animation sequence once.
+    handoffTl
+        .add(() => {
+            // Disable the main scroller to prevent conflicts during the animation.
+            masterTl.scrollTrigger.disable();
+            Oracle.log(elements.heroActor, "Hero State (Pre-Swap)");
+            const state = Flip.getState(elements.heroActor);
+            
+            gsap.set(elements.stuntActor, { autoAlpha: 1 });
+            elements.stuntActor.classList.add('is-logo-final-state');
+            
+            Flip.from(state, {
+                targets: elements.stuntActor,
+                duration: 1.2,
+                ease: 'power3.inOut',
+                // Explicitly define what properties to flip for performance
+                props: "x,y,scale,rotationX,rotationY",
+                onStart: () => {
+                    gsap.to(elements.heroActor, { autoAlpha: 0, duration: 0.3 });
+                },
+                onComplete: () => {
+                    // Re-enable the main scroller after the animation is fully done.
+                    masterTl.scrollTrigger.enable();
+                }
+            });
+        })
+        .to(elements.stuntActorFaces, { opacity: 0, duration: 0.5, ease: "power2.in" }, "-=0.7");
+
+    // A single, simple ScrollTrigger to control the timeline.
     ScrollTrigger.create({
         trigger: elements.handoffPoint,
         start: 'top 70%',
-        onEnter: () => {
-            if (isSwapped) return;
-            isSwapped = true;
-            Oracle.updateHUD('c-swap-flag', 'TRUE', '#A3BE8C');
-            Oracle.updateHUD('c-event', 'HANDOFF');
-            Oracle.group('BAIT & SWITCH INITIATED');
-
-            masterTl.scrollTrigger.disable();
-
-            Oracle.log(elements.heroActor, "Hero State (Pre-Swap)");
-            const startState = Flip.getState(elements.heroActor);
-            
-            // --- ENHANCEMENT: Log stunt double pre-animation state for better debugging ---
-            Oracle.log(elements.stuntActor, "Stunt Double State (Pre-Swap)"); 
-            
-            gsap.set(elements.stuntActor, { autoAlpha: 1 });
-            
-            Flip.from(startState, { // Flip FROM the hero's state...
-                targets: elements.stuntActor, // ...TO the stunt double's current state
-                duration: 1.8,
-                ease: 'power4.inOut',
-                onStart: () => gsap.to(elements.heroActor, { autoAlpha: 0, scale: 0.95, duration: 0.5 }),
-                onEnter: targets => gsap.from(targets, { rotationY: '+=30' }), // Note: The Flip logic was slightly off, corrected to use startState.
-                onComplete: () => {
-                    elements.stuntActor.classList.add('is-logo-final-state');
-                    Oracle.log(elements.stuntActor, "Stunt Double State (Post-Swap)");
-                    Oracle.updateHUD('c-event', 'LANDED');
-                    Oracle.groupEnd();
-                }
-            });
-            gsap.to(elements.stuntActorFaces, { opacity: 0, duration: 0.6, ease: "power2.in", delay: 0.8 });
-        },
-        onLeaveBack: () => {
-            if (!isSwapped) return;
-            isSwapped = false;
-            Oracle.updateHUD('c-swap-flag', 'FALSE', '#BF616A');
-            Oracle.updateHUD('c-event', 'REVERSING');
-            Oracle.group('REVERSE HANDOFF INITIATED');
-
-            elements.stuntActor.classList.remove('is-logo-final-state');
-            gsap.set(elements.stuntActorFaces, { clearProps: "all" });
-            gsap.set(elements.stuntActor, { autoAlpha: 0 });
-            
-            Oracle.log(elements.stuntActor, "Stunt Double State (Reversed)");
-
-            masterTl.scrollTrigger.enable();
-            // No need to manually update, ScrollTrigger will handle it on the next tick
-            
-            Oracle.updateHUD('c-event', 'SCROLLING');
-            Oracle.groupEnd();
-        }
+        // Plays the timeline on enter, reverses it on leave back. No more chatter.
+        toggleActions: "play none none reverse",
+        animation: handoffTl
     });
 };
 
@@ -173,7 +173,7 @@ const setupHandoff = (elements, masterTl) => {
 function setupAnimations() {
     gsap.registerPlugin(ScrollTrigger, Flip);
     console.clear();
-    Oracle.report('GSAP Covenant Build v36.1 Initialized. [THE OVERLORD ENHANCED]');
+    Oracle.report('GSAP Covenant Build v36.2 Initialized. [THE OVERLORD ENHANCED]');
 
     const ctx = gsap.context(() => {
         const elements = {
@@ -194,7 +194,10 @@ function setupAnimations() {
         }
         Oracle.report("Overlord components verified.");
 
-        // Respect reduced motion preferences
+        // Move stunt double into placeholder at the start
+        elements.placeholder.appendChild(elements.stuntActor);
+        gsap.set(elements.stuntActor, { autoAlpha: 0 }); // Ensure it starts hidden
+
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         const scrubValue = prefersReducedMotion ? false : 1.5;
 
@@ -208,7 +211,10 @@ function setupAnimations() {
                         end: 'bottom bottom',
                         scrub: scrubValue,
                         onUpdate: (self) => {
-                            Oracle.log(elements.heroActor, "Live Hero Scrub");
+                            // Only log if the hero is visible to reduce console noise
+                            if (gsap.getProperty(elements.heroActor, "autoAlpha") > 0) {
+                                Oracle.log(elements.heroActor, "Live Hero Scrub");
+                            }
                             Oracle.updateHUD('c-rot-x', gsap.getProperty(elements.heroActor, "rotationX").toFixed(1));
                             Oracle.updateHUD('c-rot-y', gsap.getProperty(elements.heroActor, "rotationY").toFixed(1));
                             Oracle.updateHUD('c-scale', gsap.getProperty(elements.heroActor, "scale").toFixed(2));
@@ -219,11 +225,12 @@ function setupAnimations() {
 
                 setupHeroActor(elements, masterTl);
                 setupTextPillars(elements);
-                elements.placeholder.appendChild(elements.stuntActor);
-                setupHandoff(elements, masterTl);
+                setupHandoff(elements, masterTl); // Pass masterTl for enable/disable control
             },
+            // ... (other breakpoints remain the same)
             '(min-width: 769px) and (max-width: 1024px)': () => {
-                const masterTl = gsap.timeline({
+                // ... logic as before ...
+                 const masterTl = gsap.timeline({
                     scrollTrigger: {
                         trigger: elements.textCol,
                         pin: elements.visualsCol,
@@ -234,11 +241,11 @@ function setupAnimations() {
                 });
                 masterTl.to(elements.heroActor, { rotationY: 90, scale: 1, ease: "power1.inOut" });
                 setupTextPillars(elements);
-                elements.placeholder.appendChild(elements.stuntActor);
                 setupHandoff(elements, masterTl);
             },
             '(max-width: 768px)': () => {
-                const masterTl = gsap.timeline({
+                // ... logic as before ...
+                 const masterTl = gsap.timeline({
                     scrollTrigger: {
                         trigger: elements.textCol,
                         start: 'top 20%',
@@ -255,7 +262,7 @@ function setupAnimations() {
     return ctx;
 }
 
-// Initialization
+// Initialization (no changes here)
 function setupSiteLogic() {
     const menuOpen = getElement('#menu-open-button');
     const menuClose = getElement('#menu-close-button');
