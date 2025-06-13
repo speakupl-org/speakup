@@ -93,16 +93,15 @@ function setupAnimations() {
                         });
                     },
 
-                                            // PHASE 3: The Return Journey (Scrolling Up) with OVERLORD SYNC
+                                               // PHASE 3: The Return Journey with THE NUCLEAR OPTION
                         onLeaveBack: () => {
                             if (!isFlipped) {
-                                // This guard is still essential
-                                console.warn('OVERLORD ABORT: Already in scroller state. No action taken.');
+                                console.warn('NUCLEAR SYNC ABORTED: Already in scroller state.');
                                 return;
                             }
                             
-                            console.group('%cEVENT: onLeaveBack (Initiating v8.0 OVERLORD SYNC)', 'color: #EBCB8B; font-weight:bold; font-size: 14px;');
-                            lastEventEl.textContent = 'onLeaveBack (v8.0)';
+                            console.group('%cEVENT: onLeaveBack (Initiating v9.0 NUCLEAR SYNC)', 'color: #D81B60; font-weight:bold; font-size: 16px; text-transform: uppercase;');
+                            lastEventEl.textContent = 'onLeaveBack (v9.0)';
                             flipStatusEl.textContent = 'TRANSITIONING...';
                         
                             const state = Flip.getState(actor3D, {props: "transform,opacity"});
@@ -112,51 +111,65 @@ function setupAnimations() {
                                 duration: 0.8,
                                 ease: 'power2.out',
                                 scale: true,
+                                // ============================ ONCOMPLETE STARTS HERE ============================
                                 onComplete: () => {
-                                    console.log('%cFlip UP complete. Beginning OVERLORD protocol...', 'color: #BF616A; font-weight:bold; font-size: 12px;');
+                                    console.log('%c[v9.0] Flip UP complete. Beginning silent state-reconstruction protocol...', 'color: #BF616A; font-weight:bold; font-size: 12px;');
                                     
-                                    // THE UNCOMPROMISING 5-STEP "OVERLORD SYNC"
-                                    console.log("--- PRE-SYNC STATE ---");
-                                    console.log(`Initial rotation: ${gsap.getProperty(actor3D, "rotationY").toFixed(2)} | Initial transform: ${gsap.getProperty(actor3D, "transform")}`);
+                                    // THE UNCOMPROMISING 7-STEP "NUCLEAR SYNC"
+                                    
+                                    // --- PRE-SYNC STATE DIAGNOSTICS ---
+                                    console.groupCollapsed('Pre-Sync Diagnostics');
+                                    console.log(`Initial actor3D transform: ${gsap.getProperty(actor3D, "transform")}`);
+                                    console.log(`Timeline (tl) progress: ${tl.progress().toFixed(4)}`);
+                                    console.log(`Controller (mainScrub) progress: ${mainScrub.progress.toFixed(4)}`);
+                                    console.groupEnd();
+                                    
+                                    // STEP 1: MAINTAIN STEALTH - Controller remains disabled. No action needed, but we verify.
+                                    console.log(`%cSTEP 1: CONFIRM STEALTH MODE - Main scrub is disabled: ${!mainScrub.enabled}`, 'color: #8FBCBB');
                         
-                                    // STEP 1: SCORCHED EARTH CLEAN-UP
-                                    console.log("SYNC 1: Obliterating all inline props with clearProps: 'all'.");
+                                    // STEP 2: PREP THE FIELD - Clean up the element.
+                                    console.log(`%cSTEP 2: PREP THE FIELD - Clearing all props from actor3D.`, 'color: #8FBCBB');
                                     gsap.set(actor3D, { clearProps: "all" });
-                                    console.log(`   - Post-Clear rotation: ${gsap.getProperty(actor3D, "rotationY").toFixed(2)}`);
                         
-                                    // STEP 2: AUTHORITATIVE STATE INJECTION
-                                    // We are MANUALLY setting the object to the state it SHOULD be in at the 'finalState' label.
-                                    const targetState = { rotationY: -120, rotationX: -20, scale: 1.2 };
-                                    console.log(`SYNC 2: Forcing element to target state: { rotationY: ${targetState.rotationY}, rotationX: ${targetState.rotationX}, scale: ${targetState.scale} }`);
-                                    gsap.set(actor3D, targetState);
-                                    console.log(`   - VERIFICATION: Post-SET rotation is now: ${gsap.getProperty(actor3D, "rotationY").toFixed(2)}`);
-                        
-                                    // STEP 3: WAKE THE CONTROLLER
-                                    console.log("SYNC 3: Re-enabling the main scrub controller.");
-                                    mainScrub.enable();
-                                    scrubStatusEl.textContent = 'ENABLED';
-                        
-                                    // STEP 4: FORCED RESYNC
-                                    console.log("SYNC 4: Forcing mainScrub.update(true) and ScrollTrigger.refresh(true) to resync reality.");
-                                    // This tells ScrollTrigger to re-read the state of the universe RIGHT NOW.
-                                    mainScrub.update(true); // `true` forces an immediate render
-                                    ScrollTrigger.refresh(true); // `true` forces re-calculation of transforms
-                                    console.log(`   - VERIFICATION: Timeline progress after refresh is: ${tl.progress().toFixed(4)}`);
-                        
-                                    // STEP 5: SCROLLBAR SANITY CHECK
-                                    // Now that the visual state is correct, we align the scrollbar to match.
+                                    // STEP 3: COMMAND THE TIMELINE DIRECTLY - This will sync BOTH cube AND text.
                                     const finalStateProgress = tl.labels.finalState / tl.duration();
+                                    console.log(`%cSTEP 3: COMMAND TIMELINE - Forcing timeline progress to 'finalState' (${finalStateProgress.toFixed(4)})`, 'color: #88C0D0');
+                                    tl.progress(finalStateProgress);
+                                    console.log(`   - VERIFICATION: Actor rotation is now: ${gsap.getProperty(actor3D, "rotationY").toFixed(2)}`);
+                                    console.log(`   - VERIFICATION: Pillar 3 alpha is now: ${gsap.getProperty(textPillars[2], "autoAlpha")}`);
+                        
+                                    // STEP 4: SILENTLY SYNC THE CONTROLLER
                                     const targetScrollPos = mainScrub.start + (mainScrub.end - mainScrub.start) * finalStateProgress;
-                                    console.log(`SYNC 5: Aligning scrollbar UI to calculated position: ${targetScrollPos.toFixed(2)}px`);
+                                    console.log(`%cSTEP 4: INFILTRATE CONTROLLER - Silently setting disabled scrub's scroll to ${targetScrollPos.toFixed(2)}px`, 'color: #88C0D0');
                                     mainScrub.scroll(targetScrollPos);
                                     
-                                    // FINAL VERDICT
-                                    isFlipped = false;
-                                    console.log(`FINAL VERIFICATION: Rotation is ${gsap.getProperty(actor3D, "rotationY").toFixed(2)}. Should be ${targetState.rotationY}.`);
-                                    flipStatusEl.textContent = 'In Scroller';
-                                    lastEventEl.textContent = 'Overlord Sync Complete';
-                                    console.log('OVERLORD SYNC COMPLETE. The relay race is perfectly reset.');
+                                    // STEP 5: FULL SYSTEM VERIFICATION - The most important check before going live.
+                                    console.group('%cSTEP 5: FULL SYSTEM VERIFICATION (PRE-ENABLE)', 'color: #EBCB8B');
+                                    console.log(`   - TARGET PROGRESS: ${finalStateProgress.toFixed(4)}`);
+                                    console.log(`   - Timeline (tl) progress:  ${tl.progress().toFixed(4)}`);
+                                    console.log(`   - Controller (mainScrub) progress: ${mainScrub.progress.toFixed(4)}`);
+                                    console.log(`   - Cube Rotation (should be -120): ${gsap.getProperty(actor3D, "rotationY").toFixed(2)}`);
+                                    console.log(`   - Text Alpha (should be 1): ${gsap.getProperty(textPillars[2], "autoAlpha")}`);
+                                    const isSynced = Math.abs(tl.progress() - mainScrub.progress) < 0.0001;
+                                    console.log(`   - IS SYSTEM SYNCED? -> %c${isSynced}`, `color: ${isSynced ? '#A3BE8C' : '#BF616A'}`);
                                     console.groupEnd();
+                        
+                                    // STEP 6: GO LIVE
+                                    console.log('%cSTEP 6: GO LIVE - Re-enabling the main scrub controller.', 'color: #A3BE8C');
+                                    mainScrub.enable();
+                                    scrubStatusEl.textContent = 'ENABLED';
+                                    
+                                    // STEP 7: SYNCHRONIZE THE UNIVERSE
+                                    console.log(`%cSTEP 7: SYNCHRONIZE UI - Snapping window scroll to ${targetScrollPos.toFixed(2)}px to match state.`, 'color: #A3BE8C');
+                                    window.scrollTo({ top: targetScrollPos, behavior: 'instant' });
+                        
+                                    isFlipped = false;
+                                    
+                                    // --- FINAL POST-MORTEM ---
+                                    console.log('%cNUCLEAR SYNC COMPLETE. All systems nominal.', 'color: #D81B60; font-weight: bold;');
+                                    flipStatusEl.textContent = 'In Scroller';
+                                    lastEventEl.textContent = 'Nuclear Sync Complete';
+                                    console.groupEnd(); // End the main v9.0 event group
                                 }
                             });
                         }
