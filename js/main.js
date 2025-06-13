@@ -1,4 +1,4 @@
-// main.js (Final Architectural Version)
+// main.js (Architectural Refactor)
 
 document.addEventListener('DOMContentLoaded', function () {
     // --- Menu & Footer code (unchanged) ---
@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
         yearSpan.textContent = new Date().getFullYear();
     }
 
+    // --- REFACTORED ANIMATION LOGIC ---
     function setupAnimations() {
         gsap.registerPlugin(ScrollTrigger, Flip);
 
@@ -44,81 +45,65 @@ document.addEventListener('DOMContentLoaded', function () {
                     const summaryContainer = document.querySelector(".method-summary");
                     const summaryClipper = document.querySelector(".summary-thumbnail-clipper");
 
-                    if (!visualsCol || !textCol || !actor3D) { return; }
-                    
-                    // --- PART 1: The Film Strip ---
-                    // Create the master "animation menu" timeline, paused by default.
-                    // This timeline defines every possible state of the animation.
-                    const masterTimeline = gsap.timeline({ paused: true });
+                    if (!visualsCol || !textCol || !actor3D || textPillars.length < 3) { return; }
 
+                    // --- PART 1: The Film Strip (The Master Timeline) ---
+                    // This timeline defines the entire sequence of animations.
+                    // It will be controlled by a single "scrubbing" ScrollTrigger.
+                    const masterTimeline = gsap.timeline({
+                        // Setting defaults for all tweens in this timeline
+                        defaults: { duration: 0.6, ease: "power2.inOut" }
+                    });
+
+                    // Set initial state
                     masterTimeline
-                        // State for Pillar 1
-                        .addLabel("pillar1_start")
-                        .set(textPillars, { autoAlpha: 0 }) // Reset all text
-                        .set(textPillars[0], { autoAlpha: 1 }) // Show only pillar 1 text
-                        .to(actor3D, { rotationY: 20, rotationX: -15, scale: 1, duration: 0.6, ease: "power2.inOut" })
-                        .addLabel("pillar1_end")
-                        
-                        // State for Pillar 2
-                        .addLabel("pillar2_start")
-                        .to(textPillars[0], { autoAlpha: 0 })
-                        .to(textPillars[1], { autoAlpha: 1 }, "<")
-                        .to(actor3D, { rotationY: 120, rotationX: 10, scale: 1.1, duration: 0.6, ease: "power2.inOut" }, "<")
-                        .addLabel("pillar2_end")
+                        .set(textPillars, { autoAlpha: 0 })
+                        .set(textPillars[0], { autoAlpha: 1 })
+                        .to(actor3D, { rotationY: 20, rotationX: -15, scale: 1 }); // State for Pillar 1
 
-                        // State for Pillar 3
-                        .addLabel("pillar3_start")
+                    // Transition to Pillar 2
+                    masterTimeline
+                        .to(textPillars[0], { autoAlpha: 0 })
+                        .to(textPillars[1], { autoAlpha: 1 }, "<") // Text fades happen at the same time as...
+                        .to(actor3D, { rotationY: 120, rotationX: 10, scale: 1.1 }, "<"); // ...the 3D actor animation starts.
+
+                    // Transition to Pillar 3
+                    masterTimeline
                         .to(textPillars[1], { autoAlpha: 0 })
                         .to(textPillars[2], { autoAlpha: 1 }, "<")
-                        .to(actor3D, { rotationY: -120, rotationX: -20, scale: 1.2, duration: 0.6, ease: "power2.inOut" }, "<")
-                        .addLabel("pillar3_end")
-                    
-                        // State for Exit (Ready for Flip)
-                        .addLabel("exit_start")
+                        .to(actor3D, { rotationY: -120, rotationX: -20, scale: 1.2 }, "<");
+
+                    // Transition to Exit State (Ready for Flip)
+                    masterTimeline
                         .to(textPillars[2], { autoAlpha: 0 })
-                        .to(actor3D, { rotationY: 0, rotationX: 0, scale: 1, duration: 0.6, ease: "power2.inOut" }, "<")
-                        .addLabel("exit_end");
+                        .to(actor3D, { rotationY: 0, rotationX: 0, scale: 1 }, "<");
 
 
-                    // --- PART 2: The Projector ---
-                    // This section connects the scroll events to our "film strip".
-
-                    // A. The Master Pin: This trigger's ONLY job is to pin the visuals. No animation.
+                    // --- PART 2: The Projector (A Single, Scrubbing ScrollTrigger) ---
+                    // This is the core fix. One trigger to rule them all.
+                    // It pins the visuals and links the scroll position directly to the masterTimeline's progress.
                     ScrollTrigger.create({
-                        trigger: textCol,
-                        pin: visualsCol,
-                        start: "top top",
-                        end: "bottom bottom"
-                    });
-
-                    // B. Individual Sensors: Create a trigger for each pillar to control the timeline.
-                    textPillars.forEach((pillar, i) => {
-                        ScrollTrigger.create({
-                            trigger: pillar,
-                            start: "top center",
-                            onEnter: () => masterTimeline.tweenTo(`pillar${i + 1}_end`),
-                            onEnterBack: () => masterTimeline.tweenTo(`pillar${i + 1}_start`)
-                        });
-                    });
-                    
-                    // C. The Final Sensor: For the exit state.
-                    ScrollTrigger.create({
-                        trigger: summaryContainer,
-                        start: "top bottom", // Start when summary top hits viewport bottom
-                        onEnter: () => masterTimeline.tweenTo('exit_end'),
-                        onEnterBack: () => masterTimeline.tweenTo('pillar3_end')
+                        trigger: textCol,       // The element that drives the animation
+                        pin: visualsCol,        // The element to pin
+                        start: "top top",       // Start when the top of textCol hits the top of the viewport
+                        end: "bottom bottom", // End when the bottom of textCol hits the bottom of the viewport
+                        animation: masterTimeline, // The timeline to control
+                        scrub: 0.8,             // Smoothly link scrollbar to animation (e.g., 0.8s "catch-up" time)
+                        invalidateOnRefresh: true // Recalculate on viewport resize
                     });
 
 
                     // --- PART 3: The Igloo Exit (State Change) ---
+                    // This logic was already correct and is well-suited for a discrete trigger.
+                    // It remains unchanged as it handles a specific state change (DOM reparenting) at a precise scroll point.
                     let isFlipped = false;
                     ScrollTrigger.create({
                         trigger: summaryContainer,
-                        start: "top center", // This trigger is just for the Flip effect
+                        start: "top center", // Trigger the Flip effect
                         onEnter: () => {
                             if (!isFlipped) {
                                 isFlipped = true;
-                                const state = Flip.getState(actor3D, {props: "scale"});
+                                const state = Flip.getState(actor3D, { props: "scale" });
                                 summaryClipper.appendChild(actor3D);
                                 visualsCol.classList.add('is-exiting');
                                 Flip.from(state, {
@@ -131,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         onLeaveBack: () => {
                             if (isFlipped) {
                                 isFlipped = false;
-                                const state = Flip.getState(actor3D, {props: "scale"});
+                                const state = Flip.getState(actor3D, { props: "scale" });
                                 visualsCol.appendChild(actor3D);
                                 visualsCol.classList.remove('is-exiting');
                                 Flip.from(state, {
@@ -146,8 +131,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
 
                 "(max-width: 768px)": function () {
+                    // This cleanup logic is correct.
                     gsap.set('.pillar-text-content', { autoAlpha: 1 });
-                    gsap.set('.object-3d', {clearProps: "all"}); 
+                    gsap.set('.object-3d', { clearProps: "all" });
                 }
             });
         });
@@ -163,7 +149,7 @@ document.addEventListener('DOMContentLoaded', function () {
             setTimeout(initialCheck, 100);
         }
     }
-    
+
     initialCheck();
 
 });
