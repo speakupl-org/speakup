@@ -10,20 +10,46 @@ is the mandate. Every nanosecond is accounted for.
 
 */
 
-// Oracle v37.0 - The "Sovereign" Protocol
+// Oracle v37.1 - The "Sovereign" Protocol with Configurable Verbosity
 const Oracle = {
+    // NEW: Sovereign Configuration Sub-protocol
+    config: {
+        verbosity: 1, // Default verbosity level: 1 = collapsed, 2 = expanded
+    },
+    
+    // NEW: Initialization method to set configuration from URL or localStorage
+    init: () => {
+        // Priority 2: Check localStorage for a persistent setting
+        const storedVerbosity = localStorage.getItem('oracleVerbosity');
+        if (storedVerbosity !== null) {
+            Oracle.config.verbosity = parseInt(storedVerbosity, 10);
+        }
+
+        // Priority 1: Check URL parameters to override for the current session
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlVerbosity = urlParams.get('oracle_verbosity');
+        if (urlVerbosity !== null) {
+            Oracle.config.verbosity = parseInt(urlVerbosity, 10);
+            localStorage.setItem('oracleVerbosity', urlVerbosity); // Store for convenience
+            Oracle.report(`URL override detected. Verbosity set to ${Oracle.config.verbosity}.`);
+        }
+    },
+    
     _timestamp: () => new Date().toLocaleTimeString('en-US', { hour12: false }),
 
     log: (el, label) => {
+        if (Oracle.config.verbosity < 1) return; // Suppress on quiet mode
         if (!el) { console.error(`%c[ORACLE LOG @ ${Oracle._timestamp()}: ${label}] ERROR - Element is null.`, 'color: #BF616A;'); return; }
         
-        console.groupCollapsed(`%c[ORACLE LOG @ ${Oracle._timestamp()}: ${label}]`, 'color: #D81B60; font-weight: bold;');
+        // Dynamic group method based on verbosity level
+        const groupMethod = Oracle.config.verbosity >= 2 ? console.group : console.groupCollapsed;
+
+        groupMethod(`%c[ORACLE LOG @ ${Oracle._timestamp()}: ${label}]`, 'color: #D81B60; font-weight: bold;');
         const style = window.getComputedStyle(el);
         const transform = {
             scale: gsap.getProperty(el, "scale"),
             rotationX: gsap.getProperty(el, "rotationX"),
             rotationY: gsap.getProperty(el, "rotationY"),
-            // --- FIX: Corrected typo from 'gsKy' to 'gsap' ---
             z: gsap.getProperty(el, "z")
         };
         const bounds = el.getBoundingClientRect();
@@ -36,17 +62,30 @@ const Oracle = {
         console.groupEnd();
     },
     
-    // NEW: High-frequency telemetry for continuous updates
     scan: (label, data) => {
-        console.groupCollapsed(`%c[ORACLE SCAN @ ${Oracle._timestamp()}: ${label}]`, 'color: #B48EAD; font-weight: normal;');
+        if (Oracle.config.verbosity < 1) return; // Suppress on quiet mode
+
+        // Dynamic group method based on verbosity level
+        const groupMethod = Oracle.config.verbosity >= 2 ? console.group : console.groupCollapsed;
+
+        groupMethod(`%c[ORACLE SCAN @ ${Oracle._timestamp()}: ${label}]`, 'color: #B48EAD; font-weight: normal;');
         for (const key in data) {
             console.log(`%c  - ${key}:`, 'color: #88C0D0;', data[key]);
         }
         console.groupEnd();
     },
     
-    group: (label) => console.group(`%c[ORACLE ACTION @ ${Oracle._timestamp()}: ${label}]`, 'color: #A3BE8C; font-weight: bold;'),
-    groupEnd: () => console.groupEnd(),
+    group: (label) => {
+        if (Oracle.config.verbosity < 1) return;
+        // Always use expanded for major actions when not in quiet mode
+        console.group(`%c[ORACLE ACTION @ ${Oracle._timestamp()}: ${label}]`, 'color: #A3BE8C; font-weight: bold;');
+    },
+    
+    groupEnd: () => {
+        if (Oracle.config.verbosity < 1) return;
+        console.groupEnd();
+    },
+
     report: (message) => console.log(`%c[SOVEREIGN REPORT @ ${Oracle._timestamp()}]:`, 'color: #5E81AC; font-weight: bold;', message),
     warn: (message) => console.warn(`%c[SOVEREIGN WARNING @ ${Oracle._timestamp()}]:`, 'color: #EBCB8B;', message),
     
