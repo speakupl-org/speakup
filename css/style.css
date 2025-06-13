@@ -769,22 +769,21 @@ html.menu-open {
     color: #a0a0a0; /* A softer, less-bright gray for depth */
 }
 
-/* --- 3D SCENE SETUP --- */
+/* === FINAL 3D SCENE SETUP (STABLE SIZING) === */
+
 .pillar-visuals-col {
-    /* (existing styles like width, height, top can remain) */
-    /* Add perspective to the parent to create the 3D 'world' */
+    /* (existing styles like width, top can remain) */
+    height: 70vh;
     perspective: 1200px;
-    display: flex; /* Using flex to help center the scene */
+    display: flex;
     justify-content: center;
     align-items: center;
 }
 
+/* Define the cube at a single, perfect size. Flip will handle scaling it later. */
 .scene-3d {
-    /* Let the container be fluid, taking up the space its parent gives it. */
-    width: 100%;
-    height: 100%;
-    max-width: 250px; /* NEW: Let's give it a max size for the pinned state */
-    aspect-ratio: 1 / 1; /* NEW: Ensure it's always a square */
+    width: 200px;
+    height: 200px;
     position: relative;
     transform-style: preserve-3d;
 }
@@ -794,32 +793,37 @@ html.menu-open {
     height: 100%;
     position: absolute;
     transform-style: preserve-3d;
-    /* We still move it back to center it in the 3D space. */
-    /* This calculation is now based on its own dimensions, but for simplicity, 
-       we'll keep the pixel value tied to the faces' translation. */
+    /* TranslateZ is now half of the 200px width. */
+    transform: translateZ(-100px); 
 }
 
 .face {
     position: absolute;
-    /* Make the faces fluid too! */
-    width: 100%;
-    height: 100%;
+    /* Faces are also the fixed, perfect 200x200 size. */
+    width: 200px;
+    height: 200px;
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.3);
     backdrop-filter: blur(10px);
 }
 
-/* Now, we need to adjust the translation based on half the container's new max size */
-/* Half of 250px is 125px. We also need to move the whole object back by this amount. */
-.object-3d {
-    transform: translateZ(-125px); /* Adjusted for new size */
+/* Positioning is now based on the perfect 100px (half of 200px) */
+.face.front  { transform: rotateY(  0deg) translateZ(100px); }
+.face.back   { transform: rotateY(180deg) translateZ(100px); }
+.face.right  { transform: rotateY( 90deg) translateZ(100px); }
+.face.left   { transform: rotateY(-90deg) translateZ(100px); }
+.face.top    { transform: rotateX( 90deg) translateZ(100px); }
+.face.bottom { transform: rotateX(-90deg) translateZ(100px); }
+
+/* Lastly, a small rule to help the Flip animation */
+.summary-thumbnail-clipper .object-3d {
+    /* When the cube is in the clipper, let it be positioned by Flip's inline styles */
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
 }
-.face.front  { transform: rotateY(  0deg) translateZ(125px); }
-.face.back   { transform: rotateY(180deg) translateZ(125px); }
-.face.right  { transform: rotateY( 90deg) translateZ(125px); }
-.face.left   { transform: rotateY(-90deg) translateZ(125px); }
-.face.top    { transform: rotateX( 90deg) translateZ(125px); }
-.face.bottom { transform: rotateX(-90deg) translateZ(125px); }
    
 @media (max-width: 768px) {
     .scrolly-container {
