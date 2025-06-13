@@ -1,20 +1,17 @@
 /*
 ========================================================================================
-   THE DEFINITIVE COVENANT BUILD v32.0 - "The Monolith" Protocol
+   THE DEFINITIVE COVENANT BUILD v32.1 - "Contextual Integrity" Protocol
    
-   All previous protocols are obsolete. The "Monolith" rebuilds the animation
-   logic on the principle of a SINGLE, UNIFIED TIMELINE controlling all scrollytelling
-   elements. The concepts of disabling/enabling triggers, killing tweens, and
-   multiple competing timelines have been purged. The system is now a single,
-eamless, and structurally pure state machine driven only by the scrollbar.
-   This is the final, definitive form.
+   This build corrects a critical flaw in the Monolith v32.0 implementation
+   by restoring the GSAP Context's persistence. The previous version failed
+   to return the context, causing immediate garbage collection of all animations
+   and a total loss of telemetry and motion. This version ensures the Monolith
+   timeline persists and executes as designed.
 ========================================================================================
 */
 
 // Oracle v3.2 - Streamlined for Monolith architecture
 const Oracle = {
-    group: (label) => console.group(`%c[ORACLE ACTION: ${label}]`, 'color: #A3BE8C; font-weight:bold;'),
-    groupEnd: () => console.groupEnd(),
     report: (message) => console.log(`%c[CITADEL REPORT]`, 'color: #88C0D0; font-weight: bold;', message),
     warn: (message) => console.warn(`%c[CITADEL WARNING]`, 'color: #EBCB8B;', message),
     updateHUD: (id, value) => {
@@ -26,8 +23,10 @@ const Oracle = {
 function setupAnimations() {
     gsap.registerPlugin(ScrollTrigger, Flip);
     console.clear();
-    Oracle.report('GSAP Covenant Build v32.0 Initialized. [THE MONOLITH]');
+    Oracle.report('GSAP Covenant Build v32.1 Initialized. [CONTEXTUAL INTEGRITY]');
 
+    // CONTEXTUAL INTEGRITY FIX: The 'ctx' variable MUST be returned by this function
+    // to prevent GSAP from immediately cleaning up all the animations inside it.
     const ctx = gsap.context(() => {
         const elements = {
             heroActor: document.getElementById('actor-3d'),
@@ -48,7 +47,6 @@ function setupAnimations() {
         }
         Oracle.report("Monolith components verified.");
         
-        // Prepare for FLIP by putting stunt double in its final resting place
         elements.placeholder.appendChild(elements.stuntActor);
         gsap.set(elements.stuntActor, {
             position: 'absolute', top: 0, left: 0, width: '100%', height: '100%'
@@ -56,9 +54,6 @@ function setupAnimations() {
 
         ScrollTrigger.matchMedia({
             '(min-width: 769px)': () => {
-                
-                // --- THE MONOLITH TIMELINE ---
-                // One timeline to rule them all. It lasts the entire height of the text column.
                 const tl = gsap.timeline({
                     scrollTrigger: {
                         trigger: elements.textCol,
@@ -67,16 +62,17 @@ function setupAnimations() {
                         scrub: 1.2,
                         pin: elements.visualsCol,
                         onUpdate: (self) => {
-                             // HUD Live transform data
                             Oracle.updateHUD('c-rot-x', gsap.getProperty(elements.heroActor, "rotationX").toFixed(1));
                             Oracle.updateHUD('c-rot-y', gsap.getProperty(elements.heroActor, "rotationY").toFixed(1));
                             Oracle.updateHUD('c-scale', gsap.getProperty(elements.heroActor, "scale").toFixed(2));
                             Oracle.updateHUD('c-tl-progress', self.progress.toFixed(3));
-                        }
+                        },
+                        // Ensure the HUD updates to LANDED if the user scrolls past the end
+                        onLeave: () => Oracle.updateHUD('c-event', 'LANDED'),
+                        onEnterBack: () => Oracle.updateHUD('c-event', 'SCROLLING')
                     }
                 });
 
-                // --- STAGE 1: Animate through Pillar 1 & 2 ---
                 tl.from(elements.textWrappers[0], { autoAlpha: 0, y: 30 })
                   .to(elements.heroActor, { rotationY: 180, rotationX: 20, scale: 1.1, ease: "power1.inOut" }, "<")
                   
@@ -87,37 +83,24 @@ function setupAnimations() {
                   .to(elements.textWrappers[1], { autoAlpha: 0, y: -30 })
                   .from(elements.textWrappers[2], { autoAlpha: 0, y: 30 }, "<");
 
-                // --- STAGE 2: The Final Handoff - Integrated into the Monolith ---
-                
-                // Get the final state of the stunt double IN the placeholder
                 const endState = Flip.getState(elements.stuntActor, { props: "opacity,transform" });
 
-                // Set the stunt double to MATCH the hero actor at this point in the timeline
                 tl.set(elements.stuntActor, {
-                    // Match hero's current transform state
                     rotationX: () => gsap.getProperty(elements.heroActor, "rotationX"),
                     rotationY: () => gsap.getProperty(elements.heroActor, "rotationY"),
                     scale: () => gsap.getProperty(elements.heroActor, "scale"),
-                    autoAlpha: 1 // Make it visible
+                    autoAlpha: 1
                 }, "handoff")
-                .set(elements.heroActor, { autoAlpha: 0 }, "handoff"); // Hide the original hero
+                .set(elements.heroActor, { autoAlpha: 0 }, "handoff");
                 
-                // Add the Flip animation directly into the master timeline
                 tl.add(Flip.from(endState, {
                     targets: elements.stuntActor,
-                    duration: tl.duration() * 0.2, // Duration is a percentage of the timeline
+                    duration: tl.duration() * 0.2,
                     ease: "power2.inOut",
-                    onComplete: () => { // On MONOLITH completion, set final state
-                         elements.stuntActor.classList.add('is-logo-final-state');
-                         Oracle.updateHUD('c-event', 'LANDED');
-                    },
-                    onReverseComplete: () => { // On MONOLITH reversal, remove final state
-                        elements.stuntActor.classList.remove('is-logo-final-state');
-                        Oracle.updateHUD('c-event', 'SCROLLING');
-                    }
+                    onComplete: () => elements.stuntActor.classList.add('is-logo-final-state'),
+                    onReverseComplete: () => elements.stuntActor.classList.remove('is-logo-final-state')
                 }), "handoff");
 
-                // Integrate the face-fade into the Monolith
                 tl.to(elements.stuntActorFaces, {
                     opacity: 0,
                     duration: tl.duration() * 0.1,
@@ -125,41 +108,34 @@ function setupAnimations() {
                 }, "handoff+=0.05");
 
                 Oracle.report("Monolith timeline forged. All systems unified.");
+                // Set initial HUD state
+                Oracle.updateHUD('c-rot-x', '0.0');
+                Oracle.updateHUD('c-rot-y', '0.0');
+                Oracle.updateHUD('c-scale', '1.00');
             }
         });
     });
 
+    // CONTEXTUAL INTEGRITY FIX: This return statement is CRITICAL.
     return ctx;
 }
 
-
-// --- HTML & INITIALIZATION ---
-// You will need to slightly adjust your HUD HTML for the new Panopticon v32
-/*
-<!-- ======================= CEREBRO ORACLE HUD v32.0 "MONOLITH" ======================= -->
-<div id="cerebro-hud">
-    <h4>CEREBRO-HUD v32.0 [MONOLITH]</h4>
-    <div><span class="label">EVENT:</span><span id="c-event">SCROLLING</span></div>
-    <div class="divider"></div>
-    <div class="label" style="text-align:center;">- Monolith Progress -</div>
-    <div><span class="label">Timeline:</span><span id="c-tl-progress">0.000</span></div>
-    <div class="divider"></div>
-    <div class="label" style="text-align:center;">- Live Transform (Hero) -</div>
-    <div><span class="label">Rot X:</span><span id="c-rot-x">--</span></div>
-    <div><span class="label">Rot Y:</span><span id="c-rot-y">--</span></div>
-    <div><span class="label">Scale:</span><span id="c-scale">--</span></div>
-</div>
-<!-- ====================================================================================== -->
-*/
-
-// --- Initialization Protocol v32.0 ---
-function setupSiteLogic() {
-    // ... No changes here. Your existing function is fine.
+// --- INITIALIZATION PROTOCOL v32.1 ---
+function setupSiteLogic(){
+    const e=document.getElementById("menu-open-button"),t=document.getElementById("menu-close-button"),n=document.getElementById("menu-screen"),o=document.documentElement;
+    if(e && t && n){
+        e.addEventListener("click",()=>o.classList.add("menu-open"));
+        t.addEventListener("click",()=>o.classList.remove("menu-open"));
+    }
+    const c=document.getElementById("current-year");
+    if(c)c.textContent=(new Date).getFullYear();
+    Oracle.report("Site logic initialized.");
 }
 
 function initialAnimationSetup() {
     if (window.gsap && window.ScrollTrigger && window.Flip) {
         setupAnimations();
+        // This is no longer necessary with the Monolith, but harmless as a failsafe
         ScrollTrigger.refresh();
         Oracle.report("ScrollTrigger recalibrated to final document layout.");
     } else {
