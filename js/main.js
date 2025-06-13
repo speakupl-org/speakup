@@ -1,4 +1,4 @@
-// main.js (Final Polished Version)
+// main.js (Final Architectural Version)
 
 document.addEventListener('DOMContentLoaded', function () {
     // --- Menu & Footer code (unchanged) ---
@@ -30,14 +30,11 @@ document.addEventListener('DOMContentLoaded', function () {
         yearSpan.textContent = new Date().getFullYear();
     }
 
-    // --- The Robust Animation Setup Function ---
     function setupAnimations() {
         gsap.registerPlugin(ScrollTrigger, Flip);
 
         const ctx = gsap.context(() => {
-            
             ScrollTrigger.matchMedia({
-
                 "(min-width: 769px)": function () {
 
                     const visualsCol = document.querySelector(".pillar-visuals-col");
@@ -47,59 +44,45 @@ document.addEventListener('DOMContentLoaded', function () {
                     const summaryContainer = document.querySelector(".method-summary");
                     const summaryClipper = document.querySelector(".summary-thumbnail-clipper");
 
-                    if (!visualsCol || !textCol || !actor3D || !summaryContainer || !summaryClipper) {
-                        console.error("Scrollytelling elements not found. Aborting animation setup.");
-                        return;
-                    }
+                    if (!visualsCol || !textCol || !actor3D) { return; }
+                    
+                    // Set initial state of ALL text pillars to invisible.
+                    gsap.set(textPillars, { autoAlpha: 0 });
 
-                    // --- THE MASTER TIMELINE ---
-                    // This single timeline controls the entire pillar sequence.
                     const masterTimeline = gsap.timeline({
                         scrollTrigger: {
                             trigger: textCol,
                             pin: visualsCol,
-                            start: "top top",
+                            start: "top top", // Start immediately when the text column top hits the viewport top
                             end: "bottom bottom",
-                            scrub: 1, // Using a smooth scrub value
+                            scrub: 1.2,
                         }
                     });
 
-                    // Set initial state of ALL text pillars to invisible.
-                    gsap.set(textPillars, { autoAlpha: 0 });
-
-                    // --- THE PERFECTLY PACED ANIMATION SEQUENCE ---
-
-                    // **Pillar 1: Define explicit FROM and TO states for perfect alignment.**
+                    // --- THE PROFESSIONAL PATTERN for the timeline start ---
+                    // The timeline begins IMMEDIATELY with the animation for Pillar 1.
+                    // No "dead" scroll space.
                     masterTimeline
-                        .to(textPillars[0], { autoAlpha: 1 }) // 1. Fade in text
-                        .fromTo(actor3D, // 2. Animate cube at the SAME TIME
-                            { rotationY: 20, rotationX: -15, scale: 1 },
-                            { rotationY: 120, rotationX: 10, scale: 1.1, ease: "power1.inOut" },
-                            "<" // The "<" ensures this starts with the text fade-in
-                        );
+                        .from(actor3D, { rotationY: 20, rotationX: -15, scale: 1, ease: "power1.inOut" })
+                        .to(textPillars[0], { autoAlpha: 1 }, "<");
+
+                    // **Pillar 2**
+                    masterTimeline
+                        .to(textPillars[0], { autoAlpha: 0 })
+                        .to(textPillars[1], { autoAlpha: 1 }, "<+=0.1")
+                        .to(actor3D, { rotationY: 120, rotationX: 10, scale: 1.1, ease: "power1.inOut" }, "<");
+
+                    // **Pillar 3**
+                    masterTimeline
+                        .to(textPillars[1], { autoAlpha: 0 })
+                        .to(textPillars[2], { autoAlpha: 1 }, "<+=0.1")
+                        .to(actor3D, { rotationY: -120, rotationX: -20, scale: 1.2, ease: "power1.inOut" }, "<");
                     
-                    // **Pillar 2: Transition from Pillar 1's state to Pillar 2's state.**
+                    // Final transition to the "at rest" state for the exit
                     masterTimeline
-                        .to(textPillars[0], { autoAlpha: 0 }) // 1. Fade out previous text
-                        .to(textPillars[1], { autoAlpha: 1 }, "<+=0.1") // 2. Fade in new text slightly after
-                        .fromTo(actor3D, // 3. Animate cube at the SAME TIME as the fade out
-                            { rotationY: 120, rotationX: 10, scale: 1.1 },
-                            { rotationY: -120, rotationX: -20, scale: 1.2, ease: "power1.inOut" },
-                            "<"
-                        );
-
-                    // **Pillar 3: Transition from Pillar 2's state to the final "at rest" state.**
-                    masterTimeline
-                        .to(textPillars[1], { autoAlpha: 0 }) // 1. Fade out previous text
-                        .to(textPillars[2], { autoAlpha: 1 }, "<+=0.1") // 2. Fade in final text
-                        .fromTo(actor3D, // 3. Animate cube at the SAME TIME
-                            { rotationY: -120, rotationX: -20, scale: 1.2 },
-                            { rotationY: 0, rotationX: 0, scale: 1, ease: "power1.inOut" },
-                            "<"
-                        );
+                        .to(textPillars[2], { autoAlpha: 0 })
+                        .to(actor3D, { rotationY: 0, rotationX: 0, scale: 1, ease: "power1.inOut" }, "<");
                     
-                    // Add a final "hold" at the end so Pillar 3 text is readable before the section ends.
-                    masterTimeline.to({}, { duration: 0.2 });
 
                     // --- The "Igloo" Exit/Return Animation ---
                     let isFlipped = false;
@@ -114,38 +97,35 @@ document.addEventListener('DOMContentLoaded', function () {
                                 summaryClipper.appendChild(actor3D);
                                 visualsCol.classList.add('is-exiting');
                                 Flip.from(state, {
-                                    duration: 1.2,
+                                    duration: 0.8,
                                     ease: "power2.inOut",
-                                    scale: true,
-                                    onComplete: () => {
-                                        gsap.set(actor3D, { clearProps: "all" });
-                                    }
+                                    scale: true
                                 });
                             }
                         },
-                        // ** THE SEAMLESS "NO-BLIP" onLeaveBack **
                         onLeaveBack: () => {
                             if (isFlipped) {
                                 isFlipped = false;
-                                // Hide the cube for one frame to prevent the browser "blip"
-                                gsap.set(actor3D, { autoAlpha: 0 });
                                 
-                                // Instantly do all DOM and state changes while it's hidden
+                                // THE "INSTANTANEOUS FLIP" PATTERN
+                                const state = Flip.getState(actor3D);
                                 visualsCol.appendChild(actor3D);
                                 visualsCol.classList.remove('is-exiting');
-                                masterTimeline.progress(1); // Set scrub to the correct end-state
-                                
-                                // Reveal the cube again. This all happens in the same frame.
-                                gsap.set(actor3D, { autoAlpha: 1 });
+
+                                // This is the magic. We use Flip to calculate and apply the
+                                // necessary transform in ZERO seconds, preventing any blip.
+                                Flip.from(state, {
+                                    duration: 0.5, // A brief, smooth transition back instead of a harsh pop
+                                    ease: "power2.out"
+                                });
                             }
                         }
                     });
                 },
 
                 "(max-width: 768px)": function () {
-                    // On mobile, ensure everything is visible and reset any transforms.
                     gsap.set(textPillars, { autoAlpha: 1 });
-                    gsap.set(actor3D, {clearProps: "all"}); 
+                    gsap.set(actor3D, { clearProps: "all" });
                 }
             });
         });
@@ -162,5 +142,4 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     
     initialCheck();
-
 });
