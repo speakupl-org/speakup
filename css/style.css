@@ -1511,21 +1511,26 @@ body.scroll-locked {
     visibility: hidden; /* Start invisible */
 }
 /* ==========================================================
-   V26 "CRYSTALLIZATION" PROTOCOL - ESSENTIAL STYLES
+   V27 "TRINITY" PROTOCOL - ESSENTIAL STYLES
    ========================================================== */
 
-/* This is the class that triggers the transformation */
+/* This class triggers the transformation into a flat logo */
+#actor-3d.is-logo {
+    /* THIS IS KEY: It tells the browser to treat this as a flat 2D element */
+    transform-style: flat; 
+}
+
 #actor-3d.is-logo .face {
-    /* Hide the 3D cube faces */
-    background-color: transparent !important;
+    background: transparent !important;
     border: none !important;
     backdrop-filter: none !important;
 }
 
 #actor-3d.is-logo .face.front {
-    /* The front face becomes the container for your logo */
-    opacity: 1; /* Ensure it's visible */
-    background-image: url('../images/logo.svg'); /* <<<=== CRITICAL: CHANGE THIS TO YOUR LOGO PATH */
+    opacity: 1 !important; /* Ensure it's visible */
+    /* This makes sure the logo doesn't inherit any weird 3D transforms */
+    transform: none !important; 
+    background-image: url('../images/logo.svg'); /* CRITICAL: Ensure this path is correct */
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
