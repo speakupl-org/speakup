@@ -1511,20 +1511,22 @@ body.scroll-locked {
     visibility: hidden; /* Start invisible */
 }
 /* ==========================================================
-   V26 "CRYSTALLIZATION" PROTOCOL - FINAL STATE STYLES
+   V26 "CRYSTALLIZATION" PROTOCOL - ESSENTIAL STYLES
    ========================================================== */
 
-/* This class represents the CUBE ITSELF when it has become a flat logo.
-   It removes the 3D properties and sets a simple background. */
-.object-3d.is-logo {
-    transform: none !important; /* Resets all 3D transforms */
-    transform-style: flat;      /* Disables 3D for children */
-    background-color: #43a8b4;  /* CHANGE THIS to your logo's color */
-    border-radius: 8px;         /* Optional: gives it soft corners */
+/* This is the class that triggers the transformation */
+#actor-3d.is-logo .face {
+    /* Hide the 3D cube faces */
+    background-color: transparent !important;
+    border: none !important;
+    backdrop-filter: none !important;
 }
 
-/* This targets the faces of the cube, hiding them when it becomes a logo. */
-.object-3d.is-logo .face {
-    visibility: hidden;
-    opacity: 0;
+#actor-3d.is-logo .face.front {
+    /* The front face becomes the container for your logo */
+    opacity: 1; /* Ensure it's visible */
+    background-image: url('../images/logo.svg'); /* <<<=== CRITICAL: CHANGE THIS TO YOUR LOGO PATH */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 }
