@@ -1,21 +1,18 @@
 /*
 ========================================================================================
-   THE FINAL COVENANT BUILD v14.0 - The Rebirth Lock Protocol
+   THE FINAL COVENANT BUILD v14.1 - The Rebirth Lock Protocol (Syntax Corrected)
    
-   This is the definitive, battle-hardened build. It solves the final race condition
-   caused by the `scrollTo` jump poisoning the `direction` calculation for a single frame.
-   
-   The "Rebirth Lock" (`isRebirthing` flag) is a manual state lock that is engaged
-   the moment a rebirth is triggered and disengaged ONLY after the entire protocol,
-   including the Flip animation, is complete. This makes the system immune to the
-   `scrollTo` anomaly and provides absolute state control. This is the final gear.
+   This build corrects a critical `SyntaxError` from v14.0 caused by a duplicate
+   variable declaration (`states`). The robust "Rebirth Lock" logic remains identical
+   and can now execute as intended, providing the definitive fix for the reverse-scroll
+   race condition. This is the final, working gear.
 ========================================================================================
 */
 
 function setupAnimations() {
     gsap.registerPlugin(ScrollTrigger, Flip);
     console.clear();
-    console.log('%cGSAP Covenant Build v14.0 Initialized. All systems armed.', 'color: #88C0D0; font-weight: bold; font-size: 14px;');
+    console.log('%cGSAP Covenant Build v14.1 Initialized. All systems armed.', 'color: #88C0D0; font-weight: bold; font-size: 14px;');
     ScrollTrigger.defaults({ markers: true });
 
     const ctx = gsap.context(() => {
@@ -39,12 +36,12 @@ function setupAnimations() {
               cTlProg = document.getElementById('c-tl-prog'), cScrubProg = document.getElementById('c-scrub-prog'),
               cHandoffState = document.getElementById('c-handoff-state'),
               cScrollDir = document.getElementById('c-scroll-dir'),
-              cRebirthLock = document.getElementById('c-rebirth-lock'), // <-- CRANK UP: HUD for the lock
+              cRebirthLock = document.getElementById('c-rebirth-lock'),
               cRotY = document.getElementById('c-roty'), cRotYTarget = document.getElementById('c-roty-target');
 
         // --- THE UNBREAKABLE STATE LOCKS ---
         let isFlipped = false;
-        let isRebirthing = false; // <-- CRANK UP: The master lock
+        let isRebirthing = false;
         cState.textContent = "Standby";
         cRebirthLock.textContent = "INACTIVE";
 
@@ -53,19 +50,22 @@ function setupAnimations() {
                 console.log("[MatchMedia] Entering desktop setup (min-width: 769px).");
                 cState.textContent = "In Scroller";
                 
-                // Timeline and Scrub setup are unchanged and correct.
                 const tl = gsap.timeline({ paused: true });
-                const states = { /* ... */ }; // (omitted for brevity)
-                // ... full timeline definition ...
-                 const states = {
+                
+                // =========================================================
+                // <-- SYNTAX FIX: The duplicate 'states' declaration is removed.
+                // =========================================================
+                const states = {
                     p1: { rotationY: 20, rotationX: -15, scale: 1.0 },
                     p2: { rotationY: 120, rotationX: 10, scale: 1.1 },
                     p3: { rotationY: -120, rotationX: -20, scale: 1.2 },
                     exit: { rotationY: 0, rotationX: 0, scale: 1.0 }
                 };
                 cRotYTarget.textContent = `${states.p3.rotationY}`;
+
                 gsap.set(textPillars, { autoAlpha: 0, y: '30px' });
                 gsap.set(textPillars[0], { autoAlpha: 1, y: '0px' });
+
                 tl.to(actor3D, { ...states.p1, duration: 1 })
                   .to(textPillars[0], { autoAlpha: 0, y: '-30px', duration: 0.4 }, "+=1")
                   .to(actor3D, { ...states.p2, duration: 1 }, "<")
@@ -76,12 +76,13 @@ function setupAnimations() {
                   .addLabel("finalState")
                   .to(textPillars[2], { autoAlpha: 0, y: '-30px', duration: 0.4 }, "+=1")
                   .to(actor3D, { ...states.exit, duration: 1 }, "<");
+
                 console.log(`[Timeline] Covenant Timeline created. Total duration: ${tl.duration().toFixed(2)}s.`);
                 
                 const mainScrub = ScrollTrigger.create({ trigger: textCol, pin: visualsCol, start: 'top top', end: `bottom bottom-=${window.innerHeight / 2}`, animation: tl, scrub: 0.8, invalidateOnRefresh: true, });
-                gsap.ticker.add(() => { /* HUD Ticker */ if(cState.textContent==="Standby")return;cTlProg.textContent=tl.progress().toFixed(4);cScrubProg.textContent=mainScrub.progress.toFixed(4);cRotY.textContent=gsap.getProperty(actor3D,"rotationY").toFixed(2); });
+                gsap.ticker.add(() => { if(cState.textContent==="Standby")return;cTlProg.textContent=tl.progress().toFixed(4);cScrubProg.textContent=mainScrub.progress.toFixed(4);cRotY.textContent=gsap.getProperty(actor3D,"rotationY").toFixed(2); });
                 
-                // ================== THE REBIRTH LOCK TRIGGER (v14) ==================
+                // --- The Rebirth Lock Trigger (Logic is unchanged and correct) ---
                 ScrollTrigger.create({
                     trigger: handoffPoint,
                     start: 'top center',
@@ -89,27 +90,22 @@ function setupAnimations() {
                     onToggle: self => {
                         cHandoffState.textContent = self.isActive ? 'ACTIVE' : 'INACTIVE';
                         
-                        // --- FLIP DOWN LOGIC (Guarded by the Lock) ---
                         if (self.isActive && self.direction === 1) {
-                            if (isFlipped || isRebirthing) { // <-- CRANK UP: Check the lock!
+                            if (isFlipped || isRebirthing) {
                                 if (isRebirthing) console.log("%cFlip Down BLOCKED by Rebirth Lock.", "color: #D08770;");
                                 return;
                             }
                             isFlipped = true;
                             cState.textContent = "FLIPPED"; cEvent.textContent = "onToggle (Flip Down)";
                             console.log("%cEVENT: onToggle -> Flip Down", "color: #A3BE8C; font-weight: bold;");
-
                             mainScrub.disable();
                             const state = Flip.getState(actor3D);
                             summaryClipper.appendChild(actor3D);
                             Flip.from(state, { duration: 0.8, ease: 'power2.inOut', scale: true });
                         }
                         
-                        // --- REBIRTH LOGIC (Engages the Lock) ---
                         if (!self.isActive && self.direction === -1) {
                             if (!isFlipped) return;
-
-                            // ENGAGE THE LOCK FIRST
                             isRebirthing = true;
                             cRebirthLock.textContent = "ACTIVE";
                             console.log('%cREBIRTH LOCK: ENGAGED', 'font-weight: bold; color: #BF616A;');
@@ -123,7 +119,6 @@ function setupAnimations() {
                             Flip.from(state, {
                                 duration: 0.8, ease: 'power2.out', scale: true,
                                 onComplete: () => {
-                                    // The Rebirth Protocol runs perfectly inside the animation's onComplete.
                                     console.group('%cREBIRTH PROTOCOL INITIATED', 'color: #D81B60; font-weight:bold;');
                                     tl.invalidate();
                                     const finalStateProgress = tl.labels.finalState / tl.duration();
@@ -138,7 +133,6 @@ function setupAnimations() {
                                     console.log("%cREBIRTH COMPLETE. System integrity restored.", 'font-weight: bold;');
                                     console.groupEnd();
                                     
-                                    // DISENGAGE THE LOCK LAST
                                     isRebirthing = false;
                                     cRebirthLock.textContent = "INACTIVE";
                                     console.log('%cREBIRTH LOCK: DISENGAGED', 'font-weight: bold; color: #A3BE8C;');
