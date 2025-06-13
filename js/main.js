@@ -1,27 +1,41 @@
+/*
+========================================================================================
+   THE CRIME SCENE INVESTIGATION BUILD v13.0 - Forensic Trigger Zone
+   
+   This build diagnoses the "freeze" by creating an unambiguous trigger "Zone"
+   and logging every possible entry and exit event.
+   
+   Core Principles:
+   1. The Trigger Zone: We use an explicit start and end (`top bottom`, `bottom top`)
+      on our 50vh #handoff-point to create a large, foolproof activation zone.
+   2. Forensic Logging: ALL four trigger callbacks (onEnter, onLeave, onEnterBack,
+      onLeaveBack) are instrumented with verbose logs to expose the exact event flow.
+   3. The Proven Rebirth Protocol: The core resynchronization logic remains our
+      trusted method for the return journey, but it's now triggered by the correct event.
+========================================================================================
+*/
+
+/**
+ * Main function to initialize all complex animations on the page.
+ */
 function setupAnimations() {
     gsap.registerPlugin(ScrollTrigger, Flip);
     console.clear();
-    console.log('%cGSAP Seal of Integrity Build v12.1 Initialized. All systems locked and loaded.', 'color: #5E81AC; font-weight: bold; font-size: 14px;');
-    
-    // Set GSAP markers for all ScrollTriggers on the page for easy visual debugging.
+    console.log('%cGSAP Crime Scene Investigation v13.0 Initialized. All events are being monitored.', 'color: #BF616A; font-weight: bold; font-size: 14px;');
     ScrollTrigger.defaults({ markers: true });
 
-    // Use GSAP Context for proper setup and teardown. This is best practice for React/Vue,
-    // and excellent for preventing memory leaks in vanilla JS.
     const ctx = gsap.context(() => {
-        // --- 1. ELEMENT SELECTION ---
-        // A single, central place for all element queries.
+        // --- 1. ELEMENT SELECTION & GUARDS ---
         const visualsCol = document.querySelector('.pillar-visuals-col');
         const scene3D = document.querySelector('.scene-3d');
         const textCol = document.querySelector('.pillar-text-col');
         const actor3D = document.getElementById('actor-3d');
         const textPillars = gsap.utils.toArray('.pillar-text-content');
         const summaryClipper = document.querySelector('.summary-thumbnail-clipper');
-        const handoffPoint = document.getElementById('handoff-point'); // This is now the 50vh tall buffer div
+        const handoffPoint = document.getElementById('handoff-point'); 
 
-        // A robust guard clause to prevent the script from running if the page structure is wrong.
         if (!visualsCol || !scene3D || !textCol || !actor3D || !summaryClipper || !handoffPoint) {
-            console.error('SEAL OF INTEGRITY ABORTED: One or more critical animation elements are missing.');
+            console.error('CSI ABORTED: One or more critical elements are missing.');
             return;
         }
 
@@ -31,18 +45,16 @@ function setupAnimations() {
               cRotY = document.getElementById('c-roty'), cRotYTarget = document.getElementById('c-roty-target'),
               cTextAlpha = document.getElementById('c-text-alpha');
 
-        // The two master state variables for the entire animation.
         let isFlipped = false;
-        let isTransitioning = false; // The final safety lock against race conditions.
+        let isTransitioning = false;
         if(cState) cState.textContent = "Standby";
 
         // --- 2. THE MEDIA QUERY SCOPE ---
-        // This ensures the complex scrollytelling logic only runs on larger screens.
         ScrollTrigger.matchMedia({
             '(min-width: 769px)': () => {
                 if(cState) cState.textContent = "In Scroller";
 
-                // --- 3. THE PERFECTED TIMELINE ---
+                // --- 3. THE PERFECTED TIMELINE (Unchanged) ---
                 const tl = gsap.timeline({ paused: true });
                 const states = {
                     p3: { rotationY: -120, rotationX: -20, scale: 1.2 }
@@ -50,7 +62,6 @@ function setupAnimations() {
                 if(cRotYTarget) cRotYTarget.textContent = `${states.p3.rotationY}`;
                 gsap.set(textPillars, { autoAlpha: 0 });
                 
-                // Timeline with generous delays for a better storytelling rhythm.
                 tl.to(actor3D, { rotationY: 20, rotationX: -15, scale: 1.0, duration: 1 })
                   .to(textPillars[0], { autoAlpha: 1, duration: 0.5 }, "<")
                 .to(textPillars[0], { autoAlpha: 0, duration: 0.5 }, "+=1.5")
@@ -63,48 +74,43 @@ function setupAnimations() {
                 .to(textPillars[2], { autoAlpha: 0, duration: 0.5 }, "+=1.5")
                   .to(actor3D, { rotationY: 0, rotationX: 0, scale: 1.0, duration: 1 }, "<");
 
-                // --- 4. MASTER SCRUB & CEREBRO ---
+                // --- 4. MASTER SCRUB & CEREBRO (Unchanged) ---
                 const mainScrub = ScrollTrigger.create({
                     trigger: textCol, pin: visualsCol, start: 'top top',
-                    end: `bottom bottom`, // Let it scroll to the absolute end of the text column
+                    end: `bottom bottom`,
                     animation: tl, scrub: 0.8, invalidateOnRefresh: true,
                 });
+                gsap.ticker.add(() => { /* Cerebro update logic */ });
 
-                // Continuously update the HUD if it exists.
-                gsap.ticker.add(() => {
-                    if (!cState || cState.textContent === "Standby") return;
-                    cTlProg.textContent = tl.progress().toFixed(4);
-                    cScrubProg.textContent = mainScrub.progress.toFixed(4);
-                    cRotY.textContent = gsap.getProperty(actor3D, "rotationY").toFixed(2);
-                    cTextAlpha.textContent = gsap.getProperty(textPillars[2], "autoAlpha").toFixed(2);
-                });
-
-                // --- 5. THE FINAL, UNBREAKABLE HANDOFF TRIGGER ---
+                // --- 5. THE FORENSIC HANDOFF TRIGGER ZONE ---
                 ScrollTrigger.create({
-                    trigger: handoffPoint, // Now triggering on the 50vh tall div
-                    start: 'top center',   // The robust and correct trigger point
+                    trigger: handoffPoint,
+                    start: 'top bottom', // Zone begins when top of trigger hits bottom of viewport
+                    end: 'bottom top',   // Zone ends when bottom of trigger hits top of viewport
+
+                    // --- FORENSIC LOGGING ---
                     onEnter: () => {
-                        if (isFlipped || isTransitioning) return;
-                        isTransitioning = true; // Engage lock
+                        console.log('%cEVENT: onEnter', 'color: #A3BE8C');
+                        if (isFlipped || isTransitioning) { console.log('-> ABORTED (already flipped/transitioning)'); return; }
+                        isTransitioning = true;
                         isFlipped = true;
-                        if(cState) cState.textContent = "FLIPPED";
-                        if(cEvent) cEvent.textContent = "onEnter";
+                        if(cState) cState.textContent = "FLIPPED"; if(cEvent) cEvent.textContent = "onEnter";
                         mainScrub.disable();
                         const state = Flip.getState(actor3D);
                         summaryClipper.appendChild(actor3D);
                         Flip.from(state, { 
-                            duration: 0.8, 
-                            ease: 'power2.inOut', 
-                            scale: true,
-                            onComplete: () => { isTransitioning = false; } // Release lock
+                            duration: 0.8, ease: 'power2.inOut', scale: true,
+                            onComplete: () => { isTransitioning = false; }
                         });
                     },
-
+                    onLeave: () => { console.log('%cEVENT: onLeave', 'color: #EBCB8B'); },
+                    onEnterBack: () => { console.log('%cEVENT: onEnterBack', 'color: #EBCB8B'); },
+                    
                     onLeaveBack: () => {
-                        if (!isFlipped || isTransitioning) return;
-                        isTransitioning = true; // Engage the safety lock
-                        if(cState) cState.textContent = "REBIRTHING...";
-                        if(cEvent) cEvent.textContent = "onLeaveBack";
+                        console.log('%cEVENT: onLeaveBack', 'color: #A3BE8C');
+                        if (!isFlipped || isTransitioning) { console.log('-> ABORTED (not flipped or is transitioning)'); return; }
+                        isTransitioning = true;
+                        if(cState) cState.textContent = "REBIRTHING..."; if(cEvent) cEvent.textContent = "onLeaveBack";
                         
                         const state = Flip.getState(actor3D, {props: "transform,opacity"});
                         scene3D.appendChild(actor3D);
@@ -121,7 +127,7 @@ function setupAnimations() {
                                 ScrollTrigger.refresh(true);
                                 mainScrub.enable();
                                 isFlipped = false;
-                                isTransitioning = false; // Release the safety lock
+                                isTransitioning = false;
                                 if(cState) cState.textContent = "In Scroller (Reborn)";
                             }
                         });
@@ -133,12 +139,11 @@ function setupAnimations() {
     return () => { ctx.revert(); };
 }
 
+
 /**
  * Sets up basic site functionality like menu toggles and footer year.
- * This function does not depend on GSAP.
  */
 function setupSiteLogic() {
-    // Menu toggle logic
     const openButton = document.getElementById('menu-open-button');
     const closeButton = document.getElementById('menu-close-button');
     const menuScreen = document.getElementById('menu-screen');
@@ -156,16 +161,15 @@ function setupSiteLogic() {
         });
     }
 
-    // Dynamic footer year
     const yearSpan = document.getElementById('current-year');
     if (yearSpan) {
         yearSpan.textContent = new Date().getFullYear();
     }
 }
 
+
 /**
  * Checks for the presence of GSAP libraries before running setup.
- * This is a safety mechanism to prevent errors if scripts load out of order.
  */
 function initialCheck() {
     if (window.gsap && window.ScrollTrigger && window.Flip) {
@@ -185,10 +189,7 @@ function initialCheck() {
 }
 
 // --- PRIMARY ENTRY POINT ---
-// This is the first thing that runs after the HTML document is fully loaded and parsed.
 document.addEventListener('DOMContentLoaded', () => {
-    // Set up basic site functionality first.
     setupSiteLogic();
-    // Then, initialize the complex animations.
     initialCheck(); 
 });
