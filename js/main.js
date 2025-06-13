@@ -1,4 +1,4 @@
-// main.js (Final Architectural Version w/ Handoff Fix)
+// main.js (Final Production Version)
 
 document.addEventListener('DOMContentLoaded', function () {
     // --- Menu & Footer code (unchanged) ---
@@ -30,28 +30,43 @@ document.addEventListener('DOMContentLoaded', function () {
         yearSpan.textContent = new Date().getFullYear();
     }
 
+    // --- REFACTORED ANIMATION LOGIC ---
     function setupAnimations() {
         gsap.registerPlugin(ScrollTrigger, Flip);
 
         const ctx = gsap.context(() => {
+            
+            // --- Element Validation ---
+            const visualsCol = document.querySelector(".pillar-visuals-col");
+            const textCol = document.querySelector(".pillar-text-col");
+            const actor3D = document.getElementById("actor-3d");
+            const textPillars = gsap.utils.toArray('.pillar-text-content');
+            const summaryContainer = document.querySelector(".method-summary");
+            const summaryClipper = document.querySelector(".summary-thumbnail-clipper");
+
+            if (!visualsCol || !textCol || !actor3D || !summaryContainer || !summaryClipper || textPillars.length === 0) {
+                console.error("Scrollytelling animations aborted: One or more required elements are missing from the DOM.");
+                return;
+            }
+            
+            // Shared state variable must be inside the context
+            let isFlipped = false;
+
             ScrollTrigger.matchMedia({
+
+                // --- DESKTOP ANIMATIONS ---
                 "(min-width: 769px)": function () {
 
-                    const visualsCol = document.querySelector(".pillar-visuals-col");
-                    const textCol = document.querySelector(".pillar-text-col");
-                    const actor3D = document.getElementById("actor-3d");
-                    const textPillars = gsap.utils.toArray('.pillar-text-content');
-                    const summaryContainer = document.querySelector(".method-summary");
-                    const summaryClipper = document.querySelector(".summary-thumbnail-clipper");
-
-                    if (!visualsCol || !textCol || !actor3D || textPillars.length < 3) { return; }
-
-                    // --- PART 1: The Film Strip (The Master Timeline) ---
+                    // Performance: Hint to the browser what will animate
+                    gsap.set(actor3D, { willChange: "transform" });
+                    gsap.set(textPillars, { willChange: "opacity" });
+                    
+                    // --- PART 1: The Master Timeline ("The Film Strip") ---
                     const masterTimeline = gsap.timeline({
                         defaults: { duration: 0.6, ease: "power2.inOut" }
                     });
 
-                    // Set initial state
+                    // State for Pillar 1
                     masterTimeline
                         .set(textPillars, { autoAlpha: 0 })
                         .set(textPillars[0], { autoAlpha: 1 })
@@ -68,18 +83,15 @@ document.addEventListener('DOMContentLoaded', function () {
                         .to(textPillars[1], { autoAlpha: 0 })
                         .to(textPillars[2], { autoAlpha: 1 }, "<")
                         .to(actor3D, { rotationY: -120, rotationX: -20, scale: 1.2 }, "<")
-                        // **FIX:** Add a label to mark the final state BEFORE the exit.
-                        // This gives us a clean state to return to.
-                        .addLabel("pillar3_end");
+                        // Add a label to mark the final, stable state before exiting. This is our rewind point.
+                        .addLabel("finalState");
 
-                    // Transition to Exit State (Ready for Flip)
+                    // Transition to Exit State (Cube resets rotation, ready for Flip)
                     masterTimeline
                         .to(textPillars[2], { autoAlpha: 0 })
                         .to(actor3D, { rotationY: 0, rotationX: 0, scale: 1 }, "<");
 
-
-                    // --- PART 2: The Projector (A Single, Scrubbing ScrollTrigger) ---
-                    // **FIX:** Store the ScrollTrigger in a variable so we can disable/enable it.
+                    // --- PART 2: The Main Controller ("The Director") ---
                     const mainScrubber = ScrollTrigger.create({
                         trigger: textCol,
                         pin: visualsCol,
@@ -90,46 +102,47 @@ document.addEventListener('DOMContentLoaded', function () {
                         invalidateOnRefresh: true
                     });
 
-
-                    // --- PART 3: The Igloo Exit (State Change with Handoff Logic) ---
-                    let isFlipped = false;
+                    // --- PART 3: The State Change ("The Stunt Coordinator") ---
                     ScrollTrigger.create({
                         trigger: summaryContainer,
-                        start: "top center", // This trigger is for the Flip effect
+                        start: "top center",
                         onEnter: () => {
                             if (!isFlipped) {
                                 isFlipped = true;
                                 
-                                // **FIX:** Disable the main scrubber to hand off control.
+                                // HANDOFF: Pause the main controller
                                 mainScrubber.disable();
-
-                                const state = Flip.getState(actor3D, { props: "scale" });
+                                
+                                const state = Flip.getState(actor3D, { props: "scale,rotation" });
                                 summaryClipper.appendChild(actor3D);
                                 visualsCol.classList.add('is-exiting');
+                                
                                 Flip.from(state, {
                                     duration: 0.8,
                                     ease: "power2.inOut",
                                     scale: true,
+                                    // CRITICAL: Clean up Flip's inline styles to prevent conflict.
+                                    onComplete: () => gsap.set(actor3D, { clearProps: "transform" })
                                 });
                             }
                         },
                         onLeaveBack: () => {
                             if (isFlipped) {
                                 isFlipped = false;
-
-                                // Perform the reverse flip first.
-                                const state = Flip.getState(actor3D, { props: "scale" });
+                                
+                                const state = Flip.getState(actor3D, { props: "scale,rotation" });
                                 visualsCol.appendChild(actor3D);
                                 visualsCol.classList.remove('is-exiting');
+                                
                                 Flip.from(state, {
                                     duration: 0.8,
                                     ease: "power2.out",
                                     scale: true,
-                                    // **FIX:** On completion, reset and re-enable the scrubber.
+                                    // HANDOFF: After flip-back, reset state and give control back to main scrubber.
                                     onComplete: () => {
-                                        // 1. Manually reset the timeline to the correct state.
-                                        masterTimeline.seek("pillar3_end");
-                                        // 2. Re-enable the scrubber to give control back.
+                                        // 1. Manually reset the timeline to the last good state.
+                                        masterTimeline.seek("finalState");
+                                        // 2. Re-enable the main controller.
                                         mainScrubber.enable();
                                     }
                                 });
@@ -139,23 +152,50 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 },
 
+                // --- MOBILE CLEANUP ---
                 "(max-width: 768px)": function () {
-                    gsap.set('.pillar-text-content', { autoAlpha: 1 });
-                    gsap.set('.object-3d', { clearProps: "all" });
+                    // When switching to mobile, ensure a clean state by killing all animations and triggers.
+                    // This prevents GSAP from getting confused if the user resizes mid-animation.
+                    ScrollTrigger.getAll().forEach(st => st.kill());
+                    gsap.killTweensOf([actor3D, textPillars]);
+                    gsap.set(textPillars, { autoAlpha: 1 });
+                    gsap.set(actor3D, { clearProps: "all" });
+                    
+                    // Also ensure the element is back in its original container if it was flipped
+                    if (visualsCol && !visualsCol.contains(actor3D)) {
+                         visualsCol.appendChild(actor3D);
+                    }
+                    visualsCol.classList.remove('is-exiting');
+
+                    isFlipped = false;
                 }
             });
         });
 
-        return () => ctx.revert();
+        return () => ctx.revert(); // GSAP cleanup function
     }
 
+    // --- Readiness Gate (Unchanged) ---
     function initialCheck() {
         if (window.gsap && window.ScrollTrigger && window.Flip) {
             setupAnimations();
         } else {
-            setTimeout(initialCheck, 100);
+            // Optional: More robustly check for up to 3 seconds.
+            let attempts = 0;
+            const maxAttempts = 30;
+            const interval = setInterval(() => {
+                attempts++;
+                if (window.gsap && window.ScrollTrigger && window.Flip) {
+                    clearInterval(interval);
+                    setupAnimations();
+                } else if (attempts >= maxAttempts) {
+                    clearInterval(interval);
+                    console.error("GSAP plugins failed to load in time.");
+                }
+            }, 100);
         }
     }
-
+    
     initialCheck();
+
 });
