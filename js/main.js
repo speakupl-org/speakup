@@ -66,6 +66,7 @@ function setupAnimations() {
         ScrollTrigger.matchMedia({
             // --- DESKTOP ANIMATIONS ---
             '(min-width: 769px)': () => {
+                // FOUC setup (Unchanged)
                 gsap.set(textPillars, { autoAlpha: 0 });
                 gsap.set(textPillars[0], { autoAlpha: 1 });
 
@@ -77,41 +78,49 @@ function setupAnimations() {
                         trigger: pillar,
                         start: 'top 60%',
                         end: 'bottom 40%',
-                        onEnter:    () => gsap.to(line, { scaleX: 1, duration: 0.8, ease: 'power4.out' }),
-                        onLeave:    () => gsap.to(line, { scaleX: 0, transformOrigin: 'right', duration: 0.6, ease: 'power4.in' }),
-                        onEnterBack:() => gsap.to(line, { scaleX: 1, transformOrigin: 'left',  duration: 0.8, ease: 'power4.out' }),
-                        onLeaveBack:() => gsap.to(line, { scaleX: 0, duration: 0.6, ease: 'power4.in' }),
+                        onEnter: () => gsap.to(line, { scaleX: 1, duration: 0.8, ease: 'power4.out' }),
+                        onLeave: () => gsap.to(line, { scaleX: 0, transformOrigin: 'right', duration: 0.6, ease: 'power4.in' }),
+                        onEnterBack: () => gsap.to(line, { scaleX: 1, transformOrigin: 'left', duration: 0.8, ease: 'power4.out' }),
+                        onLeaveBack: () => gsap.to(line, { scaleX: 0, duration: 0.6, ease: 'power4.in' }),
                     });
                 });
 
                 const states = [
-                    { rotationY: 20,   rotationX: -15, scale: 1.0 },
-                    { rotationY: 120,  rotationX: 10,  scale: 1.1 },
-                    { rotationY: -120, rotationX: -20, scale: 1.2 }
+                    { rotationY: 20, rotationX: -15, scale: 1.0 }, // State for Pillar 1
+                    { rotationY: 120, rotationX: 10, scale: 1.1 }, // State for Pillar 2
+                    { rotationY: -120, rotationX: -20, scale: 1.2 }  // State for Pillar 3
                 ];
 
                 // =============================================================
-                //  SOLUTION 1: RESTRUCTURED TIMELINE FOR BETTER PACING
+                //  SOLUTION 1: A NEW, MORE DELIBERATE TIMELINE
+                //  This structure gives dedicated "reading time" to each pillar.
                 // =============================================================
-                const tl = gsap.timeline({ defaults: { duration: 1, ease: 'power2.inOut' } });
-                tl
-                    .to(actor3D, states[0])
-                    .to(textPillars[0], { autoAlpha: 1 }, '<') 
-                    .to(textPillars[0], { autoAlpha: 0 })
-                    .to(textPillars[1], { autoAlpha: 1 }, '<')
-                    .to(actor3D, states[1], '<')
-                    .to(textPillars[1], { autoAlpha: 0 })
-                    .to(textPillars[2], { autoAlpha: 1 }, '<')
-                    .to(actor3D, states[2], '<')
+                const tl = gsap.timeline({ defaults: { ease: 'power2.inOut' } });
+                
+                // --- Pillar 1 (Already visible) ---
+                tl.to({}, { duration: 1 }) // Reading time for Pillar 1
+                  .to(textPillars[0], { autoAlpha: 0, duration: 0.5 });
+                
+                // --- Transition to Pillar 2 ---
+                tl.to(actor3D, { ...states[1], duration: 1.5 })
+                  .to(textPillars[1], { autoAlpha: 1, duration: 0.5 }, "<");
 
-                    // --- FIX FOR PILLAR 3 TIMING ---
-                    // This "dwell time" tween prevents the exit animation from starting too early.
-                    .to({}, { duration: 0.5 }) 
+                // --- Pillar 2 ---
+                tl.to({}, { duration: 1 }) // Reading time for Pillar 2
+                  .to(textPillars[1], { autoAlpha: 0, duration: 0.5 });
+                  
+                // --- Transition to Pillar 3 ---
+                tl.to(actor3D, { ...states[2], duration: 1.5 })
+                  .to(textPillars[2], { autoAlpha: 1, duration: 0.5 }, "<");
+                  
+                // --- Pillar 3 (THIS IS THE KEY PACING FIX) ---
+                tl.addLabel('finalPillarState')
+                  .to({}, { duration: 1.5 }) // Generous reading time for Pillar 3
+                  .to(textPillars[2], { autoAlpha: 0, duration: 0.5 });
 
-                    .addLabel('finalState')
-                    // Now, the exit animation starts
-                    .to(textPillars[2], { autoAlpha: 0, duration: 0.5 })
-                    .to(actor3D, { rotationY: 0, rotationX: 0, scale: 1.0 }, '<');
+                // --- Final transition before the Flip ---
+                tl.to(actor3D, { rotationY: 0, rotationX: 0, scale: 1.0, duration: 1.5 }, "<");
+
 
                 const mainScrub = ScrollTrigger.create({
                     trigger: textCol,
@@ -122,7 +131,7 @@ function setupAnimations() {
                     scrub: 0.8,
                     invalidateOnRefresh: true,
                 });
-                
+
                 // --- Flip Handoff Animation ---
                 ScrollTrigger.create({
                     trigger: summaryContainer,
@@ -130,7 +139,7 @@ function setupAnimations() {
                     onEnter: () => {
                         if (isFlipped) return;
                         isFlipped = true;
-                        mainScrub.disable();
+                        mainScrub.disable(); // Disable scrub
                         visualsCol.classList.add('is-exiting');
                         const state = Flip.getState(actor3D);
                         summaryClipper.appendChild(actor3D);
@@ -144,24 +153,30 @@ function setupAnimations() {
                     onLeaveBack: () => {
                         if (!isFlipped) return;
                         isFlipped = false;
+                        
+                        // =============================================================
+                        //  SOLUTION 2: THE "PRE-SYNC" HANDOFF FIX
+                        //  We sync the animation state BEFORE starting the Flip back.
+                        // =============================================================
+
+                        // 1. Manually force the main animation to its absolute end state.
+                        mainScrub.animation.progress(1);
+                        
                         visualsCol.classList.remove('is-exiting');
+                        
+                        // 2. NOW capture the state, which is guaranteed to be correct.
                         const state = Flip.getState(actor3D);
                         scene3D.appendChild(actor3D);
+                        
+                        // 3. Animate back from the correct state.
                         Flip.from(state, {
                             duration: 0.8,
                             ease: 'power2.out',
                             scale: true,
-                            // =============================================================
-                            //  SOLUTION 2: CORRECTED onComplete LOGIC FOR SCROLL-BACK
-                            // =============================================================
                             onComplete: () => {
-                                // 1. Clear styles from Flip
-                                gsap.set(actor3D, { clearProps: "transform" });
-                                
-                                // 2. (THE FIX) Sync timeline progress to the absolute end. This prevents the "jump".
-                                tl.progress(1);
-                                
-                                // 3. Re-enable the main scroll-driven animation
+                                // 4. On completion, clear Flip's inline styles and re-enable scrub.
+                                // The timeline is already at progress(1), so no jump will occur.
+                                gsap.set(actor3D, { clearProps: 'all' });
                                 mainScrub.enable();
                             }
                         });
@@ -171,19 +186,22 @@ function setupAnimations() {
 
             // --- MOBILE CLEANUP (Unchanged) ---
             '(max-width: 768px)': () => {
+                // Kill all GSAP instances to prevent conflicts
                 ScrollTrigger.getAll().forEach(trigger => trigger.kill());
                 gsap.killTweensOf([actor3D, textPillars, '.pillar-line']);
-                gsap.set([actor3D, textPillars, '.pillar-line'], { clearProps: 'all' });
-                if (scene3D && !scene3D.contains(actor3D)) { // Add check for scene3D
+                // Reset all element styles
+                gsap.set([actor3D, ...textPillars, '.pillar-line'], { clearProps: 'all' });
+                // Ensure the 3D actor is in the correct parent
+                if (scene3D && !scene3D.contains(actor3D)) {
+                    summaryClipper.innerHTML = ''; // Clear the clipper in case it still has the actor
                     scene3D.appendChild(actor3D);
                 }
-                if (visualsCol) visualsCol.classList.remove('is-exiting'); // Add check for visualsCol
+                if (visualsCol) visualsCol.classList.remove('is-exiting');
                 isFlipped = false;
             }
         });
     });
 
-    // Return the context's revert function for potential cleanup
     return () => ctx.revert();
 }
 
