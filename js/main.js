@@ -139,11 +139,11 @@ const setupTextPillars = (elements) => {
                         Oracle.scan('Pillar Text Transition', {
                             'Triggering Pillar': `#${index + 1}`,
                             'ScrollTrigger Progress': `${(progress * 100).toFixed(1)}%`,
-                            'Fading Out (Wrapper)': `#${index + 1}`,
-                            ' -> Opacity': gsap.getProperty(wrapper, 'autoAlpha').toFixed(2),
+                            'Fading Out (Wrapper)': `#${index + 1}`, // This is the CURRENT pillar, which is fading out
+                            ' -> Opacity': (1 - gsap.getProperty(nextWrapper, 'autoAlpha')).toFixed(2), // Its opacity is the inverse of the next one
                             ' -> Y': gsap.getProperty(wrapper, 'y').toFixed(1) + 'px',
                             ' -> RotX': gsap.getProperty(wrapper, 'rotationX').toFixed(1) + '°',
-                            'Fading In (Wrapper)': `#${index + 2}`,
+                            'Fading In (Wrapper)': `#${index + 2}`, // This is the NEXT pillar, which is fading in
                             ' -> Opacity': gsap.getProperty(nextWrapper, 'autoAlpha').toFixed(2),
                             ' -> Y': gsap.getProperty(nextWrapper, 'y').toFixed(1) + 'px',
                             ' -> RotX': gsap.getProperty(nextWrapper, 'rotationX').toFixed(1) + '°',
@@ -162,13 +162,14 @@ const setupTextPillars = (elements) => {
 // ENHANCED "ABSORPTION PROTOCOL" HANDOFF
 const setupHandoff = (elements, masterTl) => {
     let isSwapped = false;
+    let isReversing = false;
     Oracle.updateHUD('c-swap-flag', 'FALSE', '#BF616A');
 
     ScrollTrigger.create({
         trigger: elements.handoffPoint, start: 'top 70%',
         onToggle: self => Oracle.updateHUD('c-handoff-st-active', self.isActive ? 'TRUE' : 'FALSE', self.isActive ? '#A3BE8C' : '#BF616A'),
         onEnter: () => {
-            if (isSwapped) return;
+            if (isSwapped || isReversing) return;
             isSwapped = true;
             Oracle.group('ABSORPTION PROTOCOL INITIATED');
             Oracle.updateHUD('c-swap-flag', 'TRUE', '#A3BE8C');
@@ -177,15 +178,30 @@ const setupHandoff = (elements, masterTl) => {
             masterTl.scrollTrigger.disable();
             const stuntDouble = elements.stuntActor;
             const placeholder = elements.placeholder;
-            Oracle.report('Phase 1: Capturing state vectors.');
+            Oracle.report('Phase 1: Forcing ST update and capturing state vectors.');
+            
+            // Force ScrollTrigger to render the latest values from the scrub
+            ScrollTrigger.refresh(true); 
+
+            const hero = elements.heroActor;
+            const stuntDouble = elements.stuntActor;
+            const placeholder = elements.placeholder;
+
+            // Get final, scrub-driven properties from the hero
+            const heroProps = {
+                scale: gsap.getProperty(hero, "scale"),
+                rotationX: gsap.getProperty(hero, "rotationX"),
+                rotationY: gsap.getProperty(hero, "rotationY")
+            };
+
             const state = Flip.getState(stuntDouble, { props: "transform, opacity" });
             gsap.set(stuntDouble, {
                 autoAlpha: 1,
-                x: elements.heroActor.getBoundingClientRect().left - placeholder.getBoundingClientRect().left,
-                y: elements.heroActor.getBoundingClientRect().top - placeholder.getBoundingClientRect().top,
-                scale: gsap.getProperty(elements.heroActor, "scale"),
-                rotationX: gsap.getProperty(elements.heroActor, "rotationX"),
-                rotationY: gsap.getProperty(elements.heroActor, "rotationY")
+                x: hero.getBoundingClientRect().left - placeholder.getBoundingClientRect().left,
+                y: hero.getBoundingClientRect().top - placeholder.getBoundingClientRect().top,
+                scale: heroProps.scale,
+                rotationX: heroProps.rotationX,
+                rotationY: heroProps.rotationY,
             });
             Oracle.log(stuntDouble, "Stunt Double State (Teleported & Matched)");
             const absorptionTl = gsap.timeline({
@@ -219,19 +235,40 @@ const setupHandoff = (elements, masterTl) => {
         },
         onLeaveBack: () => {
             if (!isSwapped) return;
+            
+            isReversing = true; // Engage the lock
             isSwapped = false;
+            
             Oracle.group('REVERSE PROTOCOL INITIATED');
             Oracle.updateHUD('c-swap-flag', 'FALSE', '#BF616A');
             Oracle.updateHUD('c-event', 'REVERSING');
+            
             elements.stuntActor.classList.remove('is-logo-final-state');
-            gsap.set(elements.stuntActor, { autoAlpha: 0, clearProps: "all" });
-            gsap.set(elements.stuntActorFaces, { clearProps: "opacity" });
-            gsap.set(elements.heroActor, { clearProps: "autoAlpha, scale" });
-            masterTl.scrollTrigger.enable();
-            masterTl.scrollTrigger.update();
-            Oracle.updateHUD('c-event', 'SCROLLING');
-            Oracle.log(elements.heroActor, "Hero State (Restored)");
-            Oracle.groupEnd();
+            
+            // Kill any active animations on these elements to prevent conflicts
+            gsap.killTweensOf([elements.stuntActor, elements.stuntActorFaces, elements.heroActor, elements.placeholderClipper]);
+
+            // Use a timeline for a clean, ordered reversal
+            const reversalTl = gsap.timeline({
+                onComplete: () => {
+                    // Re-enable the master scroll trigger and force it to update its position
+                    masterTl.scrollTrigger.enable();
+                    masterTl.scrollTrigger.update();
+                    
+                    Oracle.updateHUD('c-event', 'SCROLLING');
+                    Oracle.log(elements.heroActor, "Hero State (Restored)");
+                    Oracle.groupEnd();
+                    
+                    isReversing = false; // Release the lock
+                }
+            });
+
+            // A more aggressive and visually clean reset
+            reversalTl
+                .set(elements.stuntActor, { autoAlpha: 0 })
+                .set(elements.stuntActorFaces, { clearProps: "opacity" })
+                .set(elements.placeholderClipper, { clearProps: "clipPath" })
+                .set(elements.heroActor, { autoAlpha: 1 }); // Force hero to be visible immediately
         }
     });
 };
