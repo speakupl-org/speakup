@@ -1510,3 +1510,21 @@ body.scroll-locked {
     height: 100%; /* Ensure it fills the clipper */
     visibility: hidden; /* Start invisible */
 }
+/* ==========================================================
+   V26 "CRYSTALLIZATION" PROTOCOL - FINAL STATE STYLES
+   ========================================================== */
+
+/* This class represents the CUBE ITSELF when it has become a flat logo.
+   It removes the 3D properties and sets a simple background. */
+.object-3d.is-logo {
+    transform: none !important; /* Resets all 3D transforms */
+    transform-style: flat;      /* Disables 3D for children */
+    background-color: #43a8b4;  /* CHANGE THIS to your logo's color */
+    border-radius: 8px;         /* Optional: gives it soft corners */
+}
+
+/* This targets the faces of the cube, hiding them when it becomes a logo. */
+.object-3d.is-logo .face {
+    visibility: hidden;
+    opacity: 0;
+}
