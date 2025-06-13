@@ -1,10 +1,12 @@
 /*
 =================================================================
-   Definitive Version 2.0 (Based on all final feedback)
+   Definitive Version 2.1 - With Scrollytelling Pacing & Handoff Fix
 =================================================================
 */
+
+// --- Wait for the DOM to be fully loaded before running any script ---
 document.addEventListener('DOMContentLoaded', () => {
-    // --- Menu & Footer (unchanged) ---
+    // --- Menu & Footer (Unchanged) ---
     const openButton = document.getElementById('menu-open-button');
     const closeButton = document.getElementById('menu-close-button');
     const menuScreen = document.getElementById('menu-screen');
@@ -31,15 +33,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const yearSpan = document.getElementById('current-year');
     if (yearSpan) yearSpan.textContent = new Date().getFullYear();
 
-    // --- GSAP Animations ---
-    setupAnimations();
+    // --- GSAP Animations Start Here ---
+    // The initialCheck function will handle calling setupAnimations
+    initialCheck();
 });
 
+
+/**
+ * The main function to set up all GSAP scrollytelling animations.
+ * This contains the corrected timeline and Flip handoff logic.
+ */
 function setupAnimations() {
     gsap.registerPlugin(ScrollTrigger, Flip);
 
     const ctx = gsap.context(() => {
-        // --- 1. Element & Variable Declarations ---
+        // --- 1. Element & Variable Declarations (Unchanged) ---
         const visualsCol = document.querySelector('.pillar-visuals-col');
         const scene3D = document.querySelector('.scene-3d');
         const textCol = document.querySelector('.pillar-text-col');
@@ -61,6 +69,7 @@ function setupAnimations() {
                 gsap.set(textPillars, { autoAlpha: 0 });
                 gsap.set(textPillars[0], { autoAlpha: 1 });
 
+                // Line animations (Unchanged)
                 textPillars.forEach(pillar => {
                     const line = pillar.querySelector('.pillar-line');
                     if (!line) return;
@@ -81,11 +90,12 @@ function setupAnimations() {
                     { rotationY: -120, rotationX: -20, scale: 1.2 }
                 ];
 
-                // --- 3. Friend's Working Timeline (Prevents Freeze) ---
+                // =============================================================
+                //  SOLUTION 1: RESTRUCTURED TIMELINE FOR BETTER PACING
+                // =============================================================
                 const tl = gsap.timeline({ defaults: { duration: 1, ease: 'power2.inOut' } });
                 tl
                     .to(actor3D, states[0])
-                    // CRITICAL: This tween, while seemingly redundant, prevents the "freeze" bug.
                     .to(textPillars[0], { autoAlpha: 1 }, '<') 
                     .to(textPillars[0], { autoAlpha: 0 })
                     .to(textPillars[1], { autoAlpha: 1 }, '<')
@@ -93,8 +103,14 @@ function setupAnimations() {
                     .to(textPillars[1], { autoAlpha: 0 })
                     .to(textPillars[2], { autoAlpha: 1 }, '<')
                     .to(actor3D, states[2], '<')
+
+                    // --- FIX FOR PILLAR 3 TIMING ---
+                    // This "dwell time" tween prevents the exit animation from starting too early.
+                    .to({}, { duration: 0.5 }) 
+
                     .addLabel('finalState')
-                    .to(textPillars[2], { autoAlpha: 0 })
+                    // Now, the exit animation starts
+                    .to(textPillars[2], { autoAlpha: 0, duration: 0.5 })
                     .to(actor3D, { rotationY: 0, rotationX: 0, scale: 1.0 }, '<');
 
                 const mainScrub = ScrollTrigger.create({
@@ -106,8 +122,8 @@ function setupAnimations() {
                     scrub: 0.8,
                     invalidateOnRefresh: true,
                 });
-
-                // --- 4. The Final, Corrected Flip Handoff ---
+                
+                // --- Flip Handoff Animation ---
                 ScrollTrigger.create({
                     trigger: summaryContainer,
                     start: 'top center',
@@ -130,18 +146,22 @@ function setupAnimations() {
                         isFlipped = false;
                         visualsCol.classList.remove('is-exiting');
                         const state = Flip.getState(actor3D);
-                        scene3D.appendChild(actor3D); // Using friend's refined parenting
+                        scene3D.appendChild(actor3D);
                         Flip.from(state, {
                             duration: 0.8,
                             ease: 'power2.out',
                             scale: true,
+                            // =============================================================
+                            //  SOLUTION 2: CORRECTED onComplete LOGIC FOR SCROLL-BACK
+                            // =============================================================
                             onComplete: () => {
-                                // THE FINAL 3-STEP FIX FOR THE "WARP" BUG:
                                 // 1. Clear styles from Flip
                                 gsap.set(actor3D, { clearProps: "transform" });
-                                // 2. Sync the timeline
-                                tl.seek('finalState');
-                                // 3. Re-enable scroll
+                                
+                                // 2. (THE FIX) Sync timeline progress to the absolute end. This prevents the "jump".
+                                tl.progress(1);
+                                
+                                // 3. Re-enable the main scroll-driven animation
                                 mainScrub.enable();
                             }
                         });
@@ -149,30 +169,36 @@ function setupAnimations() {
                 });
             },
 
-            // --- MOBILE CLEANUP ---
+            // --- MOBILE CLEANUP (Unchanged) ---
             '(max-width: 768px)': () => {
                 ScrollTrigger.getAll().forEach(trigger => trigger.kill());
                 gsap.killTweensOf([actor3D, textPillars, '.pillar-line']);
                 gsap.set([actor3D, textPillars, '.pillar-line'], { clearProps: 'all' });
-                if (!scene3D.contains(actor3D)) {
+                if (scene3D && !scene3D.contains(actor3D)) { // Add check for scene3D
                     scene3D.appendChild(actor3D);
                 }
-                visualsCol.classList.remove('is-exiting');
+                if (visualsCol) visualsCol.classList.remove('is-exiting'); // Add check for visualsCol
                 isFlipped = false;
             }
         });
     });
 
+    // Return the context's revert function for potential cleanup
     return () => ctx.revert();
 }
 
 
+/**
+ * Checks if GSAP and its plugins are loaded before running animations.
+ * This prevents errors if the CDN scripts load after the main.js file.
+ * (Unchanged)
+ */
 function initialCheck() {
     if (window.gsap && window.ScrollTrigger && window.Flip) {
         setupAnimations();
     } else {
         let attempts = 0;
-        const maxAttempts = 30;
+        const maxAttempts = 30; // Wait for up to 3 seconds
         const interval = setInterval(() => {
             attempts++;
             if (window.gsap && window.ScrollTrigger && window.Flip) {
@@ -180,10 +206,8 @@ function initialCheck() {
                 setupAnimations();
             } else if (attempts >= maxAttempts) {
                 clearInterval(interval);
-                console.error("GSAP plugins failed to load in time.");
+                console.error("GSAP plugins failed to load in time. Animations will not run.");
             }
         }, 100);
     }
 }
-
-initialCheck();
