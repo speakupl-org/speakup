@@ -93,54 +93,73 @@ function setupAnimations() {
                         });
                     },
 
-                    // onLeaveBack (Return Journey) with NEW Authoritative Sync
-                    onLeaveBack: () => {
-                        if (!isFlipped) return;
-                        
-                        console.group('%cEVENT: onLeaveBack (Return to Scroller)', 'color: #EBCB8B; font-weight:bold;');
-                        lastEventEl.textContent = 'onLeaveBack (Flip Up)';
-                        flipStatusEl.textContent = 'TRANSITIONING...';
-
-                        const state = Flip.getState(actor3D, {props: "transform,opacity"});
-                        scene3D.appendChild(actor3D);
-
-                        Flip.from(state, {
-                            duration: 0.8, ease: 'power2.out', scale: true,
-                            onComplete: () => {
-                                console.log('%cFlip UP complete. Initiating Authoritative 4-Step Sync...', 'color: #BF616A; font-weight:bold');
-                                
-                                // THE BULLETPROOF 4-STEP SYNC
-                                console.log(`SYNC 1: Clearing inline 'transform' from Flip animation.`);
-                                gsap.set(actor3D, { clearProps: "transform" });
-
-                                console.log(`SYNC 2: Re-enabling the main scrub controller.`);
-                                mainScrub.enable();
-                                scrubStatusEl.textContent = 'ENABLED';
-
-                                console.log(`SYNC 3: Calculating target scroll position for 'finalState'.`);
-                                // Get progress of the label (e.g., 0.7273)
-                                const finalStateProgress = tl.labels.finalState / tl.duration();
-                                // Calculate the exact scroll pixel value that corresponds to that progress
-                                const targetScrollPos = mainScrub.start + (mainScrub.end - mainScrub.start) * finalStateProgress;
-                                console.log(`   - Timeline Progress at 'finalState': ${finalStateProgress.toFixed(4)}`);
-                                console.log(`   - Target Scroll Position: ${targetScrollPos.toFixed(2)}px`);
-                                
-                                console.log(`SYNC 4: Forcing ScrollTrigger to the target position (State Injection).`);
-                                // This is the magic! We command the controller, not the animation.
-                                mainScrub.scroll(targetScrollPos);
-                                // For good measure, force a refresh to ensure all calculations are up-to-date.
-                                ScrollTrigger.refresh();
-
-                                isFlipped = false;
-                                
-                                console.log(`VERIFICATION: Current rotation is now: ${gsap.getProperty(actor3D, "rotationY").toFixed(2)}`);
-                                flipStatusEl.textContent = 'In Scroller';
-                                lastEventEl.textContent = 'Authoritative Sync Complete';
-                                console.log('AUTHORITATIVE SYNC COMPLETE.');
-                                console.groupEnd();
+                                            // PHASE 3: The Return Journey (Scrolling Up) with OVERLORD SYNC
+                        onLeaveBack: () => {
+                            if (!isFlipped) {
+                                // This guard is still essential
+                                console.warn('OVERLORD ABORT: Already in scroller state. No action taken.');
+                                return;
                             }
-                        });
-                    }
+                            
+                            console.group('%cEVENT: onLeaveBack (Initiating v8.0 OVERLORD SYNC)', 'color: #EBCB8B; font-weight:bold; font-size: 14px;');
+                            lastEventEl.textContent = 'onLeaveBack (v8.0)';
+                            flipStatusEl.textContent = 'TRANSITIONING...';
+                        
+                            const state = Flip.getState(actor3D, {props: "transform,opacity"});
+                            scene3D.appendChild(actor3D);
+                        
+                            Flip.from(state, {
+                                duration: 0.8,
+                                ease: 'power2.out',
+                                scale: true,
+                                onComplete: () => {
+                                    console.log('%cFlip UP complete. Beginning OVERLORD protocol...', 'color: #BF616A; font-weight:bold; font-size: 12px;');
+                                    
+                                    // THE UNCOMPROMISING 5-STEP "OVERLORD SYNC"
+                                    console.log("--- PRE-SYNC STATE ---");
+                                    console.log(`Initial rotation: ${gsap.getProperty(actor3D, "rotationY").toFixed(2)} | Initial transform: ${gsap.getProperty(actor3D, "transform")}`);
+                        
+                                    // STEP 1: SCORCHED EARTH CLEAN-UP
+                                    console.log("SYNC 1: Obliterating all inline props with clearProps: 'all'.");
+                                    gsap.set(actor3D, { clearProps: "all" });
+                                    console.log(`   - Post-Clear rotation: ${gsap.getProperty(actor3D, "rotationY").toFixed(2)}`);
+                        
+                                    // STEP 2: AUTHORITATIVE STATE INJECTION
+                                    // We are MANUALLY setting the object to the state it SHOULD be in at the 'finalState' label.
+                                    const targetState = { rotationY: -120, rotationX: -20, scale: 1.2 };
+                                    console.log(`SYNC 2: Forcing element to target state: { rotationY: ${targetState.rotationY}, rotationX: ${targetState.rotationX}, scale: ${targetState.scale} }`);
+                                    gsap.set(actor3D, targetState);
+                                    console.log(`   - VERIFICATION: Post-SET rotation is now: ${gsap.getProperty(actor3D, "rotationY").toFixed(2)}`);
+                        
+                                    // STEP 3: WAKE THE CONTROLLER
+                                    console.log("SYNC 3: Re-enabling the main scrub controller.");
+                                    mainScrub.enable();
+                                    scrubStatusEl.textContent = 'ENABLED';
+                        
+                                    // STEP 4: FORCED RESYNC
+                                    console.log("SYNC 4: Forcing mainScrub.update(true) and ScrollTrigger.refresh(true) to resync reality.");
+                                    // This tells ScrollTrigger to re-read the state of the universe RIGHT NOW.
+                                    mainScrub.update(true); // `true` forces an immediate render
+                                    ScrollTrigger.refresh(true); // `true` forces re-calculation of transforms
+                                    console.log(`   - VERIFICATION: Timeline progress after refresh is: ${tl.progress().toFixed(4)}`);
+                        
+                                    // STEP 5: SCROLLBAR SANITY CHECK
+                                    // Now that the visual state is correct, we align the scrollbar to match.
+                                    const finalStateProgress = tl.labels.finalState / tl.duration();
+                                    const targetScrollPos = mainScrub.start + (mainScrub.end - mainScrub.start) * finalStateProgress;
+                                    console.log(`SYNC 5: Aligning scrollbar UI to calculated position: ${targetScrollPos.toFixed(2)}px`);
+                                    mainScrub.scroll(targetScrollPos);
+                                    
+                                    // FINAL VERDICT
+                                    isFlipped = false;
+                                    console.log(`FINAL VERIFICATION: Rotation is ${gsap.getProperty(actor3D, "rotationY").toFixed(2)}. Should be ${targetState.rotationY}.`);
+                                    flipStatusEl.textContent = 'In Scroller';
+                                    lastEventEl.textContent = 'Overlord Sync Complete';
+                                    console.log('OVERLORD SYNC COMPLETE. The relay race is perfectly reset.');
+                                    console.groupEnd();
+                                }
+                            });
+                        }
                 });
             }
         });
