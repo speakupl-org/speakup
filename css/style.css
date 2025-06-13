@@ -634,53 +634,48 @@ html.menu-open {
    10. METHOD PAGE STYLES - REVISED FOR "IGLOO" SCROLLYTELLING EFFECT
    ========================================================================= */
 
-/* --- Main Layout Container --- */
+/* --- Main Layout & Handoff Helpers --- */
 .scrolly-container {
     display: flex;
     gap: 4rem; 
     align-items: flex-start;
 }
 
-/* --- Helper Class for Animation Handoff --- */
+/* This class is added by JS to hide the original column during Flip */
 .pillar-visuals-col.is-exiting {
     visibility: hidden;
 }
 
-/* --- 1. The Pinned Visuals Column (Sticky & 3D Container) --- */
+/* --- 1. The Pinned Visuals Column (The "Sticky" Part) --- */
 .pillar-visuals-col {
-    /* Layout & Sizing */
     flex: 1;
     width: 45%; 
     height: 70vh;
-    
-    /* Sticking Behavior */
     position: -webkit-sticky; /* Safari */
     position: sticky;
     top: 15vh;
-    
-    /* 3D Scene Setup - THIS IS THE CRITICAL PART */
-    display: flex; /* Use flexbox to easily center the 3D scene */
+    perspective: 1200px;
+    display: flex;
     justify-content: center;
     align-items: center;
-    perspective: 1200px; /* Creates the 3D "room" for the cube */
 }
 
-/* --- 2. The 3D Scene & Object Styles --- */
+/* --- 2. 3D Scene & Object Setup --- */
 .scene-3d {
     width: 200px;
     height: 200px;
     position: relative;
+    transform-style: preserve-3d;
     transform: translateZ(100px); 
-    transform-style: preserve-3d; /* CRITICAL: Allows children to be in 3D */
 }
 
 .object-3d {
     width: 100%;
     height: 100%;
     position: absolute;
+    transform-style: preserve-3d;
     transform: translateZ(-100px); 
-    transform-style: preserve-3d; /* CRITICAL: Allows the "faces" to be in 3D */
-    will-change: transform;
+    will-change: transform; /* Optimization for animation */
 }
 
 .face {
@@ -692,7 +687,6 @@ html.menu-open {
     backdrop-filter: blur(10px);
 }
 
-/* Position each face to form the cube */
 .face.front  { transform: rotateY(  0deg) translateZ(100px); }
 .face.back   { transform: rotateY(180deg) translateZ(100px); }
 .face.right  { transform: rotateY( 90deg) translateZ(100px); }
@@ -700,12 +694,144 @@ html.menu-open {
 .face.top    { transform: rotateX( 90deg) translateZ(100px); }
 .face.bottom { transform: rotateX(-90deg) translateZ(100px); }
 
-
 /* --- 3. The Scrolling Text Column (The "Trigger" Part) --- */
 .pillar-text-col {
     flex: 1;
     width: 50%;
-    padding-left: 2rem;
+    padding-left: 2rem; 
+}
+
+.pillar-text-content {
+    padding-top: 15vh;
+    padding-bottom: 25vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* FOUC FIX: Hide all text sections by default */
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* FOUC FIX: Make the first text section visible on page load. */
+.pillar-text-content:first-of-type {
+    opacity: 1;
+    visibility: visible;
+}
+
+.pillar-text-content:last-of-type {
+    padding-bottom: 15vh;
+}
+
+.text-anim-wrapper {
+    max-width: 45ch;
+    will-change: transform, opacity; /* Optimization for animation */
+}
+
+.pillar-number {
+    display: block;
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #43a8b4; 
+}
+
+.pillar-line {
+    width: 60px;
+    height: 3px;
+    margin: 1.5rem 0;
+    background-color: #43a8b4; 
+    transform: scaleX(0); /* Animated by GSAP */
+    transform-origin: left;
+}
+
+.pillar-title {
+    margin: 0;
+    font-family: 'Poppins', sans-serif; /* Adjusted to your font stack */
+    font-size: clamp(2.8rem, 5vw, 4rem); 
+    font-weight: 700;
+    line-height: 1.1;
+    color: #f0f0f0; 
+}
+
+.pillar-paragraph {
+    margin-top: 1.5rem;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #a0a0a0;
+}
+
+
+/* --- 4. Styles for the "Landed" Thumbnail in Summary Section --- */
+.method-summary {
+    text-align: center; /* Center the content of the summary section */
+}
+
+.summary-thumbnail-placeholder {
+    width: 200px;
+    max-width: 40%;
+    aspect-ratio: 1 / 1;
+    margin: 0 auto 2rem;
+    position: relative; 
+}
+
+.summary-thumbnail-clipper {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    /* This ensures the 3D object inside behaves correctly */
+    position: relative; 
+}
+
+/* This targets the cube *after* it has been Flipped into the clipper */
+.summary-thumbnail-clipper .object-3d {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* We reset the transform so it fits nicely inside the clipper */
+    transform: none; 
+}
+
+
+/* --- 5. Mobile & Responsive Styles --- */
+@media (max-width: 768px) {
+    .scrolly-container {
+        flex-direction: column;
+    }
+
+    .pillar-visuals-col,
+    .pillar-text-col {
+        width: 100%;
+        padding-left: 0;
+    }
+
+    .pillar-visuals-col {
+        position: static; 
+        top: auto;
+        height: auto;
+        margin-bottom: 2rem;
+        perspective: none;
+    }
+    
+    .pillar-text-content {
+       min-height: auto;
+       padding: 0 0 4rem 0;
+       /* On mobile, all text is visible from the start. No JS animation. */
+       opacity: 1;
+       visibility: visible;
+    }
+
+    .pillar-text-content:last-of-type {
+        padding-bottom: 0;
+    }
+
+    .text-anim-wrapper {
+        text-align: left;
+    }
 }
 
 /* ==================================================================
