@@ -45,23 +45,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.error("Scrollytelling animations aborted: One or more required elements are missing from the DOM.");
                 return;
             }
-            
-            // --- FIX: State flag to prevent animations from re-triggering ---
+
             let isFlipped = false;
 
             ScrollTrigger.matchMedia({
                 // --- DESKTOP ANIMATIONS ---
                 "(min-width: 769px)": function () {
-                    // Note: The CSS now handles the initial FOUC prevention.
-                    // This JS just reinforces the state for the animation logic.
                     gsap.set(textPillars, { autoAlpha: 0 });
                     gsap.set(textPillars[0], { autoAlpha: 1 });
 
-                    // Animate the decorative lines when a pillar becomes active
-                    textPillars.forEach((pillar, index) => {
+                    // Decorative line animations
+                    textPillars.forEach((pillar) => {
                         const line = pillar.querySelector('.pillar-line');
                         if (line) {
-                           ScrollTrigger.create({
+                            ScrollTrigger.create({
                                 trigger: pillar,
                                 start: "top 60%",
                                 end: "bottom 40%",
@@ -69,38 +66,28 @@ document.addEventListener('DOMContentLoaded', function () {
                                 onLeave: () => gsap.to(line, { scaleX: 0, transformOrigin: 'right', duration: 0.6, ease: "power4.in" }),
                                 onEnterBack: () => gsap.to(line, { scaleX: 1, transformOrigin: 'left', duration: 0.8, ease: "power4.out" }),
                                 onLeaveBack: () => gsap.to(line, { scaleX: 0, duration: 0.6, ease: "power4.in" })
-                           });
+                            });
                         }
                     });
 
-                    // Master timeline for the 3D cube and text fades
+                    // Master timeline for cube + text fades
                     const masterTimeline = gsap.timeline({
                         defaults: { duration: 1, ease: "power2.inOut" }
                     });
-                    
+
                     masterTimeline
-                        // Pillar 1 (initial state)
                         .to(actor3D, { rotationY: 20, rotationX: -15, scale: 1.0 })
-                        .to(textPillars[0], { autoAlpha: 1 }, "<") // Ensure first is visible
-                        
-                        // Pillar 2
+                        .to(textPillars[0], { autoAlpha: 1 }, "<")
                         .to(textPillars[0], { autoAlpha: 0 })
                         .to(textPillars[1], { autoAlpha: 1 }, "<")
                         .to(actor3D, { rotationY: 120, rotationX: 10, scale: 1.1 }, "<")
-                        
-                        // Pillar 3
                         .to(textPillars[1], { autoAlpha: 0 })
                         .to(textPillars[2], { autoAlpha: 1 }, "<")
                         .to(actor3D, { rotationY: -120, rotationX: -20, scale: 1.2 }, "<")
-                        
-                        // Add a label to easily return to this point
                         .addLabel("finalState")
-                        
-                        // Exit state (back to neutral)
                         .to(textPillars[2], { autoAlpha: 0 })
                         .to(actor3D, { rotationY: 0, rotationX: 0, scale: 1.0 }, "<");
 
-                    // Main scrubber ScrollTrigger that controls the master timeline
                     const mainScrubber = ScrollTrigger.create({
                         trigger: textCol,
                         pin: visualsCol,
@@ -111,43 +98,40 @@ document.addEventListener('DOMContentLoaded', function () {
                         invalidateOnRefresh: true,
                     });
 
-                    // --- FIXES #2 & #3: Smooth Handoff Logic ---
+                    // Smooth handoff logic with Flip
                     ScrollTrigger.create({
                         trigger: summaryContainer,
                         start: "top center",
                         onEnter: () => {
                             if (!isFlipped) {
                                 isFlipped = true;
-                                mainScrubber.disable(); // Prevent conflicting animations
+                                mainScrubber.disable();
 
-                                const state = Flip.getState(actor3D, { props: "scale" });
+                                const state = Flip.getState(actor3D, { props: "transform" });
                                 summaryClipper.appendChild(actor3D);
-                                visualsCol.classList.add('is-exiting'); // Hide original column
+                                visualsCol.classList.add('is-exiting');
 
                                 Flip.from(state, {
                                     duration: 0.8,
                                     ease: "power2.inOut",
-                                    scale: true,
-                                    // Reset transform so CSS can take over positioning
-                                    onComplete: () => gsap.set(actor3D, { clearProps: "transform" }) 
+                                    absolute: true,
+                                    onComplete: () => gsap.set(actor3D, { clearProps: "transform" })
                                 });
                             }
                         },
                         onLeaveBack: () => {
                             if (isFlipped) {
                                 isFlipped = false;
-                                
-                                const state = Flip.getState(actor3D, { props: "scale" });
+
+                                const state = Flip.getState(actor3D, { props: "transform" });
                                 visualsCol.appendChild(actor3D);
                                 visualsCol.classList.remove('is-exiting');
 
                                 Flip.from(state, {
                                     duration: 0.8,
                                     ease: "power2.out",
-                                    scale: true,
+                                    absolute: true,
                                     onComplete: () => {
-                                        // "Rewind" the timeline to the end state before re-enabling
-                                        masterTimeline.seek("finalState");
                                         mainScrubber.enable();
                                     }
                                 });
@@ -155,34 +139,28 @@ document.addEventListener('DOMContentLoaded', function () {
                         }
                     });
                 },
-                
-                // --- MOBILE/RESIZE CLEANUP & FIX ---
+
+                // --- MOBILE CLEANUP ---
                 "(max-width: 768px)": function () {
-                    // Kill all GSAP animations and triggers to prevent conflicts
                     ScrollTrigger.getAll().forEach(st => st.kill());
                     gsap.killTweensOf([actor3D, ...textPillars, '.pillar-line']);
-                    
-                    // Reset all element styles to their default CSS state
                     gsap.set(textPillars, { clearProps: "all" });
                     gsap.set(actor3D, { clearProps: "all" });
                     gsap.set('.pillar-line', { clearProps: "all" });
 
-                    // --- ROBUSTNESS FIX ---
-                    // If the cube is in the summary clipper when resizing to mobile, put it back.
                     if (visualsCol && !visualsCol.contains(actor3D)) {
                         visualsCol.appendChild(actor3D);
                     }
                     visualsCol.classList.remove('is-exiting');
-                    isFlipped = false; // Reset the state flag
+                    isFlipped = false;
                 }
             });
         });
 
-        // Return a cleanup function for GSAP context
         return () => ctx.revert();
     }
 
-    // --- Readiness Gate (unchanged) ---
+    // --- Readiness Gate ---
     function initialCheck() {
         if (window.gsap && window.ScrollTrigger && window.Flip) {
             setupAnimations();
@@ -201,6 +179,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }, 100);
         }
     }
-    
+
     initialCheck();
 });
