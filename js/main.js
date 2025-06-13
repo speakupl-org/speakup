@@ -1,7 +1,6 @@
 /*
 =================================================================
-   Definitive Version 2.0 (Based on all final feedback)
-   DEBUGGING BUILD v1.0
+   Definitive Version 3.0 (Log-Informed Final Build)
 =================================================================
 */
 document.addEventListener('DOMContentLoaded', () => {
@@ -33,15 +32,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (yearSpan) yearSpan.textContent = new Date().getFullYear();
 
     // --- GSAP Animations ---
-    setupAnimations();
+    initialCheck();
 });
 
 function setupAnimations() {
     gsap.registerPlugin(ScrollTrigger, Flip);
-
-    // Clear console on every refresh for clean debugging
-    console.clear();
-    console.log('%cGSAP Debugging Build Initialized. Watching for scrollytelling events...', 'color: #88c0d0; font-weight: bold;');
 
     const ctx = gsap.context(() => {
         // --- 1. Element & Variable Declarations ---
@@ -73,8 +68,8 @@ function setupAnimations() {
                         trigger: pillar,
                         start: 'top 60%',
                         end: 'bottom 40%',
-                        onEnter: () => gsap.to(line, { scaleX: 1, duration: 0.8, ease: 'power4.out' }),
-                        onLeave: () => gsap.to(line, { scaleX: 0, transformOrigin: 'right', duration: 0.6, ease: 'power4.in' }),
+                        onEnter:    () => gsap.to(line, { scaleX: 1, duration: 0.8, ease: 'power4.out' }),
+                        onLeave:    () => gsap.to(line, { scaleX: 0, transformOrigin: 'right', duration: 0.6, ease: 'power4.in' }),
                         onEnterBack:() => gsap.to(line, { scaleX: 1, transformOrigin: 'left',  duration: 0.8, ease: 'power4.out' }),
                         onLeaveBack:() => gsap.to(line, { scaleX: 0, duration: 0.6, ease: 'power4.in' }),
                     });
@@ -86,7 +81,7 @@ function setupAnimations() {
                     { rotationY: -120, rotationX: -20, scale: 1.2 }
                 ];
 
-                // --- 3. A stable timeline structure for debugging ---
+                // A clean, simple timeline for the main scroll effect
                 const tl = gsap.timeline({ defaults: { duration: 1, ease: 'power2.inOut' } });
                 tl
                     .to(actor3D, states[0])
@@ -111,107 +106,64 @@ function setupAnimations() {
                     invalidateOnRefresh: true,
                 });
 
-                // --- 4. The Flip Handoff with extensive logging ---
+                // --- 4. The Final, Corrected Flip Handoff ---
                 ScrollTrigger.create({
                     trigger: summaryContainer,
                     start: 'top center',
-                    markers: true, // Specific markers for this trigger
                     onEnter: () => {
-                        console.groupCollapsed('%c[onEnter] Firing: Handing off to Summary', 'color: #A3BE8C; font-weight:bold;');
-                        if (isFlipped) {
-                            console.warn('onEnter called, but isFlipped is already true. Aborting.');
-                            console.groupEnd();
-                            return;
-                        }
+                        if (isFlipped) return;
                         isFlipped = true;
                         mainScrub.disable();
-                        console.log('isFlipped set to:', isFlipped);
-                        console.log('mainScrub disabled.');
                         visualsCol.classList.add('is-exiting');
-                        
                         const state = Flip.getState(actor3D);
-                        console.log('Flip state CAPTURED from main scene:', state);
-
                         summaryClipper.appendChild(actor3D);
-                        console.log('actor3D moved to summaryClipper.');
-                        
                         Flip.from(state, {
                             duration: 0.8,
                             ease: 'power2.inOut',
                             scale: true,
-                            onComplete: () => {
-                                console.log('%cFlip [onEnter] COMPLETE. Clearing props.', 'color: #A3BE8C');
-                                gsap.set(actor3D, { clearProps: 'all' });
-                                console.log('actor3D style after clear:', actor3D.style.transform);
-                            }
+                            onComplete: () => gsap.set(actor3D, { clearProps: 'all' })
                         });
-                        console.groupEnd();
                     },
                     onLeaveBack: () => {
-                        console.group('%c[onLeaveBack] Firing: Returning to Scroller', 'color: #EBCB8B; font-weight:bold;');
-                        if (!isFlipped) {
-                            console.warn('onLeaveBack called, but isFlipped is already false. Aborting.');
-                            console.groupEnd();
-                            return;
-                        }
-                        isFlipped = false;
-                        console.log('isFlipped set to:', isFlipped);
+                        // The LOGS proved this is the key. Only run if it's already flipped.
+                        if (!isFlipped) return; 
 
                         visualsCol.classList.remove('is-exiting');
                         const state = Flip.getState(actor3D);
-                        console.log('Flip state CAPTURED from summary clipper:', state);
-                        
-                        scene3D.appendChild(actor3D);
-                        console.log('actor3D moved back to scene3D.');
-                        
+                        scene3D.appendChild(actor3D); 
+
                         Flip.from(state, {
                             duration: 0.8,
                             ease: 'power2.out',
                             scale: true,
                             onComplete: () => {
-                                console.groupCollapsed('%cFlip [onLeaveBack] COMPLETE. Starting 3-step sync...', 'color: #EBCB8B');
+                                // THE BULLETPROOF 3-STEP SYNC
                                 
-                                console.log(`1. actor3D style BEFORE clear:`, actor3D.style.transform);
+                                // STEP 1: Clear styles from Flip.
                                 gsap.set(actor3D, { clearProps: "transform" });
-                                console.log(`1. actor3D style AFTER clear:`, actor3D.style.transform);
-
-                                console.log(`2. Timeline progress BEFORE seek:`, tl.progress().toFixed(4));
+                                
+                                // STEP 2: Force the timeline to its exact pre-handoff state.
                                 tl.seek('finalState');
-                                console.log(`2. Timeline progress AFTER seek('finalState'):`, tl.progress().toFixed(4));
-                                console.log(`   (Actor transform should now match timeline's 'finalState')`);
-                                console.log(`   RotationY is now:`, gsap.getProperty(actor3D, "rotationY").toFixed(2));
-
-
+                                
+                                // STEP 3: Re-enable the scroller. It's now perfectly synced.
                                 mainScrub.enable();
-                                console.log('3. mainScrub re-enabled.');
-                                console.log('   (ScrollTrigger will now take back control)');
 
-                                console.groupEnd();
+                                // THE RACE-CONDITION FIX:
+                                // Only set isFlipped to false AFTER everything is done.
+                                isFlipped = false;
                             }
                         });
-                        console.groupEnd();
                     }
                 });
-                
-                // Expose key variables to the global scope for manual inspection in the console
-                window.gsapDebug = {
-                    timeline: tl,
-                    mainScrub: mainScrub,
-                    actor: actor3D
-                };
             },
 
             // --- MOBILE CLEANUP ---
             '(max-width: 768px)': () => {
-                // Kill all GSAP instances to prevent conflicts
-                if (window.gsapDebug) {
-                    ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-                    gsap.killTweensOf([actor3D, textPillars, '.pillar-line']);
-                }
-                // Reset all element styles
-                gsap.set([actor3D, textPillars, '.pillar-line'], { clearProps: 'all' });
+                ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+                gsap.killTweensOf([actor3D, textPillars, '.pillar-line']);
+                gsap.set([actor3D, ...textPillars, '.pillar-line'], { clearProps: 'all' });
                 if (scene3D && !scene3D.contains(actor3D)) {
-                    if (summaryClipper) summaryClipper.innerHTML = '';
+                    if(summaryClipper) summaryClipper.innerHTML = '';
                     scene3D.appendChild(actor3D);
                 }
                 if (visualsCol) visualsCol.classList.remove('is-exiting');
