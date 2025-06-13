@@ -1493,3 +1493,9 @@ body.no-scroll {
 #cerebro-hud .label { color: #81A1C1; width: 130px; }
 #cerebro-hud .divider { height: 1px; background: #4C566A; margin: 8px 0; }
 #cerebro-hud span:not(.label) { font-weight: bold; color: #E5E9F0; }
+/* ==========================================================
+   V19 ZERO-MOTION REBUILD PROTOCOL - ESSENTIAL UTILITY
+   ========================================================== */
+body.scroll-locked {
+    overflow: hidden;
+}
