@@ -1,4 +1,4 @@
-// main.js (Architectural Refactor)
+// main.js (Final Architectural Version w/ Handoff Fix)
 
 document.addEventListener('DOMContentLoaded', function () {
     // --- Menu & Footer code (unchanged) ---
@@ -30,7 +30,6 @@ document.addEventListener('DOMContentLoaded', function () {
         yearSpan.textContent = new Date().getFullYear();
     }
 
-    // --- REFACTORED ANIMATION LOGIC ---
     function setupAnimations() {
         gsap.registerPlugin(ScrollTrigger, Flip);
 
@@ -48,10 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (!visualsCol || !textCol || !actor3D || textPillars.length < 3) { return; }
 
                     // --- PART 1: The Film Strip (The Master Timeline) ---
-                    // This timeline defines the entire sequence of animations.
-                    // It will be controlled by a single "scrubbing" ScrollTrigger.
                     const masterTimeline = gsap.timeline({
-                        // Setting defaults for all tweens in this timeline
                         defaults: { duration: 0.6, ease: "power2.inOut" }
                     });
 
@@ -59,19 +55,22 @@ document.addEventListener('DOMContentLoaded', function () {
                     masterTimeline
                         .set(textPillars, { autoAlpha: 0 })
                         .set(textPillars[0], { autoAlpha: 1 })
-                        .to(actor3D, { rotationY: 20, rotationX: -15, scale: 1 }); // State for Pillar 1
+                        .to(actor3D, { rotationY: 20, rotationX: -15, scale: 1 });
 
                     // Transition to Pillar 2
                     masterTimeline
                         .to(textPillars[0], { autoAlpha: 0 })
-                        .to(textPillars[1], { autoAlpha: 1 }, "<") // Text fades happen at the same time as...
-                        .to(actor3D, { rotationY: 120, rotationX: 10, scale: 1.1 }, "<"); // ...the 3D actor animation starts.
+                        .to(textPillars[1], { autoAlpha: 1 }, "<")
+                        .to(actor3D, { rotationY: 120, rotationX: 10, scale: 1.1 }, "<");
 
                     // Transition to Pillar 3
                     masterTimeline
                         .to(textPillars[1], { autoAlpha: 0 })
                         .to(textPillars[2], { autoAlpha: 1 }, "<")
-                        .to(actor3D, { rotationY: -120, rotationX: -20, scale: 1.2 }, "<");
+                        .to(actor3D, { rotationY: -120, rotationX: -20, scale: 1.2 }, "<")
+                        // **FIX:** Add a label to mark the final state BEFORE the exit.
+                        // This gives us a clean state to return to.
+                        .addLabel("pillar3_end");
 
                     // Transition to Exit State (Ready for Flip)
                     masterTimeline
@@ -80,29 +79,30 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
                     // --- PART 2: The Projector (A Single, Scrubbing ScrollTrigger) ---
-                    // This is the core fix. One trigger to rule them all.
-                    // It pins the visuals and links the scroll position directly to the masterTimeline's progress.
-                    ScrollTrigger.create({
-                        trigger: textCol,       // The element that drives the animation
-                        pin: visualsCol,        // The element to pin
-                        start: "top top",       // Start when the top of textCol hits the top of the viewport
-                        end: "bottom bottom", // End when the bottom of textCol hits the bottom of the viewport
-                        animation: masterTimeline, // The timeline to control
-                        scrub: 0.8,             // Smoothly link scrollbar to animation (e.g., 0.8s "catch-up" time)
-                        invalidateOnRefresh: true // Recalculate on viewport resize
+                    // **FIX:** Store the ScrollTrigger in a variable so we can disable/enable it.
+                    const mainScrubber = ScrollTrigger.create({
+                        trigger: textCol,
+                        pin: visualsCol,
+                        start: "top top",
+                        end: "bottom bottom",
+                        animation: masterTimeline,
+                        scrub: 0.8,
+                        invalidateOnRefresh: true
                     });
 
 
-                    // --- PART 3: The Igloo Exit (State Change) ---
-                    // This logic was already correct and is well-suited for a discrete trigger.
-                    // It remains unchanged as it handles a specific state change (DOM reparenting) at a precise scroll point.
+                    // --- PART 3: The Igloo Exit (State Change with Handoff Logic) ---
                     let isFlipped = false;
                     ScrollTrigger.create({
                         trigger: summaryContainer,
-                        start: "top center", // Trigger the Flip effect
+                        start: "top center", // This trigger is for the Flip effect
                         onEnter: () => {
                             if (!isFlipped) {
                                 isFlipped = true;
+                                
+                                // **FIX:** Disable the main scrubber to hand off control.
+                                mainScrubber.disable();
+
                                 const state = Flip.getState(actor3D, { props: "scale" });
                                 summaryClipper.appendChild(actor3D);
                                 visualsCol.classList.add('is-exiting');
@@ -116,6 +116,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         onLeaveBack: () => {
                             if (isFlipped) {
                                 isFlipped = false;
+
+                                // Perform the reverse flip first.
                                 const state = Flip.getState(actor3D, { props: "scale" });
                                 visualsCol.appendChild(actor3D);
                                 visualsCol.classList.remove('is-exiting');
@@ -123,6 +125,13 @@ document.addEventListener('DOMContentLoaded', function () {
                                     duration: 0.8,
                                     ease: "power2.out",
                                     scale: true,
+                                    // **FIX:** On completion, reset and re-enable the scrubber.
+                                    onComplete: () => {
+                                        // 1. Manually reset the timeline to the correct state.
+                                        masterTimeline.seek("pillar3_end");
+                                        // 2. Re-enable the scrubber to give control back.
+                                        mainScrubber.enable();
+                                    }
                                 });
                             }
                         }
@@ -131,7 +140,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
 
                 "(max-width: 768px)": function () {
-                    // This cleanup logic is correct.
                     gsap.set('.pillar-text-content', { autoAlpha: 1 });
                     gsap.set('.object-3d', { clearProps: "all" });
                 }
@@ -141,7 +149,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return () => ctx.revert();
     }
 
-    // --- Readiness Gate (Unchanged) ---
     function initialCheck() {
         if (window.gsap && window.ScrollTrigger && window.Flip) {
             setupAnimations();
@@ -151,5 +158,4 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     initialCheck();
-
 });
