@@ -33,7 +33,6 @@ document.addEventListener('DOMContentLoaded', function () {
         gsap.registerPlugin(ScrollTrigger, Flip);
 
         const ctx = gsap.context(() => {
-            // --- Element Validation ---
             const visualsCol = document.querySelector(".pillar-visuals-col");
             const textCol = document.querySelector(".pillar-text-col");
             const actor3D = document.getElementById("actor-3d");
@@ -45,20 +44,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.error("Scrollytelling animations aborted: One or more required elements are missing from the DOM.");
                 return;
             }
-
+            
             let isFlipped = false;
 
             ScrollTrigger.matchMedia({
-                // --- DESKTOP ANIMATIONS ---
                 "(min-width: 769px)": function () {
                     gsap.set(textPillars, { autoAlpha: 0 });
                     gsap.set(textPillars[0], { autoAlpha: 1 });
 
-                    // Decorative line animations
                     textPillars.forEach((pillar) => {
                         const line = pillar.querySelector('.pillar-line');
                         if (line) {
-                            ScrollTrigger.create({
+                           ScrollTrigger.create({
                                 trigger: pillar,
                                 start: "top 60%",
                                 end: "bottom 40%",
@@ -66,27 +63,36 @@ document.addEventListener('DOMContentLoaded', function () {
                                 onLeave: () => gsap.to(line, { scaleX: 0, transformOrigin: 'right', duration: 0.6, ease: "power4.in" }),
                                 onEnterBack: () => gsap.to(line, { scaleX: 1, transformOrigin: 'left', duration: 0.8, ease: "power4.out" }),
                                 onLeaveBack: () => gsap.to(line, { scaleX: 0, duration: 0.6, ease: "power4.in" })
-                            });
+                           });
                         }
                     });
 
-                    // Master timeline for cube + text fades
+                    // Define the key animation states
+                    const pillar1State = { rotationY: 20, rotationX: -15, scale: 1.0 };
+                    const pillar2State = { rotationY: 120, rotationX: 10, scale: 1.1 };
+                    const pillar3State = { rotationY: -120, rotationX: -20, scale: 1.2 };
+                    const exitState = { rotationY: 0, rotationX: 0, scale: 1.0 };
+
                     const masterTimeline = gsap.timeline({
                         defaults: { duration: 1, ease: "power2.inOut" }
                     });
-
+                    
                     masterTimeline
-                        .to(actor3D, { rotationY: 20, rotationX: -15, scale: 1.0 })
+                        .to(actor3D, pillar1State)
                         .to(textPillars[0], { autoAlpha: 1 }, "<")
+                        
                         .to(textPillars[0], { autoAlpha: 0 })
                         .to(textPillars[1], { autoAlpha: 1 }, "<")
-                        .to(actor3D, { rotationY: 120, rotationX: 10, scale: 1.1 }, "<")
+                        .to(actor3D, pillar2State, "<")
+                        
+                        // Add label at the START of the Pillar 3 animation
+                        .addLabel("finalState")
                         .to(textPillars[1], { autoAlpha: 0 })
                         .to(textPillars[2], { autoAlpha: 1 }, "<")
-                        .to(actor3D, { rotationY: -120, rotationX: -20, scale: 1.2 }, "<")
-                        .addLabel("finalState")
+                        .to(actor3D, pillar3State, "<")
+                                                
                         .to(textPillars[2], { autoAlpha: 0 })
-                        .to(actor3D, { rotationY: 0, rotationX: 0, scale: 1.0 }, "<");
+                        .to(actor3D, exitState, "<");
 
                     const mainScrubber = ScrollTrigger.create({
                         trigger: textCol,
@@ -98,40 +104,46 @@ document.addEventListener('DOMContentLoaded', function () {
                         invalidateOnRefresh: true,
                     });
 
-                    // Smooth handoff logic with Flip
                     ScrollTrigger.create({
                         trigger: summaryContainer,
                         start: "top center",
                         onEnter: () => {
                             if (!isFlipped) {
                                 isFlipped = true;
-                                mainScrubber.disable();
+                                mainScrubber.disable(); 
 
-                                const state = Flip.getState(actor3D, { props: "transform" });
+                                const state = Flip.getState(actor3D, { props: "scale, rotation" });
                                 summaryClipper.appendChild(actor3D);
                                 visualsCol.classList.add('is-exiting');
 
                                 Flip.from(state, {
                                     duration: 0.8,
                                     ease: "power2.inOut",
-                                    absolute: true,
-                                    onComplete: () => gsap.set(actor3D, { clearProps: "transform" })
+                                    scale: true,
+                                    onComplete: () => gsap.set(actor3D, { clearProps: "transform" }) 
                                 });
                             }
                         },
                         onLeaveBack: () => {
                             if (isFlipped) {
                                 isFlipped = false;
-
-                                const state = Flip.getState(actor3D, { props: "transform" });
+                                
+                                const state = Flip.getState(actor3D, { props: "scale, rotation" });
                                 visualsCol.appendChild(actor3D);
                                 visualsCol.classList.remove('is-exiting');
 
+                                // THE FIX: Animate TO the correct state in a single tween
                                 Flip.from(state, {
                                     duration: 0.8,
                                     ease: "power2.out",
-                                    absolute: true,
+                                    // Animate scale, rotation, etc. TO the Pillar 3 values
+                                    scale: true, // Let Flip handle the size change
+                                    rotationY: pillar3State.rotationY, // Animate TO this rotation
+                                    rotationX: pillar3State.rotationX, // Animate TO this rotation
                                     onComplete: () => {
+                                        // Sync the timeline to the correct spot
+                                        masterTimeline.seek("finalState");
+                                        // Then re-enable scrubbing
                                         mainScrubber.enable();
                                     }
                                 });
@@ -139,14 +151,12 @@ document.addEventListener('DOMContentLoaded', function () {
                         }
                     });
                 },
-
-                // --- MOBILE CLEANUP ---
+                
                 "(max-width: 768px)": function () {
                     ScrollTrigger.getAll().forEach(st => st.kill());
                     gsap.killTweensOf([actor3D, ...textPillars, '.pillar-line']);
-                    gsap.set(textPillars, { clearProps: "all" });
-                    gsap.set(actor3D, { clearProps: "all" });
-                    gsap.set('.pillar-line', { clearProps: "all" });
+                    
+                    gsap.set([textPillars, actor3D, '.pillar-line'], { clearProps: "all" });
 
                     if (visualsCol && !visualsCol.contains(actor3D)) {
                         visualsCol.appendChild(actor3D);
@@ -160,7 +170,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return () => ctx.revert();
     }
 
-    // --- Readiness Gate ---
+    // --- Readiness Gate (unchanged) ---
     function initialCheck() {
         if (window.gsap && window.ScrollTrigger && window.Flip) {
             setupAnimations();
@@ -179,6 +189,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }, 100);
         }
     }
-
+    
     initialCheck();
 });
