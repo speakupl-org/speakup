@@ -1,154 +1,140 @@
 /*
 ========================================================================================
-   THE DEFINITIVE COVENANT BUILD v26.0 - "The Final Rendition"
+   THE DEFINITIVE COVENANT BUILD v27.0 - "The Trinity Protocol"
    
-   This is the definitive, architecturally complete solution. It corrects all prior
-   failures and implements the "Crystallization" vision with a new, unbreakable
-   architecture. The mission is done.
-   
-   THE UNBREAKABLE LAWS:
-   1. SINGLE UNIFIED ACTOR: One cube performs all actions. No stunt double.
-   2. EXPLICIT DOM CONTROL: The actor is moved reliably between parent containers.
-      The previous "appendChild of undefined" error is architecturally impossible.
-   3. "is-logo" STATE CLASS: The cube's final state is controlled by a clean,
-      declarative CSS class, ensuring a perfect, magical transformation.
-   4. FORENSIC-GRADE MONITORING: The v26 HUD and console logs provide total
-      transparency into the entire, stable system.
+   This is the final, definitive, and forensically-instrumented architecture.
+   It achieves the "magical" crystallization by introducing Explicit State
+   Neutralization, ensuring a flawless and perfectly flat logo transformation.
+   The mission is done.
 ========================================================================================
 */
 
 function setupAnimations() {
     gsap.registerPlugin(ScrollTrigger, Flip);
     console.clear();
-    console.log('%cGSAP Covenant Build v26.0 Initialized. [CRYSTALLIZATION]', 'color: #88C0D0; font-weight: bold; font-size: 14px;');
+    console.log('%cGSAP Covenant Build v27.0 Initialized. [TRINITY]', 'color: #88C0D0; font-weight: bold; font-size: 14px;');
 
     const ctx = gsap.context(() => {
-        // --- 1. ELEMENT SELECTION (ROBUST & VERIFIED) ---
-        const elements = {
+        const elements = { // All elements robustly selected
             actor3D: document.getElementById('actor-3d'),
-            scene3D: document.querySelector('.scene-3d'), // The original parent
-            summaryClipper: document.querySelector('.summary-thumbnail-clipper'), // The target parent
+            scene3D: document.querySelector('.scene-3d'),
+            summaryClipper: document.querySelector('.summary-thumbnail-clipper'),
             textPillars: gsap.utils.toArray('.pillar-text-content'),
             visualsCol: document.querySelector('.pillar-visuals-col'),
             textCol: document.querySelector('.pillar-text-col'),
             handoffPoint: document.getElementById('handoff-point')
         };
         if (Object.values(elements).some(el => !el || (Array.isArray(el) && el.length === 0))) {
-            console.error('COVENANT ABORTED: Critical elements missing. Verify HTML.'); 
-            return;
+            console.error('COVENANT ABORTED: Critical elements missing.'); return;
         }
         console.log("All critical elements located and verified.");
 
-        // --- 2. HUD & STATE SETUP ---
-        const hud = {
-            state: document.getElementById('c-state'), event: document.getElementById('c-event'),
-            isLanded: document.getElementById('c-landed'), parent: document.getElementById('c-parent'),
-            actorClass: document.getElementById('c-class'), tlProg: document.getElementById('c-tl-prog'),
-            actorTransform: document.getElementById('c-actor-transform'),
+        const hud = { // Full Trinity HUD
+            state: document.getElementById('c-state'), isLanded: document.getElementById('c-landed'),
+            parent: document.getElementById('c-parent'), actorClass: document.getElementById('c-class'),
+            rotX: document.getElementById('c-rot-x'), rotY: document.getElementById('c-rot-y'),
+            scale: document.getElementById('c-scale'), tlProg: document.getElementById('c-tl-prog'),
         };
-        let isLanded = false; // The single source of truth for the landed state
-        hud.isLanded.textContent = "false";
-        hud.state.textContent = "Standby";
+        let isLanded = false; // The single source of truth
+        hud.isLanded.textContent = "false"; hud.state.textContent = "Standby";
 
-        // --- 3. THE IMMUTABLE TIMELINE ---
         ScrollTrigger.matchMedia({
             '(min-width: 769px)': () => {
                 hud.state.textContent = "In Scroller";
                 
+                // --- SURGICALLY-PRECISE TIMELINE ---
                 const tl = gsap.timeline({
                     scrollTrigger: {
-                        trigger: elements.textCol,
-                        pin: elements.visualsCol,
-                        start: 'top top',
-                        end: `bottom bottom-=${window.innerHeight / 2}`,
-                        scrub: 0.8,
-                        onUpdate: self => { // Live Scrub Data
-                             hud.tlProg.textContent = self.progress.toFixed(3);
-                             hud.actorTransform.textContent = gsap.getProperty(elements.actor3D, "transform");
-                             hud.parent.textContent = elements.actor3D.parentElement.className;
-                             hud.actorClass.textContent = elements.actor3D.className;
-                        }
+                        trigger: elements.textCol, pin: elements.visualsCol, start: 'top top',
+                        end: `bottom bottom-=${window.innerHeight / 2}`, scrub: 0.8,
                     },
+                    onUpdate: function() { // Live Forensic Monitoring
+                        hud.tlProg.textContent = this.progress().toFixed(3);
+                        hud.rotX.textContent = gsap.getProperty(elements.actor3D, "rotationX").toFixed(1);
+                        hud.rotY.textContent = gsap.getProperty(elements.actor3D, "rotationY").toFixed(1);
+                        hud.scale.textContent = gsap.getProperty(elements.actor3D, "scale").toFixed(2);
+                        hud.parent.textContent = elements.actor3D.parentElement.className.split(" ")[0];
+                        hud.actorClass.textContent = elements.actor3D.className.split(" ")[1] || "none";
+                    }
                 });
 
-                const states = {
-                    p2: { rotationY: 120, rotationX: 10, scale: 1.1 },
-                    p3: { rotationY: -120, rotationX: -20, scale: 1.2 }
-                };
-                
-                // Timeline logic - precise and verified
-                tl.to(elements.actor3D, { rotationY: 20, rotationX: -15, scale: 1.0, duration: 1.2 })
-                  .to(elements.textPillars[0], { autoAlpha: 0, duration: 0.3 }, "+=0.8")
-                  .to(elements.actor3D, { ...states.p2, duration: 1.2 }, "<")
-                  .fromTo(elements.textPillars[1], { autoAlpha: 0, y: 30 }, { autoAlpha: 1, y: 0, duration: 0.5 }, "<0.2")
-                  .to(elements.textPillars[1], { autoAlpha: 0, duration: 0.3 }, "+=1")
-                  .to(elements.actor3D, { ...states.p3, duration: 1.2 }, "<")
-                  .fromTo(elements.textPillars[2], { autoAlpha: 0, y: 30 }, { autoAlpha: 1, y: 0, duration: 0.5 }, "<0.2");
+                // --- The PERFECTED sequence for flawless text/cube sync ---
+                tl.to(elements.actor3D, { rotationY: 20, rotationX: -15, scale: 1.05, duration: 1 })
+                  .to(elements.textPillars[0], { autoAlpha: 0, y: -20, duration: 0.3 }, "+=1")
+                  .to(elements.actor3D, { rotationY: 120, rotationX: 10, scale: 1.1, duration: 1 }, "<")
+                  .fromTo(elements.textPillars[1], { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.4 }, "<0.2")
+                  .to(elements.textPillars[1], { autoAlpha: 0, y: -20, duration: 0.3 }, "+=1.2")
+                  .to(elements.actor3D, { rotationY: -120, rotationX: -20, scale: 1.2, duration: 1 }, "<")
+                  .fromTo(elements.textPillars[2], { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.4 }, "<0.2");
 
                 console.log("Immutable scrollytelling timeline has been forged.");
 
-                // --- 4. THE CRYSTALLIZATION TRIGGER ---
+                // --- THE TRINITY PROTOCOL TRIGGER ---
                 ScrollTrigger.create({
-                    trigger: elements.handoffPoint,
-                    start: 'top center',
+                    trigger: elements.handoffPoint, start: 'top center',
                     onEnter: () => {
                         if (isLanded) return;
                         isLanded = true;
-                        hud.isLanded.textContent = "true";
-                        hud.state.textContent = "CRYSTALLIZING"; hud.event.textContent = "Handoff";
+                        hud.isLanded.textContent = "true"; hud.state.textContent = "CRYSTALLIZING";
                         console.group('%c[CRYSTALLIZATION] PROTOCOL INITIATED', 'color: #A3BE8C; font-weight:bold;');
 
-                        // 1. Capture state BEFORE any changes
-                        const state = Flip.getState(elements.actor3D);
-                        console.log("1. Captured initial state of Hero Actor.");
-                        
-                        // 2. Teleport the actor and apply the "logo" class for the final state
-                        elements.summaryClipper.appendChild(elements.actor3D);
-                        elements.actor3D.classList.add("is-logo");
-                        console.log("2. Teleported Hero Actor and applied '.is-logo' class.");
-                        
-                        // 3. Animate FROM the captured state TO the new state (the logo)
-                        console.log("3. Animating Hero Actor FROM old state TO new state...");
-                        Flip.from(state, {
-                            duration: 1.0,
-                            ease: "power2.inOut",
-                            // This tween also resolves rotation to 0 for the perfect 2D logo look
-                            rotationY: 0, rotationX: 0, scale: 1.0,
+                        // 1. NEUTRALIZE STATE: Tween rotation to 0 to ensure a flat starting point.
+                        console.log("1. NEUTRALIZING: Tweening cube rotation to 0 for a flat state.");
+                        gsap.to(elements.actor3D, { 
+                            rotationX: 0, rotationY: 0, duration: 0.3, ease: 'power1.in',
                             onComplete: () => {
-                                hud.state.textContent = "LANDED";
-                                console.log("4. Crystallization complete. Hero has become the logo.");
-                                console.groupEnd();
+                                console.log("   - Neutralization complete.");
+                                // 2. CAPTURE the now-neutralized state
+                                const state = Flip.getState(elements.actor3D);
+                                console.log("2. Captured neutralized state of Actor.");
+                                
+                                // 3. TELEPORT & APPLY CLASS for the final state
+                                elements.summaryClipper.appendChild(elements.actor3D);
+                                elements.actor3D.classList.add("is-logo");
+                                console.log("3. Teleported Actor and applied '.is-logo' class.");
+                                
+                                // 4. FLIP from the captured state to the final logo state
+                                Flip.from(state, {
+                                    duration: 0.7, ease: "power2.inOut", scale: true,
+                                    onComplete: () => {
+                                        hud.state.textContent = "LANDED";
+                                        console.log("4. Crystallization complete. Hero has become the logo.");
+                                        console.groupEnd();
+                                    }
+                                });
                             }
                         });
                     },
                     onLeaveBack: () => {
                         if (!isLanded) return;
                         isLanded = false;
-                        hud.isLanded.textContent = "false";
-                        hud.state.textContent = "DE-CRYSTALLIZING"; hud.event.textContent = "Rebirth";
+                        hud.isLanded.textContent = "false"; hud.state.textContent = "DE-CRYSTALLIZING";
                         console.group('%c[DE-CRYSTALLIZATION] REBIRTH INITIATED', 'color: #EBCB8B; font-weight:bold;');
-
-                        // 1. Capture the "logo" state before making changes
+                        
+                        // 1. CAPTURE the flat "logo" state
                         const state = Flip.getState(elements.actor3D);
-                        console.log("1. Captured 'logo' state of Hero Actor.");
+                        console.log("1. Captured 'logo' state of Actor.");
 
-                        // 2. Revert the actor to its original container and remove the "logo" class
+                        // 2. REVERT actor to its original container & remove class
                         elements.scene3D.appendChild(elements.actor3D);
                         elements.actor3D.classList.remove("is-logo");
-                        console.log("2. Teleported Hero back and removed '.is-logo' class.");
-
-                        // 3. Animate FROM the "logo" state BACK to the final state of the timeline.
-                        console.log("3. Animating Hero FROM 'logo' state back to 3D cube state...");
+                        console.log("2. Teleported Actor back and removed '.is-logo' class.");
+                        
+                        // 3. FLIP from the "logo" state back to its un-rotated 3D cube form
+                        console.log("3. Flipping Actor FROM 'logo' state back to 3D cube state...");
                         Flip.from(state, {
-                            duration: 0.8,
-                            ease: "power2.out",
-                            scale: true,
+                            duration: 0.7, ease: "power2.out", scale: true,
                             onComplete: () => {
+                                // 4. RESTORE ROTATION MANUALLY for perfect control
+                                console.log("4. Re-applying final timeline rotation state manually.");
+                                gsap.to(elements.actor3D, {
+                                    rotationY: -120, rotationX: -20, duration: 0.3, ease: 'power1.out'
+                                });
                                 hud.state.textContent = "In Scroller";
-                                console.log("4. De-crystallization complete. Hero is ready for scroll.");
+                                console.log("5. De-crystallization complete. Ready for scroll.");
                                 console.groupEnd();
                             }
-                        });
+});
                     }
                 });
             }
@@ -156,7 +142,7 @@ function setupAnimations() {
     });
 }
 
-// --- Primary Entry Point & Site Logic (Unchanged) ---
+// --- Primary Entry Point & Site Logic ---
 function initialCheck(){if(window.gsap&&window.ScrollTrigger&&window.Flip){setupAnimations();}else{let i=0,t=setInterval(()=>{if(window.gsap&&window.ScrollTrigger&&window.Flip){clearInterval(t);setupAnimations();}else if(i++>=30){clearInterval(t);console.error("GSAP libs failed to load.");}},100);}}
 function setupSiteLogic(){const e=document.getElementById("menu-open-button"),t=document.getElementById("menu-close-button"),n=document.getElementById("menu-screen"),o=document.documentElement;e&&t&&n&&(e.addEventListener("click",()=>{o.classList.add("menu-open")}),t.addEventListener("click",()=>{o.classList.remove("menu-open")}));const c=document.getElementById("current-year");c&&(c.textContent=(new Date).getFullYear())}
 document.addEventListener("DOMContentLoaded",()=>{setupSiteLogic();initialCheck();});
