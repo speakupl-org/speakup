@@ -30,116 +30,125 @@ document.addEventListener('DOMContentLoaded', function () {
         yearSpan.textContent = new Date().getFullYear();
     }
 
-    // =========================================================================
-    // 3D SCROLLYTELLING - V7: THE SCENE-TRIGGERED ARCHITECTURE
-    // =========================================================================
+    // --- The Robust Animation Setup Function ---
+    // We wrap ALL our GSAP logic in a single function.
+    function setupAnimations() {
+        
+        // Register the plugins now that we know they exist.
+        gsap.registerPlugin(ScrollTrigger, Flip);
 
-    // Register GSAP plugins. Flip is for the bonus "exit" animation.
-    gsap.registerPlugin(ScrollTrigger, Flip);
+        ScrollTrigger.matchMedia({
 
-    ScrollTrigger.matchMedia({
+            "(min-width: 769px)": function () {
 
-        "(min-width: 769px)": function () {
+                // --- 1. SELECTORS & REFERENCES (The Robust Way) ---
+                const visualsCol = document.querySelector(".pillar-visuals-col");
+                const actor3D = document.getElementById("actor-3d");
+                const textPillars = gsap.utils.toArray('.pillar-text-content');
+                const summaryContainer = document.querySelector(".method-summary");
+                const summaryClipper = document.querySelector(".summary-thumbnail-clipper");
 
-            // --- 1. SELECTORS & REFERENCES (The Robust Way) ---
-            // Find all our "actors" on the page ONCE and store them in variables.
-            const visualsCol = document.querySelector(".pillar-visuals-col");
-            const actor3D = document.getElementById("actor-3d");
-            const textPillars = gsap.utils.toArray('.pillar-text-content');
-            const summaryContainer = document.querySelector(".method-summary");
-            const summaryClipper = document.querySelector(".summary-thumbnail-clipper");
+                if (!visualsCol || !actor3D || !summaryContainer || !summaryClipper) {
+                    console.error("Scrollytelling elements not found. Aborting animation setup.");
+                    return; 
+                }
 
-            // Safety Check: If any critical element isn't found, stop here to avoid errors.
-            if (!visualsCol || !actor3D || !summaryContainer || !summaryClipper) {
-                console.error("Scrollytelling elements not found. Aborting animation setup.");
-                return; 
-            }
+                gsap.set(textPillars, { autoAlpha: 0 });
 
-            // Hide text pillars to start.
-            gsap.set(textPillars, { autoAlpha: 0 });
+                // --- 2. PIN THE VISUALS "STAGE" ---
+                ScrollTrigger.create({
+                    trigger: ".pillar-text-col",
+                    pin: visualsCol,
+                    start: "top top",
+                    end: "bottom bottom"
+                });
 
-
-            // --- 2. PIN THE VISUALS "STAGE" ---
-            ScrollTrigger.create({
-                trigger: ".pillar-text-col",
-                pin: visualsCol,
-                start: "top top",
-                end: "bottom bottom"
-            });
-
-
-            // --- 3. SCENE-BASED ANIMATIONS ---
-            textPillars.forEach((pillar, i) => {
-                let pillarTimeline = gsap.timeline({
-                    scrollTrigger: {
-                        trigger: pillar,
-                        start: "top center+=10%",
-                        end: "bottom center-=10%",
-                        scrub: 1,
-                        onEnter: () => gsap.to(pillar, { autoAlpha: 1, duration: 0.5 }),
-                        onLeave: () => gsap.to(pillar, { autoAlpha: 0, duration: 0.5 }),
-                        onEnterBack: () => gsap.to(pillar, { autoAlpha: 1, duration: 0.5 }),
-                        onLeaveBack: () => gsap.to(pillar, { autoAlpha: 0, duration: 0.5 }),
+                // --- 3. SCENE-BASED ANIMATIONS ---
+                textPillars.forEach((pillar, i) => {
+                    let pillarTimeline = gsap.timeline({
+                        scrollTrigger: {
+                            trigger: pillar,
+                            start: "top center+=10%",
+                            end: "bottom center-=10%",
+                            scrub: 1,
+                            onEnter: () => gsap.to(pillar, { autoAlpha: 1, duration: 0.5 }),
+                            onLeave: () => gsap.to(pillar, { autoAlpha: 0, duration: 0.5 }),
+                            onEnterBack: () => gsap.to(pillar, { autoAlpha: 1, duration: 0.5 }),
+                            onLeaveBack: () => gsap.to(pillar, { autoAlpha: 0, duration: 0.5 }),
+                        }
+                    });
+                    
+                    if (i === 0) {
+                        pillarTimeline.to(actor3D, { rotationY: 120, rotationX: 10, scale: 1.1, ease: "power2.inOut" });
+                    } else if (i === 1) {
+                        pillarTimeline.to(actor3D, { rotationY: -120, rotationX: -20, scale: 1.2, ease: "power2.inOut" });
+                    } else if (i === 2) {
+                        pillarTimeline.to(actor3D, { rotationY: 0, rotationX: 0, scale: 1, ease: "power3.inOut" });
                     }
                 });
                 
-                if (i === 0) {
-                    pillarTimeline.to(actor3D, { rotationY: 120, rotationX: 10, scale: 1.1, ease: "power2.inOut" });
-                } else if (i === 1) {
-                    pillarTimeline.to(actor3D, { rotationY: -120, rotationX: -20, scale: 1.2, ease: "power2.inOut" });
-                } else if (i === 2) {
-                    pillarTimeline.to(actor3D, { rotationY: 0, rotationX: 0, scale: 1, ease: "power3.inOut" });
-                }
-            });
-            
+                // --- 4. THE "IGLOO" EXIT/RETURN ANIMATION (Fully Robust) ---
+                let isFlipped = false; 
 
-            // --- 4. THE "IGLOO" EXIT/RETURN ANIMATION (Fully Robust) ---
-            let isFlipped = false; 
-
-            ScrollTrigger.create({
-                trigger: summaryContainer, // Using the whole summary section as the trigger
-                start: "top center",       // Trigger when the section reaches the middle
-                
-                onEnter: () => {
-                    if (!isFlipped) {
-                        isFlipped = true;
-                        const state = Flip.getState(actor3D, {props: "scale,opacity"});
-                        
-                        // USE THE VARIABLE, not a new querySelector!
-                        summaryClipper.appendChild(actor3D); 
-                        
-                        Flip.from(state, {
-                            duration: 1.2,
-                            ease: "power2.inOut",
-                            scale: true,
-                            onStart: () => {
-                                visualsCol.classList.add('is-exiting'); 
-                            }
-                        });
+                ScrollTrigger.create({
+                    trigger: summaryContainer,
+                    start: "top center",
+                    onEnter: () => {
+                        if (!isFlipped) {
+                            isFlipped = true;
+                            const state = Flip.getState(actor3D, {props: "scale,opacity"});
+                            summaryClipper.appendChild(actor3D); 
+                            Flip.from(state, {
+                                duration: 1.2,
+                                ease: "power2.inOut",
+                                scale: true,
+                                onStart: () => {
+                                    visualsCol.classList.add('is-exiting'); 
+                                }
+                            });
+                        }
+                    },
+                    onLeaveBack: () => {
+                        if (isFlipped) {
+                            isFlipped = false;
+                            const state = Flip.getState(actor3D, {props: "scale,opacity"});
+                            visualsCol.appendChild(actor3D);
+                            Flip.from(state, {
+                                duration: 1.2,
+                                ease: "power2.inOut",
+                                scale: true,
+                                onStart: () => {
+                                    visualsCol.classList.remove('is-exiting');
+                                }
+                            });
+                        }
                     }
-                },
+                });
+            },
 
-                onLeaveBack: () => {
-                    if (isFlipped) {
-                        isFlipped = false;
-                        const state = Flip.getState(actor3D, {props: "scale,opacity"});
-                        
-                        // USE THE VARIABLE!
-                        visualsCol.appendChild(actor3D);
-                        
-                        Flip.from(state, {
-                            duration: 1.2,
-                            ease: "power2.inOut",
-                            scale: true,
-                            onStart: () => {
-                                visualsCol.classList.remove('is-exiting');
-                            }
-                        });
-                    }
-                }
-            });
-        },
+            "(max-width: 768px)": function () {
+                gsap.set('.pillar-text-content', { autoAlpha: 1 });
+            }
+        });
+    } // End of setupAnimations function
 
-        "(max-width: 768px)": function () {
-            gsap.set('.pillar-text-content', { autoAlpha: 1 });
-       
+    // --- THE "READY CHECK" ---
+    // This is the most important part. We check if the main GSAP plugins
+    // have loaded and attached themselves to the window.
+    // We'll give it a couple of tries in case there's a slight delay.
+    
+    function initialCheck() {
+        if (window.gsap && window.ScrollTrigger && window.Flip) {
+            // All scripts are loaded and ready, let's set up the animations!
+            setupAnimations();
+        } else {
+            // One or more scripts are not ready yet. Let's wait a tiny bit and check again.
+            // This is a simple but effective fallback for slow network conditions.
+            setTimeout(initialCheck, 100);
+        }
+    }
+    
+    // Start the first check.
+    initialCheck();
+
+}); // End of DOMContentLoaded
