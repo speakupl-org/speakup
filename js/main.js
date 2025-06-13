@@ -52,51 +52,54 @@ document.addEventListener('DOMContentLoaded', function () {
                         return;
                     }
 
+                    // --- THE MASTER TIMELINE ---
+                    // This single timeline controls the entire pillar sequence.
                     const masterTimeline = gsap.timeline({
                         scrollTrigger: {
                             trigger: textCol,
                             pin: visualsCol,
                             start: "top top",
                             end: "bottom bottom",
-                            scrub: 1,
+                            scrub: 1, // Using a smooth scrub value
                         }
                     });
 
                     // Set initial state of ALL text pillars to invisible.
                     gsap.set(textPillars, { autoAlpha: 0 });
 
-                    // **Pillar 1: Explicit From/To for perfect alignment**
-                    masterTimeline
-                        .to(textPillars[0], { autoAlpha: 1 })
-                        .fromTo(actor3D, 
-                            { rotationY: 20, rotationX: -15, scale: 1 },
-                            { rotationY: 120, rotationX: 10, scale: 1.1, ease: "power2.inOut" },
-                            "<" // The key is to start the cube animation WITH the text fade-in
-                        );
+                    // --- THE PERFECTLY PACED ANIMATION SEQUENCE ---
 
-                    // **Pillar 2**
+                    // **Pillar 1: Define explicit FROM and TO states for perfect alignment.**
                     masterTimeline
-                        .to(textPillars[0], { autoAlpha: 0 })
-                        .to(textPillars[1], { autoAlpha: 1 }, "<+=0.2") // Overlap the fades slightly
-                        .fromTo(actor3D,
+                        .to(textPillars[0], { autoAlpha: 1 }) // 1. Fade in text
+                        .fromTo(actor3D, // 2. Animate cube at the SAME TIME
+                            { rotationY: 20, rotationX: -15, scale: 1 },
+                            { rotationY: 120, rotationX: 10, scale: 1.1, ease: "power1.inOut" },
+                            "<" // The "<" ensures this starts with the text fade-in
+                        );
+                    
+                    // **Pillar 2: Transition from Pillar 1's state to Pillar 2's state.**
+                    masterTimeline
+                        .to(textPillars[0], { autoAlpha: 0 }) // 1. Fade out previous text
+                        .to(textPillars[1], { autoAlpha: 1 }, "<+=0.1") // 2. Fade in new text slightly after
+                        .fromTo(actor3D, // 3. Animate cube at the SAME TIME as the fade out
                             { rotationY: 120, rotationX: 10, scale: 1.1 },
-                            { rotationY: -120, rotationX: -20, scale: 1.2, ease: "power2.inOut" },
+                            { rotationY: -120, rotationX: -20, scale: 1.2, ease: "power1.inOut" },
                             "<"
                         );
 
-                    // **Pillar 3**
+                    // **Pillar 3: Transition from Pillar 2's state to the final "at rest" state.**
                     masterTimeline
-                        .to(textPillars[1], { autoAlpha: 0 })
-                        .to(textPillars[2], { autoAlpha: 1 }, "<+=0.2")
-                        .fromTo(actor3D,
+                        .to(textPillars[1], { autoAlpha: 0 }) // 1. Fade out previous text
+                        .to(textPillars[2], { autoAlpha: 1 }, "<+=0.1") // 2. Fade in final text
+                        .fromTo(actor3D, // 3. Animate cube at the SAME TIME
                             { rotationY: -120, rotationX: -20, scale: 1.2 },
-                            { rotationY: 0, rotationX: 0, scale: 1, ease: "power3.inOut" },
+                            { rotationY: 0, rotationX: 0, scale: 1, ease: "power1.inOut" },
                             "<"
                         );
                     
-                    // Final hold to ensure Pillar 3 text is readable at the end of the scroll
-                     masterTimeline.to(textPillars[2], { autoAlpha: 0, delay: 0.5 });
-
+                    // Add a final "hold" at the end so Pillar 3 text is readable before the section ends.
+                    masterTimeline.to({}, { duration: 0.2 });
 
                     // --- The "Igloo" Exit/Return Animation ---
                     let isFlipped = false;
@@ -120,13 +123,19 @@ document.addEventListener('DOMContentLoaded', function () {
                                 });
                             }
                         },
+                        // ** THE SEAMLESS "NO-BLIP" onLeaveBack **
                         onLeaveBack: () => {
                             if (isFlipped) {
                                 isFlipped = false;
+                                // Hide the cube for one frame to prevent the browser "blip"
                                 gsap.set(actor3D, { autoAlpha: 0 });
+                                
+                                // Instantly do all DOM and state changes while it's hidden
                                 visualsCol.appendChild(actor3D);
                                 visualsCol.classList.remove('is-exiting');
-                                masterTimeline.progress(1);
+                                masterTimeline.progress(1); // Set scrub to the correct end-state
+                                
+                                // Reveal the cube again. This all happens in the same frame.
                                 gsap.set(actor3D, { autoAlpha: 1 });
                             }
                         }
@@ -134,8 +143,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
 
                 "(max-width: 768px)": function () {
+                    // On mobile, ensure everything is visible and reset any transforms.
                     gsap.set(textPillars, { autoAlpha: 1 });
-                    gsap.set(actor3D, { clearProps: "all" });
+                    gsap.set(actor3D, {clearProps: "all"}); 
                 }
             });
         });
