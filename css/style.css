@@ -1499,3 +1499,14 @@ body.no-scroll {
 body.scroll-locked {
     overflow: hidden;
 }
+/* ==========================================================
+   V24 PROTOCOL - ESSENTIAL STYLES
+   ========================================================== */
+#actor-3d-stunt-double {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%; /* Ensure it fills the clipper */
+    height: 100%; /* Ensure it fills the clipper */
+    visibility: hidden; /* Start invisible */
+}
