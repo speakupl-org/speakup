@@ -634,11 +634,164 @@ html.menu-open {
    10. METHOD PAGE STYLES - REVISED FOR "IGLOO" SCROLLYTELLING EFFECT
    ========================================================================= */
 
-/* --- Container and Layout for the Scrollytelling Section --- */
+/* --- Main Layout Container --- */
 .scrolly-container {
     display: flex;
     gap: 4rem; 
     align-items: flex-start;
+}
+
+/* --- Helper Class for Animation Handoff --- */
+.pillar-visuals-col.is-exiting {
+    visibility: hidden;
+}
+
+/* --- 1. The Pinned Visuals Column (Sticky & 3D Container) --- */
+.pillar-visuals-col {
+    /* Layout & Sizing */
+    flex: 1;
+    width: 45%; 
+    height: 70vh;
+    
+    /* Sticking Behavior */
+    position: -webkit-sticky; /* Safari */
+    position: sticky;
+    top: 15vh;
+    
+    /* 3D Scene Setup - THIS IS THE CRITICAL PART */
+    display: flex; /* Use flexbox to easily center the 3D scene */
+    justify-content: center;
+    align-items: center;
+    perspective: 1200px; /* Creates the 3D "room" for the cube */
+}
+
+/* --- 2. The 3D Scene & Object Styles --- */
+.scene-3d {
+    width: 200px;
+    height: 200px;
+    position: relative;
+    transform: translateZ(100px); 
+    transform-style: preserve-3d; /* CRITICAL: Allows children to be in 3D */
+}
+
+.object-3d {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    transform: translateZ(-100px); 
+    transform-style: preserve-3d; /* CRITICAL: Allows the "faces" to be in 3D */
+    will-change: transform;
+}
+
+.face {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+}
+
+/* Position each face to form the cube */
+.face.front  { transform: rotateY(  0deg) translateZ(100px); }
+.face.back   { transform: rotateY(180deg) translateZ(100px); }
+.face.right  { transform: rotateY( 90deg) translateZ(100px); }
+.face.left   { transform: rotateY(-90deg) translateZ(100px); }
+.face.top    { transform: rotateX( 90deg) translateZ(100px); }
+.face.bottom { transform: rotateX(-90deg) translateZ(100px); }
+
+
+/* --- 3. The Scrolling Text Column --- */
+.pillar-text-col {
+    flex: 1;
+    width: 50%;
+    padding-left: 2rem; 
+}
+
+.pillar-text-content {
+    padding-top: 15vh;
+    padding-bottom: 25vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* FOUC FIX: Hide all text sections by default. GSAP will reveal them. */
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* FOUC FIX: Show the first section on page load */
+.pillar-text-content:first-of-type {
+    opacity: 1;
+    visibility: visible;
+}
+
+.pillar-text-content:last-of-type {
+    padding-bottom: 15vh;
+}
+
+/* --- 4. Text Content & Art Direction --- */
+.text-anim-wrapper {
+    max-width: 45ch;
+    will-change: opacity, transform;
+}
+
+.pillar-number {
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #43a8b4; 
+    display: block;
+}
+
+.pillar-line {
+    width: 60px;
+    height: 3px;
+    background-color: #43a8b4; 
+    margin: 1.5rem 0;
+    transform: scaleX(0);
+    transform-origin: left;
+}
+
+.pillar-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.8rem, 5vw, 4rem); 
+    font-weight: 700;
+    line-height: 1.1;
+    color: #f0f0f0; 
+    margin: 0;
+}
+
+.pillar-paragraph {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    margin-top: 1.5rem;
+    color: #a0a0a0;
+}
+
+/* --- 5. Styles for the "Landed" Thumbnail --- */
+.summary-thumbnail-placeholder {
+    width: 200px;
+    max-width: 40%;
+    aspect-ratio: 1 / 1;
+    margin: 0 auto 2rem;
+    position: relative; 
+}
+
+.summary-thumbnail-clipper {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.summary-thumbnail-clipper .object-3d {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
 }
 
 /* =========================================================================
