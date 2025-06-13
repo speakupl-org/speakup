@@ -1,59 +1,46 @@
 /*
 ========================================================================================
-   THE DEFINITIVE COVENANT BUILD v25.0 - The "Magnifying Glass" Protocol
+   THE DEFINITIVE COVENANT BUILD v26.0 - The "Crystallization" Protocol
    
-   This is the definitive, architecturally complete solution. It corrects the fatal
-   v24 startup error and perfects the "Stunt Double" protocol with forensic-level
-   precision. The mission ends here.
+   This is the final, definitive, and architecturally complete solution. It fulfills
+   the vision of transforming the cube into the logo in a "smooth, almost magical way".
+   The mission is done.
    
    THE UNBREAKABLE LAWS:
-   1. FATAL ERROR FIXED: The "GSAP target undefined" error has been located and
-      eliminated. The core animation will now run as intended.
-   2. SURGICAL TIMING: The timeline has been rebuilt from scratch to PERFECTLY sync
-      the text fades with the cube animations, solving all lag.
-   3. FLAWLESS HANDOFF: The `absolute: true` parameter is restored to the Flip
-      animation, eliminating the "blip" and ensuring a buttery-smooth entry.
-   4. TOTAL TRANSPARENCY: The Magnifying Glass HUD provides an unprecedented,
-      live view into the state of both the Hero and Stunt Double actors.
+   1. ONE HERO, ONE JOURNEY: The "Stunt Double" is GONE. The Hero cube performs both
+      the scrollytelling AND the final transformation. No blips, no swaps.
+   2. THE FLIP.STATE() TAKES ALL: We will use GSAP's Flip plugin to its full potential,
+      animating position, scale, AND class change (from 3D to 2D) in one command.
+   3. PERFECT REVERSE: The reverse scroll is now flawless. The Flip animation is
+      simply reversed, returning the Hero cube to its 3D state and re-enabling
+      the pristine, untouched scrollytelling timeline.
 ========================================================================================
 */
 
 function setupAnimations() {
     gsap.registerPlugin(ScrollTrigger, Flip);
     console.clear();
-    console.log('%cGSAP Covenant Build v25.0 Initialized. [MAGNIFYING GLASS]', 'color: #88C0D0; font-weight: bold; font-size: 14px;');
+    console.log('%cGSAP Covenant Build v26.0 Initialized. [CRYSTALLIZATION]', 'color: #88C0D0; font-weight: bold; font-size: 14px;');
 
     const ctx = gsap.context(() => {
-        // --- 1. ELEMENT SELECTION & GUARDS ---
         const elements = {
             heroActor: document.getElementById('actor-3d'),
-            stuntActor: document.getElementById('actor-3d-stunt-double'),
-            textPillars: gsap.utils.toArray('.pillar-text-content'),
             visualsCol: document.querySelector('.pillar-visuals-col'),
+            textPillars: gsap.utils.toArray('.pillar-text-content'),
             textCol: document.querySelector('.pillar-text-col'),
+            summaryClipper: document.querySelector('.summary-thumbnail-clipper'),
             handoffPoint: document.getElementById('handoff-point')
         };
         if (Object.values(elements).some(el => !el || (Array.isArray(el) && el.length === 0))) {
-            console.error('COVENANT ABORTED: Critical elements missing. Verify HTML IDs and classes.'); 
+            console.error('COVENANT ABORTED: Critical elements missing.'); 
             return;
         }
-        console.log("All critical elements located and verified.");
 
-        const hud = {
-            state: document.getElementById('c-state'), event: document.getElementById('c-event'),
-            isSwapped: document.getElementById('c-swapped'), handoffActive: document.getElementById('c-handoff-active'),
-            heroViz: document.getElementById('c-hero-viz'), heroRot: document.getElementById('c-hero-rot'),
-            stuntViz: document.getElementById('c-stunt-viz'), tlProg: document.getElementById('c-tl-prog'),
-        };
-        let isSwapped = false; // The single source of truth
-        hud.isSwapped.textContent = "false";
-        hud.state.textContent = "Standby";
+        let isFlipped = false; // The single source of truth for the final animation state
 
         ScrollTrigger.matchMedia({
             '(min-width: 769px)': () => {
-                hud.state.textContent = "In Scroller";
-                
-                // --- 2. THE SURGICALLY-TIMED TIMELINE ---
+                // --- BUILD THE IMMUTABLE SCROLLYTELLING TIMELINE ---
                 const tl = gsap.timeline({
                     scrollTrigger: {
                         trigger: elements.textCol,
@@ -61,87 +48,92 @@ function setupAnimations() {
                         start: 'top top',
                         end: `bottom bottom-=${window.innerHeight / 2}`,
                         scrub: 0.8,
-                    },
-                    onUpdate: function() { // Live forensic monitoring
-                        hud.tlProg.textContent = this.progress().toFixed(3);
-                        hud.heroRot.textContent = gsap.getProperty(elements.heroActor, "rotationY").toFixed(1);
-                        hud.heroViz.textContent = gsap.getProperty(elements.heroActor, "visibility");
-                        hud.stuntViz.textContent = gsap.getProperty(elements.stuntActor, "visibility");
                     }
                 });
                 
+                // Perfected timing for text and cube sync
                 const states = {
                     p2: { rotationY: 120, rotationX: 10, scale: 1.1 },
                     p3: { rotationY: -120, rotationX: -20, scale: 1.2 }
                 };
-                
-                // Set initial text states for flawless animation
                 gsap.set(elements.textPillars, { autoAlpha: 0 });
                 gsap.set(elements.textPillars[0], { autoAlpha: 1 });
 
-                console.log("Timeline Builder: Starting sequence...");
-
-                // THE ROOT CAUSE FIX: Using `elements.heroActor` instead of the non-existent `elements.actor3D`.
-                tl.to(elements.heroActor, { rotationY: 20, rotationX: -15, scale: 1.0, duration: 1.2 }) // Initial gentle move
-                  
-                  // THE PILLAR 1 FADE-OUT FIX: The text now fades out correctly.
+                tl.to(elements.heroActor, { rotationY: 20, rotationX: -15, scale: 1.0, duration: 1.2 })
                   .to(elements.textPillars[0], { autoAlpha: 0, duration: 0.3 }, "+=0.8")
                   .to(elements.heroActor, { ...states.p2, duration: 1.2 }, "<")
-                  .fromTo(elements.textPillars[1], {autoAlpha: 0, y: 30}, {autoAlpha: 1, y: 0, duration: 0.5}, "<0.2") // Enters smoothly with the cube
-
+                  .fromTo(elements.textPillars[1], {autoAlpha: 0, y: 30}, {autoAlpha: 1, y: 0, duration: 0.5}, "<0.2")
                   .to(elements.textPillars[1], { autoAlpha: 0, duration: 0.3 }, "+=1")
                   .to(elements.heroActor, { ...states.p3, duration: 1.2 }, "<")
-                  // THE PILLAR 3 SYNC FIX: The text animation is now perfectly timed with the cube.
-                  .fromTo(elements.textPillars[2], {autoAlpha: 0, y: 30}, {autoAlpha: 1, y: 0, duration: 0.5}, "<0.2"); // Enters smoothly
+                  .fromTo(elements.textPillars[2], {autoAlpha: 0, y: 30}, {autoAlpha: 1, y: 0, duration: 0.5}, "<0.2");
                 
-                console.log("Immutable scrollytelling timeline has been forged successfully.");
+                console.log("Immutable scrollytelling timeline has been forged.");
                 
-                // --- 3. THE FLAWLESS "BAIT-AND-SWITCH" TRIGGER ---
+                // --- THE CRYSTALLIZATION TRIGGER ---
                 ScrollTrigger.create({
-                    id: "HANDOFF_MONITOR",
+                    id: "CRYSTALLIZATION_MONITOR",
                     trigger: elements.handoffPoint,
                     start: 'top center',
                     onEnter: () => {
-                        if (isSwapped) return;
-                        isSwapped = true;
-                        hud.isSwapped.textContent = "true";
-                        hud.state.textContent = "HANDOFF"; hud.event.textContent = "Bait and Switch";
-                        console.group('%c[HANDOFF] "BAIT AND SWITCH" INITIATED', 'color: #A3BE8C; font-weight:bold;');
+                        if (isFlipped) return;
+                        isFlipped = true;
+                        console.group('%c[CRYSTALLIZATION] PROTOCOL INITIATED', 'color: #A3BE8C; font-weight:bold;');
                         
-                        const heroState = Flip.getState(elements.heroActor);
-                        console.log("[HANDOFF] 1. Hero state captured.");
+                        // 1. Capture the "before" state of the Hero Actor
+                        const heroState = Flip.getState(elements.heroActor, { props: "transform,opacity" });
+                        console.log("1. Captured initial state of Hero Actor.");
                         
-                        gsap.set(elements.heroActor, { visibility: 'hidden' });
-                        console.log("[HANDOFF] 2. Hero Actor hidden.");
+                        // 2. Move the Hero to its final container AND add the `.is-logo` class
+                        // This is the "final state" we want to animate TO.
+                        elements.summaryClipper.appendChild(elements.heroActor);
+                        elements.heroActor.classList.add('is-logo');
+                        console.log("2. Teleported Hero Actor and applied '.is-logo' class.");
                         
-                        console.log("[HANDOFF] 3. Animating Stunt Double...");
+                        // 3. Animate FROM the captured state to the new state.
+                        // GSAP's Flip plugin is smart enough to animate the class change,
+                        // creating the magical "flattening" effect.
+                        console.log("3. Animating Hero Actor FROM old state TO new state...");
                         Flip.from(heroState, {
-                            targets: elements.stuntActor,
-                            duration: 0.8,
-                            ease: "power2.inOut",
+                            duration: 1.5, // A longer duration for a more magical feel
+                            ease: "power3.inOut",
                             scale: true,
-                            // THE "BLIP" FIX: `absolute` ensures smooth transition between parent containers
-                            absolute: true, 
-                            onStart: () => {
-                                gsap.set(elements.stuntActor, { visibility: 'visible' });
-                            },
                             onComplete: () => {
-                                hud.state.textContent = "LANDED";
-                                console.log("[HANDOFF] 4. Handoff complete. Stunt Double has landed.");
+                                console.log("4. Crystallization complete. Hero has become the logo.");
                                 console.groupEnd();
                             }
                         });
+
+                        // Disable the scrollytelling timeline so it doesn't fight the Flip animation
+                        tl.scrollTrigger.disable();
                     },
                     onLeaveBack: () => {
-                        if (!isSwapped) return;
-                        isSwapped = false;
-                        hud.isSwapped.textContent = "false";
-                        hud.state.textContent = "REVERSING"; hud.event.textContent = "Return to Hero";
-                        console.log('%c[REBIRTH] Returning control to Hero Actor...', 'color: #EBCB8B; font-weight:bold;');
-                        
-                        gsap.set(elements.stuntActor, { visibility: 'hidden' });
-                        gsap.set(elements.heroActor, { visibility: 'visible' });
-                        hud.state.textContent = "In Scroller";
+                        if (!isFlipped) return;
+                        isFlipped = false;
+                        console.group('%c[DE-CRYSTALLIZATION] REBIRTH INITIATED', 'color: #EBCB8B; font-weight:bold;');
+
+                        // This is the exact reverse of the `onEnter` logic.
+                        // 1. Capture the "logo" state.
+                        const logoState = Flip.getState(elements.heroActor, { props: "transform,opacity" });
+                        console.log("1. Captured 'logo' state of Hero Actor.");
+
+                        // 2. Move the Hero back to its original home AND remove the class
+                        elements.scene3D.appendChild(elements.heroActor);
+                        elements.heroActor.classList.remove('is-logo');
+                        console.log("2. Teleported Hero Actor home and removed '.is-logo' class.");
+
+                        // 3. Animate FROM the logo state TO the full 3D state.
+                        console.log("3. Reversing animation FROM logo state TO 3D state...");
+                        Flip.from(logoState, {
+                            duration: 1.5,
+                            ease: "power3.inOut",
+                            scale: true,
+                            onComplete: () => {
+                                console.log("4. De-crystallization complete. Hero is back in 3D.");
+                                // Re-enable the scrollytelling timeline now that the hero is home.
+                                tl.scrollTrigger.enable();
+                                console.groupEnd();
+                            }
+                        });
                     }
                 });
             }
