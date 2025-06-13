@@ -41,115 +41,105 @@ document.addEventListener('DOMContentLoaded', function () {
 
         "(min-width: 769px)": function () {
 
-            // --- 1. SETUP & SELECTORS ---
+            // --- 1. SELECTORS & REFERENCES (The Robust Way) ---
+            // Find all our "actors" on the page ONCE and store them in variables.
             const visualsCol = document.querySelector(".pillar-visuals-col");
             const actor3D = document.getElementById("actor-3d");
             const textPillars = gsap.utils.toArray('.pillar-text-content');
-            const summaryThumbnail = document.querySelector(".summary-thumbnail-placeholder");
+            const summaryContainer = document.querySelector(".method-summary");
+            const summaryClipper = document.querySelector(".summary-thumbnail-clipper");
 
-            // Hide all text pillars initially, we'll control their visibility.
+            // Safety Check: If any critical element isn't found, stop here to avoid errors.
+            if (!visualsCol || !actor3D || !summaryContainer || !summaryClipper) {
+                console.error("Scrollytelling elements not found. Aborting animation setup.");
+                return; 
+            }
+
+            // Hide text pillars to start.
             gsap.set(textPillars, { autoAlpha: 0 });
 
+
             // --- 2. PIN THE VISUALS "STAGE" ---
-            // We create a standalone ScrollTrigger just for pinning. This is clean and simple.
-            // It pins the visuals column for the entire height of the text column.
             ScrollTrigger.create({
                 trigger: ".pillar-text-col",
                 pin: visualsCol,
                 start: "top top",
-                end: "bottom bottom", // Pin for the full duration
-                // markers: {startColor: "blue", endColor: "blue"}, // Optional: markers for the pin
+                end: "bottom bottom"
             });
 
-            // --- 3. SCENE-BASED ANIMATIONS (The Core Logic) ---
-            // We loop through each text pillar and create a dedicated animation for it.
+
+            // --- 3. SCENE-BASED ANIMATIONS ---
             textPillars.forEach((pillar, i) => {
-                
                 let pillarTimeline = gsap.timeline({
                     scrollTrigger: {
                         trigger: pillar,
-                        start: "top center+=10%", // When the pillar's top hits the center
-                        end: "bottom center-=10%",  // When the pillar's bottom leaves the center
+                        start: "top center+=10%",
+                        end: "bottom center-=10%",
                         scrub: 1,
-                        // markers: true, // Use markers on individual triggers for fine-tuning
-                        
-                        // This is the magic for fading text in and out!
                         onEnter: () => gsap.to(pillar, { autoAlpha: 1, duration: 0.5 }),
                         onLeave: () => gsap.to(pillar, { autoAlpha: 0, duration: 0.5 }),
                         onEnterBack: () => gsap.to(pillar, { autoAlpha: 1, duration: 0.5 }),
                         onLeaveBack: () => gsap.to(pillar, { autoAlpha: 0, duration: 0.5 }),
                     }
                 });
-
-                // Now, add the 3D cube animation to this pillar's timeline.
-                // We check the index 'i' to determine which animation to run.
-                if (i === 0) { // Pillar 1 (Diagnosis)
+                
+                if (i === 0) {
                     pillarTimeline.to(actor3D, { rotationY: 120, rotationX: 10, scale: 1.1, ease: "power2.inOut" });
-                } else if (i === 1) { // Pillar 2 (Conversation)
+                } else if (i === 1) {
                     pillarTimeline.to(actor3D, { rotationY: -120, rotationX: -20, scale: 1.2, ease: "power2.inOut" });
-                } else if (i === 2) { // Pillar 3 (Evolution)
+                } else if (i === 2) {
                     pillarTimeline.to(actor3D, { rotationY: 0, rotationX: 0, scale: 1, ease: "power3.inOut" });
                 }
             });
             
-            // --- 4. THE "IGLOO" EXIT ANIMATION (THE BI-DIRECTIONAL UPGRADE) ---
-// This animates the 3D cube from its pinned position into the
-// final summary section's placeholder AND back again.
 
-// We need a variable to keep track of the cube's state.
-let isFlipped = false; 
+            // --- 4. THE "IGLOO" EXIT/RETURN ANIMATION (Fully Robust) ---
+            let isFlipped = false; 
 
-ScrollTrigger.create({
-    trigger: summaryThumbnail,
-    start: "top 80%",
-    // markers: {startColor: "red", endColor: "red"}, // Keep for debugging if you need it
+            ScrollTrigger.create({
+                trigger: summaryContainer, // Using the whole summary section as the trigger
+                start: "top center",       // Trigger when the section reaches the middle
+                
+                onEnter: () => {
+                    if (!isFlipped) {
+                        isFlipped = true;
+                        const state = Flip.getState(actor3D, {props: "scale,opacity"});
+                        
+                        // USE THE VARIABLE, not a new querySelector!
+                        summaryClipper.appendChild(actor3D); 
+                        
+                        Flip.from(state, {
+                            duration: 1.2,
+                            ease: "power2.inOut",
+                            scale: true,
+                            onStart: () => {
+                                visualsCol.classList.add('is-exiting'); 
+                            }
+                        });
+                    }
+                },
 
-    // -- FORWARD ANIMATION (SCROLLING DOWN) --
-    onEnter: () => {
-        // Only run the animation if the cube isn't already flipped.
-        if (!isFlipped) {
-            isFlipped = true;
-            
-            // Get the initial state of the 3D actor in the pinned column.
-            const state = Flip.getState(actor3D, {props: "scale,opacity"});
-            
-            // Move the actor to its new home inside the clipper.
-            document.querySelector(".summary-thumbnail-clipper").appendChild(actor3D);
-            
-            // Animate FROM its old state TO its new state.
-            Flip.from(state, {
-                duration: 1.2,
-                ease: "power2.inOut",
-                scale: true,
-                onStart: () => {
-                    visualsCol.classList.add('is-exiting'); 
+                onLeaveBack: () => {
+                    if (isFlipped) {
+                        isFlipped = false;
+                        const state = Flip.getState(actor3D, {props: "scale,opacity"});
+                        
+                        // USE THE VARIABLE!
+                        visualsCol.appendChild(actor3D);
+                        
+                        Flip.from(state, {
+                            duration: 1.2,
+                            ease: "power2.inOut",
+                            scale: true,
+                            onStart: () => {
+                                visualsCol.classList.remove('is-exiting');
+                            }
+                        });
+                    }
                 }
             });
-        }
-    },
+        },
 
-    // -- REVERSE ANIMATION (SCROLLING UP) --
-    onLeaveBack: () => {
-        // Only run the reverse animation if the cube IS currently flipped.
-        if (isFlipped) {
-            isFlipped = false;
-            
-            // Get the state of the actor in its CURRENT position (the placeholder).
-            const state = Flip.getState(actor3D, {props: "scale,opacity"});
-            
-            // Move the actor BACK to its original home in the main visuals column.
-            visualsCol.appendChild(actor3D);
-            
-            // Animate FROM its previous state (in the placeholder) TO its new state (back in the pinned column).
-            Flip.from(state, {
-                duration: 1.2,
-                ease: "power2.inOut",
-                scale: true,
-                onStart: () => {
-                    // Make the main visuals column visible again as the cube flies back.
-                    visualsCol.classList.remove('is-exiting');
-                }
-            });
-        }
-    }
-});
+        "(max-width: 768px)": function () {
+            gsap.set('.pillar-text-content', { autoAlpha: 1 });
+       
