@@ -141,16 +141,13 @@
             <p class="pillar-paragraph">Cada aula é um passo à frente. Meu feedback é constante e construtivo. Juntos, ajustamos o plano para garantir que sua evolução nunca pare.</p>
         </div>
     </div>
-    <!-- The Unambiguous Finish Line for the Scroller -->
-    <div id="handoff-point" style="height: 1px; width: 100%;"></div>
-        <!-- 
-      THE CRITICAL BUFFER ZONE (v12.0)
-      This creates physical space to prevent the "Recoil Bug". After the Rebirth teleports
-      the user to the handoff-point, this buffer ensures the summary section is not
-      immediately in the trigger zone, giving the user room to scroll back up.
+    <!-- 
+      THE UNIFIED TRIGGER (v12.1)
+      This single element is both the finish line AND the buffer zone.
+      It's a 50vh tall space that provides room for the scroll to reverse
+      without re-triggering the handoff instantly.
     -->
-    <div id="handoff-buffer" style="height: 50vh;"></div>
-
+    <div id="handoff-point" style="height: 50vh; width: 100%;"></div>
 </div>
     </section>
     
