@@ -1,4 +1,5 @@
-// main.js - This is the final, working desktop function.
+// in your main.js
+// This is the complete, corrected, and final version.
 
 "(min-width: 769px)": function () {
 
@@ -32,6 +33,7 @@
                 start: "top center+=10%",
                 end: "bottom center-=10%",
                 scrub: 1.5,
+                // These callbacks are essential for the text to appear/disappear.
                 onEnter: () => gsap.to(pillar, { autoAlpha: 1, duration: 0.5 }),
                 onLeave: () => gsap.to(pillar, { autoAlpha: 0, duration: 0.5 }),
                 onEnterBack: () => gsap.to(pillar, { autoAlpha: 1, duration: 0.5 }),
@@ -75,7 +77,7 @@
                 const state = Flip.getState(actor3D, {props: "scale,opacity"});
                 visualsCol.appendChild(actor3D);
                 
-                // THE SYNTAX ERROR WAS HERE. THIS IS NOW CORRECT.
+                // This block is now syntactically correct.
                 Flip.from(state, {
                     duration: 1.2,
                     ease: "expo.inOut",
