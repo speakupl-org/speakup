@@ -1,48 +1,50 @@
 /*
 
-THE DEFINITIVE COVENANT BUILD v37.0 - "Sovereign" Protocol
+THE DEFINITIVE COVENANT BUILD v37.2 - "Sovereign" Protocol (Synchronized)
 
-This version transcends mere observation. The Oracle is now Sovereign, offering
-unprecedented levels of telemetry for animation state, transitions, and element
-properties. The handoff mechanism has been evolved into a multi-stage 'Absorption
-Protocol' for a more sophisticated and visually compelling transition. Granularity
-is the mandate. Every nanosecond is accounted for.
+This version corrects a race condition in the initialization sequence, ensuring that
+the Oracle's verbosity configuration is locked in before any telemetry scanning
+begins. The initialization flow is now restructured for guaranteed order of operations.
 
 */
 
-// Oracle v37.1 - The "Sovereign" Protocol with Configurable Verbosity
+// Oracle v37.2 - The "Sovereign" Protocol with Synchronized Initialization
 const Oracle = {
-    // NEW: Sovereign Configuration Sub-protocol
+    // Configuration Sub-protocol
     config: {
-        verbosity: 1, // Default verbosity level: 1 = collapsed, 2 = expanded
+        verbosity: 1, // Default: 1=collapsed, 2=expanded
     },
     
-    // INSTRUMENTED VERSION OF Oracle.scan
-    scan: (label, data) => {
-        // PROBE 4: Check verbosity AT THE MOMENT OF THE SCAN.
-        if (!window.scanCheck) { // This will only log once to avoid clutter
-            console.log(`%c[DIAGNOSTIC SCAN CHECK] At first scan, verbosity = ${Oracle.config.verbosity}`, 'color: orange; font-weight: bold; font-size: 14px;');
-            window.scanCheck = true;
+    // REVISED: init now accepts a callback to guarantee execution order
+    init: (callback) => {
+        // Set verbosity from localStorage first
+        const storedVerbosity = localStorage.getItem('oracleVerbosity');
+        if (storedVerbosity !== null) {
+            Oracle.config.verbosity = parseInt(storedVerbosity, 10);
         }
 
-        if (Oracle.config.verbosity < 1) return; 
-
-        const groupMethod = Oracle.config.verbosity >= 2 ? console.group : console.groupCollapsed;
-
-        groupMethod(`%c[ORACLE SCAN @ ${Oracle._timestamp()}: ${label}]`, 'color: #B48EAD; font-weight: normal;');
-        for (const key in data) {
-            console.log(`%c  - ${key}:`, 'color: #88C0D0;', data[key]);
+        // Override with URL parameter if present
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlVerbosity = urlParams.get('oracle_verbosity');
+        if (urlVerbosity !== null && urlVerbosity !== '') {
+            const parsedVerbosity = parseInt(urlVerbosity, 10);
+            if (!isNaN(parsedVerbosity)) {
+                Oracle.config.verbosity = parsedVerbosity;
+            }
         }
-        console.groupEnd();
+        
+        // CRITICAL: Execute the main logic ONLY after configuration is set
+        if(callback && typeof callback === 'function') {
+            callback();
+        }
     },
-    
+
     _timestamp: () => new Date().toLocaleTimeString('en-US', { hour12: false }),
 
     log: (el, label) => {
-        if (Oracle.config.verbosity < 1) return; // Suppress on quiet mode
+        if (Oracle.config.verbosity < 1) return;
         if (!el) { console.error(`%c[ORACLE LOG @ ${Oracle._timestamp()}: ${label}] ERROR - Element is null.`, 'color: #BF616A;'); return; }
         
-        // Dynamic group method based on verbosity level
         const groupMethod = Oracle.config.verbosity >= 2 ? console.group : console.groupCollapsed;
 
         groupMethod(`%c[ORACLE LOG @ ${Oracle._timestamp()}: ${label}]`, 'color: #D81B60; font-weight: bold;');
@@ -63,18 +65,12 @@ const Oracle = {
         console.groupEnd();
     },
     
-        // INSTRUMENTED VERSION OF Oracle.scan
+    // CLEANED: Diagnostic probes removed.
     scan: (label, data) => {
-        // PROBE 4: Check verbosity AT THE MOMENT OF THE SCAN.
-        if (!window.scanCheck) { // This will only log once to avoid clutter
-            console.log(`%c[DIAGNOSTIC SCAN CHECK] At first scan, verbosity = ${Oracle.config.verbosity}`, 'color: orange; font-weight: bold; font-size: 14px;');
-            window.scanCheck = true;
-        }
-
-        if (Oracle.config.verbosity < 1) return; 
-
+        if (Oracle.config.verbosity < 1) return;
+        
         const groupMethod = Oracle.config.verbosity >= 2 ? console.group : console.groupCollapsed;
-
+        
         groupMethod(`%c[ORACLE SCAN @ ${Oracle._timestamp()}: ${label}]`, 'color: #B48EAD; font-weight: normal;');
         for (const key in data) {
             console.log(`%c  - ${key}:`, 'color: #88C0D0;', data[key]);
@@ -84,7 +80,6 @@ const Oracle = {
     
     group: (label) => {
         if (Oracle.config.verbosity < 1) return;
-        // Always use expanded for major actions when not in quiet mode
         console.group(`%c[ORACLE ACTION @ ${Oracle._timestamp()}: ${label}]`, 'color: #A3BE8C; font-weight: bold;');
     },
     
@@ -105,6 +100,8 @@ const Oracle = {
     }
 };
 
+// --- The rest of your functions are here, unmodified ---
+
 // Utility to safely get elements
 const getElement = (selector, isArray = false) => {
     try {
@@ -120,17 +117,9 @@ const getElement = (selector, isArray = false) => {
 // Hero actor animation setup (unchanged)
 const setupHeroActor = (elements, masterTl) => {
     masterTl.to(elements.heroActor, {
-        rotationY: 120,
-        rotationX: 10,
-        scale: 1.1,
-        ease: "power2.inOut",
-        duration: 2
+        rotationY: 120, rotationX: 10, scale: 1.1, ease: "power2.inOut", duration: 2
     }).to(elements.heroActor, {
-        rotationY: -120,
-        rotationX: -20,
-        scale: 1.2,
-        ease: "power2.inOut",
-        duration: 2
+        rotationY: -120, rotationX: -20, scale: 1.2, ease: "power2.inOut", duration: 2
     });
 };
 
@@ -144,14 +133,9 @@ const setupTextPillars = (elements) => {
             const nextWrapper = elements.textWrappers[index + 1];
             gsap.timeline({
                 scrollTrigger: {
-                    trigger: pillar,
-                    start: "top 80%",
-                    end: "bottom 70%", // Fine-tuned for better feel
-                    scrub: 1.5,
+                    trigger: pillar, start: "top 80%", end: "bottom 70%", scrub: 1.5,
                     onUpdate: (self) => {
                         const progress = self.progress.toFixed(3);
-                        
-                        // --- ENHANCED GRANULAR REPORTING ---
                         Oracle.scan('Pillar Text Transition', {
                             'Triggering Pillar': `#${index + 1}`,
                             'ScrollTrigger Progress': `${(progress * 100).toFixed(1)}%`,
@@ -164,7 +148,6 @@ const setupTextPillars = (elements) => {
                             ' -> Y': gsap.getProperty(nextWrapper, 'y').toFixed(1) + 'px',
                             ' -> RotX': gsap.getProperty(nextWrapper, 'rotationX').toFixed(1) + '°',
                         });
-
                         Oracle.updateHUD('c-active-pillar', `P${index + 1}`, '#A3BE8C');
                         Oracle.updateHUD('c-scroll-progress', `${(progress * 100).toFixed(0)}%`);
                     }
@@ -182,24 +165,18 @@ const setupHandoff = (elements, masterTl) => {
     Oracle.updateHUD('c-swap-flag', 'FALSE', '#BF616A');
 
     ScrollTrigger.create({
-        trigger: elements.handoffPoint,
-        start: 'top 70%',
+        trigger: elements.handoffPoint, start: 'top 70%',
         onToggle: self => Oracle.updateHUD('c-handoff-st-active', self.isActive ? 'TRUE' : 'FALSE', self.isActive ? '#A3BE8C' : '#BF616A'),
         onEnter: () => {
             if (isSwapped) return;
             isSwapped = true;
-            
             Oracle.group('ABSORPTION PROTOCOL INITIATED');
             Oracle.updateHUD('c-swap-flag', 'TRUE', '#A3BE8C');
             Oracle.updateHUD('c-event', 'ABSORPTION');
-            
             Oracle.log(elements.heroActor, "Hero State (Pre-Absorption)");
             masterTl.scrollTrigger.disable();
-
             const stuntDouble = elements.stuntActor;
             const placeholder = elements.placeholder;
-            
-            // Phase 1: Pre-Positioning and State Capture
             Oracle.report('Phase 1: Capturing state vectors.');
             const state = Flip.getState(stuntDouble, { props: "transform, opacity" });
             gsap.set(stuntDouble, {
@@ -211,8 +188,6 @@ const setupHandoff = (elements, masterTl) => {
                 rotationY: gsap.getProperty(elements.heroActor, "rotationY")
             });
             Oracle.log(stuntDouble, "Stunt Double State (Teleported & Matched)");
-            
-            // Phase 2: The Absorption Timeline
             const absorptionTl = gsap.timeline({
                 onComplete: () => {
                     stuntDouble.classList.add('is-logo-final-state');
@@ -221,66 +196,39 @@ const setupHandoff = (elements, masterTl) => {
                     Oracle.groupEnd();
                 }
             });
-
             Oracle.report('Phase 2: Initiating travel and absorption sequence.');
-
-            // The main travel using Flip for a seamless position match
-            absorptionTl.add(
-                Flip.from(state, {
-                    targets: stuntDouble,
-                    duration: 1.5,
-                    ease: 'power3.inOut',
-                    onUpdate: function() {
-                        Oracle.scan('Absorption Vector Trace', {
-                            'Target': 'Stunt Double',
-                            'Progress': `${(this.progress() * 100).toFixed(1)}%`,
-                            'X': gsap.getProperty(stuntDouble, 'x').toFixed(1),
-                            'Y': gsap.getProperty(stuntDouble, 'y').toFixed(1),
-                            'Scale': gsap.getProperty(stuntDouble, 'scale').toFixed(2),
-                            'RotY': gsap.getProperty(stuntDouble, 'rotationY').toFixed(1)
-                        });
-                    }
-                })
-            );
-
-            // Simultaneous visual effects for "absorption"
-            absorptionTl
-                .to(elements.heroActor, { autoAlpha: 0, scale: '-=0.1', duration: 0.4, ease: "power2.in" }, 0)
+            absorptionTl.add(Flip.from(state, {
+                targets: stuntDouble, duration: 1.5, ease: 'power3.inOut',
+                onUpdate: function() {
+                    Oracle.scan('Absorption Vector Trace', {
+                        'Target': 'Stunt Double',
+                        'Progress': `${(this.progress() * 100).toFixed(1)}%`,
+                        'X': gsap.getProperty(stuntDouble, 'x').toFixed(1),
+                        'Y': gsap.getProperty(stuntDouble, 'y').toFixed(1),
+                        'Scale': gsap.getProperty(stuntDouble, 'scale').toFixed(2),
+                        'RotY': gsap.getProperty(stuntDouble, 'rotationY').toFixed(1)
+                    });
+                }
+            }));
+            absorptionTl.to(elements.heroActor, { autoAlpha: 0, scale: '-=0.1', duration: 0.4, ease: "power2.in" }, 0)
                 .to(elements.stuntActorFaces, { opacity: 0, duration: 0.6, ease: "power2.in", stagger: 0.05 }, 0.6)
-                // The 'gulp' effect: container shrinks and expands
-                .to(elements.placeholderClipper, { 
-                    clipPath: "inset(20% 20% 20% 20%)",
-                    duration: 0.6,
-                    ease: 'expo.in'
-                }, 0.7)
-                // The cube 'squashes' as it enters the placeholder
+                .to(elements.placeholderClipper, { clipPath: "inset(20% 20% 20% 20%)", duration: 0.6, ease: 'expo.in' }, 0.7)
                 .to(stuntDouble, { scaleX: 1.2, scaleY: 0.8, duration: 0.4, ease: 'circ.in' }, 0.9)
-                .to(elements.placeholderClipper, {
-                    clipPath: "inset(0% 0% 0% 0%)",
-                    duration: 0.8,
-                    ease: 'elastic.out(1, 0.5)'
-                }, 1.3)
-                // The cube stabilizes back to its normal shape
+                .to(elements.placeholderClipper, { clipPath: "inset(0% 0% 0% 0%)", duration: 0.8, ease: 'elastic.out(1, 0.5)' }, 1.3)
                 .to(stuntDouble, { scaleX: 1, scaleY: 1, duration: 0.8, ease: 'elastic.out(1, 0.5)' }, 1.3);
-
         },
         onLeaveBack: () => {
             if (!isSwapped) return;
             isSwapped = false;
-            
             Oracle.group('REVERSE PROTOCOL INITIATED');
             Oracle.updateHUD('c-swap-flag', 'FALSE', '#BF616A');
             Oracle.updateHUD('c-event', 'REVERSING');
-            
             elements.stuntActor.classList.remove('is-logo-final-state');
-            // Use clearProps for robust state clearing
             gsap.set(elements.stuntActor, { autoAlpha: 0, clearProps: "all" });
             gsap.set(elements.stuntActorFaces, { clearProps: "opacity" });
             gsap.set(elements.heroActor, { clearProps: "autoAlpha, scale" });
-            
             masterTl.scrollTrigger.enable();
-            masterTl.scrollTrigger.update(); // Force immediate update
-            
+            masterTl.scrollTrigger.update();
             Oracle.updateHUD('c-event', 'SCROLLING');
             Oracle.log(elements.heroActor, "Hero State (Restored)");
             Oracle.groupEnd();
@@ -288,19 +236,18 @@ const setupHandoff = (elements, masterTl) => {
     });
 };
 
-
-// Main animation setup
+// REVISED Main animation setup
 function setupAnimations() {
     gsap.registerPlugin(ScrollTrigger, Flip);
     console.clear();
-    Oracle.report('GSAP Covenant Build v37.0 Initialized. [SOVEREIGN PROTOCOL ONLINE]');
+    // New report confirms the final verbosity level
+    Oracle.report(`Covenant Build v37.2 Initialized. Verbosity Level: ${Oracle.config.verbosity} [SOVEREIGN ONLINE]`);
 
     const ctx = gsap.context(() => {
         const elements = {
             heroActor: getElement('#actor-3d'),
             stuntActor: getElement('#actor-3d-stunt-double'),
             placeholder: getElement('#summary-placeholder'),
-            // NEW: Added a reference to the clipper for the absorption effect
             placeholderClipper: getElement('.summary-thumbnail-clipper'), 
             pillars: getElement('.pillar-text-content', true),
             textWrappers: getElement('.text-anim-wrapper', true),
@@ -323,11 +270,7 @@ function setupAnimations() {
             '(min-width: 1025px)': () => {
                 const masterTl = gsap.timeline({
                     scrollTrigger: {
-                        trigger: elements.textCol,
-                        pin: elements.visualsCol,
-                        start: 'top top',
-                        end: 'bottom bottom',
-                        scrub: scrubValue,
+                        trigger: elements.textCol, pin: elements.visualsCol, start: 'top top', end: 'bottom bottom', scrub: scrubValue,
                         onToggle: self => Oracle.updateHUD('c-master-st-active', self.isActive ? 'TRUE' : 'FALSE', self.isActive ? '#A3BE8C' : '#BF616A'),
                         onUpdate: (self) => {
                             const hero = elements.heroActor;
@@ -335,15 +278,9 @@ function setupAnimations() {
                             const rotY = gsap.getProperty(hero, "rotationY").toFixed(1);
                             const scale = gsap.getProperty(hero, "scale").toFixed(2);
                             const progress = (self.progress * 100).toFixed(0);
-
-                            // Log detailed movement scan for every frame of the scroll
                             Oracle.scan('Live Hero Actor Scrub', {
-                                'Master ScrollTrigger': `${progress}%`,
-                                'RotX': rotX,
-                                'RotY': rotY,
-                                'Scale': scale
+                                'Master ScrollTrigger': `${progress}%`, 'RotX': rotX, 'RotY': rotY, 'Scale': scale
                             });
-
                             Oracle.updateHUD('c-rot-x', rotX);
                             Oracle.updateHUD('c-rot-y', rotY);
                             Oracle.updateHUD('c-scale', scale);
@@ -351,10 +288,8 @@ function setupAnimations() {
                         }
                     }
                 });
-
                 setupHeroActor(elements, masterTl);
                 setupTextPillars(elements);
-                // Stunt actor is already in the placeholder via HTML, we don't need to append it.
                 setupHandoff(elements, masterTl);
             },
             '(min-width: 769px) and (max-width: 1024px)': () => {
@@ -364,20 +299,17 @@ function setupAnimations() {
                 setupHandoff(elements, masterTl);
             },
             '(max-width: 768px)': () => {
-                // Handoff is not feasible on mobile, simplify gracefully.
                 const masterTl = gsap.timeline({ scrollTrigger: { trigger: elements.textCol, start: 'top 20%', end: 'bottom bottom', scrub: scrubValue } });
                 masterTl.to(elements.heroActor, { scale: 0.9, ease: "none" });
                 setupTextPillars(elements);
-                // On mobile, the stunt double is never shown. We hide it for safety.
                 gsap.set(elements.stuntActor, { display: 'none' });
             }
         });
     });
-
     return ctx;
 }
 
-// Initialization Logic (largely unchanged)
+// Initialization Logic
 function setupSiteLogic() {
     const menuOpen = getElement('#menu-open-button');
     const menuClose = getElement('#menu-close-button');
@@ -391,13 +323,14 @@ function setupSiteLogic() {
 
     const yearEl = getElement('#current-year');
     if (yearEl) yearEl.textContent = new Date().getFullYear();
-
     Oracle.report("Site logic initialized.");
 }
 
+// REVISED initialization sequence to fix race condition
 function initialAnimationSetup() {
     if (window.gsap && window.ScrollTrigger && window.Flip) {
-        setupAnimations();
+        // Oracle.init will now call setupAnimations after it's done configuring.
+        Oracle.init(setupAnimations); 
     } else {
         Oracle.warn("GSAP libraries failed to load. SOVEREIGN protocol aborted.");
     }
