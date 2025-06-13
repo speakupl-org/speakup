@@ -1510,29 +1510,34 @@ body.scroll-locked {
     height: 100%; /* Ensure it fills the clipper */
     visibility: hidden; /* Start invisible */
 }
-/* ==========================================================
-   V28 "ZERO POINT" PROTOCOL - ESSENTIAL STYLES
-   ========================================================== */
+/* =========================================================================
+   V30 "THE CITADEL" PROTOCOL - ESSENTIAL STYLES
+   ========================================================================= */
 
-/* This class triggers the transformation into a flat logo */
-#actor-3d.is-logo {
-    /* THIS IS KEY: It tells the browser to treat this as a flat 2D element */
-    transform-style: flat;
-    /* This ensures the logo isn't rotated or scaled weirdly in its final state */
-    transform: none !important;
+/* The stunt double starts invisible and ready for JS control */
+#actor-3d-stunt-double {
+    visibility: hidden;
 }
 
-#actor-3d.is-logo .face {
+/* 
+This class is added by JS to the stunt-double to transform it.
+We use high specificity to override any other styles. 
+*/
+#actor-3d-stunt-double.is-logo-final-state {
+    transform-style: flat;
+    transform: none !important; /* Forces it flat */
+}
+
+#actor-3d-stunt-double.is-logo-final-state .face {
     background: transparent !important;
     border: none !important;
-    backdrop-filter: none !important;
 }
 
-#actor-3d.is-logo .face.front {
+#actor-3d-stunt-double.is-logo-final-state .face.front {
+    transform: none !important;
     opacity: 1 !important;
-    transform: none !important; 
-    background-image: url('../images/logo.svg'); /* CRITICAL: Ensure this path is correct */
+    background-image: url('../images/logo.svg'); /* CRITICAL: YOUR LOGO PATH */
     background-size: contain;
-    background-repeat: no-repeat;
     background-position: center;
+    background-repeat: no-repeat;
 }
