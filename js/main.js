@@ -92,43 +92,64 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             });
             
-            // --- 4. THE "IGLOO" EXIT ANIMATION (BONUS POLISH) ---
-            // This animates the 3D cube from its pinned position into the
-            // final summary section's placeholder. This requires the Flip Plugin.
-            ScrollTrigger.create({
-                trigger: summaryThumbnail,
-                start: "top 80%", // Start the exit animation a bit before the summary section
-                // markers: {startColor: "red", endColor: "red"},
-                onEnter: () => {
-                    // Get the initial state of the 3D actor
-                    const state = Flip.getState(actor3D, {props: "scale,opacity"});
-                    
-                    // in your main.js
-document.querySelector(".summary-thumbnail-clipper").appendChild(actor3D);
-                    
-                    // Animate from the initial state to the new state
-                    Flip.from(state, {
-                        duration: 1.2,
-                        ease: "power2.inOut",
-                        scale: true, // Ensure scale is animated
-                        onStart: () => {
-                            // Hide the original visuals column so there's no "ghost" image
-                            visualsCol.classList.add('is-exiting'); 
-                        },
-                        onComplete: () => {
-                            // After the flip, maybe you want to unpin the main visuals column
-                            // For simplicity, we just leave it hidden. But this is where you'd clean up.
-                        }
-                    });
+            // --- 4. THE "IGLOO" EXIT ANIMATION (THE BI-DIRECTIONAL UPGRADE) ---
+// This animates the 3D cube from its pinned position into the
+// final summary section's placeholder AND back again.
+
+// We need a variable to keep track of the cube's state.
+let isFlipped = false; 
+
+ScrollTrigger.create({
+    trigger: summaryThumbnail,
+    start: "top 80%",
+    // markers: {startColor: "red", endColor: "red"}, // Keep for debugging if you need it
+
+    // -- FORWARD ANIMATION (SCROLLING DOWN) --
+    onEnter: () => {
+        // Only run the animation if the cube isn't already flipped.
+        if (!isFlipped) {
+            isFlipped = true;
+            
+            // Get the initial state of the 3D actor in the pinned column.
+            const state = Flip.getState(actor3D, {props: "scale,opacity"});
+            
+            // Move the actor to its new home inside the clipper.
+            document.querySelector(".summary-thumbnail-clipper").appendChild(actor3D);
+            
+            // Animate FROM its old state TO its new state.
+            Flip.from(state, {
+                duration: 1.2,
+                ease: "power2.inOut",
+                scale: true,
+                onStart: () => {
+                    visualsCol.classList.add('is-exiting'); 
                 }
             });
-        },
-
-        "(max-width: 768px)": function () {
-            // For mobile, we just ensure the text pillars are visible
-            // since there are no complex animations. GSAP automatically
-            // cleans up the desktop animations when resizing.
-            gsap.set('.pillar-text-content', { autoAlpha: 1 });
         }
-    });
+    },
+
+    // -- REVERSE ANIMATION (SCROLLING UP) --
+    onLeaveBack: () => {
+        // Only run the reverse animation if the cube IS currently flipped.
+        if (isFlipped) {
+            isFlipped = false;
+            
+            // Get the state of the actor in its CURRENT position (the placeholder).
+            const state = Flip.getState(actor3D, {props: "scale,opacity"});
+            
+            // Move the actor BACK to its original home in the main visuals column.
+            visualsCol.appendChild(actor3D);
+            
+            // Animate FROM its previous state (in the placeholder) TO its new state (back in the pinned column).
+            Flip.from(state, {
+                duration: 1.2,
+                ease: "power2.inOut",
+                scale: true,
+                onStart: () => {
+                    // Make the main visuals column visible again as the cube flies back.
+                    visualsCol.classList.remove('is-exiting');
+                }
+            });
+        }
+    }
 });
