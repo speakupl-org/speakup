@@ -1,30 +1,37 @@
 /*
 ========================================================================================
-   THE DEFINITIVE COVENANT BUILD v36.0 - "The Overlord" Protocol Enhanced
+   THE DEFINITIVE COVENANT BUILD v36.1 - "The Overlord" Protocol Enhanced
    
-   Building on v35.0, this version introduces deeper telemetry, advanced animations,
-   and modular architecture. The Oracle v36.0 now tracks scroll position, active pillars,
-   and more, with enhanced HUD and console reporting. Only sophistication—no shortcuts.
+   Build v36.1 rectifies a critical perception failure in the Oracle's logging
+   subroutine and enhances its reporting verbosity. The Omni-Oracle now delivers
+   flawless, detailed telemetry on all observed phenomena, ensuring total operational
+   awareness. Sophistication is the only path forward.
 ========================================================================================
 */
 
-// Oracle v36.0 - The "Omni-Oracle" Enhanced
+// Oracle v36.1 - The "Omni-Oracle" Enhanced
 const Oracle = {
     log: (el, label) => {
-        if (!el) { console.error(`%c[ORACLE LOG: ${label}] ERROR - Element is null.`, 'color: #BF616A;'); return; }
+        if (!el) { 
+            console.error(`%c[ORACLE LOG: ${label}]%c ERROR - Target element is null or undefined. Observation aborted.`, 'color: #D81B60; font-weight: bold;', 'color: #BF616A;'); 
+            return; 
+        }
         const style = window.getComputedStyle(el);
+        // Corrected gsKy to gsap
         const transform = {
             scale: gsap.getProperty(el, "scale"),
             rotationX: gsap.getProperty(el, "rotationX"),
             rotationY: gsap.getProperty(el, "rotationY"),
-            z: gsKy.getProperty(el, "z")
+            z: gsap.getProperty(el, "z") 
         };
+        const box = el.getBoundingClientRect();
         console.log(
             `%c[ORACLE LOG: ${label}]`, 'color: #D81B60; font-weight: bold;',
-            `\n  - ID: ${el.id || el.className}`,
+            `\n  - Target: ${el.tagName}#${el.id || '(no id)'}.${el.className.split(' ').join('.')}`,
             `\n  - Transform: { RotX: ${transform.rotationX.toFixed(1)}, RotY: ${transform.rotationY.toFixed(1)}, Scale: ${transform.scale.toFixed(2)}, Z: ${transform.z.toFixed(1)} }`,
-            `\n  - Opacity: ${style.opacity}`, `| Visibility: ${style.visibility}`,
-            `\n  - Scroll: ${(window.scrollY / document.body.scrollHeight * 100).toFixed(1)}%`
+            `\n  - Style: { Opacity: ${style.opacity}, Visibility: ${style.visibility} }`,
+            `\n  - Viewport Rect: { Top: ${box.top.toFixed(0)}, Left: ${box.left.toFixed(0)}, W: ${box.width.toFixed(0)}, H: ${box.height.toFixed(0)} }`,
+            `\n  - Scroll Context: ${(window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100).toFixed(1)}%`
         );
     },
     group: (label) => console.group(`%c[ORACLE ACTION: ${label}]`, 'color: #A3BE8C; font-weight: bold;'),
@@ -39,6 +46,7 @@ const Oracle = {
         }
     }
 };
+
 
 // Utility to safely get elements
 const getElement = (selector, isArray = false) => {
@@ -98,7 +106,7 @@ const setupTextPillars = (elements) => {
     });
 };
 
-// Handoff mechanism with enhanced transition
+// Handoff mechanism with enhanced transition and logging
 const setupHandoff = (elements, masterTl) => {
     let isSwapped = false;
     Oracle.updateHUD('c-swap-flag', 'FALSE', '#BF616A');
@@ -115,19 +123,23 @@ const setupHandoff = (elements, masterTl) => {
 
             masterTl.scrollTrigger.disable();
 
-            const startState = Flip.getState(elements.heroActor);
-            const endState = Flip.getState(elements.stuntActor);
             Oracle.log(elements.heroActor, "Hero State (Pre-Swap)");
-
+            const startState = Flip.getState(elements.heroActor);
+            
+            // --- ENHANCEMENT: Log stunt double pre-animation state for better debugging ---
+            Oracle.log(elements.stuntActor, "Stunt Double State (Pre-Swap)"); 
+            
             gsap.set(elements.stuntActor, { autoAlpha: 1 });
-            Flip.from(endState, {
-                targets: elements.stuntActor,
+            
+            Flip.from(startState, { // Flip FROM the hero's state...
+                targets: elements.stuntActor, // ...TO the stunt double's current state
                 duration: 1.8,
                 ease: 'power4.inOut',
                 onStart: () => gsap.to(elements.heroActor, { autoAlpha: 0, scale: 0.95, duration: 0.5 }),
-                onEnter: targets => gsap.from(targets, { ...startState, rotationY: '+=30' }),
+                onEnter: targets => gsap.from(targets, { rotationY: '+=30' }), // Note: The Flip logic was slightly off, corrected to use startState.
                 onComplete: () => {
                     elements.stuntActor.classList.add('is-logo-final-state');
+                    Oracle.log(elements.stuntActor, "Stunt Double State (Post-Swap)");
                     Oracle.updateHUD('c-event', 'LANDED');
                     Oracle.groupEnd();
                 }
@@ -144,21 +156,24 @@ const setupHandoff = (elements, masterTl) => {
             elements.stuntActor.classList.remove('is-logo-final-state');
             gsap.set(elements.stuntActorFaces, { clearProps: "all" });
             gsap.set(elements.stuntActor, { autoAlpha: 0 });
+            
+            Oracle.log(elements.stuntActor, "Stunt Double State (Reversed)");
 
             masterTl.scrollTrigger.enable();
-            masterTl.scrollTrigger.update();
-
+            // No need to manually update, ScrollTrigger will handle it on the next tick
+            
             Oracle.updateHUD('c-event', 'SCROLLING');
             Oracle.groupEnd();
         }
     });
 };
 
+
 // Main animation setup
 function setupAnimations() {
     gsap.registerPlugin(ScrollTrigger, Flip);
     console.clear();
-    Oracle.report('GSAP Covenant Build v36.0 Initialized. [THE OVERLORD ENHANCED]');
+    Oracle.report('GSAP Covenant Build v36.1 Initialized. [THE OVERLORD ENHANCED]');
 
     const ctx = gsap.context(() => {
         const elements = {
