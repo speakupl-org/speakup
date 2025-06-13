@@ -143,6 +143,14 @@
     </div>
     <!-- The Unambiguous Finish Line for the Scroller -->
     <div id="handoff-point" style="height: 1px; width: 100%;"></div>
+        <!-- 
+      THE CRITICAL BUFFER ZONE (v12.0)
+      This creates physical space to prevent the "Recoil Bug". After the Rebirth teleports
+      the user to the handoff-point, this buffer ensures the summary section is not
+      immediately in the trigger zone, giving the user room to scroll back up.
+    -->
+    <div id="handoff-buffer" style="height: 50vh;"></div>
+
 </div>
     </section>
     
