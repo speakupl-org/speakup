@@ -1511,13 +1511,15 @@ body.scroll-locked {
     visibility: hidden; /* Start invisible */
 }
 /* ==========================================================
-   V27 "TRINITY" PROTOCOL - ESSENTIAL STYLES
+   V28 "ZERO POINT" PROTOCOL - ESSENTIAL STYLES
    ========================================================== */
 
 /* This class triggers the transformation into a flat logo */
 #actor-3d.is-logo {
     /* THIS IS KEY: It tells the browser to treat this as a flat 2D element */
-    transform-style: flat; 
+    transform-style: flat;
+    /* This ensures the logo isn't rotated or scaled weirdly in its final state */
+    transform: none !important;
 }
 
 #actor-3d.is-logo .face {
@@ -1527,8 +1529,7 @@ body.scroll-locked {
 }
 
 #actor-3d.is-logo .face.front {
-    opacity: 1 !important; /* Ensure it's visible */
-    /* This makes sure the logo doesn't inherit any weird 3D transforms */
+    opacity: 1 !important;
     transform: none !important; 
     background-image: url('../images/logo.svg'); /* CRITICAL: Ensure this path is correct */
     background-size: contain;
