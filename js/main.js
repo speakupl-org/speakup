@@ -1,4 +1,4 @@
-// main.js (Complete and Corrected)
+// main.js (Final Version)
 
 document.addEventListener('DOMContentLoaded', function () {
     // --- Menu & Footer code (unchanged) ---
@@ -34,7 +34,6 @@ document.addEventListener('DOMContentLoaded', function () {
     function setupAnimations() {
         gsap.registerPlugin(ScrollTrigger, Flip);
 
-        // Use gsap.context() for proper cleanup, which is best practice.
         const ctx = gsap.context(() => {
             
             ScrollTrigger.matchMedia({
@@ -54,53 +53,64 @@ document.addEventListener('DOMContentLoaded', function () {
                         return;
                     }
 
-                    // --- 2. MASTER TIMELINE ARCHITECTURE ---
-                    // Instead of multiple timelines, we create ONE master timeline.
-                    // A single ScrollTrigger will control this entire sequence, leading
-                    // to much smoother and more reliable scrubbing.
+                    // --- 2. THE NEW, MORE ROBUST MASTER TIMELINE ---
                     const masterTimeline = gsap.timeline({
                         scrollTrigger: {
-                            trigger: textCol, // The scrolling text column is the trigger
-                            pin: visualsCol, // Pin the visuals column
+                            trigger: textCol,
+                            pin: visualsCol,
                             start: "top top",
-                            end: "bottom bottom", // Animate over the full height of the text column
-                            scrub: 1, // Smooth scrub (1 second catch-up time)
+                            end: "bottom bottom",
+                            scrub: 1,
                         }
                     });
-
-                    // --- 3. BUILD THE SEQUENTIAL ANIMATION ---
-                    // We now add all animations to our one masterTimeline.
                     
-                    // Set an initial state for the 3D actor to make the start less abrupt
-                    masterTimeline.set(actor3D, { rotationY: 20, rotationX: -15 });
+                    // --- 3. REBUILT, EVENLY-PACED ANIMATION SEQUENCE ---
 
-                    // Animate Pillar 1 text fade in/out and cube rotation
-                    masterTimeline
-                        .to(textPillars[0], { autoAlpha: 1 })
-                        .to(actor3D, { rotationY: 120, rotationX: 10, scale: 1.1, ease: "power2.inOut" }, "<")
-                        .to(textPillars[0], { autoAlpha: 0 });
+                    // Set initial state of ALL text pillars to invisible.
+                    gsap.set(textPillars, { autoAlpha: 0 });
 
-                    // Animate Pillar 2 text fade in/out and cube rotation
+                    // **Pillar 1 Section**
                     masterTimeline
-                        .to(textPillars[1], { autoAlpha: 1 })
-                        .to(actor3D, { rotationY: -120, rotationX: -20, scale: 1.2, ease: "power2.inOut" }, "<")
-                        .to(textPillars[1], { autoAlpha: 0 });
+                        .fromTo(actor3D, 
+                            { rotationY: 20, rotationX: -15, scale: 1 }, // Explicit FROM state
+                            { rotationY: 120, rotationX: 10, scale: 1.1, ease: "power2.inOut" } // Explicit TO state
+                        )
+                        .to(textPillars[0], { autoAlpha: 1 }, "<"); // Fade in text WITH the cube animation
                     
-                    // Animate Pillar 3 text fade in/out and cube rotation
+                    // Add a "hold" section where Pillar 1 is just visible
+                    masterTimeline.to({}, {duration: 0.25});
+
+                    // **Pillar 2 Section**
                     masterTimeline
-                        .to(textPillars[2], { autoAlpha: 1 })
-                        .to(actor3D, { rotationY: 0, rotationX: 0, scale: 1, ease: "power3.inOut" }, "<")
-                        .to(textPillars[2], { autoAlpha: 0 });
+                        .to(textPillars[0], { autoAlpha: 0 }) // Fade out previous text
+                        .fromTo(actor3D, 
+                            { rotationY: 120, rotationX: 10, scale: 1.1 },
+                            { rotationY: -120, rotationX: -20, scale: 1.2, ease: "power2.inOut" }
+                        )
+                        .to(textPillars[1], { autoAlpha: 1 }, "<"); // Fade in new text
+
+                    // Add a "hold" section
+                    masterTimeline.to({}, {duration: 0.25});
+
+                    // **Pillar 3 Section**
+                    masterTimeline
+                        .to(textPillars[1], { autoAlpha: 0 })
+                        .fromTo(actor3D, 
+                            { rotationY: -120, rotationX: -20, scale: 1.2 },
+                            { rotationY: 0, rotationX: 0, scale: 1, ease: "power3.inOut" } // Final "at rest" state
+                        )
+                        .to(textPillars[2], { autoAlpha: 1 }, "<"); // Fade in final text
+                    
+                    // Add a final "hold" section
+                    masterTimeline.to({}, {duration: 0.25});
 
 
                     // --- 4. THE "IGLOO" EXIT/RETURN ANIMATION ---
-                    // This is separate from the masterTimeline because Flip is a state-change animation,
-                    // not part of the main scrub sequence.
                     let isFlipped = false;
 
                     ScrollTrigger.create({
                         trigger: summaryContainer,
-                        start: "top center", // Trigger when the summary section hits the center
+                        start: "top center",
                         onEnter: () => {
                             if (!isFlipped) {
                                 isFlipped = true;
@@ -112,47 +122,46 @@ document.addEventListener('DOMContentLoaded', function () {
                                     ease: "power2.inOut",
                                     scale: true,
                                     onComplete: () => {
-                                        // Ensure final state is clean after animation
                                         gsap.set(actor3D, { clearProps: "all" });
                                     }
                                 });
                             }
                         },
-                        // ** THIS IS THE FIX FOR THE REVERSE SCROLL **
+                        // ** THE NEW, SEAMLESS onLeaveBack **
                         onLeaveBack: () => {
                             if (isFlipped) {
                                 isFlipped = false;
 
-                                // Step 1: Instantly move the 3D actor back to its original column.
-                                visualsCol.appendChild(actor3D);
-                                
-                                // Step 2: Make the original column visible again.
-                                visualsCol.classList.remove('is-exiting');
+                                // Hide the cube briefly to prevent the "blip"
+                                gsap.set(actor3D, { autoAlpha: 0 });
 
-                                // Step 3 (CRITICAL): Manually set the master timeline's progress to 1 (the end).
-                                // This ensures that when the actor reappears, its rotation and scale are
-                                // exactly what they should be at the end of the main scroll sequence.
-                                // The scrub will then take over seamlessly from this correct state.
+                                // Instantly move the cube back to its original parent
+                                visualsCol.appendChild(actor3D);
+                                visualsCol.classList.remove('is-exiting');
+                                
+                                // Set the master timeline to its end state
                                 masterTimeline.progress(1);
+                                
+                                // Now that the cube is in the right place and has the right
+                                // transforms, reveal it again. This all happens in one frame.
+                                gsap.set(actor3D, { autoAlpha: 1 });
                             }
                         }
                     });
                 },
 
                 "(max-width: 768px)": function () {
-                    // On mobile, just make sure everything is visible and transforms are cleared.
-                    gsap.set('.pillar-text-content', { autoAlpha: 1 });
-                    gsap.set('.object-3d', {clearProps: "all"}); 
+                    // On mobile, ensure everything is visible and reset any transforms.
+                    gsap.set(textPillars, { autoAlpha: 1 });
+                    gsap.set(actor3D, {clearProps: "all"}); 
                 }
             });
         }); // end of gsap.context()
 
-        // This would be crucial in a Single Page Application (SPA) for cleanup.
         return () => ctx.revert(); 
     }
 
     // --- The "Ready Check" (unchanged) ---
-    // Checks if the GSAP plugins have loaded before running the animation setup.
     function initialCheck() {
         if (window.gsap && window.ScrollTrigger && window.Flip) {
             setupAnimations();
@@ -161,7 +170,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
     
-    // Start the check.
     initialCheck();
 
-}); // End of DOMContentLoaded
+});
