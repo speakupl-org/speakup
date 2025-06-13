@@ -786,6 +786,7 @@ html.menu-open {
     height: 200px;
     position: relative;
     transform-style: preserve-3d;
+    transform: translateZ(100px); 
 }
 
 .object-3d {
