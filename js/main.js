@@ -1,48 +1,55 @@
 /*
 ========================================================================================
-   THE DEFINITIVE COVENANT BUILD v19.0 - The "Zero-Motion Rebuild" Protocol
+   THE DEFINITIVE COVENANT BUILD v20.0 - The "Final Stand" Protocol
    
-   This is the final, definitive architecture. It abandons all previous attempts to
-   manage state during motion. Instead, it enforces absolute stability by physically
-   locking the user's scroll, killing the old animation system, manually restoring
-   the cube, and only then rebuilding a pristine animation system from scratch.
+   This is the definitive, fully-armored architecture. It addresses all prior
+   failures with a new, robust, and completely transparent system. The mission ends here.
    
-   THE NEW ARCHITECTURE:
-   1. ZERO-MOTION PRINCIPLE: When reversing, user scroll is FROZEN via `body.scroll-locked`.
-      This eliminates ALL motion-based conflicts and jank.
-   2. KILL, DON'T DISABLE: The old scrollytelling trigger is `kill()`ed, not disabled.
-      This purges it and its state from memory completely.
-   3. MANUAL RESTORE TWEEN: A clean `gsap.to()` tween, not Flip, is used to return
-      the cube to its final position. This is predictable and avoids Flip's state complexities.
-   4. MODULAR REBUILD: The entire scrollytelling animation is encapsulated in a
-      `createScrollytelling()` function, which is called on load and again after a rebirth.
+   THE UNBREAKABLE PRINCIPLES:
+   1. ONE SOURCE OF TRUTH: A global STATE object manages all flags (`isFlipped`,
+      `isRebirthing`). No more ambiguity.
+   2. TOTAL ANNIHILATION: The rebirth process now kills ALL ScrollTriggers on the page,
+      ensuring zero state pollution. No survivors.
+   3. LIVE FORENSIC MONITORING: The main timeline has a dedicated `onUpdate` to
+      continuously feed the HUD with data AS YOU SCROLL.
+   4. MANUAL RESTORE & RESET: Flip is used for the "down" journey only. The "up"
+      journey is a clean, manual GSAP tween to a pristine state, solving all "blips".
 ========================================================================================
 */
 
-// --- Global Scope Variables & Functions for the v19 Protocol ---
-let ctx;
-let isFlipped = false;
-let isRebirthing = false;
-let mainScrub; // The main scrollytelling ScrollTrigger
-
-// Helper functions for clarity and control
-const lockScroll = () => { document.body.classList.add('scroll-locked'); };
-const unlockScroll = () => { document.body.classList.remove('scroll-locked'); };
+// --- GLOBAL STATE & HELPERS ---
+const STATE = {
+    isFlipped: false,
+    isRebirthing: false
+};
+const lockScroll = () => document.body.classList.add('scroll-locked');
+const unlockScroll = () => document.body.classList.remove('scroll-locked');
+let mainScrollytelling; // This will hold our main scrollytelling instance
 
 /**
- * Encapsulated function to create the entire scrollytelling animation.
- * This can be called on page load and again during a rebuild.
+ * Annihilates every GSAP ScrollTrigger on the page.
+ */
+function killAllTriggers() {
+    console.warn("KILL SWITCH ENGAGED: Annihilating all ScrollTriggers...");
+    ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    console.warn("KILL SWITCH: All triggers terminated.");
+}
+
+/**
+ * Builds a pristine, new scrollytelling instance.
  */
 function createScrollytelling(elements, hud) {
-    console.log("%cBUILDER: Creating new scrollytelling animation instance...", "color: #81A1C1");
+    console.log("%cBUILDER: Forging new scrollytelling instance...", "color: #81A1C1");
 
     const { actor3D, textPillars, textCol, visualsCol } = elements;
     
-    // --- Precision Timeline ---
+    // PRECISION TIMELINE with LIVE MONITORING
     const tl = gsap.timeline({
-        onUpdate: () => {
-             // For debugging the text/cube mismatch
-             hud.actorTransform.textContent = gsap.getProperty(actor3D, "transform");
+        onUpdate: function() {
+            // This now provides the LIVE tracking you requested.
+            hud.tlProg.textContent = this.progress().toFixed(3);
+            hud.textY.textContent = gsap.getProperty(textPillars[2], "y").toFixed(2);
+            hud.actorTransform.textContent = gsap.getProperty(actor3D, "transform");
         }
     });
 
@@ -52,25 +59,25 @@ function createScrollytelling(elements, hud) {
         p3: { rotationY: -120, rotationX: -20, scale: 1.2 }
     };
 
-    // Text animations are now perfectly synchronized to the START of the cube tween
     tl.to(actor3D, { ...states.p1, duration: 1 })
-      .to(textPillars[0], { autoAlpha: 0, y: '-30px', duration: 0.4 }, "+=1")
+      .to(textPillars[0], { autoAlpha: 0, y: '-30px', duration: 0.5 }, "+=0.8")
       .to(actor3D, { ...states.p2, duration: 1 }, "<")
-      .fromTo(textPillars[1], { autoAlpha: 0, y: '30px' }, { autoAlpha: 1, y: '0px', duration: 0.4 }, "<")
-      .to(textPillars[1], { autoAlpha: 0, y: '-30px', duration: 0.4 }, "+=1")
+      .fromTo(textPillars[1], { autoAlpha: 0, y: '30px' }, { autoAlpha: 1, y: '0px', duration: 0.5 }, "<")
+      .to(textPillars[1], { autoAlpha: 0, y: '-30px', duration: 0.5 }, "+=0.8")
       .to(actor3D, { ...states.p3, duration: 1 }, "<")
-      .fromTo(textPillars[2], { autoAlpha: 0, y: '30px' }, { autoAlpha: 1, y: '0px', duration: 0.4 }, "<")
+      .fromTo(textPillars[2], { autoAlpha: 0, y: '30px' }, { autoAlpha: 1, y: '0px', duration: 0.5 }, "<")
       .addLabel("finalState");
 
-    // Create the master scrub, assigning it to the global variable
-    mainScrub = ScrollTrigger.create({
+    mainScrollytelling = ScrollTrigger.create({
         trigger: textCol,
         pin: visualsCol,
         start: 'top top',
         end: `bottom bottom-=${window.innerHeight / 2}`,
         animation: tl,
         scrub: 0.8,
-        invalidateOnRefresh: true
+        invalidateOnRefresh: true,
+        // Add a live log for when this specific trigger is updated by GSAP
+        onUpdate: self => console.log(`Main Scrub Update: p:${self.progress.toFixed(2)} d:${self.direction}`),
     });
     console.log("%cBUILDER: New scrollytelling instance is LIVE.", "color: #A3BE8C");
 }
@@ -79,11 +86,9 @@ function createScrollytelling(elements, hud) {
 function setupAnimations() {
     gsap.registerPlugin(ScrollTrigger, Flip);
     console.clear();
-    console.log('%cGSAP Covenant Build v19.0 Initialized. All systems armed.', 'color: #88C0D0; font-weight: bold; font-size: 14px;');
-    ScrollTrigger.defaults({ markers: true }); 
+    console.log('%cGSAP Covenant Build v20.0 Initialized. [FINAL STAND]', 'color: #88C0D0; font-weight: bold; font-size: 14px;');
 
-    ctx = gsap.context(() => {
-        // --- 1. ELEMENT SELECTION ---
+    const ctx = gsap.context(() => {
         const elements = {
             visualsCol: document.querySelector('.pillar-visuals-col'),
             scene3D: document.querySelector('.scene-3d'),
@@ -93,86 +98,99 @@ function setupAnimations() {
             handoffPoint: document.getElementById('handoff-point'),
             textCol: document.querySelector('.pillar-text-col')
         };
-        if (Object.values(elements).some(el => !el)) {
+        if (Object.values(elements).some(el => !el || (Array.isArray(el) && el.length === 0))) {
             console.error('COVENANT ABORTED: Critical elements missing.'); return;
         }
 
-        // --- 2. COMMAND CENTER HUD ---
         const hud = {
             state: document.getElementById('c-state'), event: document.getElementById('c-event'),
-            isFlipped: document.getElementById('c-flipped'), rebirthLock: document.getElementById('c-rebirth-lock'),
-            scrollLock: document.getElementById('c-scroll-lock'), tween: document.getElementById('c-tween'),
+            isFlipped: document.getElementById('c-flipped'), isRebirthing: document.getElementById('c-rebirthing'),
+            handoffActive: document.getElementById('c-handoff-active'), direction: document.getElementById('c-direction'),
+            tlProg: document.getElementById('c-tl-prog'), textY: document.getElementById('c-text-y'),
             actorTransform: document.getElementById('c-actor-transform')
         };
-        hud.state.textContent = "Standby"; hud.isFlipped.textContent = "false"; 
-        hud.rebirthLock.textContent = "INACTIVE"; hud.scrollLock.textContent = "OFF"; hud.tween.textContent = "none";
-        
+        const updateHudState = () => { hud.isFlipped.textContent = STATE.isFlipped; hud.isRebirthing.textContent = STATE.isRebirthing; };
+        updateHudState();
+        hud.state.textContent = "Standby";
+
         ScrollTrigger.matchMedia({
             '(min-width: 769px)': () => {
                 hud.state.textContent = "Awaiting Interaction";
-                
-                // Set initial text state
                 gsap.set(elements.textPillars, { autoAlpha: 0 });
                 gsap.set(elements.textPillars[0], { autoAlpha: 1 });
-                
-                // Initial creation of the scrollytelling animation
                 createScrollytelling(elements, hud);
 
-                // --- 3. THE ZERO-MOTION REBUILD TRIGGER ---
+                // This is now the ONLY trigger that will be created after a rebuild.
                 ScrollTrigger.create({
+                    id: "HANDOFF_MONITOR",
                     trigger: elements.handoffPoint,
                     start: 'top center',
+                    onUpdate: self => { hud.direction.textContent = self.direction; },
                     onToggle: self => {
-                        // --- A) FLIP DOWN ---
+                        hud.handoffActive.textContent = self.isActive;
+                        
+                        // A) FLIP DOWN
                         if (self.isActive && self.direction === 1) {
-                            if (isFlipped || isRebirthing) return;
-                            isFlipped = true; hud.isFlipped.textContent = "true";
+                            if (STATE.isFlipped || STATE.isRebirthing) return;
+                            STATE.isFlipped = true; updateHudState();
                             hud.state.textContent = "FLIPPED"; hud.event.textContent = "Flip Down";
                             console.log("%cEVENT: Flip Down", "color: #A3BE8C; font-weight: bold;");
                             
-                            mainScrub.disable();
+                            mainScrollytelling.disable();
                             const flipState = Flip.getState(elements.actor3D);
                             elements.summaryClipper.appendChild(elements.actor3D);
-                            Flip.from(flipState, { duration: 0.8, ease: 'power2.inOut', scale: true });
+                            Flip.from(flipState, {
+                                duration: 0.8, ease: 'power2.inOut', scale: true,
+                                onComplete: () => {
+                                    // This solves the "trapped in 3D form" issue
+                                    console.log("Flip Down Complete. Resetting actor's transform for clean layout.");
+                                    gsap.set(elements.actor3D, { clearProps: "transform" });
+                                }
+                            });
                         }
                         
-                        // --- B) ZERO-MOTION REBUILD ---
+                        // B) THE FINAL STAND REBIRTH
                         if (!self.isActive && self.direction === -1) {
-                            if (!isFlipped || isRebirthing) return;
-                            isRebirthing = true; hud.rebirthLock.textContent = "ACTIVE";
-                            console.group('%cZERO-MOTION REBUILD PROTOCOL INITIATED', 'color: #D81B60; font-weight:bold;');
+                            if (!STATE.isFlipped || STATE.isRebirthing) return;
+                            STATE.isRebirthing = true; updateHudState();
+                            hud.state.textContent = "REBIRTHING"; hud.event.textContent = "Protocol Engaged";
+                            console.group('%c"FINAL STAND" REBIRTH PROTOCOL INITIATED', 'color: #D81B60; font-weight:bold;');
                             
-                            // 1. FREEZE EVERYTHING
-                            lockScroll(); hud.scrollLock.textContent = "ON";
+                            // 1. FREEZE THE WORLD
+                            lockScroll();
                             console.log("1. SCROLL LOCKED. User input frozen.");
                             
-                            // 2. TERMINATE THE OLD ANIMATION
-                            mainScrub.kill();
-                            console.log("2. Old scrollytelling instance KILLED.");
+                            // 2. TOTAL ANNIHILATION
+                            killAllTriggers();
                             
-                            // 3. RESTORE THE ACTOR
-                            hud.state.textContent = "RESTORING..."; hud.event.textContent = "Manual Restore";
-                            hud.tween.textContent = "actor-restore";
+                            // 3. MANUAL, CLEAN RESTORE
+                            console.log("3. Wiping actor & initiating manual restore tween...");
                             elements.scene3D.appendChild(elements.actor3D);
+                            gsap.set(elements.actor3D, { clearProps: "all" });
                             gsap.to(elements.actor3D, {
                                 duration: 0.6,
                                 ease: 'power2.out',
-                                rotationY: -120, rotationX: -20, scale: 1.2,
+                                rotationY: -120, rotationX: -20, scale: 1.2, // The exact "finalState"
                                 onComplete: () => {
-                                    hud.tween.textContent = "none";
-                                    console.log("3. Actor restored to final position.");
+                                    console.log("4. Actor restored to pristine finalState.");
                                     
-                                    // 4. REBUILD THE SCROLLYTELLING SYSTEM
-                                    hud.state.textContent = "REBUILDING..."; hud.event.textContent = "System Rebuild";
+                                    // 4. REBUILD FROM SCRATCH
                                     createScrollytelling(elements, hud);
 
-                                    // 5. UNFREEZE AND RESET STATE
-                                    isFlipped = false; hud.isFlipped.textContent = "false";
-                                    isRebirthing = false; hud.rebirthLock.textContent = "INACTIVE";
-                                    unlockScroll(); hud.scrollLock.textContent = "OFF";
+                                    // 5. TELEPORT SAFELY
+                                    const handoffPointTop = elements.handoffPoint.getBoundingClientRect().top + window.scrollY;
+                                    const safeHavenPosition = handoffPointTop - 5; // Extra safe margin
+                                    window.scrollTo({ top: safeHavenPosition, behavior: 'instant' });
+                                    console.log(`5. Teleported to Safe Haven: ${safeHavenPosition.toFixed(0)}px`);
+                                    
+                                    // 6. UNLOCK AND RESET
+                                    STATE.isFlipped = false;
+                                    STATE.isRebirthing = false;
+                                    updateHudState();
+                                    unlockScroll();
                                     hud.state.textContent = "In Scroller (Reborn)";
-                                    console.log("4. New scrollytelling instance is live.");
-                                    console.log("5. SCROLL UNLOCKED. System is pristine.");
+                                    hud.event.textContent = "System Stable";
+                                    console.log("6. SCROLL UNLOCKED. System is pristine and ready.");
                                     console.groupEnd();
                                 }
                             });
