@@ -1,7 +1,7 @@
-// main.js
+// main.js (Complete and Corrected)
 
 document.addEventListener('DOMContentLoaded', function () {
-    // --- Your Menu & Footer code remains untouched ---
+    // --- Menu & Footer code (unchanged) ---
     const openButton = document.getElementById('menu-open-button');
     const closeButton = document.getElementById('menu-close-button');
     const menuScreen = document.getElementById('menu-screen');
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function setupAnimations() {
         gsap.registerPlugin(ScrollTrigger, Flip);
 
-        // We use gsap.context() for proper cleanup, which is best practice.
+        // Use gsap.context() for proper cleanup, which is best practice.
         const ctx = gsap.context(() => {
             
             ScrollTrigger.matchMedia({
@@ -71,31 +71,31 @@ document.addEventListener('DOMContentLoaded', function () {
                     // --- 3. BUILD THE SEQUENTIAL ANIMATION ---
                     // We now add all animations to our one masterTimeline.
                     
-                    // Set initial state for the 3D actor
+                    // Set an initial state for the 3D actor to make the start less abrupt
                     masterTimeline.set(actor3D, { rotationY: 20, rotationX: -15 });
 
-                    // Animate Pillar 1
+                    // Animate Pillar 1 text fade in/out and cube rotation
                     masterTimeline
                         .to(textPillars[0], { autoAlpha: 1 })
                         .to(actor3D, { rotationY: 120, rotationX: 10, scale: 1.1, ease: "power2.inOut" }, "<")
                         .to(textPillars[0], { autoAlpha: 0 });
 
-                    // Animate Pillar 2
+                    // Animate Pillar 2 text fade in/out and cube rotation
                     masterTimeline
                         .to(textPillars[1], { autoAlpha: 1 })
                         .to(actor3D, { rotationY: -120, rotationX: -20, scale: 1.2, ease: "power2.inOut" }, "<")
                         .to(textPillars[1], { autoAlpha: 0 });
                     
-                    // Animate Pillar 3
+                    // Animate Pillar 3 text fade in/out and cube rotation
                     masterTimeline
                         .to(textPillars[2], { autoAlpha: 1 })
                         .to(actor3D, { rotationY: 0, rotationX: 0, scale: 1, ease: "power3.inOut" }, "<")
                         .to(textPillars[2], { autoAlpha: 0 });
 
 
-                    // --- 4. THE "IGLOO" EXIT/RETURN ANIMATION (Kept separate for reliability) ---
-                    // Your logic here was excellent. We'll keep it separate because Flip
-                    // is a state-change animation, not part of the main scrub sequence.
+                    // --- 4. THE "IGLOO" EXIT/RETURN ANIMATION ---
+                    // This is separate from the masterTimeline because Flip is a state-change animation,
+                    // not part of the main scrub sequence.
                     let isFlipped = false;
 
                     ScrollTrigger.create({
@@ -118,41 +118,41 @@ document.addEventListener('DOMContentLoaded', function () {
                                 });
                             }
                         },
+                        // ** THIS IS THE FIX FOR THE REVERSE SCROLL **
                         onLeaveBack: () => {
                             if (isFlipped) {
                                 isFlipped = false;
-                                const state = Flip.getState(actor3D, { props: "scale" });
+
+                                // Step 1: Instantly move the 3D actor back to its original column.
                                 visualsCol.appendChild(actor3D);
+                                
+                                // Step 2: Make the original column visible again.
                                 visualsCol.classList.remove('is-exiting');
-                                Flip.from(state, {
-                                    duration: 1.2,
-                                    ease: "power2.inOut",
-                                    scale: true,
-                                    onStart: () => {
-                                        // Restore the rotations from the end of the master timeline
-                                        masterTimeline.progress(1);
-                                    }
-                                });
+
+                                // Step 3 (CRITICAL): Manually set the master timeline's progress to 1 (the end).
+                                // This ensures that when the actor reappears, its rotation and scale are
+                                // exactly what they should be at the end of the main scroll sequence.
+                                // The scrub will then take over seamlessly from this correct state.
+                                masterTimeline.progress(1);
                             }
                         }
                     });
                 },
 
                 "(max-width: 768px)": function () {
-                    // On mobile, just make sure everything is visible.
+                    // On mobile, just make sure everything is visible and transforms are cleared.
                     gsap.set('.pillar-text-content', { autoAlpha: 1 });
-                    gsap.set('.object-3d', {clearProps: "all"}); // reset any 3D transforms
+                    gsap.set('.object-3d', {clearProps: "all"}); 
                 }
             });
         }); // end of gsap.context()
 
-        // It's good practice to have a cleanup function, even if not strictly needed in this simple case
-        // This would be crucial in a Single Page Application (SPA).
+        // This would be crucial in a Single Page Application (SPA) for cleanup.
         return () => ctx.revert(); 
     }
 
-    // --- THE "READY CHECK" ---
-    // Your ready check is solid, we'll keep it as is.
+    // --- The "Ready Check" (unchanged) ---
+    // Checks if the GSAP plugins have loaded before running the animation setup.
     function initialCheck() {
         if (window.gsap && window.ScrollTrigger && window.Flip) {
             setupAnimations();
@@ -161,6 +161,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
     
+    // Start the check.
     initialCheck();
 
 }); // End of DOMContentLoaded
