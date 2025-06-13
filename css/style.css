@@ -635,231 +635,6 @@ html.menu-open {
    ========================================================================= */
 
 /* --- Container and Layout for the Scrollytelling Section --- */
-
-.scrolly-container {
-    display: flex;
-    /* Sets the gap between the pinned image column and the scrolling text column. */
-    gap: 4rem; 
-    align-items: flex-start;
-}
-
-
-/* --- 1. The Pinned Visuals Column (The "Sticky" Part) --- */
-/* This is the column on the left that will stick to the screen. */
-
-.pillar-visuals-col {
-    flex: 1; /* Allows the column to grow and take up space. */
-    width: 45%; 
-    
-    /* It will stick 15% from the top of the viewport. */
-    top: 15vh;
-    
-    /* The height determines how much space the image area takes up. It
-       MUST be less than the viewport height for sticky to work correctly. */
-    height: 70vh;
-
-    /* `display: grid` is a clean, modern way to stack the visual items
-       directly on top of each other in the exact same spot. */
-    display: grid;
-    place-items: center; /* This vertically and horizontally centers the active image. */
-}
-
-
-/* --- 2. The Individual Image Wrappers --- */
-/* These items need to be stacked so only one is visible at a time. */
-
-.pillar-visual-item {
-    /* These grid properties tell every visual item to occupy the *exact same cell*
-       in the grid, effectively stacking them. The JavaScript will then control
-       which one is visible by changing `autoAlpha` (opacity & visibility). */
-    grid-column: 1 / -1;
-    grid-row: 1 / -1;
-    
-    width: 100%;
-    height: 100%;
-    
-    /* Adds a soft, premium look to the image container. */
-    border-radius: 12px; 
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    overflow: hidden; /* Ensures the image respects the border-radius. */
-}
-
-.pillar-visual-item img {
-    /* Ensures the image covers the container without being distorted. */
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-
-/* --- 3. The Scrolling Text Column (The "Trigger" Part) --- */
-/* This column on the right will scroll normally. */
-
-/* MODIFY IT TO LOOK LIKE THIS */
-.pillar-text-col {
-    flex: 1;
-    width: 50%;
-    /* Add this to give the text column some breathing room */
-    padding-left: 2rem; 
-}
-
-/* IMPORTANT: Each text block MUST have significant height. 
-   This creates the "scroll distance" needed for the GSAP `scrub`
-/* in your style.css */
-.pillar-text-content {
-    /* We no longer need a massive min-height. We'll use padding to create space. */
-    /* This creates natural scroll distance between text blocks. */
-    padding-top: 15vh;
-    padding-bottom: 25vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-/* Let's remove the bottom padding on the very last text section */
-.pillar-text-content:last-of-type {
-    padding-bottom: 15vh;
-}
-
-/*
-   ADD THIS ENTIRE NEW BLOCK OF CODE
-   A good place is right after your .pillar-text-content rule.
-*/
-
-/* NEW: Constrain the width of the text block for readability */
-.text-anim-wrapper {
-    max-width: 45ch; /* Limits width to about 45 characters */
-}
-
-/* NEW STYLES for text elements */
-.pillar-number {
-    font-size: 1rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: #43a8b4; /* <<< IMPORTANT: CHANGE THIS to your brand's accent color! */
-    display: block; /* Ensures it's on its own line */
-}
-
-/* NEW: The decorative line */
-.pillar-line {
-    width: 60px;
-    height: 3px;
-    background-color: #43a8b4; /* <<< IMPORTANT: USE THE SAME ACCENT COLOR! */
-    margin: 1.5rem 0;
-    /* Start the line scaled to zero so we can animate it in */
-    transform: scaleX(0);
-    transform-origin: left;
-}
-
-.pillar-title {
-    /* The new "Hero" font for our titles */
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(2.8rem, 5vw, 4rem); /* Responsive font size */
-    font-weight: 700;
-    line-height: 1.1;
-    color: #f0f0f0; /* A bright, near-white */
-    margin: 0;
-}
-
-.pillar-paragraph {
-    font-size: 1.1rem;
-    line-height: 1.7;
-    margin-top: 1.5rem;
-    color: #a0a0a0; /* A softer, less-bright gray for depth */
-}
-
-/* === FINAL 3D SCENE SETUP (STABLE SIZING) === */
-
-.pillar-visuals-col {
-    /* (existing styles like width, top can remain) */
-    height: 70vh;
-    perspective: 1200px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* Define the cube at a single, perfect size. Flip will handle scaling it later. */
-.scene-3d {
-    width: 200px;
-    height: 200px;
-    position: relative;
-    transform-style: preserve-3d;
-    transform: translateZ(100px); 
-}
-
-.object-3d {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    transform-style: preserve-3d;
-    /* TranslateZ is now half of the 200px width. */
-    transform: translateZ(-100px); 
-}
-
-.face {
-    position: absolute;
-    /* Faces are also the fixed, perfect 200x200 size. */
-    width: 200px;
-    height: 200px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    backdrop-filter: blur(10px);
-}
-
-/* Positioning is now based on the perfect 100px (half of 200px) */
-.face.front  { transform: rotateY(  0deg) translateZ(100px); }
-.face.back   { transform: rotateY(180deg) translateZ(100px); }
-.face.right  { transform: rotateY( 90deg) translateZ(100px); }
-.face.left   { transform: rotateY(-90deg) translateZ(100px); }
-.face.top    { transform: rotateX( 90deg) translateZ(100px); }
-.face.bottom { transform: rotateX(-90deg) translateZ(100px); }
-
-/* Lastly, a small rule to help the Flip animation */
-.summary-thumbnail-clipper .object-3d {
-    /* When the cube is in the clipper, let it be positioned by Flip's inline styles */
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-}
-   
-@media (max-width: 768px) {
-    .scrolly-container {
-        /* Stack the columns vertically instead of side-by-side. */
-        flex-direction: column;
-    }
-
-    .pillar-visuals-col,
-    .pillar-text-col {
-        /* Override desktop sizes to take up the full width. */
-        width: 100%;
-    }
-
-    .pillar-visuals-col {
-        /* Disables the sticky behavior completely. */
-        position: static; 
-        top: auto;
-        height: auto;
-        margin-bottom: 2rem;
-    }
-
-    /* All three images are displayed in a traditional stack before their text. */
-    .pillar-visual-item {
-        /* You can adjust this as needed for your ideal mobile layout. */
-        /* For example, display all of them a as a gallery at the top? It s' up on my designer my team member, ` the user` - " who ' did bring that idea of `-- "the Igloo ' moment "-' which inspired`- this '`- work for (`... them` as customer of him 'too!` " now our a project '-- gets to have the `- a ' `-- ' final now just their brand their site "- just on our `-´ a new a`- what`- one a client`-´ might `- have for their team their "-` their website from Brazil now `-- to his users for him '-' his a final clients right `- '- when marketing now `- our human `- on there does a better `-- marketing to their '-' web project " with us now "! Good '- there the comment and ready `- my `-- final CSS code "! Their project their business "- just is`- starting. */
-    }
-    .pillar-visual-item:not(:first-of-type) {
-        margin-top:2rem
-    }
-    
-    .pillar-text-content {
-       min-height: auto;      /* Remove the massive desktop height */
-       padding-bottom: 4rem; /* Add some space between sections */
-       text-align: center;
-/* --- Container and Layout for the Scrollytelling Section --- */
 .scrolly-container {
     display: flex;
     gap: 4rem; 
@@ -870,26 +645,10 @@ html.menu-open {
    15. HELPER STYLES FOR "IGLOO" JS ANIMATIONS
    ========================================================================= */
 
-/* For the image zoom/pan effect within its container */
-.pillar-image-scaler {
-    width: 100%;
-    height: 100%;
-    overflow: hidden; 
-    will-change: transform;
-}
-.pillar-image-scaler img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    will-change: transform;
-}
-
-/* For the slide-in text animation */
 .text-anim-wrapper {
-    will-change: transform;
+    will-change: transform, opacity;
 }
 
-/* Outer Wrapper for the thumbnail */
 .summary-thumbnail-placeholder {
     width: 200px;
     max-width: 40%;
@@ -898,7 +657,6 @@ html.menu-open {
     position: relative; 
 }
 
-/* Inner Clipper for the thumbnail */
 .summary-thumbnail-clipper {
     width: 100%;
     height: 100%;
@@ -907,7 +665,6 @@ html.menu-open {
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 
-/* When the cube lands in the thumbnail */
 .summary-thumbnail-placeholder .object-3d {
     width: 100%;
     height: 100%;
@@ -928,9 +685,12 @@ html.menu-open {
 .pillar-visuals-col {
     flex: 1;
     width: 45%; 
+    /* Sticking position */
+    position: -webkit-sticky;
+    position: sticky;
     top: 15vh;
     height: 70vh;
-    /* --- UPDATED FOR 3D --- */
+    /* 3D Scene Setup */
     perspective: 1200px;
     display: flex;
     justify-content: center;
@@ -971,6 +731,7 @@ html.menu-open {
 .face.top    { transform: rotateX( 90deg) translateZ(100px); }
 .face.bottom { transform: rotateX(-90deg) translateZ(100px); }
 
+
 /* --- 3. The Scrolling Text Column (The "Trigger" Part) --- */
 .pillar-text-col {
     flex: 1;
@@ -985,22 +746,18 @@ html.menu-open {
     flex-direction: column;
     justify-content: center;
     /* 
-       FOUC FIX (Problem #1): Hide all text sections by default.
+       FOUC FIX: Hide all text sections by default.
        GSAP will make them visible as needed. This prevents the "flash".
     */
     opacity: 0;
     visibility: hidden;
 }
 
-/* 
-   FOUC FIX (Problem #1): Make sure the VERY FIRST text section is visible on page load
-   before any JavaScript runs.
-*/
+/* FOUC FIX: Make sure the VERY FIRST text section is visible on page load. */
 .pillar-text-content:first-of-type {
     opacity: 1;
     visibility: visible;
 }
-
 
 .pillar-text-content:last-of-type {
     padding-bottom: 15vh;
@@ -1008,7 +765,6 @@ html.menu-open {
 
 .text-anim-wrapper {
     max-width: 45ch; 
-    will-change: opacity, transform; /* Optimization for animation */
 }
 
 .pillar-number {
@@ -1045,7 +801,10 @@ html.menu-open {
     color: #a0a0a0;
 }
 
-/* --- MOBILE STYLES --- */
+/* =========================================================================
+   MOBILE & RESPONSIVE STYLES
+   ========================================================================= */
+   
 @media (max-width: 768px) {
     .scrolly-container {
         flex-direction: column;
@@ -1062,22 +821,20 @@ html.menu-open {
         top: auto;
         height: auto;
         margin-bottom: 2rem;
-        /* Ensure the 3D scene is centered on mobile when static */
         display: flex;
         justify-content: center;
         align-items: center;
-        perspective: none; /* Can be removed for mobile if not needed */
+        perspective: none;
     }
-
+    
     .pillar-text-content {
        min-height: auto;
-       padding: 0 0 4rem 0; /* Adjusted padding for mobile */
-       text-align: left; 
-       /* FOUC FIX: On mobile, all text should be visible from the start. */
+       padding: 0 0 4rem 0;
+       text-align: left;
+       /* On mobile, all text should be visible from the start. */
        opacity: 1;
        visibility: visible;
     }
-
     .pillar-text-content:last-of-type {
         padding-bottom: 0;
     }
