@@ -1,4 +1,4 @@
-// main.js (Final Version)
+// main.js (Final Polished Version)
 
 document.addEventListener('DOMContentLoaded', function () {
     // --- Menu & Footer code (unchanged) ---
@@ -40,7 +40,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 "(min-width: 769px)": function () {
 
-                    // --- 1. SELECTORS & REFERENCES ---
                     const visualsCol = document.querySelector(".pillar-visuals-col");
                     const textCol = document.querySelector(".pillar-text-col");
                     const actor3D = document.getElementById("actor-3d");
@@ -53,7 +52,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         return;
                     }
 
-                    // --- 2. THE NEW, MORE ROBUST MASTER TIMELINE ---
                     const masterTimeline = gsap.timeline({
                         scrollTrigger: {
                             trigger: textCol,
@@ -63,49 +61,44 @@ document.addEventListener('DOMContentLoaded', function () {
                             scrub: 1,
                         }
                     });
-                    
-                    // --- 3. REBUILT, EVENLY-PACED ANIMATION SEQUENCE ---
 
                     // Set initial state of ALL text pillars to invisible.
                     gsap.set(textPillars, { autoAlpha: 0 });
 
-                    // **Pillar 1 Section**
+                    // **Pillar 1: Explicit From/To for perfect alignment**
                     masterTimeline
+                        .to(textPillars[0], { autoAlpha: 1 })
                         .fromTo(actor3D, 
-                            { rotationY: 20, rotationX: -15, scale: 1 }, // Explicit FROM state
-                            { rotationY: 120, rotationX: 10, scale: 1.1, ease: "power2.inOut" } // Explicit TO state
-                        )
-                        .to(textPillars[0], { autoAlpha: 1 }, "<"); // Fade in text WITH the cube animation
-                    
-                    // Add a "hold" section where Pillar 1 is just visible
-                    masterTimeline.to({}, {duration: 0.25});
+                            { rotationY: 20, rotationX: -15, scale: 1 },
+                            { rotationY: 120, rotationX: 10, scale: 1.1, ease: "power2.inOut" },
+                            "<" // The key is to start the cube animation WITH the text fade-in
+                        );
 
-                    // **Pillar 2 Section**
+                    // **Pillar 2**
                     masterTimeline
-                        .to(textPillars[0], { autoAlpha: 0 }) // Fade out previous text
-                        .fromTo(actor3D, 
+                        .to(textPillars[0], { autoAlpha: 0 })
+                        .to(textPillars[1], { autoAlpha: 1 }, "<+=0.2") // Overlap the fades slightly
+                        .fromTo(actor3D,
                             { rotationY: 120, rotationX: 10, scale: 1.1 },
-                            { rotationY: -120, rotationX: -20, scale: 1.2, ease: "power2.inOut" }
-                        )
-                        .to(textPillars[1], { autoAlpha: 1 }, "<"); // Fade in new text
+                            { rotationY: -120, rotationX: -20, scale: 1.2, ease: "power2.inOut" },
+                            "<"
+                        );
 
-                    // Add a "hold" section
-                    masterTimeline.to({}, {duration: 0.25});
-
-                    // **Pillar 3 Section**
+                    // **Pillar 3**
                     masterTimeline
                         .to(textPillars[1], { autoAlpha: 0 })
-                        .fromTo(actor3D, 
+                        .to(textPillars[2], { autoAlpha: 1 }, "<+=0.2")
+                        .fromTo(actor3D,
                             { rotationY: -120, rotationX: -20, scale: 1.2 },
-                            { rotationY: 0, rotationX: 0, scale: 1, ease: "power3.inOut" } // Final "at rest" state
-                        )
-                        .to(textPillars[2], { autoAlpha: 1 }, "<"); // Fade in final text
+                            { rotationY: 0, rotationX: 0, scale: 1, ease: "power3.inOut" },
+                            "<"
+                        );
                     
-                    // Add a final "hold" section
-                    masterTimeline.to({}, {duration: 0.25});
+                    // Final hold to ensure Pillar 3 text is readable at the end of the scroll
+                     masterTimeline.to(textPillars[2], { autoAlpha: 0, delay: 0.5 });
 
 
-                    // --- 4. THE "IGLOO" EXIT/RETURN ANIMATION ---
+                    // --- The "Igloo" Exit/Return Animation ---
                     let isFlipped = false;
 
                     ScrollTrigger.create({
@@ -127,23 +120,13 @@ document.addEventListener('DOMContentLoaded', function () {
                                 });
                             }
                         },
-                        // ** THE NEW, SEAMLESS onLeaveBack **
                         onLeaveBack: () => {
                             if (isFlipped) {
                                 isFlipped = false;
-
-                                // Hide the cube briefly to prevent the "blip"
                                 gsap.set(actor3D, { autoAlpha: 0 });
-
-                                // Instantly move the cube back to its original parent
                                 visualsCol.appendChild(actor3D);
                                 visualsCol.classList.remove('is-exiting');
-                                
-                                // Set the master timeline to its end state
                                 masterTimeline.progress(1);
-                                
-                                // Now that the cube is in the right place and has the right
-                                // transforms, reveal it again. This all happens in one frame.
                                 gsap.set(actor3D, { autoAlpha: 1 });
                             }
                         }
@@ -151,17 +134,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
 
                 "(max-width: 768px)": function () {
-                    // On mobile, ensure everything is visible and reset any transforms.
                     gsap.set(textPillars, { autoAlpha: 1 });
-                    gsap.set(actor3D, {clearProps: "all"}); 
+                    gsap.set(actor3D, { clearProps: "all" });
                 }
             });
-        }); // end of gsap.context()
+        });
 
-        return () => ctx.revert(); 
+        return () => ctx.revert();
     }
 
-    // --- The "Ready Check" (unchanged) ---
     function initialCheck() {
         if (window.gsap && window.ScrollTrigger && window.Flip) {
             setupAnimations();
