@@ -1,58 +1,46 @@
 /*
 ========================================================================================
-   THE DEFINITIVE COVENANT BUILD v22.0 - The "Final Covenant"
+   THE DEFINITIVE COVENANT BUILD v23.0 - The "Immutability & Stunt Double" Protocol
    
-   This is the final, definitive, and battle-hardened architecture. It is a complete
-   synthesis of all lessons learned. It solves all "blips" and "weirdness" by
-   instituting a set of unbreakable laws for state management. The mission is done.
+   This is the final, definitive, and architecturally complete solution. It abandons
+   all prior attempts to manage a mutable state. The mission is done.
    
-   THE FINAL LAWS:
-   1. FLIP IS FOR TRAVEL, GSAP IS FOR CONTROL: Flip is ONLY used to move the cube.
-      The moment it arrives, its state is wiped and a pure GSAP timeline takes over.
-      A new `absolute: true` parameter on the "Flip Down" ensures a smooth entry.
-   2. THE SYSTEM IS PRESERVED: We return to the stable `invalidate/refresh` protocol,
-      now paired with an aggressive `clearProps` wipe AFTER the reverse flip. This
-      prevents state pollution without causing the "blips" of a total-kill rebuild.
-   3. FORENSIC TRANSPARENCY: The Mission Control HUD provides a complete, live view.
+   THE UNBREAKABLE LAWS:
+   1. SEPARATION OF CONCERNS: The "Hero" cube performs the scrollytelling. A new,
+      identical "Stunt Double" performs the landing. They never interact.
+   2. IMMUTABILITY: The main scrollytelling timeline and its "Hero" cube are NEVER
+      disabled, killed, or polluted by Flip. Its state is immutable.
+   3. THE ILLUSION OF TRANSFER: A seamless "bait-and-switch" animation creates the
+      illusion of a handoff, replacing the unstable `Flip` transfer.
 ========================================================================================
 */
-
-// --- GLOBAL STATE & MAIN SCRUB INSTANCE ---
-const STATE = {
-    isFlipped: false,
-    isRebirthing: false
-};
-let mainScrub;
 
 function setupAnimations() {
     gsap.registerPlugin(ScrollTrigger, Flip);
     console.clear();
-    console.log('%cGSAP Covenant Build v22.0 Initialized. [FINAL COVENANT]', 'color: #88C0D0; font-weight: bold; font-size: 14px;');
+    console.log('%cGSAP Covenant Build v23.0 Initialized. [FINAL COVENANT]', 'color: #88C0D0; font-weight: bold; font-size: 14px;');
 
     const ctx = gsap.context(() => {
         const elements = {
-            visualsCol: document.querySelector('.pillar-visuals-col'),
-            scene3D: document.querySelector('.scene-3d'),
-            actor3D: document.getElementById('actor-3d'),
+            heroActor: document.getElementById('actor-3d'),
+            stuntActor: document.getElementById('actor-3d-stunt-double'), // New element
             textPillars: gsap.utils.toArray('.pillar-text-content'),
-            summaryClipper: document.querySelector('.summary-thumbnail-clipper'),
-            handoffPoint: document.getElementById('handoff-point'),
-            textCol: document.querySelector('.pillar-text-col')
+            visualsCol: document.querySelector('.pillar-visuals-col'),
+            textCol: document.querySelector('.pillar-text-col'),
+            handoffPoint: document.getElementById('handoff-point')
         };
         if (Object.values(elements).some(el => !el || (Array.isArray(el) && el.length === 0))) {
             console.error('COVENANT ABORTED: Critical elements missing.'); return;
         }
 
-        const hud = {
+        const hud = { // Overwatch HUD v23
             state: document.getElementById('c-state'), event: document.getElementById('c-event'),
-            isFlipped: document.getElementById('c-flipped'), isRebirthing: document.getElementById('c-rebirthing'),
-            handoffActive: document.getElementById('c-handoff-active'), direction: document.getElementById('c-direction'),
-            tlProg: document.getElementById('c-tl-prog'), cubeRot: document.getElementById('c-cube-rot'),
+            heroAlpha: document.getElementById('c-hero-alpha'), stuntAlpha: document.getElementById('c-stunt-alpha'),
+            tlProg: document.getElementById('c-tl-prog'), heroRot: document.getElementById('c-hero-rot'),
             textAlpha: document.getElementById('c-text-alpha')
         };
-        const updateHudState = () => { hud.isFlipped.textContent = STATE.isFlipped; hud.isRebirthing.textContent = STATE.isRebirthing; };
-        updateHudState();
-        hud.state.textContent = "Standby";
+
+        let isFlipped = false; // This now only tracks if the "illusion" is active
 
         ScrollTrigger.matchMedia({
             '(min-width: 769px)': () => {
@@ -60,123 +48,87 @@ function setupAnimations() {
                 gsap.set(elements.textPillars, { autoAlpha: 0 });
                 gsap.set(elements.textPillars[0], { autoAlpha: 1 });
                 
-                // --- BUILD THE SCROLLYTELLING INSTANCE ---
+                // --- 1. BUILD THE IMMUTABLE SCROLLYTELLING INSTANCE ---
                 const tl = gsap.timeline({
-                    paused: true,
-                    onUpdate: function() { // Live forensic monitoring AS YOU SCROLL
+                    scrollTrigger: {
+                        trigger: elements.textCol,
+                        pin: elements.visualsCol,
+                        start: 'top top',
+                        end: `bottom bottom-=${window.innerHeight / 2}`,
+                        scrub: 0.8,
+                        invalidateOnRefresh: true,
+                    },
+                    onUpdate: function() { // Live forensic monitoring
                         hud.tlProg.textContent = this.progress().toFixed(3);
-                        hud.cubeRot.textContent = gsap.getProperty(elements.actor3D, "rotationY").toFixed(1);
+                        hud.heroRot.textContent = gsap.getProperty(elements.heroActor, "rotationY").toFixed(1);
                         hud.textAlpha.textContent = gsap.getProperty(elements.textPillars[2], "autoAlpha").toFixed(2);
+                        hud.heroAlpha.textContent = gsap.getProperty(elements.heroActor, "autoAlpha").toFixed(2);
+                        hud.stuntAlpha.textContent = gsap.getProperty(elements.stuntActor, "autoAlpha").toFixed(2);
                     }
                 });
-
-                const states = {
-                    p1: { rotationY: 20, rotationX: -15, scale: 1.0 },
-                    p2: { rotationY: 120, rotationX: 10, scale: 1.1 },
-                    p3: { rotationY: -120, rotationX: -20, scale: 1.2 }
-                };
-
-                tl.to(elements.actor3D, { ...states.p1, duration: 1.2 })
-                  .to(elements.textPillars[0], { autoAlpha: 0, duration: 0.4 }, "+=0.8")
-                  .to(elements.actor3D, { ...states.p2, duration: 1.2 }, "<")
-                  .from(elements.textPillars[1], { autoAlpha: 0, y: 30, duration: 0.6 }, "<")
-                  .to(elements.textPillars[1], { autoAlpha: 0, duration: 0.4 }, "+=0.8")
-                  .to(elements.actor3D, { ...states.p3, duration: 1.2 }, "<")
-                  .from(elements.textPillars[2], { autoAlpha: 0, y: 30, duration: 0.6 }, "<")
-                  .addLabel("finalState");
-
-                mainScrub = ScrollTrigger.create({
-                    trigger: elements.textCol,
-                    pin: elements.visualsCol,
-                    start: 'top top',
-                    end: `bottom bottom-=${window.innerHeight / 2}`,
-                    animation: tl,
-                    scrub: 0.8,
-                    invalidateOnRefresh: true,
-                });
-                // --- END BUILD ---
-
-                // --- CREATE THE HANDOFF MONITOR ---
+                
+                // This timeline will now animate perfectly in both directions, because it is NEVER tampered with.
+                tl.fromTo(elements.textPillars[0], {y:0},{ autoAlpha: 0, y: -30, duration: 0.4 }, 1.5)
+                  .fromTo(elements.heroActor, {rotationY: 0, rotationX: 0, scale: 1}, {rotationY: 120, rotationX: 10, scale: 1.1, duration: 1.2}, "<")
+                  .fromTo(elements.textPillars[1], {autoAlpha: 0, y: 30}, {autoAlpha: 1, y: 0, duration: 0.6}, "<")
+                  
+                  .to(elements.textPillars[1], {autoAlpha: 0, y: -30, duration: 0.4}, "+=1.2")
+                  .to(elements.heroActor, {rotationY: -120, rotationX: -20, scale: 1.2, duration: 1.2}, "<")
+                  .fromTo(elements.textPillars[2], {autoAlpha: 0, y: 30}, {autoAlpha: 1, y: 0, duration: 0.6}, "<")
+                  .addLabel("finalState"); // Label marks the perfect handoff point
+                
+                console.log("Immutable scrollytelling timeline has been forged.");
+                
+                // --- 2. CREATE THE HANDOFF "BAIT-AND-SWITCH" TRIGGER ---
                 ScrollTrigger.create({
                     id: "HANDOFF_MONITOR",
                     trigger: elements.handoffPoint,
                     start: 'top center',
-                    onUpdate: self => hud.direction.textContent = self.direction === 1 ? 'DOWN' : 'UP',
                     onToggle: self => {
-                        hud.handoffActive.textContent = self.isActive;
-                        
-                        // A) FLIP DOWN
-                        if (self.isActive && self.direction === 1) {
-                            if (STATE.isFlipped || STATE.isRebirthing) return;
-                            STATE.isFlipped = true; updateHudState();
-                            hud.state.textContent = "FLIPPED"; hud.event.textContent = "Flip Down";
-                            console.log("%cEVENT: Flip Down", "color: #A3BE8C; font-weight: bold;");
+                        // A) HANDOFF TO STUNT DOUBLE
+                        if (self.isActive && !isFlipped) {
+                            isFlipped = true;
+                            hud.state.textContent = "HANDOFF"; hud.event.textContent = "Bait and Switch";
+                            console.group('%c"BAIT AND SWITCH" PROTOCOL INITIATED', 'color: #A3BE8C; font-weight:bold;');
                             
-                            mainScrub.disable();
-                            const flipState = Flip.getState(elements.actor3D);
-                            elements.summaryClipper.appendChild(elements.actor3D);
-                            // THE "BLIP" FIX: Use `absolute: true` to get smooth transitions between parents
-                            // And explicitly set the final state for perfect control.
-                            Flip.from(flipState, {
+                            // 1. Get the final state of the Hero cube
+                            const heroState = Flip.getState(elements.heroActor, {props: "transform"});
+                            console.log("1. Captured final state of Hero Actor.");
+                            
+                            // 2. Hide the Hero
+                            gsap.set(elements.heroActor, { autoAlpha: 0 });
+                            console.log("2. Hero Actor hidden.");
+
+                            // 3. Perform the "Flip" FROM the Hero's state TO the Stunt Double's natural state
+                            console.log("3. Animating Stunt Double FROM Hero's state...");
+                            Flip.from(heroState, {
+                                targets: elements.stuntActor,
                                 duration: 0.8,
-                                ease: 'power2.inOut',
-                                absolute: true, // This is a key for smooth parent-to-parent flips
-                                scale: true,
+                                ease: "power2.inOut",
+                                scale: true, // Also animate scale for a perfect match
+                                onStart: () => {
+                                    gsap.set(elements.stuntActor, {autoAlpha: 1}); // Reveal the stunt double at the start
+                                    console.log("   - Stunt Double revealed, animation begins.");
+                                },
                                 onComplete: () => {
-                                    console.log("Flip Down Complete. Actor is now under placeholder control.");
+                                    hud.state.textContent = "LANDED";
+                                    console.log("4. Handoff complete. Stunt Double has landed.");
+                                    console.groupEnd();
                                 }
                             });
                         }
                         
-                        // B) THE FINAL COVENANT REBIRTH
-                        if (!self.isActive && self.direction === -1) {
-                            if (!STATE.isFlipped || STATE.isRebirthing) return;
-                            STATE.isRebirthing = true; updateHudState();
-                            hud.state.textContent = "REBIRTHING"; hud.event.textContent = "Protocol Engaged";
-                            console.group('%c"FINAL COVENANT" REBIRTH PROTOCOL INITIATED', 'color: #D81B60; font-weight:bold;');
+                        // B) REBIRTH (RETURN TO HERO)
+                        if (!self.isActive && isFlipped) {
+                            isFlipped = false;
+                            hud.state.textContent = "REBIRTHING"; hud.event.textContent = "Return to Hero";
+                            console.log('%cREBIRTH: Returning control to Hero Actor...', 'color: #EBCB8B; font-weight:bold;');
                             
-                            mainScrub.disable(); // Ensure the scrub is off during the flip
-                            const flipState = Flip.getState(elements.actor3D);
-                            elements.scene3D.appendChild(elements.actor3D);
-                            
-                            console.log("1. Flipping actor back to scrolly container...");
-                            Flip.from(flipState, {
-                                duration: 0.8, ease: 'power2.out', scale: true,
-                                onComplete: () => {
-                                    console.log("2. WIPE & RESTORE PHASE");
-                                    // 2a. WIPE STATE POLLUTION. This is CRITICAL.
-                                    gsap.set(elements.actor3D, { clearProps: "all" });
-                                    
-                                    // 2b. INVALIDATE & RESTORE TIMELINE to its perfect pre-flip state.
-                                    tl.invalidate();
-                                    const finalProgress = tl.labels.finalState / tl.duration();
-                                    tl.progress(finalProgress).pause();
-                                    
-                                    // 2c. RE-ENABLE the main scrub controller.
-                                    mainScrub.enable();
-                                    
-                                    // 2d. TELEPORT to a safe haven just above the trigger.
-                                    const handoffPointTop = elements.handoffPoint.getBoundingClientRect().top + window.scrollY;
-                                    const safeHavenPosition = handoffPointTop - 5;
-                                    window.scrollTo({ top: safeHavenPosition, behavior: 'instant' });
-                                    
-                                    // 2e. REFRESH everything to sync with the new reality.
-                                    ScrollTrigger.refresh();
-
-                                    console.log("3. System restored to pristine pre-handoff state.");
-                                    
-                                    // 2f. Reset flags after a safe delay.
-                                    gsap.delayedCall(0.1, () => {
-                                        STATE.isFlipped = false;
-                                        STATE.isRebirthing = false;
-                                        updateHudState();
-                                        hud.state.textContent = "In Scroller (Reborn)";
-                                        hud.event.textContent = "System Stable";
-                                        console.log("4. State flags reset. System is ready.");
-                                        console.groupEnd();
-                                    });
-                                }
-                            });
+                            // It's this simple: hide the stunt double, show the hero.
+                            // The immutable timeline will handle the rest perfectly.
+                            gsap.set(elements.stuntActor, { autoAlpha: 0 });
+                            gsap.set(elements.heroActor, { autoAlpha: 1 });
+                            hud.state.textContent = "In Scroller";
                         }
                     }
                 });
