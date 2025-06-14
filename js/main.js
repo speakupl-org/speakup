@@ -294,75 +294,70 @@ const setupTextPillars = (elements, masterTl) => {
 };
 
 // =========================================================================
-//   THE ARCHITECT PROTOCOL HANDOFF (v40.1 - DECOUPLED & ARMED)
+//   THE JANUS PROTOCOL HANDOFF (v41 - State-Locked & Non-Recursive)
 // =========================================================================
+// This version resolves the Recursive Refresh Paradox by eliminating the
+// dangerous refresh call and implementing a formal state-locking mechanism.
 const setupHandoff = (elements, masterStoryTl) => {
 
     let isSwapped = false;
     let isReversing = false;
+    // The "Janus Lock" prevents overlapping, destructive state changes.
+    let isLocked = false; 
+    
     Oracle.updateHUD('c-handoff-armed-flag', 'FALSE', '#BF616A');
 
-    // STAGE 1: Define the complex logic as standalone functions.
-    // This keeps the trigger creation clean and readable.
+    // --- State-Locked Absorption Logic ---
     const performAbsorption = (self) => {
-        if (isSwapped || isReversing) return;
+        // Do not proceed if a swap is in progress or the state is locked.
+        if (isSwapped || isReversing || isLocked) return;
         isSwapped = true;
+        isLocked = true; // Engage the Janus Lock.
         
-        Oracle.group('ABSORPTION PROTOCOL INITIATED');
-        Oracle.reportStatus('ABSORPTION', '#D08770');
+        Oracle.group('JANUS PROTOCOL: ABSORPTION INITIATED');
+        Oracle.reportStatus('STATE_LOCKED (JANUS)', '#EBCB8B');
         Oracle.updateHUD('c-event', 'ABSORPTION');
         
-        // Disable the master scroll timeline to prevent conflicts during the FLIP.
+        // Phase 1: Pause primary narrative, bypassing the global refresh.
+        Oracle.report('Phase 1: Pausing primary narrative timeline.');
         masterStoryTl.scrollTrigger.disable(false);
-        Oracle.report('Phase 1: Forcing ST update and capturing state vectors.');
-        ScrollTrigger.refresh(true); // Force a refresh to get latest values
+        
+        // CRITICAL FIX: The global refresh call is REMOVED.
+        // Calling refresh() from an event handler caused the recursive freeze.
+        // We now rely on GSAP's state at the moment the master timeline was disabled.
+        Oracle.report('Bypassing global refresh (Janus Mandate). Capturing vectors...');
 
         const hero = elements.heroActor;
         const stuntDouble = elements.stuntActor;
-
-        // Capture state for FLIP animation
         const state = Flip.getState(stuntDouble, { props: "transform, opacity" });
         const heroProps = { 
             scale: gsap.getProperty(hero, "scale"), 
             rotationX: gsap.getProperty(hero, "rotationX"), 
             rotationY: gsap.getProperty(hero, "rotationY") 
         };
-        Oracle.log(hero, `Hero State (Pre-Absorption) | Captured RotY: ${heroProps.rotationY.toFixed(2)}`);
+        Oracle.log(hero, `Hero State (Pre-Absorption) | Locked RotY: ${heroProps.rotationY.toFixed(2)}`);
 
-        // Teleport the stunt double to the hero's position and match its state
         gsap.set(stuntDouble, {
             autoAlpha: 1,
             x: hero.getBoundingClientRect().left - elements.placeholder.getBoundingClientRect().left,
             y: hero.getBoundingClientRect().top - elements.placeholder.getBoundingClientRect().top,
-            scale: heroProps.scale,
-            rotationX: heroProps.rotationX,
-            rotationY: heroProps.rotationY,
+            scale: heroProps.scale, rotationX: heroProps.rotationX, rotationY: heroProps.rotationY,
         });
-        Oracle.log(stuntDouble, "Stunt Double State (Teleported & Matched)");
 
         const absorptionTl = gsap.timeline({
             onComplete: () => {
                 masterStoryTl.scrollTrigger.enable(); // Re-enable master scroll
                 Oracle.reportStatus('STABILIZED', '#A3BE8C');
                 Oracle.updateHUD('c-event', 'STABILIZED / SCROLL ENABLED');
-                Oracle.log(stuntDouble, "Stunt Double State (Post-Absorption/Logo)");
+                isLocked = false; // Release the Janus Lock.
+                Oracle.report("Janus Lock released. System is nominal.");
                 Oracle.groupEnd();
             }
         });
-
-        Oracle.report('Phase 2: Initiating travel and absorption sequence.');
-        // The FLIP animation itself
-        absorptionTl.add(Flip.from(state, { 
-            targets: stuntDouble, 
-            duration: 1.5, 
-            ease: 'power3.inOut', 
-            onUpdate: function() { 
-                Oracle.scan('Absorption Vector Trace', { 'Progress': `${(this.progress() * 100).toFixed(1)}%` });
-            } 
-        }));
-
-        // The rest of the synchronized absorption animation
+        
+        Oracle.report('Phase 2: Initiating Flip animation.');
         absorptionTl
+            .add(Flip.from(state, { targets: stuntDouble, duration: 1.5, ease: 'power3.inOut' }))
             .to(hero, { autoAlpha: 0, scale: '-=0.1', duration: 0.4, ease: "power2.in" }, 0)
             .to(elements.stuntActorFaces, { opacity: 0, duration: 0.6, ease: "power2.in", stagger: 0.05 }, 0.6)
             .to(elements.placeholderClipper, { clipPath: "inset(20% 20% 20% 20%)", duration: 0.6, ease: 'expo.in' }, 0.7)
@@ -373,48 +368,37 @@ const setupHandoff = (elements, masterStoryTl) => {
             .call(() => stuntDouble.classList.add('is-logo-final-state'), [], '>');
     };
 
+    // --- State-Locked Reversal Logic ---
     const performReversal = (self) => {
-        if (!isSwapped) return; // Prevent this from running if it hasn't swapped yet
-        isReversing = true;
-        isSwapped = false;
+        if (!isSwapped || isLocked) return;
+        isReversing = true; isSwapped = false; isLocked = true; // Engage Lock
 
-        Oracle.group('REVERSE PROTOCOL INITIATED');
-        Oracle.reportStatus('REVERSING', '#EBCB8B');
-        Oracle.updateHUD('c-event', 'REVERSAL');
+        Oracle.group('JANUS PROTOCOL: REVERSAL INITIATED');
+        Oracle.reportStatus('STATE_LOCKED (JANUS)', '#EBCB8B');
         
         elements.stuntActor.classList.remove('is-logo-final-state');
         gsap.killTweensOf([elements.stuntActor, elements.stuntActorFaces, elements.heroActor, elements.placeholderClipper]);
 
-        // Create a dedicated reversal timeline to ensure clean state restoration
-        const reversalTl = gsap.timeline({
-            onComplete: () => {
-                masterStoryTl.scrollTrigger.enable(); // Ensure master scroll is enabled
-                masterStoryTl.scrollTrigger.update(); // Force an update
-                Oracle.reportStatus('SCROLLING', '#88C0D0');
-                Oracle.updateHUD('c-event', 'SCROLLING');
-                Oracle.log(elements.heroActor, "Hero State (Restored)");
-                Oracle.groupEnd();
-                isReversing = false;
-            }
-        });
+        gsap.set(elements.heroActor, { autoAlpha: 1 });
+        gsap.set(elements.stuntActor, { autoAlpha: 0 });
         
-        // Immediately set elements back to their pre-absorption state
-        reversalTl
-            .set(elements.stuntActor, { autoAlpha: 0 })
-            .set(elements.stuntActorFaces, { clearProps: "opacity" })
-            .set(elements.placeholderClipper, { clearProps: "clipPath" })
-            .set(elements.heroActor, { autoAlpha: 1 });
+        masterStoryTl.scrollTrigger.enable();
+        Oracle.reportStatus('SCROLLING', '#88C0D0');
+        
+        isLocked = false; // Release Lock
+        isReversing = false;
+        Oracle.report("Janus Lock released. System is nominal.");
+        Oracle.groupEnd();
     };
 
-    // STAGE 2: Create the SKELETAL trigger.
-    // It contains NO complex logic initially, only simple HUD updates. This prevents the freeze.
+    // --- Skeletal Trigger Creation (Architect Protocol) ---
+    // This remains the correct way to avoid the initial race condition.
     ScrollTrigger.create({
         trigger: elements.handoffPoint,
         start: 'top 70%',
         onToggle: self => Oracle.updateHUD('c-handoff-st-active', self.isActive ? 'TRUE' : 'FALSE', self.isActive ? '#A3BE8C' : '#BF616A'),
         
-        // STAGE 3: ARM the trigger after layout calculation.
-        // onRefresh is the safe moment to attach heavy event listeners, solving the race condition.
+        // Arming the trigger after the first global refresh is still correct.
         onRefresh: (self) => {
             self.onEnter = () => performAbsorption(self);
             self.onLeaveBack = () => performReversal(self);
