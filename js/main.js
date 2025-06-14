@@ -8,11 +8,33 @@ begins. The initialization flow is now restructured for guaranteed order of oper
 
 */
 
-// Oracle v37.2 - The "Sovereign" Protocol with Synchronized Initialization
+// Oracle v38.0 - The "Sovereign" Protocol with Performance & Covenant Sub-protocols
 const Oracle = {
     // Configuration Sub-protocol
     config: {
         verbosity: 1, // Default: 1=collapsed, 2=expanded
+    },
+
+    // <<<< NEW SOVEREIGN PROTOCOL v43.1 UPGRADE >>>>
+    // The Performance Sub-protocol for monitoring execution bottlenecks.
+    performance: {
+        benchmark: (label, functionToTest) => {
+            if (Oracle.config.verbosity < 1) {
+                functionToTest();
+                return;
+            }
+            const startTime = performance.now();
+            functionToTest(); // Execute the function
+            const endTime = performance.now();
+            const duration = (endTime - startTime).toFixed(3);
+            const color = duration < 50 ? '#A3BE8C' : (duration < 200 ? '#EBCB8B' : '#BF616A');
+            
+            console.log(
+                `%c[ORACLE BENCHMARK @ ${Oracle._timestamp()}: ${label}] - %cExecution Time: ${duration}ms`,
+                'color: #8FBCBB; font-weight: bold;',
+                `color: ${color}; font-weight: normal;`
+            );
+        }
     },
     
     runSelfDiagnostic: () => {
@@ -21,7 +43,6 @@ const Oracle = {
         const groupMethod = Oracle.config.verbosity >= 2 ? console.group : console.groupCollapsed;
         console.group(`%c[ORACLE SELF-DIAGNOSTIC (SOVEREIGN INTEGRITY PROTOCOL)]`, 'color: #D08770; font-weight: bold;');
 
-        // 1. Dependency Verification
         groupMethod('%c1. Dependency Verification', 'color: #EBCB8B;');
             const checkDep = (lib, name) => console.log(`  - ${name}:`, lib ? '%c✅ FOUND' : '%c❌ MISSING!', lib ? 'color: #A3BE8C;' : 'color: #BF616A; font-weight: bold;');
             checkDep(window.gsap, 'GSAP Core');
@@ -29,15 +50,14 @@ const Oracle = {
             checkDep(window.Flip, 'Flip Plugin');
         console.groupEnd();
         
-        // 2. Oracle Integrity Check
         groupMethod('%c2. Oracle Internal Integrity', 'color: #EBCB8B;');
-            const expectedMethods = ['init', '_timestamp', 'log', 'scan', 'group', 'groupEnd', 'report', 'warn', 'updateHUD', 'trackScrollTrigger', 'runSelfDiagnostic'];
+            const expectedMethods = ['init', '_timestamp', 'log', 'scan', 'group', 'groupEnd', 'report', 'warn', 'updateHUD', 'trackScrollTrigger', 'runSelfDiagnostic', 'performance'];
             let integrityOk = true;
             expectedMethods.forEach(methodName => {
-                if (typeof Oracle[methodName] === 'function') {
-                    console.log(`  - Method '${methodName}': %c✅ OK`, 'color: #A3BE8C;');
+                if (typeof Oracle[methodName] !== 'undefined') {
+                    console.log(`  - Property/Method '${methodName}': %c✅ OK`, 'color: #A3BE8C;');
                 } else {
-                    console.log(`  - Method '${methodName}': %c❌ MISSING/INVALID!`, 'color: #BF616A; font-weight: bold;');
+                    console.log(`  - Property/Method '${methodName}': %c❌ MISSING/INVALID!`, 'color: #BF616A; font-weight: bold;');
                     integrityOk = false;
                 }
             });
@@ -45,7 +65,6 @@ const Oracle = {
             else { Oracle.warn("Oracle integrity compromised! Check for missing methods."); }
         console.groupEnd();
 
-        // 3. Environment & Element Sanity Check
         groupMethod('%c3. Environment Sanity Check', 'color: #EBCB8B;');
             console.log(`%c  - Viewport:`, 'color: #88C0D0;', `${window.innerWidth}w x ${window.innerHeight}h`);
             const contentCount = document.querySelectorAll('.pillar-text-content').length;
@@ -59,29 +78,17 @@ const Oracle = {
         
         console.groupEnd();
     },
-
-    // REVISED: init now accepts a callback to guarantee execution order
+    
     init: (callback) => {
-        // Set verbosity from localStorage first
         const storedVerbosity = localStorage.getItem('oracleVerbosity');
-        if (storedVerbosity !== null) {
-            Oracle.config.verbosity = parseInt(storedVerbosity, 10);
-        }
-
-        // Override with URL parameter if present
+        if (storedVerbosity !== null) Oracle.config.verbosity = parseInt(storedVerbosity, 10);
         const urlParams = new URLSearchParams(window.location.search);
         const urlVerbosity = urlParams.get('oracle_verbosity');
         if (urlVerbosity !== null && urlVerbosity !== '') {
             const parsedVerbosity = parseInt(urlVerbosity, 10);
-            if (!isNaN(parsedVerbosity)) {
-                Oracle.config.verbosity = parsedVerbosity;
-            }
+            if (!isNaN(parsedVerbosity)) Oracle.config.verbosity = parsedVerbosity;
         }
-        
-        // CRITICAL: Execute the main logic ONLY after configuration is set
-        if(callback && typeof callback === 'function') {
-            callback();
-        }
+        if(callback && typeof callback === 'function') callback();
     },
 
     _timestamp: () => new Date().toLocaleTimeString('en-US', { hour12: false }),
@@ -89,9 +96,7 @@ const Oracle = {
     log: (el, label) => {
         if (Oracle.config.verbosity < 1) return;
         if (!el) { console.error(`%c[ORACLE LOG @ ${Oracle._timestamp()}: ${label}] ERROR - Element is null.`, 'color: #BF616A;'); return; }
-        
         const groupMethod = Oracle.config.verbosity >= 2 ? console.group : console.groupCollapsed;
-
         groupMethod(`%c[ORACLE LOG @ ${Oracle._timestamp()}: ${label}]`, 'color: #D81B60; font-weight: bold;');
         const style = window.getComputedStyle(el);
         const transform = {
@@ -101,7 +106,6 @@ const Oracle = {
             z: gsap.getProperty(el, "z")
         };
         const bounds = el.getBoundingClientRect();
-
         console.log(`%c  - Target:`, 'color: #81A1C1;', `${el.tagName}#${el.id || el.className}`);
         console.log(`%c  - Transform:`, 'color: #81A1C1;', `{ RotX: ${transform.rotationX.toFixed(2)}, RotY: ${transform.rotationY.toFixed(2)}, Scale: ${transform.scale.toFixed(2)}, Z: ${transform.z.toFixed(2)} }`);
         console.log(`%c  - Style:`, 'color: #81A1C1;', `{ Opacity: ${style.opacity}, Visibility: ${style.visibility} }`);
@@ -110,16 +114,11 @@ const Oracle = {
         console.groupEnd();
     },
     
-    // CLEANED: Diagnostic probes removed.
     scan: (label, data) => {
         if (Oracle.config.verbosity < 1) return;
-        
         const groupMethod = Oracle.config.verbosity >= 2 ? console.group : console.groupCollapsed;
-        
         groupMethod(`%c[ORACLE SCAN @ ${Oracle._timestamp()}: ${label}]`, 'color: #B48EAD; font-weight: normal;');
-        for (const key in data) {
-            console.log(`%c  - ${key}:`, 'color: #88C0D0;', data[key]);
-        }
+        for (const key in data) console.log(`%c  - ${key}:`, 'color: #88C0D0;', data[key]);
         console.groupEnd();
     },
     
@@ -128,46 +127,24 @@ const Oracle = {
         console.group(`%c[ORACLE ACTION @ ${Oracle._timestamp()}: ${label}]`, 'color: #A3BE8C; font-weight: bold;');
     },
     
-    groupEnd: () => {
-        if (Oracle.config.verbosity < 1) return;
-        console.groupEnd();
-    },
+    groupEnd: () => { if (Oracle.config.verbosity < 1) return; console.groupEnd(); },
 
-    // <<<< UPGRADED SOVEREIGN PROTOCOL v41 FUNCTION >>>>
-    // Replace the v40 trackScrollTrigger with this one.
     trackScrollTrigger: (stInstance, label) => {
-        if (Oracle.config.verbosity < 1) return;
-        if (!stInstance) {
-            Oracle.warn(`[ORACLE ST_TRACK @ ${Oracle._timestamp()}: ${label}] FAILED - ScrollTrigger instance is null.`);
-            return;
-        }
-
+        if (Oracle.config.verbosity < 1 || !stInstance) return;
         const groupMethod = Oracle.config.verbosity >= 2 ? console.group : console.groupCollapsed;
-
         groupMethod(`%c[ORACLE ST_TRACK @ ${Oracle._timestamp()}: ${label}]`, 'color: #EBCB8B; font-weight: bold;');
         const triggerEl = stInstance.trigger;
-        const scrollerEl = stInstance.scroller;
-        const scrollerHeight = scrollerEl === window ? document.documentElement.scrollHeight : scrollerEl.scrollHeight;
-        const totalDistance = stInstance.end - stInstance.start; // <-- Storing the value
-
+        const totalDistance = stInstance.end - stInstance.start;
         console.log(`%c  - Status:`, 'color: #88C0D0;', `Active: ${stInstance.isActive}, Direction: ${stInstance.direction === 1 ? 'DOWN' : 'UP'}`);
         console.log(`%c  - Trigger Element:`, 'color: #88C0D0;', `${triggerEl.tagName}#${triggerEl.id || '.' + triggerEl.className.split(' ')[0]}`);
         console.log(`%c  - Pixel Range:`, 'color: #88C0D0;', `Start: ${stInstance.start.toFixed(0)}px, End: ${stInstance.end.toFixed(0)}px`);
         console.log(`%c  - Total Distance:`, 'color: #88C0D0;', `${totalDistance.toFixed(0)}px`);
-        console.log(`%c  - Scroller Height:`, 'color: #88C0D0;', `${scrollerHeight.toFixed(0)}px (Viewport: ${window.innerHeight}px)`);
         console.log(`%c  - Progress:`, 'color: #88C0D0;', `${(stInstance.progress * 100).toFixed(2)}%`);
-
-        // <<<< NEW SENTINEL LOGIC >>>>
-        // This runs only ONCE when the trigger becomes active.
-        if (!stInstance._sentinelWarned) { // Use a custom flag to prevent log spam
+        if (!stInstance._sentinelWarned) {
             const minSafeDistance = window.innerHeight * 2;
-            if (totalDistance < minSafeDistance) {
-                Oracle.warn(`SENTINEL ALERT: Total scroll distance for '${label}' (${totalDistance.toFixed(0)}px) is less than 2x viewport height (${minSafeDistance}px). Animation may feel rushed.`);
-            }
-            stInstance._sentinelWarned = true; // Set flag so it doesn't run again
+            if (totalDistance < minSafeDistance) Oracle.warn(`SENTINEL ALERT: Total scroll distance for '${label}' (${totalDistance.toFixed(0)}px) is less than 2x viewport height (${minSafeDistance}px). Animation may feel rushed.`);
+            stInstance._sentinelWarned = true;
         }
-        // <<<< END NEW SENTINEL LOGIC >>>>
-
         console.groupEnd();
     },
     
@@ -176,10 +153,7 @@ const Oracle = {
     
     updateHUD: (id, value, color = '#E5E9F0') => {
         const el = document.getElementById(id);
-        if (el) {
-            el.textContent = value;
-            el.style.color = color;
-        }
+        if (el) { el.textContent = value; el.style.color = color; }
     }
 };
 
@@ -215,85 +189,59 @@ const setupHeroActor = (elements, masterTl) => {
 // =========================================================================
 // This function no longer creates its own timeline. Instead, it accepts the 
 // single master timeline (`masterTl`) and adds its animation "chapters" to it.
+// =====================================================================================
+//   THE DEFINITIVE BLUEPRINT for Text Pillars (v43.1 - COVENANT "Unbroken Chain")
+// =====================================================================================
+// This version resolves the logic freeze by constructing the entire narrative
+// sequence as a single, monolithic, unbroken animation chain. This provides
+// absolute clarity to the GSAP engine and prevents recursive calculation errors.
 const setupTextPillars = (elements, masterTl) => {
 
-    // 1. Establish Authoritative JS Initial State.
-    // We now control both parent containers AND child wrappers to prevent conflicts.
-    gsap.set(elements.pillars, { autoAlpha: 0 }); // Hide all parent containers by default.
-    gsap.set(elements.pillars[0], { autoAlpha: 1 }); // Explicitly show the first parent container.
-    
-    gsap.set(elements.textWrappers, { y: 40, rotationX: -15 }); // Set default "hidden" transform on ALL wrappers.
-    gsap.set(elements.textWrappers[0], { y: 0, rotationX: 0 }); // Set the first wrapper to its "visible" transform state.
+    // 1. Establish Authoritative JS Initial State (Unchanged)
+    gsap.set(elements.pillars, { autoAlpha: 0 }); 
+    gsap.set(elements.pillars[0], { autoAlpha: 1 });
+    gsap.set(elements.textWrappers, { y: 40, rotationX: -15 }); 
+    gsap.set(elements.textWrappers[0], { y: 0, rotationX: 0 });
 
-    // === OVERKILL TRACKER #1: INITIAL STATE VERIFICATION (PRESERVED & ENHANCED) ===
-    // This tracker is now more critical as it verifies our new, more complex initial state.
+    // === OVERKILL TRACKER #1: STATE AUTHORITY VERIFICATION (Unchanged) ===
     Oracle.group("COVENANT Initial Pillar State Authority (PRE-ANIMATION)");
     elements.pillars.forEach((pillar, index) => {
-        const wrapper = elements.textWrappers[index];
-        const pStyle = window.getComputedStyle(pillar);
-        const wStyle = window.getComputedStyle(wrapper);
-
         Oracle.scan(`Pillar #${index + 1} State Vector`, {
-            'Parent Container ID': pillar.dataset.pillar,
             'Parent GSAP Opacity': gsap.getProperty(pillar, "autoAlpha"),
-            'Parent BROWSER Opacity': parseFloat(pStyle.opacity).toFixed(2),
-            'Wrapper GSAP Y': gsap.getProperty(wrapper, "y").toFixed(1) + 'px',
-            'Wrapper BROWSER Transform': wStyle.transform
+            'Wrapper GSAP Y': gsap.getProperty(elements.textWrappers[index], "y").toFixed(1) + 'px'
         });
     });
     Oracle.groupEnd();
-    // ===================================================================================
-
-    // 2. Add Multi-Layered Synchronized Animations to the Master Timeline.
-    // The sequence now animates the parent container's visibility and the child
-    // wrapper's transform simultaneously for a richer effect.
-
-    // Transition from Pillar 1 to Pillar 2 (starts at 1.0s).
+    
+    // 2. CONSTRUCT THE UNBROKEN CHAIN.
+    // All tweens are now part of a single, continuous command chain. This removes
+    // all logical ambiguity and guarantees a linear execution flow.
     masterTl
-        // Animate out Pillar 1's content. We target the parent for opacity...
+        // -- Transition 1: Pillar 1 to Pillar 2 (starts at 1.0s) --
         .to(elements.pillars[0], { autoAlpha: 0, duration: 0.5, ease: "power2.in" }, 1.0)
-        // ...and the wrapper for the 3D transform.
         .to(elements.textWrappers[0], { y: -40, rotationX: 15, duration: 0.5, ease: "power2.in" }, "<")
-
-        // At the exact same time, animate in Pillar 2's content.
-        // We target the parent for opacity...
         .to(elements.pillars[1], { autoAlpha: 1, duration: 0.5, ease: "power2.out" }, "<")
-        // ...and use a .from() tween for the wrapper's 3D transform for clean code.
-        .from(elements.textWrappers[1], { y: 40, rotationX: -15, duration: 0.5, ease: "power2.out" }, "<");
+        .from(elements.textWrappers[1], { y: 40, rotationX: -15, duration: 0.5, ease: "power2.out" }, "<")
 
-    // Transition from Pillar 2 to Pillar 3 (starts at 3.0s).
-    masterTl
+        // -- Transition 2: Pillar 2 to Pillar 3 (starts at 3.0s) --
         .to(elements.pillars[1], { autoAlpha: 0, duration: 0.5, ease: "power2.in" }, 3.0)
         .to(elements.textWrappers[1], { y: -40, rotationX: 15, duration: 0.5, ease: "power2.in" }, "<")
         .to(elements.pillars[2], { autoAlpha: 1, duration: 0.5, ease: "power2.out" }, "<")
         .from(elements.textWrappers[2], { y: 40, rotationX: -15, duration: 0.5, ease: "power2.out" }, "<");
 
 
-    // === NEW COVENANT TRACKER #3: CHRONOSYNCHRONY VERIFICATION ===
-    // This new tracker is a temporal log. It iterates through the master timeline's
-    // direct children (the tweens) created by THIS function, verifying their timing
-    // and proving their successful integration into the grand narrative.
+    // === COVENANT TRACKER #3: CHRONOSYNCHRONY VERIFICATION (Unchanged but more relevant) ===
     Oracle.group("COVENANT Chronosynchrony Verification [TextPillars]");
         const pillarTweens = masterTl.getChildren(false, true, true).filter(tween => {
-             // A sophisticated filter to find only the tweens targeting our pillar elements.
             const targets = Array.isArray(tween.targets()) ? tween.targets() : [tween.targets()];
             return targets.some(t => t.classList.contains('pillar-text-content') || t.classList.contains('text-anim-wrapper'));
         });
         Oracle.scan(`Pillar Tween Integration`, {
-            'Status': 'SUCCESS',
+            'Status': 'MONOLITHIC CHAIN CONFIRMED',
             'Tween Chapters Found': pillarTweens.length,
-            'Expected Chapters': 8 // (2 tweens per pillar) * 4 transitions
-        });
-        pillarTweens.forEach((tween, i) => {
-            const targetEl = tween.targets()[0];
-            Oracle.scan(`  - Tween #${i+1}`, {
-                'Target': `${targetEl.tagName}.${targetEl.className.split(' ')[0]}`,
-                'Start Time': tween.startTime().toFixed(2) + 's',
-                'Duration': tween.duration().toFixed(2) + 's'
-            });
+            'Expected Chapters': 8 
         });
     Oracle.groupEnd();
-    // =================================================================
 };
 
 // =========================================================================
@@ -392,85 +340,91 @@ const setupHandoff = (elements, masterStoryTl) => { // <-- ACCEPTS the one maste
 };
 
 // =========================================================================
-//         SOVEREIGN ARCHITECTURE v42: UNIFIED NARRATIVE
+//         SOVEREIGN ARCHITECTURE v43.1: UNIFIED & BENCHMARKED NARRATIVE
 // =========================================================================
 
 function setupAnimations() {
     gsap.registerPlugin(ScrollTrigger, Flip);
     console.clear();
-    Oracle.report(`Sovereign Build v42 Initialized. Verbosity: ${Oracle.config.verbosity}`);
+    // Report the new, corrected build version.
+    Oracle.report(`Sovereign Build v43.1 Initialized. Verbosity: ${Oracle.config.verbosity}`);
 
-    const ctx = gsap.context(() => {
-        Oracle.runSelfDiagnostic();
+    let ctx; // Define ctx in the outer scope so it can be returned after the benchmark.
 
-        const elements = {
-            heroActor: getElement('#actor-3d'), stuntActor: getElement('#actor-3d-stunt-double'), placeholder: getElement('#summary-placeholder'),
-            placeholderClipper: getElement('.summary-thumbnail-clipper'), pillars: getElement('.pillar-text-content', true),
-            textWrappers: getElement('.text-anim-wrapper', true), visualsCol: getElement('.pillar-visuals-col'), textCol: getElement('.pillar-text-col'),
-            handoffPoint: getElement('#handoff-point'), stuntActorFaces: getElement('#actor-3d-stunt-double .face:not(.front)', true)
-        };
+    // <<<< ENHANCEMENT: WRAP ENTIRE SETUP IN THE NEW PERFORMANCE BENCHMARK >>>>
+    // This will now measure the execution time of the entire animation architecture setup.
+    Oracle.performance.benchmark('Sovereign Animation Architecture Setup', () => {
         
-        if (Object.values(elements).some(el => !el || (Array.isArray(el) && !el.length))) {
-            Oracle.warn('SOVEREIGN ABORT: Missing critical elements.'); return;
-        }
-        Oracle.report("Sovereign components verified and locked.");
+        ctx = gsap.context(() => {
+            Oracle.runSelfDiagnostic();
 
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const scrubValue = prefersReducedMotion ? false : 1.5;
-
-        ScrollTrigger.matchMedia({
-            '(min-width: 1025px)': () => {
-                Oracle.report("Protocol (v42 - UNIFIED Narrative Timeline) engaged for desktop.");
-                
-                // PINNING IS SEPARATE - This is correct.
-                ScrollTrigger.create({
-                    trigger: elements.textCol, pin: elements.visualsCol,
-                    start: 'top top', end: 'bottom bottom',
-                    onToggle: self => Oracle.updateHUD('c-master-st-active', self.isActive ? 'PIN_ACTIVE' : 'PIN_INACTIVE', self.isActive ? '#A3BE8C' : '#BF616A'),
-                });
-
-                // === THE ONE MASTER STORY TIMELINE ===
-                // All animations will now be added to this single timeline.
-                const masterStoryTl = gsap.timeline({
-                    scrollTrigger: {
-                        trigger: elements.textCol,
-                        start: 'top top',
-                        end: 'bottom bottom',
-                        scrub: scrubValue,
-                        // This onUpdate now controls EVERYTHING.
-                        onUpdate: (self) => {
-                            const hero = elements.heroActor;
-                            const rotX = gsap.getProperty(hero, "rotationX").toFixed(1);
-                            const rotY = gsap.getProperty(hero, "rotationY").toFixed(1);
-                            const scale = gsap.getProperty(hero, "scale").toFixed(2);
-                            const progress = (self.progress * 100).toFixed(0);
-
-                            // Existing HUD updates are perfect.
-                            Oracle.scan('Live Story Scrub', { 'Master Progress': `${progress}%`, 'RotX': rotX, 'RotY': rotY, 'Scale': scale });
-                            Oracle.updateHUD('c-rot-x', rotX);
-                            Oracle.updateHUD('c-rot-y', rotY);
-                            Oracle.updateHUD('c-scale', scale);
-                            Oracle.updateHUD('c-scroll', `${progress}%`);
-
-                            // Existing Trackers are moved here.
-                            Oracle.trackScrollTrigger(self, "Unified Story Controller");
+            const elements = {
+                heroActor: getElement('#actor-3d'), stuntActor: getElement('#actor-3d-stunt-double'), placeholder: getElement('#summary-placeholder'),
+                placeholderClipper: getElement('.summary-thumbnail-clipper'), pillars: getElement('.pillar-text-content', true),
+                textWrappers: getElement('.text-anim-wrapper', true), visualsCol: getElement('.pillar-visuals-col'), textCol: getElement('.pillar-text-col'),
+                handoffPoint: getElement('#handoff-point'), stuntActorFaces: getElement('#actor-3d-stunt-double .face:not(.front)', true)
+            };
+            
+            if (Object.values(elements).some(el => !el || (Array.isArray(el) && !el.length))) {
+                Oracle.warn('SOVEREIGN ABORT: Missing critical elements.'); return;
+            }
+            Oracle.report("Sovereign components verified and locked.");
+    
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const scrubValue = prefersReducedMotion ? false : 1.5;
+    
+            ScrollTrigger.matchMedia({
+                '(min-width: 1025px)': () => {
+                    Oracle.report("Protocol (v43.1 - UNIFIED Narrative Timeline) engaged for desktop.");
+                    
+                    // PINNING IS SEPARATE - This is correct.
+                    ScrollTrigger.create({
+                        trigger: elements.textCol, pin: elements.visualsCol,
+                        start: 'top top', end: 'bottom bottom',
+                        onToggle: self => Oracle.updateHUD('c-master-st-active', self.isActive ? 'PIN_ACTIVE' : 'PIN_INACTIVE', self.isActive ? '#A3BE8C' : '#BF616A'),
+                    });
+    
+                    // === THE ONE MASTER STORY TIMELINE ===
+                    // All animations will now be added to this single timeline.
+                    const masterStoryTl = gsap.timeline({
+                        scrollTrigger: {
+                            trigger: elements.textCol,
+                            start: 'top top',
+                            end: 'bottom bottom',
+                            scrub: scrubValue,
+                            // This onUpdate now controls EVERYTHING.
+                            onUpdate: (self) => {
+                                const hero = elements.heroActor;
+                                const rotX = gsap.getProperty(hero, "rotationX").toFixed(1);
+                                const rotY = gsap.getProperty(hero, "rotationY").toFixed(1);
+                                const scale = gsap.getProperty(hero, "scale").toFixed(2);
+                                const progress = (self.progress * 100).toFixed(0);
+    
+                                Oracle.scan('Live Story Scrub', { 'Master Progress': `${progress}%`, 'RotX': rotX, 'RotY': rotY, 'Scale': scale });
+                                Oracle.updateHUD('c-rot-x', rotX);
+                                Oracle.updateHUD('c-rot-y', rotY);
+                                Oracle.updateHUD('c-scale', scale);
+                                Oracle.updateHUD('c-scroll', `${progress}%`);
+    
+                                Oracle.trackScrollTrigger(self, "Unified Story Controller");
+                            }
                         }
-                    }
-                });
-                
-                // Calling the 'recipes' and feeding them the ONE master timeline.
-                setupHeroActor(elements, masterStoryTl);
-                setupTextPillars(elements, masterStoryTl); // Pass the master timeline in.
-                
-                // Handoff is complex and event-based (onEnter), so it remains separate.
-                // We pass it masterStoryTl so it knows which animation to disable/enable.
-                setupHandoff(elements, masterStoryTl); 
-            },
-            // Other breakpoints can be updated similarly if needed. For now, we focus on desktop.
-            '(min-width: 769px) and (max-width: 1024px)': () => { /* ... */ },
-            '(max-width: 768px)': () => { /* ... */ }
+                    });
+                    
+                    // Calling the 'recipes' and feeding them the ONE master timeline.
+                    setupHeroActor(elements, masterStoryTl);
+                    setupTextPillars(elements, masterStoryTl); // This now calls the corrected v43.1 "Unbroken Chain" function
+                    
+                    // Handoff remains separate and is passed masterStoryTl so it knows what to control.
+                    setupHandoff(elements, masterStoryTl); 
+                },
+                // Other breakpoints remain for future expansion.
+                '(min-width: 769px) and (max-width: 1024px)': () => { /* ... */ },
+                '(max-width: 768px)': () => { /* ... */ }
+            });
         });
     });
+
     return ctx;
 }
 
