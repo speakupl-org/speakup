@@ -664,11 +664,21 @@ html.menu-open {
     pointer-events: auto; /* Re-enable pointer events for the canvas itself */
 }
 
-/* The right column that holds the text content. It scrolls normally. */
+/* Find this rule in your stylesheet */
 .pillar-text-col {
     width: 50%; 
-    position: relative; /* Needed for z-index stacking context if required */
+    position: relative; 
     z-index: 10;
+    
+    /* ADD THIS LINE to give the text breathing room */
+    padding: 0 5%; /* Adjust percentage as needed for your design */
+}
+
+/* Also ensure your text-anim-wrapper doesn't have its own restrictive padding */
+.text-anim-wrapper {
+    max-width: 550px;
+    margin: 0 auto; /* This keeps it horizontally centered within its padded column */
+    /* Remove any horizontal padding from here if it exists */
 }
 
 /* 
