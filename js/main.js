@@ -254,7 +254,7 @@ const setupHandoff = (elements, masterTl) => {
                     ease: 'elastic.out(1, 0.5)'
                 }, 1.3)
                 .to(stuntDouble, { scaleX: 1, scaleY: 1, duration: 0.8, ease: 'elastic.out(1, 0.5)' }, 1.3)
-        },
+        }
    // ======================= v37.4 "AEGIS" PROTOCOL ADDITION: LOGO TRANSFORMATION =======================
                 .to(stuntDouble, {
                     rotationX: 0,
