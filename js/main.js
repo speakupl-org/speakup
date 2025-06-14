@@ -150,25 +150,42 @@ const setupTextPillars = (elements) => {
                     onEnterBack: (self) => Oracle.report(`Pillar ST#${index + 1} ENTERED (Back)`),
                     onLeaveBack: (self) => Oracle.report(`Pillar ST#${index + 1} EXITED (Back)`),
                     
+                    // OMNISCIENT ORACLE onUpdate with Indestructible Blueprint logging
                     onUpdate: (self) => {
-                        const progress = self.progress.toFixed(3);
-                        Oracle.scan('Pillar Text Transition', {
+                        // A more robust way to build the log object, preventing crashes.
+                        const data = {
                             'Triggering Pillar': `#${index + 1}`,
-                            'ScrollTrigger Progress': `${(progress * 100).toFixed(1)}%`,
-                            'ST Active': self.isActive, // Is this specific trigger currently active?
-                            'ST Geometry': `start: ${self.start.toFixed(0)}px | end: ${self.end.toFixed(0)}px`, // Raw pixel values
-
-                            'Fading Out (Wrapper)': `#${index + 1}`,
-                            ' -> Opacity': (1 - gsap.getProperty(nextWrapper, 'autoAlpha')).toFixed(2),
-                            ' -> Y': gsap.getProperty(wrapper, 'y').toFixed(1) + 'px',
-                            ' -> RotX': gsap.getProperty(wrapper, 'rotationX').toFixed(1) + '°',
-                            'Fading In (Wrapper)': `#${index + 2}`,
-                            ' -> Opacity': gsap.getProperty(nextWrapper, 'autoAlpha').toFixed(2),
-                            ' -> Y': gsap.getProperty(nextWrapper, 'y').toFixed(1) + 'px',
-                            ' -> RotX': gsap.getProperty(nextWrapper, 'rotationX').toFixed(1) + '°',
-                        });
+                            'ScrollTrigger Progress': `${(self.progress * 100).toFixed(1)}%`,
+                            'ST Active': self.isActive,
+                            'ST Geometry': `start: ${self.start.toFixed(0)}px | end: ${self.end.toFixed(0)}px`
+                        };
+                    
+                        try {
+                            // Instead of calculating opacity, let's log the direct, raw values.
+                            const outWrapperOpacity = gsap.getProperty(wrapper, 'autoAlpha');
+                            const inWrapperOpacity = gsap.getProperty(nextWrapper, 'autoAlpha');
+                            
+                            data['Fading Out (#_Opacity)'] = `#${index+1}_${outWrapperOpacity.toFixed(2)}`;
+                            data[' -> Fading In (#_Opacity)'] = `#${index+2}_${inWrapperOpacity.toFixed(2)}`;
+                    
+                            const outWrapperY = gsap.getProperty(wrapper, 'y');
+                            const inWrapperY = gsap.getProperty(nextWrapper, 'y');
+                    
+                            data['Out Y vs In Y'] = `${outWrapperY.toFixed(1)}px vs ${inWrapperY.toFixed(1)}px`;
+                    
+                        } catch (e) {
+                            // If ANY of the gsap.getProperty calls fail, this will catch it
+                            // without crashing the entire script.
+                            data['ORACLE_SYSTEM_FAILURE'] = `A property could not be read for pillar #${index+1}`;
+                            data['ERROR_MESSAGE'] = e.message;
+                        }
+                        
+                        // Now, send the fully (or partially) constructed data object.
+                        Oracle.scan('Pillar Text Transition', data);
+                    
+                        // The HUD updates are separate and safe.
                         Oracle.updateHUD('c-active-pillar', `P${index + 1}`, '#A3BE8C');
-                        Oracle.updateHUD('c-scroll-progress', `${(progress * 100).toFixed(0)}%`);
+                        Oracle.updateHUD('c-scroll-progress', `${(self.progress * 100).toFixed(0)}%`);
                     }
                     // ======================== END ORACLE UPGRADE =========================
                 }
