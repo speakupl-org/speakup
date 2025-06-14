@@ -97,63 +97,56 @@
     <!-- =========================================================================
        PILLARS SECTION - UPDATED FOR THE "IGLOO" EFFECT
        ========================================================================= -->
-    <section class="method-pillars">
-        <div class="container">
-            <div class="scrolly-container">
-
-             <!-- Column 1: Pinned 3D Visual -->
-<div class="pillar-visuals-col">
-    <div class="scene-3d">
-        <div class="object-3d" id="actor-3d">
-            <!-- The 6 faces of our starting cube -->
-            <div class="face front"></div>
-            <div class="face back"></div>
-            <div class="face right"></div>
-            <div class="face left"></div>
-            <div class="face top"></div>
-            <div class="face bottom"></div>
-        </div>
-    </div>
-</div>
-
-                <!-- Column 2: Scrolling Text - UPGRADED FOR ART DIRECTION -->
-<div class="pillar-text-col">
-    <!-- Pillar 1 -->
-    <div class="pillar-text-content" data-pillar="1">
-        <div class="text-anim-wrapper">
-            <span class="pillar-number">Pilar 1</span>
-            <div class="pillar-line"></div> <!-- ADD THIS LINE -->
-            <h2 class="pillar-title">Diagnóstico e Imersão</h2>
-            <p class="pillar-paragraph">Primeiro, eu escuto. Entendemos suas metas, barreiras e o que te move. A partir daqui, criamos um plano de imersão focado, feito unicamente para você.</p>
-        </div>
-    </div>
-    <!-- Pillar 2 -->
-    <div class="pillar-text-content" data-pillar="2">
-        <div class="text-anim-wrapper">
-            <span class="pillar-number">Pilar 2</span>
-            <div class="pillar-line"></div> <!-- ADD THIS LINE -->
-            <h2 class="pillar-title">Conexão e Conversação</h2>
-            <p class="pillar-paragraph">A prática é a prioridade. Desde o primeiro dia, focamos em conversas reais sobre temas do seu universo, transformando teoria em confiança prática.</p>
-        </div>
-    </div>
-    <!-- Pillar 3 -->
-    <div class="pillar-text-content" data-pillar="3">
-        <div class="text-anim-wrapper">
-            <span class="pillar-number">Pilar 3</span>
-            <div class="pillar-line"></div> <!-- ADD THIS LINE -->
-            <h2 class="pillar-title">Feedback e Evolução</h2>
-            <p class="pillar-paragraph">Cada aula é um passo à frente. Meu feedback é constante e construtivo. Juntos, ajustamos o plano para garantir que sua evolução nunca pare.</p>
-        </div>
-    </div>
-    <!-- The Unambiguous Finish Line for the Scroller -->
-    <div id="handoff-point" style="height: 1px; width: 100%;"></div>
-</div>
-    </section>
+        <section class="method-pillars">
+            <div class="container">
+                <div class="scrolly-container">
     
-    <!-- =========================================================================
-       SUMMARY - UPDATED FOR THE "IGLOO" EFFECT
-       ========================================================================= -->
-    <section class="method-summary">
+                 <!-- Column 1: Pinned 3D Visual -->
+    <div class="pillar-visuals-col">
+        <div class="scene-3d">
+            <div class="object-3d" id="actor-3d">
+                <!-- The 6 faces of our starting cube -->
+                <div class="face front"></div>
+                <div class="face back"></div>
+                <div class="face right"></div>
+                <div class="face left"></div>
+                <div class="face top"></div>
+                <div class="face bottom"></div>
+            </div>
+        </div>
+    </div>
+    
+                    <!-- Column 2: Scrolling Text - UPGRADED FOR ART DIRECTION -->
+    <div class="pillar-text-col">
+        <!-- Pillar 1 -->
+        <div class="pillar-text-content" data-pillar="1">
+            <div class="text-anim-wrapper">
+                <span class="pillar-number">Pilar 1</span>
+                <div class="pillar-line"></div> <!-- ADD THIS LINE -->
+                <h2 class="pillar-title">Diagnóstico e Imersão</h2>
+                <p class="pillar-paragraph">Primeiro, eu escuto. Entendemos suas metas, barreiras e o que te move. A partir daqui, criamos um plano de imersão focado, feito unicamente para você.</p>
+            </div>
+        </div>
+        <!-- Pillar 2 -->
+        <div class="pillar-text-content" data-pillar="2">
+            <div class="text-anim-wrapper">
+                <span class="pillar-number">Pilar 2</span>
+                <div class="pillar-line"></div> <!-- ADD THIS LINE -->
+                <h2 class="pillar-title">Conexão e Conversação</h2>
+                <p class="pillar-paragraph">A prática é a prioridade. Desde o primeiro dia, focamos em conversas reais sobre temas do seu universo, transformando teoria em confiança prática.</p>
+            </div>
+        </div>
+<!-- CORRECT STRUCTURE -->
+        <!-- Pillar 3 -->
+        <div class="pillar-text-content" data-pillar="3">
+            <!-- ... -->
+        </div>
+        <!-- The Unambiguous Finish Line for the Scroller now lives here -->
+        <div id="handoff-point" style="height: 1px; width: 100%;"></div>
+    </div> <!-- THIS is the closing div for .pillar-text-col -->
+</section>
+<!-- The next section begins here. There is NOTHING between it and the last section -->
+<section class="method-summary">
         <div class="container">
             <div class="summary-thumbnail-placeholder" id="summary-placeholder">
                 <div class="summary-thumbnail-clipper">
