@@ -250,12 +250,11 @@ const setupTextPillars = (elements, masterTl) => {
     Oracle.groupEnd();
 };
 
-// SOVEREIGN PROTOCOL: The "Absorption & Morph" Handoff
+// SOVEREIGN PROTOCOL: The "Absorption & Morph" Handoff (Corrected)
 const setupHandoff = (elements, masterStoryTl) => {
     Oracle.group("Handoff Protocol Setup ('Absorption & Morph')");
 
     let isAbsorbed = false;
-    // The final SVG path shape for the logo
     const logoPathData = "M81.5,1.5 C125.8,1.5 161.5,37.2 161.5,81.5 C161.5,125.8 125.8,161.5 81.5,161.5 C37.2,161.5 1.5,125.8 1.5,81.5 C1.5,37.2 37.2,1.5 81.5,1.5 Z";
 
     ScrollTrigger.create({
@@ -271,12 +270,11 @@ const setupHandoff = (elements, masterStoryTl) => {
             Oracle.updateHUD('c-swap-flag', 'ABSORBED', '#EBCB8B');
             Oracle.updateHUD('c-event', 'STATE CAPTURE & TELEPORT');
 
-            masterStoryTl.scrollTrigger.disable(false); // Disable scrub, but keep position
+            masterStoryTl.scrollTrigger.disable(false);
             Oracle.warn('Master ScrollTrigger DISABLED for handoff.');
             
             ScrollTrigger.refresh(true);
             
-            // 1. Capture the exact state of the Hero Actor
             const heroState = {
                 scale: gsap.getProperty(elements.heroActor, "scale"),
                 rotationX: gsap.getProperty(elements.heroActor, "rotationX"),
@@ -284,10 +282,8 @@ const setupHandoff = (elements, masterStoryTl) => {
             };
             Oracle.scan('Hero Actor State Vector (Pre-Absorption)', heroState);
             
-            // 2. Capture the destination state using Flip
             const state = Flip.getState(elements.stuntActor, { props: "transform, opacity" });
             
-            // 3. Teleport the Stunt Double and match Hero's state
             gsap.set(elements.stuntActor, {
                 autoAlpha: 1,
                 x: elements.heroActor.getBoundingClientRect().left - elements.placeholder.getBoundingClientRect().left,
@@ -299,33 +295,49 @@ const setupHandoff = (elements, masterStoryTl) => {
             Oracle.log(elements.stuntActor, "Stunt Double State (Teleported & Matched)");
             gsap.to(elements.heroActor, { autoAlpha: 0, duration: 0.1 });
             
-            // 4. Create the multi-stage absorption timeline
             const absorptionTl = gsap.timeline({
                 onComplete: () => {
-                    Oracle.report('Absorption & Morph Complete. System Stabilized.');
+                    // =========================================================================
+                    // FIX 1: RE-ENABLE THE MASTER SCROLLTRIGGER
+                    // This ensures that scrubbing resumes after the handoff animation is complete.
+                    // =========================================================================
+                    if (masterStoryTl && masterStoryTl.scrollTrigger) {
+                        masterStoryTl.scrollTrigger.enable();
+                        Oracle.report('Master ScrollTrigger RE-ENABLED. Handoff complete.');
+                    }
+                    // =========================================================================
+                    
                     Oracle.updateHUD('c-event', 'STABILIZED / LOGO');
+                    Oracle.log(elements.stuntActor, "Stunt Double State (Post-Absorption)");
                     Oracle.groupEnd();
                 }
             });
 
             Oracle.report('Phase 2: Initiating FLIP travel, morph, and stabilization.');
             absorptionTl
-                // Travel from hero's position to the placeholder
                 .add(Flip.from(state, { 
                     targets: elements.stuntActor, 
                     duration: 1.2, 
                     ease: 'power3.inOut',
-                    onUpdate: function() { // Provides the "absurd scrutiny" on the animation path
-                         Oracle.scan('Absorption Vector Trace', { 
-                            'Progress': `${(this.progress() * 100).toFixed(1)}%`,
-                            'X': gsap.getProperty(elements.stuntActor, 'x').toFixed(1),
-                            'Y': gsap.getProperty(elements.stuntActor, 'y').toFixed(1),
-                            'Scale': gsap.getProperty(elements.stuntActor, 'scale').toFixed(2),
-                            'RotY': gsap.getProperty(elements.stuntActor, 'rotationY').toFixed(1) 
-                        });
+                    onUpdate: function() { 
+                        // =========================================================================
+                        // FIX 2: THROTTLE THE VECTOR TRACE LOG
+                        // We only log if progress changes noticeably, preventing console spam.
+                        // =========================================================================
+                        const currentProgress = (this.progress() * 100).toFixed(0);
+                        if (currentProgress !== (this._lastProgress || '')) {
+                             Oracle.scan('Absorption Vector Trace', { 
+                                'Progress': `${currentProgress}%`,
+                                'X': gsap.getProperty(elements.stuntActor, 'x').toFixed(1),
+                                'Y': gsap.getProperty(elements.stuntActor, 'y').toFixed(1),
+                                'Scale': gsap.getProperty(elements.stuntActor, 'scale').toFixed(2),
+                                'RotY': gsap.getProperty(elements.stuntActor, 'rotationY').toFixed(1) 
+                            });
+                            this._lastProgress = currentProgress;
+                        }
+                        // =========================================================================
                     } 
                 }))
-                // While travelling, flatten the 3D rotation and morph into the logo
                 .to(elements.stuntActor, { rotationX: 0, rotationY: 0, z: 0, duration: 0.8, ease: "power3.inOut" }, 0.2)
                 .to('#morph-path', { morphSVG: logoPathData, duration: 0.8, ease: 'power3.inOut' }, 0.2)
                 .to(elements.stuntActorFaces, { opacity: 0, duration: 0.4, stagger: 0.05 }, 0.1);
@@ -341,10 +353,9 @@ const setupHandoff = (elements, masterStoryTl) => {
 
             gsap.killTweensOf([elements.stuntActor, '#morph-path', elements.heroActor]);
             
-            // Forcefully reset everything to its starting state
             gsap.set(elements.stuntActor, { autoAlpha: 0, clearProps: "all" });
             gsap.set(elements.heroActor, { autoAlpha: 1 });
-            gsap.set('#morph-path', { morphSVG: "M0,0 H200 V200 H0 Z" }); // Reset to square
+            gsap.set('#morph-path', { morphSVG: "M0,0 H200 V200 H0 Z" });
             
             masterStoryTl.scrollTrigger.enable();
             Oracle.warn('Master ScrollTrigger RE-ENABLED.');
@@ -357,7 +368,7 @@ const setupHandoff = (elements, masterStoryTl) => {
 };
 
 // =========================================================================
-//         SOVEREIGN ARCHITECTURE v43.1: UNIFIED & BENCHMARKED NARRATIVE
+//         SOVEREIGN ARCHITECTURE v43.1: UNIFIED & BENCHMARKED NARRATIVE (FINAL)
 // =========================================================================
 function setupAnimations() {
     gsap.registerPlugin(ScrollTrigger, Flip, MorphSVGPlugin);
@@ -381,7 +392,6 @@ function setupAnimations() {
                 handoffPoint: getElement('#handoff-point')
             };
             
-            // Halts if diagnostic checks fail (e.g., missing elements)
             if (Object.values(elements).some(el => !el || (Array.isArray(el) && !el.length))) {
                 Oracle.warn('SOVEREIGN ABORT: Missing critical elements. Halting animation setup.');
                 return;
@@ -393,7 +403,6 @@ function setupAnimations() {
                 '(min-width: 1025px)': () => {
                     Oracle.report("Protocol engaged for desktop. Constructing unified timeline.");
 
-                    // Pinner for the visuals
                     ScrollTrigger.create({
                         trigger: elements.textCol,
                         pin: elements.visualsCol,
@@ -402,7 +411,6 @@ function setupAnimations() {
                         onToggle: self => Oracle.updateHUD('c-master-st-active', self.isActive ? 'PIN_ACTIVE' : 'PIN_INACTIVE', self.isActive ? '#A3BE8C' : '#BF616A'),
                     });
 
-                    // The Master Timeline that controls the entire story
                     const masterStoryTl = gsap.timeline({
                         scrollTrigger: {
                             trigger: elements.textCol,
@@ -410,29 +418,38 @@ function setupAnimations() {
                             end: 'bottom bottom',
                             scrub: 1.5,
                             onUpdate: (self) => {
-                                // Update HUD with real-time data from the animating hero
+                                // Update HUD with real-time data on every frame for smoothness
                                 Oracle.updateHUD('c-rot-x', gsap.getProperty(elements.heroActor, "rotationX").toFixed(1));
                                 Oracle.updateHUD('c-rot-y', gsap.getProperty(elements.heroActor, "rotationY").toFixed(1));
                                 Oracle.updateHUD('c-scale', gsap.getProperty(elements.heroActor, "scale").toFixed(2));
                                 Oracle.updateHUD('c-scroll', `${(self.progress * 100).toFixed(0)}%`);
-                                Oracle.trackScrollTrigger(self, "Unified Story Controller");
+
+                                // =====================================================================
+                                // THE FINAL FIX: Throttle the detailed ST_TRACK log.
+                                // It will now only fire if verbosity is 2 AND progress has changed.
+                                // =====================================================================
+                                const currentProgress = (self.progress * 100).toFixed(0);
+                                if (currentProgress !== (self._lastProgress || '')) {
+                                    Oracle.trackScrollTrigger(self, "Unified Story Controller");
+                                    self._lastProgress = currentProgress;
+                                }
+                                // =====================================================================
                             }
                         }
                     });
 
-                    // Add animation chapters to the master timeline
                     setupHeroActor(elements, masterStoryTl);
                     setupTextPillars(elements, masterStoryTl);
-                    setupHandoff(elements, masterStoryTl); // Handoff now listens independently but is aware of the master
+                    setupHandoff(elements, masterStoryTl); 
                 },
                 '(max-width: 1024px)': () => {
                     Oracle.report("Sovereign Protocol STANDBY. No scrollytelling animations on mobile view.");
                 }
             });
             
-        }); // End GSAP Context
-    }); // End Performance Benchmark
-    return ctx; // Return context for cleanup if needed
+        }); 
+    });
+    return ctx;
 }
 
 // --- INITIALIZATION SEQUENCE ---
