@@ -634,6 +634,10 @@ html.menu-open {
    METHOD PAGE STYLES - SOVEREIGN PROTOCOL v43.1
    ========================================================================= */
 
+/* =========================================================================
+   METHOD PAGE STYLES - SOVEREIGN PROTOCOL v43.1
+   ========================================================================= */
+
 /* --- Main Layout Container --- */
 .scrolly-container {
     display: flex;
@@ -654,7 +658,7 @@ html.menu-open {
     justify-content: center;
     align-items: center;
     /* SOVEREIGN FIX: Prevents the pinned column from capturing mouse events
-       and blocking interactions with the text scrolling underneath. */
+       and blocking interactions with the text scrolling underneath. CRITICAL. */
     pointer-events: none;
 }
 
@@ -699,22 +703,33 @@ html.menu-open {
     padding-left: 2rem;
 }
 
+/*
+   ==================================================================
+   THIS IS THE FOUC (Flash Of Unstyled Content) FIX
+   ==================================================================
+*/
+/* STEP 1: Hide ALL text sections by default using CSS. */
 .pillar-text-content {
-    min-height: 80vh; /* Give each section enough space to trigger its animation */
+    min-height: 80vh; 
     display: flex;
     flex-direction: column;
     justify-content: center;
-
-    /* SOVEREIGN FIX (FOUC): Hide all text sections by default. */
+    /* This makes them invisible instantly on page load, before JS runs. */
     opacity: 0;
     visibility: hidden;
 }
 
-/* SOVEREIGN FIX (FOUC): Make an EXCEPTION for the first text section. */
+/* STEP 2: Make an EXCEPTION for the very first text section. */
 .pillar-text-content:first-of-type {
+    /* This makes it visible on page load so the page isn't blank. */
     opacity: 1;
     visibility: visible;
 }
+/*
+   END FOUC FIX. JS will now handle fade-in/out smoothly.
+   ==================================================================
+*/
+
 
 .pillar-text-content:last-of-type {
     min-height: 0;
@@ -740,13 +755,13 @@ html.menu-open {
     height: 3px;
     margin: 1.5rem 0;
     background-color: #43a8b4; 
-    transform: scaleX(0); /* Animated by GSAP */
+    transform: scaleX(0); 
     transform-origin: left;
 }
 
 .pillar-title {
     margin: 0;
-    font-family: 'Poppins', sans-serif; /* Adjusted to your font stack */
+    font-family: 'Poppins', sans-serif;
     font-size: clamp(2.8rem, 5vw, 4rem); 
     font-weight: 700;
     line-height: 1.1;
@@ -760,11 +775,9 @@ html.menu-open {
     color: #a0a0a0;
 } 
 
-}
 
 /* --- 4. Handoff & Summary Section Styles --- */
 .method-summary {
-    text-align: center;
     padding-top: 10vh; /* Give space above the landed logo */
 }
 
@@ -779,8 +792,8 @@ html.menu-open {
     width: 100%;
     height: 100%;
     position: relative; 
-    border-radius: 8px; /* Optional: if you want a rounded container */
-    overflow: hidden; /* Optional */
+    border-radius: 8px;
+    overflow: hidden; 
 }
 
 /* The Stunt Double, once inside the clipper, fills the space */
@@ -795,12 +808,14 @@ html.menu-open {
 
 /* MORPH STYLES: Define how the morphed shape and its container should look */
 #actor-3d-stunt-double .face.front {
+    /* Make the front face of the cube invisible, we only want to see the SVG path inside it */
     background: transparent !important;
     border: none;
 }
 
 #morph-path {
-    fill: #f0f0f0; /* Color of the final logo shape */
+    /* This is the color of the final logo shape. MUST HAVE A FILL to be visible. */
+    fill: #E5E9F0; 
     stroke: none;
 }
 
@@ -823,311 +838,17 @@ html.menu-open {
         height: auto;
         margin-bottom: 4rem;
         perspective: none;
+        pointer-events: auto; /* Re-enable pointer events on mobile */
     }
     
     .pillar-text-content {
        min-height: auto;
        padding: 0 0 4rem 0;
-       /* On mobile, all text is visible from the start. */
+       /* On mobile, all text is visible from the start. Override the FOUC fix. */
        opacity: 1;
        visibility: visible;
     }
 
-    .pillar-text-content:last-of-type {
-        padding-bottom: 0;
-    }
-}
-
-/* ==================================================================
-   THIS IS THE CORRECTED CODE WITH THE FOUC FIX
-   ==================================================================
-*/
-
-/* STEP 1: Hide ALL text sections by default. */
-.pillar-text-content {
-    padding-top: 15vh;
-    padding-bottom: 25vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-
-    /* This makes them invisible instantly */
-    opacity: 0;
-    visibility: hidden;
-}
-
-/* STEP 2: Make an EXCEPTION for the very first text section. */
-.pillar-text-content:first-of-type {
-    /* This makes it visible on page load */
-    opacity: 1;
-    visibility: visible;
-}
-
-/* Let's remove the bottom padding on the very last text section */
-.pillar-text-content:last-of-type {
-    padding-bottom: 15vh;
-}
-
-/* Constrain the width of the text block for readability */
-.text-anim-wrapper {
-    max-width: 45ch;
-}
-
-/* NEW STYLES for text elements */
-.pillar-number {
-    font-size: 1rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: #43a8b4; /* <<< IMPORTANT: CHANGE THIS to your brand's accent color! */
-    display: block;
-}
-
-/* The decorative line starts scaled to zero */
-.pillar-line {
-    width: 60px;
-    height: 3px;
-    background-color: #43a8b4; /* <<< IMPORTANT: USE THE SAME ACCENT COLOR! */
-    margin: 1.5rem 0;
-    transform: scaleX(0);
-    transform-origin: left;
-}
-
-.pillar-title {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(2.8rem, 5vw, 4rem);
-    font-weight: 700;
-    line-height: 1.1;
-    color: #f0f0f0;
-    margin: 0;
-}
-
-.pillar-paragraph {
-    font-size: 1.1rem;
-    line-height: 1.7;
-    margin-top: 1.5rem;
-    color: #a0a0a0;
-}
-
-/* --- 5. Styles for the "Landed" Thumbnail --- */
-.summary-thumbnail-placeholder {
-    width: 200px;
-    max-width: 40%;
-    aspect-ratio: 1 / 1;
-    margin: 0 auto 2rem;
-    position: relative; 
-}
-
-.summary-thumbnail-clipper {
-    width: 100%;
-    height: 100%;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-}
-
-.summary-thumbnail-clipper .object-3d {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-}
-
-/* =========================================================================
-   15. HELPER STYLES FOR "IGLOO" JS ANIMATIONS
-   ========================================================================= */
-
-.text-anim-wrapper {
-    will-change: transform, opacity;
-}
-
-.summary-thumbnail-placeholder {
-    width: 200px;
-    max-width: 40%;
-    aspect-ratio: 1 / 1;
-    margin: 0 auto 2rem;
-    position: relative; 
-}
-
-.summary-thumbnail-clipper {
-    width: 100%;
-    height: 100%;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-}
-
-.summary-thumbnail-placeholder .object-3d {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-
-/*
-   CRITICAL: This class is added by JS to hide the original visuals column 
-   during the Flip transition, preventing a "ghost" image from appearing.
-*/
-.pillar-visuals-col.is-exiting {
-    visibility: hidden;
-}
-
-/* --- 1. The Pinned Visuals Column (The "Sticky" Part) --- */
-.pillar-visuals-col {
-    flex: 1;
-    width: 45%; 
-    /* Sticking position */
-    position: -webkit-sticky;
-    position: sticky;
-    top: 15vh;
-    height: 70vh;
-    /* 3D Scene Setup */
-    perspective: 1200px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* === 3D SCENE & OBJECT SETUP === */
-.scene-3d {
-    width: 200px;
-    height: 200px;
-    position: relative;
-    transform-style: preserve-3d;
-    transform: translateZ(100px); 
-}
-
-.object-3d {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    transform-style: preserve-3d;
-    transform: translateZ(-100px); 
-    will-change: transform; /* Optimization for animation */
-}
-
-.face {
-    position: absolute;
-    width: 200px;
-    height: 200px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    backdrop-filter: blur(10px);
-}
-
-.face.front  { transform: rotateY(  0deg) translateZ(100px); }
-.face.back   { transform: rotateY(180deg) translateZ(100px); }
-.face.right  { transform: rotateY( 90deg) translateZ(100px); }
-.face.left   { transform: rotateY(-90deg) translateZ(100px); }
-.face.top    { transform: rotateX( 90deg) translateZ(100px); }
-.face.bottom { transform: rotateX(-90deg) translateZ(100px); }
-
-
-/* --- 3. The Scrolling Text Column (The "Trigger" Part) --- */
-.pillar-text-col {
-    flex: 1;
-    width: 50%;
-    padding-left: 2rem; 
-}
-
-.pillar-text-content {
-    padding-top: 15vh;
-    padding-bottom: 25vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    /* 
-       FOUC FIX: Hide all text sections by default.
-       GSAP will make them visible as needed. This prevents the "flash".
-    */
-    opacity: 0;
-    visibility: hidden;
-}
-
-/* FOUC FIX: Make sure the VERY FIRST text section is visible on page load. */
-.pillar-text-content:first-of-type {
-    opacity: 1;
-    visibility: visible;
-}
-
-.pillar-text-content:last-of-type {
-    padding-bottom: 15vh;
-}
-
-.text-anim-wrapper {
-    max-width: 45ch; 
-}
-
-.pillar-number {
-    font-size: 1rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: #43a8b4; 
-    display: block;
-}
-
-.pillar-line {
-    width: 60px;
-    height: 3px;
-    background-color: #43a8b4; 
-    margin: 1.5rem 0;
-    transform: scaleX(0);
-    transform-origin: left;
-}
-
-.pillar-title {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(2.8rem, 5vw, 4rem); 
-    font-weight: 700;
-    line-height: 1.1;
-    color: #f0f0f0; 
-    margin: 0;
-}
-
-.pillar-paragraph {
-    font-size: 1.1rem;
-    line-height: 1.7;
-    margin-top: 1.5rem;
-    color: #a0a0a0;
-}
-
-/* =========================================================================
-   MOBILE & RESPONSIVE STYLES
-   ========================================================================= */
-   
-@media (max-width: 768px) {
-    .scrolly-container {
-        flex-direction: column;
-    }
-
-    .pillar-visuals-col,
-    .pillar-text-col {
-        width: 100%;
-        padding-left: 0;
-    }
-
-    .pillar-visuals-col {
-        position: static; 
-        top: auto;
-        height: auto;
-        margin-bottom: 2rem;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        perspective: none;
-    }
-    
-    .pillar-text-content {
-       min-height: auto;
-       padding: 0 0 4rem 0;
-       text-align: left;
-       /* On mobile, all text should be visible from the start. */
-       opacity: 1;
-       visibility: visible;
-    }
     .pillar-text-content:last-of-type {
         padding-bottom: 0;
     }
