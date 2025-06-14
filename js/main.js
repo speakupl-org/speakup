@@ -332,7 +332,90 @@ function initialAnimationSetup() {
     });
 }
 
-// --- Event Listeners ---
-document.addEventListener("DOMContentLoaded", setupSiteLogic);
-window.addEventListener("load", initialAnimationSetup);
-ScrollTrigger.addEventListener("resize", initialAnimationSetup);
+// CEREBRO ORACLE -- JAVASCRIPT DIRECTIVE: main.js REFACTOR
+document.addEventListener('DOMContentLoaded', () => {
+
+    // STEP 0: REGISTRATION AND TARGETING
+    gsap.registerPlugin(ScrollTrigger, Flip, MorphSVGPlugin);
+
+    const actor = document.querySelector("#actor-3d");
+    const textSections = gsap.utils.toArray(".pillar-text-content");
+    const handoffPoint = document.querySelector("#handoff-point");
+    const stuntDouble = document.querySelector("#actor-3d-stunt-double");
+    const placeholder = document.querySelector("#summary-placeholder");
+    const morphPath = document.querySelector("#morph-path");
+    
+    // DEFINE YOUR FINAL LOGO SHAPE!
+    // Get this from your SVG file. It's the 'd' attribute of your logo's path.
+    const logoPathShape = "M81.5,1.5 C37.4,1.5 1.5,37.4 1.5,81.5 C1.5,125.6 37.4,161.5 81.5,161.5 C125.6,161.5 161.5,125.6 161.5,81.5 C161.5,37.4 125.6,1.5 81.5,1.5 Z M81.5,123.5 C56.6,123.5 36.5,103.4 36.5,78.5 C36.5,53.6 56.6,33.5 81.5,33.5 C106.4,33.5 126.5,53.6 126.5,78.5 C126.5,103.4 106.4,123.5 81.5,123.5 Z"; // <-- REPLACE WITH YOUR REAL SVG PATH DATA
+
+
+    // STEP 1: CREATE THE SOVEREIGN MASTER TIMELINE
+    const masterTL = gsap.timeline({
+        scrollTrigger: {
+            trigger: ".scrolly-container",
+            start: "top top",
+            end: "bottom+=50% bottom", // Extend scroll distance for a smooth handoff
+            scrub: 1.2,
+            pin: ".pillar-visuals-col",
+            anticipatePin: 1
+        }
+    });
+
+    // STEP 2: ORCHESTRATE THE NARRATIVE (CUBE AND TEXT)
+    // Add initial cube rotation, scale, etc.
+    masterTL
+        .to(actor, { rotationX: 360, rotationY: 360, duration: 4 })
+        .to(actor, { scale: 1.5, duration: 2 }, "<");
+
+    // Sequence the text fades with the timeline
+    textSections.forEach((section, index) => {
+        if (index > 0) { // The first section is already visible
+            masterTL
+                .to(textSections[index - 1], { opacity: 0, y: -40, duration: 0.5 }, ">-0.2") // Fade out previous
+                .fromTo(section, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 1 }); // Fade in current
+        }
+    });
+    
+    // Fade out the last text section before handoff
+    masterTL.to(textSections[textSections.length - 1], { opacity: 0, y: -40, duration: 0.5 }, ">1");
+
+
+    // STEP 3: THE FLIP & MORPH HANDOFF PROTOCOL
+    masterTL.add(() => {
+        // 1. Capture the final state: where the Stunt Double should end up.
+        const state = Flip.getState(stuntDouble, { props: "scale" });
+
+        // 2. Teleport the Stunt Double to the Primary Actor's position.
+        placeholder.appendChild(stuntDouble);
+        gsap.set(stuntDouble, { opacity: 1 });
+        actor.style.visibility = 'hidden'; // Hide the original actor
+
+        // 3. Initiate the FLIP and MORPH
+        Flip.from(state, {
+            duration: 1.5,
+            ease: "power2.inOut",
+            scale: true, // Make sure it animates scale
+            onComplete: () => {
+                // Handoff is complete. Hide the Stunt Double's frame.
+                 gsap.to(stuntDouble, {opacity: 0, duration: 0.3 });
+            },
+            // NEST THE MORPH ANIMATION INSIDE THE FLIP!
+            // This ensures they happen together.
+            onStart: () => {
+                 gsap.to(morphPath, {
+                    duration: 1.2, // Slightly shorter duration for a nice effect
+                    ease: "power2.inOut",
+                    attr: { d: logoPathShape }, // Morph to the logo
+                    scale: 0.815, // Scale down to fit 163px placeholder (163/200)
+                });
+                // Make the now visible logo stand out.
+                gsap.fromTo("#summary-placeholder", {boxShadow: "0 0 0px 0px rgba(var(--rgb-primary), 0)"}, {
+                    boxShadow: "0 0 30px 8px rgba(var(--rgb-primary), 0.5)",
+                    duration: 1.5,
+                    ease: "power2.out"
+                })
+            }
+        });
+    }, ">"); // Trigger this at the very end of the scroll
+});
