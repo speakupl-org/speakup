@@ -185,38 +185,7 @@ function setupSite() {
     });
 }
 
-// COMPLETELY REPLACE your old setupAnimations function with this one.
-
-// NEW DIAGNOSTIC "FILTER" FUNCTION
-function runDiagnostics(elements) {
-    console.group("%c[SOVEREIGN DIAGNOSTICS]", "color: #D08770; font-weight: bold;");
-
-    if (!elements.masterTrigger) {
-        console.error("CRITICAL FAILURE: '.scrolly-container' not found!");
-    } else {
-        console.log("✅ '.scrolly-container' found.", {
-            height: elements.masterTrigger.offsetHeight + 'px'
-        });
-    }
-
-    if (elements.textPillars.length === 0) {
-        console.error("CRITICAL FAILURE: No '.pillar-text-content' elements found!");
-    } else {
-        console.log(`✅ Found ${elements.textPillars.length} text pillars.`);
-    }
-
-    // After a brief delay to ensure layout is calculated, re-check heights.
-    setTimeout(() => {
-        console.log("Height of .scrolly-container after 100ms delay:", elements.masterTrigger.offsetHeight + 'px');
-        if (elements.masterTrigger.offsetHeight < window.innerHeight * 2) {
-             console.warn("WARNING: The .scrolly-container is not tall enough to support a long scroll animation.");
-        } else {
-             console.log("Container height appears sufficient for scroll animation.");
-        }
-    }, 100);
-
-    console.groupEnd();
-}
+// FINAL VERSION: Replace your setupAnimations function with this.
 
 function setupAnimations() {
     const ctx = gsap.context(() => {
@@ -228,8 +197,11 @@ function setupAnimations() {
             handoffPoint: document.querySelector('#handoff-point'),
             masterTrigger: document.querySelector('.scrolly-container'),
             visualsCol: document.querySelector('.pillar-visuals-col'),
-            textPillars: gsap.utils.toArray('.pillar-text-content') // Trigger based on the parent
+            textPillars: gsap.utils.toArray('.pillar-text-content')
         };
+        
+        // RUN THE DIAGNOSTIC "FILTER" FIRST
+        runDiagnostics(elements);
         
         if (!elements.canvas || typeof THREE === 'undefined') {
             Oracle.warn('ABORT: Critical element or library not found.');
@@ -238,17 +210,12 @@ function setupAnimations() {
         }
         
         const { cube } = threeJsModule.setup(elements.canvas);
-        Oracle.report("Three.js Module Initialized.");
         Oracle.updateHUD('c-validation-status', 'PASSED', '#A3BE8C');
-
         gsap.set(elements.finalLogoSvg, { autoAlpha: 0 });
 
         ScrollTrigger.matchMedia({
             '(min-width: 1025px)': () => {
-                // =============================================================
-                // FIX: This timeline NOW ONLY controls the cube.
-                // The pillar animations have been completely removed from here.
-                // =============================================================
+                // Timeline for the CUBE ONLY
                 const masterTl = gsap.timeline({
                     scrollTrigger: {
                         trigger: elements.masterTrigger,
@@ -256,13 +223,9 @@ function setupAnimations() {
                         end: 'bottom bottom',
                         scrub: 1.5,
                         onUpdate: self => {
-                            if (self.progress > 0 && self.progress < 1) {
-                                Oracle.state.animation_phase = 'PILLARS_SCROLL';
-                            } else if (self.progress >= 1) {
-                                Oracle.state.animation_phase = 'HANDOFF_AWAIT';
-                            } else {
-                                Oracle.state.animation_phase = 'IDLE';
-                            }
+                            if (self.progress > 0 && self.progress < 1) { Oracle.state.animation_phase = 'PILLARS_SCROLL'; }
+                            else if (self.progress >= 1) { Oracle.state.animation_phase = 'HANDOFF_AWAIT'; }
+                            else { Oracle.state.animation_phase = 'IDLE'; }
                             Oracle.updateHUD('c-scroll', `${(self.progress * 100).toFixed(0)}%`);
                             Oracle.updateHUD('c-rot-y', (cube.rotation.y * (180 / Math.PI)).toFixed(1));
                             Oracle.updateAndLog(cube, self);
@@ -272,29 +235,28 @@ function setupAnimations() {
                 masterTl.to(cube.rotation, { y: Math.PI * 3, x: Math.PI * -1.5, ease: 'none' });
                 masterTl.to(cube.scale, { x: 1.2, y: 1.2, z: 1.2, ease: 'power1.inOut', yoyo: true, repeat: 1 }, 0);
                 
-                // --- Pinning ---
+                // Pinning
                 ScrollTrigger.create({
-                    trigger: elements.masterTrigger,
+                    trigger: elements.visualsCol, // Pin the visuals column itself
                     start: 'top top',
+                    endTrigger: elements.masterTrigger,
                     end: 'bottom bottom',
-                    pin: elements.visualsCol,
+                    pin: true,
                     pinSpacing: false
                 });
 
-                // --- Independent Pillar Text Animation ---
+                // Independent animation for each text pillar
                 elements.textPillars.forEach((pillar) => {
-                    gsap.fromTo(pillar.querySelector('.text-anim-wrapper'), 
-                        { autoAlpha: 0, y: 50 }, // From State
-                        { // To State
-                            autoAlpha: 1, y: 0,
-                            scrollTrigger: {
-                                trigger: pillar,
-                                start: 'top center+=100', // Start when the pillar's top hits below the center
-                                end: 'bottom bottom-=100',// End when the pillar's bottom leaves the bottom
-                                scrub: true,
-                            },
-                        }
-                    );
+                    gsap.from(pillar.querySelector('.text-anim-wrapper'), {
+                        scrollTrigger: {
+                            trigger: pillar,
+                            start: 'top 60%',
+                            end: 'bottom 40%',
+                            scrub: true,
+                        },
+                        autoAlpha: 0,
+                        y: 50,
+                    });
                 });
 
                 setupHandoff(elements, cube);
