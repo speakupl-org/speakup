@@ -1543,10 +1543,10 @@ body.scroll-locked {
     transform: none !important;
     opacity: 1 !important;
     
-    /* === THE FINAL, CORRECTED PATH === */
-    background-image: url('/images/icon-bridge.svg'); 
-    
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
+    /* 
+       This single line sets the image, position, size, and repeat, 
+       and uses !important to win the fight against the other rule. 
+       This is the final fix.
+    */
+    background: url('../images/logo.svg') center / contain no-repeat !important; 
 }
