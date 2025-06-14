@@ -1,22 +1,28 @@
 /*
 
-THE DEFINITIVE COVENANT BUILD v43.3.1 - "Sovereign" Protocol (AI Briefing Enabled)
+THE DEFINITIVE COVENANT BUILD v43.2 - "Sovereign" Protocol (Synchronized & Fortified)
 
-This version corrects a critical syntax error from the previous build and ensures all 
-functions are complete and properly integrated.
+This definitive version introduces a robust diagnostic framework, "The Oracle," providing
+granular, contextual, and performance-aware insights into the animation lifecycle.
 
-NEW v43.3: The "Prequest" AI Briefing System is online. A director's console in the HUD
-allows for the generation of a perfectly formatted, context-aware status report that can be 
-pasted directly to an AI assistant for high-speed problem-solving.
+It also resolves a core architectural flaw by refactoring the pillar text animations 
+into a single, monolithic "Unbroken Chain" on the master timeline, ensuring absolute 
+logical consistency and eliminating potential recursion or race conditions.
+
+NEW v43.2: The Handoff Protocol is now a reversible, state-aware sequence integrated 
+directly into the master timeline's end-of-life, utilizing GSAP Flip for a seamless 
+"absorption" effect followed by a MorphSVG transformation.
+
+The Resize Protocol has been fortified with GSAP's context() and revert() methods,
+ensuring absolute stability and eliminating state pollution on viewport changes.
 
 */
 
-// Oracle v43.3 - The "Prequest" Protocol Upgrade
+// Oracle v43.2 - The "Observer" Protocol Upgrade
 const Oracle = {
     config: {
         verbosity: 1, // ?oracle_verbosity=2 for max detail.
     },
-    elements: {}, // NEW: A place to store references to key elements
     _getGroupMethod: function() {
         return this.config.verbosity >= 2 ? console.group : console.groupCollapsed;
     },
@@ -98,104 +104,7 @@ const Oracle = {
     warn: (message) => console.warn(`%c[SOVEREIGN WARNING @ ${Oracle._timestamp()}]:`, 'color: #D08770;', message),
     updateHUD: (id, value, color = '#E5E9F0') => {
         const el = document.getElementById(id);
-        if (el) { el.textContent = value; if(color) { el.style.color = color; } }
-    },
-
-    // =========================================================================
-    //         NEW v43.3: THE "PREQUEST" AI BRIEFING SYSTEM
-    // =========================================================================
-    snapshot: function() {
-        const getElState = (el) => {
-            if (!el || !el.getBoundingClientRect) {
-                return { visibility: 'N/A', opacity: 'N/A', bcr: 'Not Found', transform: 'N/A', d: 'N/A' };
-            }
-            const bcr = el.getBoundingClientRect();
-            return {
-                visibility: gsap.getProperty(el, "visibility"),
-                opacity: gsap.getProperty(el, "opacity").toFixed(2),
-                bcr: `T:${bcr.top.toFixed(0)}, L:${bcr.left.toFixed(0)}, W:${bcr.width.toFixed(0)}, H:${bcr.height.toFixed(0)}`,
-                transform: gsap.getProperty(el, "transform"),
-                d: el.tagName === 'PATH' ? el.getAttribute('d').substring(0, 50) + '...' : 'N/A'
-            };
-        };
-        return {
-            timestamp: this._timestamp(),
-            validation: document.getElementById('c-validation-status')?.textContent || 'N/A',
-            viewport: `${window.innerWidth}w x ${window.innerHeight}h`,
-            gsapContext: window.gsapCtx && window.gsapCtx.isActive() ? 'Active' : 'Inactive',
-            telemetry: {
-                progress: document.getElementById('c-scroll')?.textContent || 'N/A',
-                masterST: document.getElementById('c-master-st-active')?.textContent || 'N/A',
-                handoffST: document.getElementById('c-handoff-st-active')?.textContent || 'N/A',
-                lastEvent: document.getElementById('c-event')?.textContent || 'N/A',
-            },
-            actors: {
-                hero: getElState(this.elements.heroActor),
-                stunt: getElState(this.elements.stuntActor),
-                morph: getElState(this.elements.morphPath),
-            }
-        };
-    },
-    generateAIBriefing: function() {
-        const intent = document.getElementById('director-intent').value;
-        if (!intent) {
-            this.warn("Cannot generate briefing: Director's Intent field is empty.");
-            return;
-        }
-        const snap = this.snapshot();
-        const briefing = `
-\`\`\`markdown
-[SOVEREIGN PROTOCOL AI BRIEFING]
-
-**1. CREATIVE DIRECTOR'S INTENT:**
-> ${intent}
-
----
-
-**2. SYSTEM SNAPSHOT (at time of request):**
-*   **Report Generated:** ${snap.timestamp}
-*   **Validation Status:** ${snap.validation}
-*   **Viewport:** ${snap.viewport}
-*   **GSAP Context:** ${snap.gsapContext}
-
----
-
-**3. LIVE TELEMETRY:**
-*   **Master Story Progress:** ${snap.telemetry.progress}
-*   **Pinning Trigger:** ${snap.telemetry.masterST}
-*   **Handoff Trigger:** ${snap.telemetry.handoffST}
-*   **Last Event:** ${snap.telemetry.lastEvent}
-
----
-
-**4. KEY ACTOR AUDIT:**
-*   **#actor-3d (The Hero):**
-    *   **Visibility:** ${snap.actors.hero.visibility}, **Opacity:** ${snap.actors.hero.opacity}
-    *   **On-Screen Position (BCR):** ${snap.actors.hero.bcr}
-    *   **GSAP Transform:** \`${snap.actors.hero.transform}\`
-
-*   **#actor-3d-stunt-double (The Stunt Double):**
-    *   **Visibility:** ${snap.actors.stunt.visibility}, **Opacity:** ${snap.actors.stunt.opacity}
-    *   **On-Screen Position (BCR):** ${snap.actors.stunt.bcr}
-    *   **GSAP Transform:** \`${snap.actors.stunt.transform}\`
-
-*   **#morph-path (The Logo):**
-    *   **Visibility:** ${snap.actors.morph.visibility}, **Opacity:** ${snap.actors.morph.opacity}
-    *   **On-Screen Position (BCR):** ${snap.actors.morph.bcr}
-    *   **GSAP 'd' Attribute:** \`${snap.actors.morph.d}\`
-
----
-
-**5. THE ASK:**
-Based on the intent and data above, please provide one of the following:
-  - A specific GSAP code snippet to achieve the desired effect.
-  - A step-by-step debugging plan.
-  - An analysis of the current state and a proposal for the next creative step.
-\`\`\`
-`;
-        console.clear();
-        this.report("AI Briefing Generated. Copy the entire block below and paste it to your AI assistant.");
-        console.log(briefing);
+        if (el) { el.textContent = value; el.style.color = color; }
     }
 };
 
@@ -231,11 +140,14 @@ const setupTextPillars = (elements, masterTl) => {
         .from(elements.textWrappers[2], { y: 40, rotationX: -15, autoAlpha: 0, duration: 0.5, ease: "power2.out" }, "<");
 };
 
+// NEW: The Absorption & Morph Protocol
 const setupHandoff = (elements) => {
     Oracle.report("Handoff Protocol: Absorption & Morph sequence armed.");
 
+    // This is the shape of your final logo. You can get this from a vector editor like Illustrator or Figma.
     const speakUpLogoPath = "M81.5,1.5 C37.2,1.5 1.5,37.2 1.5,81.5 C1.5,125.8 37.2,161.5 81.5,161.5 C125.8,161.5 161.5,125.8 161.5,81.5 C161.5,37.2 125.8,1.5 81.5,1.5 Z M81.5,116.5 C81.5,125.1 74.6,132 66,132 C57.4,132 50.5,125.1 50.5,116.5 L50.5,74 C50.5,65.4 57.4,58.5 66,58.5 C74.6,58.5 81.5,65.4 81.5,74 L81.5,116.5 Z M112.5,74 C112.5,65.4 105.6,58.5 97,58.5 C88.4,58.5 81.5,65.4 81.5,74 L81.5,89 C81.5,97.6 88.4,104.5 97,104.5 C105.6,104.5 112.5,97.6 112.5,89 L112.5,74 Z";
 
+    // A separate timeline for the morph ensures it can be controlled independently.
     const morphTl = gsap.timeline({ paused: true });
     morphTl.to(elements.morphPath, {
         duration: 0.8,
@@ -245,19 +157,22 @@ const setupHandoff = (elements) => {
 
     ScrollTrigger.create({
         trigger: elements.handoffPoint,
-        start: "top bottom",
-        end: "bottom top",
+        start: "top bottom", // When the handoff point enters the bottom of the viewport
+        end: "bottom top", // Keep it active until it leaves the top
         onToggle: self => Oracle.updateHUD('c-handoff-st-active', self.isActive ? 'ACTIVE' : 'INACTIVE', self.isActive ? '#A3BE8C' : '#BF616A'),
         
         onEnter: () => {
             Oracle.updateHUD('c-handoff-state', 'ENGAGED', '#EBCB8B');
             Oracle.updateHUD('c-event', 'ABSORPTION INITIATED');
             
+            // 1. Get the current state of the Hero Actor
             const state = Flip.getState(elements.heroActor, { props: "transform,opacity" });
 
+            // 2. Hide the Hero and place the Stunt Double in its exact spot
             gsap.set(elements.heroActor, { autoAlpha: 0 });
             gsap.set(elements.stuntActor, { autoAlpha: 1, zIndex: 100 });
             
+            // This places the stunt double in the final layout but records its starting position from the state
             Flip.from(state, {
                 targets: elements.stuntActor,
                 duration: 1.2,
@@ -268,7 +183,9 @@ const setupHandoff = (elements) => {
                     Oracle.updateHUD('c-event', 'MORPHING...');
                     morphTl.play();
                 },
-                absolute: true,
+                // This "nested" tween runs at the same time as the Flip
+                // It makes the cube "collapse" into its front face
+                absolute: true, // IMPORTANT: Allows independent tweening during the flip
                 nested: true,
                 tween: gsap.to(elements.stuntActorFaces, {
                     autoAlpha: 0,
@@ -281,9 +198,10 @@ const setupHandoff = (elements) => {
             Oracle.updateHUD('c-handoff-state', 'DISENGAGED', '#BF616A');
             Oracle.updateHUD('c-event', 'REVERSAL');
             
+            // In reverse, just reset everything cleanly
             gsap.set(elements.heroActor, { autoAlpha: 1 });
             gsap.set(elements.stuntActor, { autoAlpha: 0, zIndex: 1 });
-            gsap.to(elements.stuntActorFaces, { autoAlpha: 1, duration: 0.1 });
+            gsap.to(elements.stuntActorFaces, { autoAlpha: 1, duration: 0.1 }); // Reset faces for next time
             morphTl.reverse();
         },
     });
@@ -291,16 +209,19 @@ const setupHandoff = (elements) => {
 
 
 // =========================================================================
-//         SOVEREIGN ARCHITECTURE v43.3.1: UNIFIED & BENCHMARKED NARRATIVE
+//         SOVEREIGN ARCHITECTURE v43.2: UNIFIED & BENCHMARKED NARRATIVE
 // =========================================================================
 function setupAnimations() {
     gsap.registerPlugin(ScrollTrigger, Flip, MorphSVGPlugin);
     console.clear();
-    Oracle.report(`Sovereign Build v43.3.1 Initialized. AI Briefing System is online.`);
+    Oracle.report(`Sovereign Build v43.2 Initialized. Verbosity: ${Oracle.config.verbosity}. Use ?oracle_verbosity=2 for max scrutiny.`);
     
+    // The gsap.context() function is the key to robust, resize-safe animations.
+    // It keeps all our selectors and animations contained.
     const ctx = gsap.context(() => {
         Oracle.runSelfDiagnostic();
 
+        // ** Elements defined inside the context, accessible by all nested functions.
         const elements = {
             heroActor: getElement('#actor-3d'),
             stuntActor: getElement('#actor-3d-stunt-double'),
@@ -315,9 +236,6 @@ function setupAnimations() {
             masterTrigger: getElement('.scrolly-container')
         };
         
-        // Register elements with the Oracle for snapshot access
-        Oracle.elements = elements;
-
         if (Object.values(elements).some(el => !el || (Array.isArray(el) && !el.length))) {
             Oracle.warn('SOVEREIGN ABORT: Missing critical elements. Halting animation setup.');
             return;
@@ -325,6 +243,9 @@ function setupAnimations() {
         Oracle.report("All Sovereign components verified and locked.");
         Oracle.updateHUD('c-st-instances', ScrollTrigger.getAll().length);
 
+        // *** CRITICAL FIX: `matchMedia` is now INSIDE the GSAP context ***
+        // This ensures it has access to the `elements` object and gets properly
+        // cleaned up by the context's `revert()` method on resize.
         ScrollTrigger.matchMedia({
             '(min-width: 1025px)': () => {
                 Oracle.report("Protocol engaged for desktop. Constructing unified timeline.");
@@ -332,7 +253,7 @@ function setupAnimations() {
                 const triggerConfig = {
                     trigger: elements.masterTrigger,
                     start: 'top top',
-                    end: 'bottom bottom-=1px',
+                    end: 'bottom bottom-=1px', // End 1px before the absolute bottom
                     scrub: 1.5,
                 };
 
@@ -349,6 +270,7 @@ function setupAnimations() {
                     }
                 });
                 
+                // Pinning is a separate ScrollTrigger
                 ScrollTrigger.create({
                     trigger: triggerConfig.trigger,
                     start: triggerConfig.start,
@@ -358,26 +280,28 @@ function setupAnimations() {
                     onToggle: self => Oracle.updateHUD('c-master-st-active', self.isActive ? 'PIN_ACTIVE' : 'PIN_INACTIVE', self.isActive ? '#A3BE8C' : '#BF616A'),
                 });
 
+                // Assemble the animation
                 setupHeroActor(elements, masterStoryTl);
                 setupTextPillars(elements, masterStoryTl);
-                setupHandoff(elements);
+                setupHandoff(elements); // Handoff now manages its own trigger
 
             },
             '(max-width: 1024px)': () => {
                 Oracle.report("Sovereign Protocol STANDBY. No scrollytelling on mobile view.");
+                 // Ensure cube and path are in a sensible default state for mobile
                 gsap.set(elements.heroActor, { autoAlpha: 1 });
                 gsap.set(elements.stuntActor, { autoAlpha: 0 });
             }
         });
-    });
+    }); // --- END GSAP CONTEXT ---
 
-    return ctx; 
+    return ctx; // Return the context for cleanup
 }
 
 // =========================================================================
 //         INITIALIZATION SEQUENCE (RESIZE-ROBUST)
 // =========================================================================
-let gsapCtx; 
+let gsapCtx; // Global variable to hold our GSAP context
 
 function setupSiteLogic() {
     const menuOpen = getElement('#menu-open-button');
@@ -388,14 +312,6 @@ function setupSiteLogic() {
     }
     const yearEl = getElement('#current-year');
     if (yearEl) yearEl.textContent = new Date().getFullYear();
-
-    const briefingBtn = getElement('#generate-briefing-btn');
-    if (briefingBtn) {
-        briefingBtn.addEventListener('click', () => Oracle.generateAIBriefing());
-    } else {
-        Oracle.warn("AI Briefing button not found. System is offline.");
-    }
-    
     Oracle.report("Site logic initialized.");
 }
 
@@ -403,12 +319,11 @@ function initialAnimationSetup() {
     Oracle.init(() => {
         if (gsap && ScrollTrigger && Flip && MorphSVGPlugin) {
             if (gsapCtx) {
-                gsapCtx.revert(); 
+                gsapCtx.revert(); // THE DEFINITIVE REVERT
                 Oracle.warn("SOVEREIGN REVERT: Previous GSAP context purged for resize.");
             }
             Oracle.performance.benchmark('Sovereign Animation Architecture Setup', () => {
                  gsapCtx = setupAnimations(); 
-                 window.gsapCtx = gsapCtx; // Make context globally accessible for diagnostics
             });
         } else {
             Oracle.runSelfDiagnostic();
@@ -420,4 +335,4 @@ function initialAnimationSetup() {
 // --- Event Listeners ---
 document.addEventListener("DOMContentLoaded", setupSiteLogic);
 window.addEventListener("load", initialAnimationSetup);
-window.addEventListener("resize", initialAnimationSetup);
+ScrollTrigger.addEventListener("resize", initialAnimationSetup);
