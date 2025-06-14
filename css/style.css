@@ -647,14 +647,24 @@ html.menu-open {
     }
     .pull-quote { margin: 2rem 0; }
 }
-/* ========================================================== */
-/*   DEFINITIVE SOVEREIGN SCROLLYTELLING LAYOUT               */
-/* ========================================================== */
+/*
+==========================================================
+  DEFINITIVE SCROLLYTELLING LAYOUT (CORRECTED)
+==========================================================
+*/
 
-/* The main container for the two-column scrollytelling effect. */
+/* The main container for the two-column effect. */
 .scrolly-container {
-    display: flex;          /* Creates the two-column layout */
-    align-items: flex-start;  /* Aligns children to the top */
+    display: flex;
+    
+    /* 
+      FIX #1 - THE PINNING PROBLEM:
+      This is the most critical property. It tells the flex container to align
+      the top of the short column (visuals) with the top of the tall
+      column (text). Without this, `position: sticky` will not work
+      correctly inside a flex container of uneven children.
+    */
+    align-items: flex-start;
 }
 
 /* The left column that holds the 3D canvas. It will be STICKY. */
@@ -666,108 +676,80 @@ html.menu-open {
 
     width: 50%;             
     height: 100vh;          /* Make it exactly the height of the screen */
-    
-    /* Center the canvas within the column */
+
+    /* These are for centering the canvas within the column, which is correct. */
     display: flex;
     align-items: center;
     justify-content: center;
-    pointer-events: none; /* Allows interaction with content that scrolls under it */
 }
 
 #threejs-canvas {
     width: 500px;
     height: 500px;
     max-width: 100%;
-    pointer-events: auto; /* Re-enable pointer events for the canvas itself */
 }
 
-/* Find this rule in your stylesheet */
+/* The right column that holds the scrolling text. */
 .pillar-text-col {
-    width: 50%; 
-    position: relative; 
+    width: 50%;
+    position: relative; /* This is fine, for z-index context. */
     z-index: 10;
     
-    /* ADD THIS LINE to give the text breathing room */
-    padding: 0 5%; /* Adjust percentage as needed for your design */
+    /* 
+      FIX #2 - THE BREATHING ROOM PROBLEM:
+      This adds horizontal padding INSIDE the text column, pushing the
+      text away from the visual column and giving it space.
+      Adjust the '5%' value to your liking.
+    */
+    padding: 0 5%;
 }
 
-/* Also ensure your text-anim-wrapper doesn't have its own restrictive padding */
-.text-anim-wrapper {
-    max-width: 550px;
-    margin: 0 auto; /* This keeps it horizontally centered within its padded column */
-    /* Remove any horizontal padding from here if it exists */
-}
 
-/* 
-   Each individual text section. THIS is what CREATES the scroll distance.
-*/
+/* Each individual text section. These create the scroll distance. */
 .pillar-text-content {
     /* Each pillar must be tall to create scroll distance. */
-    min-height: 85vh; /* A little less than 100vh feels better */
+    min-height: 85vh; /* This is correct. */
 
-    /* Center the text nicely within each tall pillar. */
+    /* These properties center the text nicely within each tall pillar. */
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 0 5%; /* Give the text some breathing room */
-
-    /* FOUC PREVENTION: Hide all text pillars by default */
-    opacity: 0;
-    visibility: hidden;
 }
 
-/* FOUC PREVENTION: Make the very first one visible on page load */
-.pillar-text-content:first-of-type {
-    opacity: 1;
-    visibility: visible;
-}
-
-
-/* The actual text wrapper that we will fade in and out. */
+/* 
+  The text wrapper itself. By adding padding to the parent column,
+  we can just use margin here to center it.
+*/
 .text-anim-wrapper {
     max-width: 550px;
     margin: 0 auto; /* Horizontally center the text block */
 }
 
-/* --- Handoff & Summary Section --- */
-.method-summary {
-    padding: 10vh 0; /* Give it space */
-    text-align: center;
-}
-
-.summary-thumbnail-placeholder {
-    width: 163px;
-    height: 163px;
-    margin: 0 auto 2rem;
-    position: relative; /* Acts as a positioning anchor for Flip */
-}
-
-#final-logo-svg {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-}
-
-#morph-path { fill: #E5E9F0; stroke: none; }
 
 /* --- Mobile & Responsive Fallback --- */
 @media (max-width: 1024px) {
     .scrolly-container {
         flex-direction: column;
+        align-items: center; /* Center items when in a column */
     }
-    .pillar-visuals-col, .pillar-text-col {
+
+    .pillar-visuals-col, 
+    .pillar-text-col {
         width: 100%;
-        padding-left: 0;
         position: relative; /* Reset sticky positioning */
         top: auto;
+        padding: 0 5%; /* Ensure padding is consistent on mobile */
     }
+
     .pillar-visuals-col {
-        height: 50vh; 
+        height: 50vh;
         margin-bottom: 2rem;
     }
+
     .pillar-text-content {
         min-height: auto; /* On mobile, let content define height */
-        padding: 4rem 5%;
-        opacity: 1; /* Make all text visible on mobile */
-        visibility: visible;
+        padding-top: 4rem;
+        padding-bottom: 4rem;
     }
 }
 
