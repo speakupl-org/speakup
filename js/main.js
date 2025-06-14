@@ -127,6 +127,7 @@ const setupHeroActor = (elements, masterTl) => {
 const setupTextPillars = (elements) => {
     elements.pillars.forEach((pillar, index) => {
         const wrapper = elements.textWrappers[index];
+        // This set is correct, it presets the starting state.
         if (index > 0) gsap.set(wrapper, { autoAlpha: 0, y: 40, rotationX: -15 });
 
         if (index < elements.pillars.length - 1) {
@@ -135,9 +136,9 @@ const setupTextPillars = (elements) => {
                 scrollTrigger: {
                     trigger: pillar,
                     
-                    // CORE FIX: Make the trigger zones specific and non-overlapping
+                    // CORE FIX: These values create specific, non-overlapping trigger zones.
                     start: "top center",      // WHEN the top of the pillar hits the viewport center
-                    end: "bottom center",     // AND END when the bottom of the pillar hits the viewport center
+                    end: "bottom center",     // AND ENDS when the bottom of the pillar hits the viewport center
                     
                     scrub: 1.5,
                     // PRESERVED: Your entire Oracle logging architecture remains untouched and fully functional.
