@@ -123,11 +123,10 @@ const setupHeroActor = (elements, masterTl) => {
     });
 };
 
-// Text pillars animation with CORRECTED TRIGGER ZONES (v37.8 - Blueprint Version)
+// Text pillars animation with OMNISCIENT ORACLE (v37.9 - Blueprint Version)
 const setupTextPillars = (elements) => {
     elements.pillars.forEach((pillar, index) => {
         const wrapper = elements.textWrappers[index];
-        // This set is correct, it presets the starting state.
         if (index > 0) gsap.set(wrapper, { autoAlpha: 0, y: 40, rotationX: -15 });
 
         if (index < elements.pillars.length - 1) {
@@ -136,17 +135,29 @@ const setupTextPillars = (elements) => {
                 scrollTrigger: {
                     trigger: pillar,
                     
-                    // CORE FIX: These values create specific, non-overlapping trigger zones.
-                    start: "top center",      // WHEN the top of the pillar hits the viewport center
-                    end: "bottom center",     // AND ENDS when the bottom of the pillar hits the viewport center
+                    // CORE FIX: Let's try tighter, more specific trigger zones.
+                    // This creates a smaller active window and is less prone to overlap.
+                    start: "top 60%",      
+                    end: "top 20%",
                     
                     scrub: 1.5,
-                    // PRESERVED: Your entire Oracle logging architecture remains untouched and fully functional.
+
+                    // ================= OMNISCIENT ORACLE UPGRADE v1.0 =================
+                    markers: Oracle.config.verbosity > 1, // The All-Seeing Eye. Activates with verbosity level 2+.
+                    
+                    onEnter: (self) => Oracle.report(`Pillar ST#${index + 1} ENTERED`),
+                    onLeave: (self) => Oracle.report(`Pillar ST#${index + 1} EXITED`),
+                    onEnterBack: (self) => Oracle.report(`Pillar ST#${index + 1} ENTERED (Back)`),
+                    onLeaveBack: (self) => Oracle.report(`Pillar ST#${index + 1} EXITED (Back)`),
+                    
                     onUpdate: (self) => {
                         const progress = self.progress.toFixed(3);
                         Oracle.scan('Pillar Text Transition', {
                             'Triggering Pillar': `#${index + 1}`,
                             'ScrollTrigger Progress': `${(progress * 100).toFixed(1)}%`,
+                            'ST Active': self.isActive, // Is this specific trigger currently active?
+                            'ST Geometry': `start: ${self.start.toFixed(0)}px | end: ${self.end.toFixed(0)}px`, // Raw pixel values
+
                             'Fading Out (Wrapper)': `#${index + 1}`,
                             ' -> Opacity': (1 - gsap.getProperty(nextWrapper, 'autoAlpha')).toFixed(2),
                             ' -> Y': gsap.getProperty(wrapper, 'y').toFixed(1) + 'px',
@@ -159,6 +170,7 @@ const setupTextPillars = (elements) => {
                         Oracle.updateHUD('c-active-pillar', `P${index + 1}`, '#A3BE8C');
                         Oracle.updateHUD('c-scroll-progress', `${(progress * 100).toFixed(0)}%`);
                     }
+                    // ======================== END ORACLE UPGRADE =========================
                 }
             })
             .to(wrapper, { autoAlpha: 0, y: -40, rotationX: 15, ease: "power2.in" })
