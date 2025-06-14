@@ -322,8 +322,7 @@ function setupAnimations() {
                 Oracle.warn(`Could not find a '.text-anim-wrapper' inside pillar number ${i + 1}. Skipping animation for this element.`);
             }
         });
-    });
-    
+                
     gsapCtx = ctx; 
     return ctx;
 }
