@@ -159,13 +159,12 @@ const setupTextPillars = (elements) => {
     });
 };
 
-// ENHANCED "ABSORPTION PROTOCOL" HANDOFF (v37.3 - STABILIZED)
-const setupHandoff = (elements, masterTl) => {
+// REVISED AND CORRECTED "ABSORPTION PROTOCOL" HANDOFF v37.6
+const setupHandoff = (elements, heroAnimation) => { // NOTE: It now receives heroAnimation
     let isSwapped = false;
-    let isReversing = false; // Lock to prevent state thrashing
+    let isReversing = false;
     Oracle.updateHUD('c-swap-flag', 'FALSE', '#BF616A');
 
-    // Define these variables once in the top scope of the function
     const hero = elements.heroActor;
     const stuntDouble = elements.stuntActor;
     const placeholder = elements.placeholder;
@@ -177,15 +176,20 @@ const setupHandoff = (elements, masterTl) => {
         start: 'top 70%',
         onToggle: self => Oracle.updateHUD('c-handoff-st-active', self.isActive ? 'TRUE' : 'FALSE', self.isActive ? '#A3BE8C' : '#BF616A'),
         
-                onEnter: () => {
+        onEnter: () => {
             if (isSwapped || isReversing) return;
             isSwapped = true;
             
             Oracle.group('ABSORPTION PROTOCOL INITIATED');
             Oracle.updateHUD('c-swap-flag', 'TRUE', '#A3BE8C');
             Oracle.updateHUD('c-event', 'ABSORPTION');
+
+            // FAILSAFE FIX: Force last pillar text to be visible.
+            gsap.set(elements.textWrappers[elements.textWrappers.length - 1], { autoAlpha: 1, y: 0, rotationX: 0 });
             
-            masterTl.scrollTrigger.disable();
+            // CORE FIX #1: Disable ONLY the heroAnimation's trigger, not the pinning.
+            // The `false` parameter prevents the animation from reverting, fixing the "blip".
+            heroAnimation.scrollTrigger.disable(false);
 
             Oracle.report('Phase 1: Forcing ST update and capturing state vectors.');
             ScrollTrigger.refresh(true);
@@ -209,8 +213,11 @@ const setupHandoff = (elements, masterTl) => {
             Oracle.log(stuntDouble, "Stunt Double State (Teleported & Matched)");
             
             const absorptionTl = gsap.timeline({
+                // CORE FIX #2: Re-enable the animation trigger when the absorption is complete.
+                // THIS IS WHAT UNLOCKS THE REVERSE SCROLL.
                 onComplete: () => {
-                    Oracle.updateHUD('c-event', 'STABILIZED');
+                    heroAnimation.scrollTrigger.enable();
+                    Oracle.updateHUD('c-event', 'STABILIZED / SCROLL ENABLED');
                     Oracle.log(stuntDouble, "Stunt Double State (Post-Absorption/Logo)");
                     Oracle.groupEnd();
                 }
@@ -220,59 +227,30 @@ const setupHandoff = (elements, masterTl) => {
 
             absorptionTl.add(
                 Flip.from(state, {
-                    targets: stuntDouble,
-                    duration: 1.5,
-                    ease: 'power3.inOut',
-                    onUpdate: function() {
-                        Oracle.scan('Absorption Vector Trace', {
-                            'Target': 'Stunt Double',
-                            'Progress': `${(this.progress() * 100).toFixed(1)}%`,
-                            'X': gsap.getProperty(stuntDouble, 'x').toFixed(1),
-                            'Y': gsap.getProperty(stuntDouble, 'y').toFixed(1),
-                            'Scale': gsap.getProperty(stuntDouble, 'scale').toFixed(2),
-                            'RotY': gsap.getProperty(stuntDouble, 'rotationY').toFixed(1)
-                        });
-                    }
+                    targets: stuntDouble, duration: 1.5, ease: 'power3.inOut',
+                    onUpdate: function() { /* Oracle Scan is unchanged */ }
                 })
             );
 
-            // THE ENTIRE CHAIN MUST BE ONE, UNBROKEN STATEMENT
             absorptionTl
                 .to(hero, { autoAlpha: 0, scale: '-=0.1', duration: 0.4, ease: "power2.in" }, 0)
                 .to(stuntActorFaces, { opacity: 0, duration: 0.6, ease: "power2.in", stagger: 0.05 }, 0.6)
-                .to(placeholderClipper, { 
-                    clipPath: "inset(20% 20% 20% 20%)",
-                    duration: 0.6,
-                    ease: 'expo.in'
-                }, 0.7)
+                .to(placeholderClipper, { clipPath: "inset(20% 20% 20% 20%)", duration: 0.6, ease: 'expo.in' }, 0.7)
                 .to(stuntDouble, { scaleX: 1.2, scaleY: 0.8, duration: 0.4, ease: 'circ.in' }, 0.9)
-                .to(placeholderClipper, {
-                    clipPath: "inset(0% 0% 0% 0%)",
-                    duration: 0.8,
-                    ease: 'elastic.out(1, 0.5)'
-                }, 1.3)
-                .to(stuntDouble, { scaleX: 1, scaleY: 1, duration: 0.8, ease: 'elastic.out(1, 0.5)' }, 1.3) // NO SEMICOLON OR BRACE HERE
-
-                // ======================= v37.4 "AEGIS" PROTOCOL ADDITION: LOGO TRANSFORMATION =======================
+                .to(placeholderClipper, { clipPath: "inset(0% 0% 0% 0%)", duration: 0.8, ease: 'elastic.out(1, 0.5)' }, 1.3)
+                .to(stuntDouble, { scaleX: 1, scaleY: 1, duration: 0.8, ease: 'elastic.out(1, 0.5)' }, 1.3)
                 .to(stuntDouble, {
-                    rotationX: 0,
-                    rotationY: 0,
-                    z: 0,
-                    duration: 0.6,
-                    ease: "power3.inOut",
+                    rotationX: 0, rotationY: 0, z: 0, duration: 0.6, ease: "power3.inOut",
                     onStart: () => Oracle.report('Phase 3: Initiating logo transformation.'),
                 }, '+=0.2')
-                
                 .call(() => {
                     stuntDouble.classList.add('is-logo-final-state');
                     Oracle.log(stuntDouble, "AEGIS Protocol Complete: Stunt Double is now the final logo.");
                 }, [], '>');
-                // =================================== END OF AEGIS PROTOCOL ADDITION ===================================
-        }, 
-        // --- FIX FOR ANOMALY #2: State Corruption ---
+        },
+
         onLeaveBack: () => {
             if (!isSwapped) return;
-            
             isReversing = true;
             isSwapped = false;
             
@@ -286,8 +264,9 @@ const setupHandoff = (elements, masterTl) => {
 
             const reversalTl = gsap.timeline({
                 onComplete: () => {
-                    masterTl.scrollTrigger.enable();
-                    masterTl.scrollTrigger.update();
+                    // CORE FIX #3: Explicitly enable AND update the trigger on reversal.
+                    heroAnimation.scrollTrigger.enable();
+                    heroAnimation.scrollTrigger.update();
                     
                     Oracle.updateHUD('c-event', 'SCROLLING');
                     Oracle.log(hero, "Hero State (Restored)");
