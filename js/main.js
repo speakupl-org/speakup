@@ -304,53 +304,63 @@ const setupHandoff = (elements, masterStoryTl) => {
             
             const absorptionTl = gsap.timeline({
                 onComplete: () => {
-                    // THE FIX: Re-enable the MASTER scrollTrigger.
-                    masterStoryTl.scrollTrigger.enable();
-                    Oracle.report('Master ScrollTrigger RE-ENABLED.');
+                    if (masterStoryTl && masterStoryTl.scrollTrigger) { // Safety check
+                        masterStoryTl.scrollTrigger.enable();
+                        Oracle.report('Master ScrollTrigger RE-ENABLED.');
+                    }
                     Oracle.updateHUD('c-event', 'STABILIZED / SCROLL ENABLED');
                     Oracle.log(elements.stuntActor, "Stunt Double State (Post-Absorption/Logo)");
                     Oracle.groupEnd(); // End "ABSORPTION PROTOCOL" group
                 }
             });
-
+            
             Oracle.report('Phase 2: Initiating travel and absorption sequence.');
-            // NEW, UPGRADED TIMELINE
+            
             absorptionTl
-                // The Flip animation and hero/face fades are unchanged
-                .add(Flip.from(state, { 
-                    targets: elements.stuntActor, 
-                    duration: 1.5, 
+                // Start the timeline with the Flip animation. Note the open chain.
+                .add(Flip.from(state, {
+                    targets: elements.stuntActor,
+                    duration: 1.5,
                     ease: 'power3.inOut',
-                    onUpdate: function() { /* ... unchanged ... */ } 
-                }))
+                    onUpdate: function() {
+                        Oracle.scan('Absorption Vector Trace', {
+                            'Target': 'Stunt Double',
+                            'Progress': `${(this.progress() * 100).toFixed(1)}%`,
+                            'X': gsap.getProperty(elements.stuntActor, 'x').toFixed(1),
+                            'Y': gsap.getProperty(elements.stuntActor, 'y').toFixed(1),
+                            'Scale': gsap.getProperty(elements.stuntActor, 'scale').toFixed(2),
+                            'RotY': gsap.getProperty(elements.stuntActor, 'rotationY').toFixed(1)
+                        });
+                    }
+                })) // <-- CORRECT: The parenthesis from Flip.from() ends here. The chain continues.
+            
+                // All subsequent tweens are now correctly part of the timeline
                 .to(elements.heroActor, { autoAlpha: 0, scale: '-=0.1', duration: 0.4, ease: "power2.in" }, 0)
                 .to(elements.stuntActorFaces, { opacity: 0, duration: 0.6, ease: "power2.in", stagger: 0.05 }, 0.6)
-                // The "squeeze" effect animations are unchanged
                 .to(elements.placeholderClipper, { clipPath: "inset(20% 20% 20% 20%)", duration: 0.6, ease: 'expo.in' }, 0.7)
                 .to(elements.stuntActor, { scaleX: 1.2, scaleY: 0.8, duration: 0.4, ease: 'circ.in' }, 0.9)
                 .to(elements.placeholderClipper, { clipPath: "inset(0% 0% 0% 0%)", duration: 0.8, ease: 'elastic.out(1, 0.5)' }, 1.3)
                 .to(elements.stuntActor, { scaleX: 1, scaleY: 1, duration: 0.8, ease: 'elastic.out(1, 0.5)' }, 1.3)
             
-                // ==== THE MORPHSVG UPGRADE ====
-                // This last part is what's different
+                // THE MORPHSVG UPGRADE - now correctly chained
                 .to(elements.stuntActor, { 
                     rotationX: 0, 
                     rotationY: 0, 
-                    duration: 0.8, // Synchronize duration with the morph for a smooth effect
+                    duration: 0.8,
                     ease: "power3.inOut", 
                     onStart: () => Oracle.report('Phase 3: Initiating 3D flatten & SVG morph.') 
                 }, '+=0.2')
-            
-                // THIS IS THE MAGIC: Morph the square into your logo at the same time
                 .to('#morph-path', {
-                    morphSVG: logoPathData, // <-- This uses the variable we defined earlier
+                    morphSVG: logoPathData,
                     duration: 0.8, 
                     ease: 'power3.inOut'
-                }, "<") // <-- The "<" position parameter starts it at the same time as the previous animation
-                
+                }, "<")
+            
+                // The final, simple .call() to log completion
                 .call(() => {
                     Oracle.log(elements.stuntActor, "AEGIS Protocol Complete: SVG Morph complete.");
                 });
+
         },
 
         // AROUND LINE 328
