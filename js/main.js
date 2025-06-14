@@ -423,35 +423,50 @@ function setupAnimations() {
     return ctx;
 }
 
-// --- INITIALIZATION SEQUENCE ---
+// --- INITIALIZATION SEQUENCE (FINAL, RESIZE-ROBUST VERSION) ---
+
+// 1. A global variable to hold our GSAP context.
+let gsapCtx;
 
 function setupSiteLogic() {
+    // This function remains unchanged.
     const menuOpen = getElement('#menu-open-button');
     const menuClose = getElement('#menu-close-button');
     if (menuOpen && menuClose) {
         menuOpen.addEventListener('click', () => document.documentElement.classList.add('menu-open'));
         menuClose.addEventListener('click', () => document.documentElement.classList.remove('menu-open'));
     }
-
     const yearEl = getElement('#current-year');
     if (yearEl) yearEl.textContent = new Date().getFullYear();
     Oracle.report("Site logic initialized.");
 }
 
-// Ensure Oracle config is ready FIRST, then run animations
 function initialAnimationSetup() {
-    // We initialize the Oracle, and PASS the main animation function
-    // as a callback. This guarantees order of operations.
     Oracle.init(() => {
         if (window.gsap && window.ScrollTrigger && window.Flip && window.MorphSVGPlugin) {
-            setupAnimations(); 
+            
+            // THE CRITICAL FIX: Before we set up new animations,
+            // we revert any old ones that might exist from a previous resize.
+            if (gsapCtx) {
+                gsapCtx.revert();
+                Oracle.warn("Previous GSAP context reverted due to re-initialization.");
+            }
+            
+            // Now we run the setup and store the new context in our variable.
+            gsapCtx = setupAnimations(); 
+
         } else {
-            Oracle.runSelfDiagnostic(); // Run diagnostic even on failure to report what's missing
+            Oracle.runSelfDiagnostic();
             Oracle.warn("CRITICAL FAILURE: GSAP libraries failed to load. SOVEREIGN protocol aborted.");
         }
     });
 }
 
-// Bind Listeners
+// Keep the event listeners the same
 document.addEventListener("DOMContentLoaded", setupSiteLogic);
 window.addEventListener("load", initialAnimationSetup);
+
+// BONUS: For ultimate robustness, also re-run the setup on resize.
+// This ensures that even if the user resizes without crossing the breakpoint,
+// positions are recalculated correctly.
+window.addEventListener("resize", initialAnimationSetup);
