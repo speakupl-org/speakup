@@ -699,7 +699,8 @@ html.menu-open {
 .pillar-text-col {
     flex: 1;
     width: 50%;
-    padding-left: 2rem; 
+    padding-left: 2rem;
+    min-height: 300vh;
 }
 
 .pillar-text-content {
