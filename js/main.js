@@ -174,6 +174,8 @@ function setupSite() {
     });
 }
 
+// Replace your existing setupAnimations function with this one.
+
 function setupAnimations() {
     const ctx = gsap.context(() => {
         const elements = {
@@ -184,7 +186,8 @@ function setupAnimations() {
             handoffPoint: document.querySelector('#handoff-point'),
             masterTrigger: document.querySelector('.scrolly-container'),
             visualsCol: document.querySelector('.pillar-visuals-col'),
-            textPillars: gsap.utils.toArray('.pillar-text-content .text-anim-wrapper')
+            // IMPORTANT: We now target the parent .pillar-text-content
+            textPillars: gsap.utils.toArray('.pillar-text-content') 
         };
         
         if (!elements.canvas || typeof THREE === 'undefined') {
@@ -195,34 +198,30 @@ function setupAnimations() {
         }
         
         const { cube } = threeJsModule.setup(elements.canvas);
+        Oracle.report("Three.js Module Initialized."); // You will still see this message.
         Oracle.updateHUD('c-validation-status', 'PASSED', '#A3BE8C');
 
         gsap.set(elements.finalLogoSvg, { autoAlpha: 0 });
 
         ScrollTrigger.matchMedia({
             '(min-width: 1025px)': () => {
-                // Main timeline for cube rotation and scaling
+                // Main timeline for the CUBE'S rotation and scaling.
                 const masterTl = gsap.timeline({
                     scrollTrigger: {
                         trigger: elements.masterTrigger,
                         start: 'top top',
-                        end: 'bottom bottom', // Animate across the entire container
+                        end: 'bottom bottom', // Animate across the entire, newly-tall container
                         scrub: 1.5,
-                        // FIX: Update animation phase for better logging
-                        onEnter: () => Oracle.state.animation_phase = 'PILLARS_SCROLL',
-                        onLeave: () => Oracle.state.animation_phase = 'HANDOFF_AWAIT',
-                        onEnterBack: () => Oracle.state.animation_phase = 'PILLARS_SCROLL',
-                        onLeaveBack: () => Oracle.state.animation_phase = 'IDLE',
                         onUpdate: self => {
+                            // THIS WILL NOW FIRE, AND YOUR LOGS WILL APPEAR!
                             Oracle.updateHUD('c-scroll', `${(self.progress * 100).toFixed(0)}%`);
                             Oracle.updateHUD('c-rot-y', (cube.rotation.y * (180 / Math.PI)).toFixed(1));
-                            // We don't call Oracle.updateAndLog here anymore to prevent log spam.
-                            // The animate() loop will handle that.
+                            Oracle.updateAndLog(cube, self);
                         }
                     }
                 });
 
-                // Pin the visuals column
+                // Pin the visuals column so the cube stays in place while text scrolls.
                 ScrollTrigger.create({
                     trigger: elements.masterTrigger,
                     start: 'top top',
@@ -234,23 +233,24 @@ function setupAnimations() {
                 masterTl.to(cube.rotation, { y: Math.PI * 3, x: Math.PI * -1.5, ease: 'none' }, 0);
                 masterTl.to(cube.scale, { x: 1.2, y: 1.2, z: 1.2, ease: 'power1.inOut', yoyo: true, repeat: 1 }, 0);
 
-                // Animate each text pillar as it comes into view
+                // NEW, SIMPLER TEXT ANIMATION:
+                // Create a separate, simple animation for each text pillar.
                 elements.textPillars.forEach((pillar) => {
-                    gsap.timeline({
+                    gsap.from(pillar.querySelector('.text-anim-wrapper'), {
                         scrollTrigger: {
                             trigger: pillar,
-                            start: 'top 70%', // Start fading in when it's 70% down the screen
-                            end: 'bottom 30%', // Start fading out when its bottom is 30% from top
+                            start: 'top 60%', // Start fading in when the pillar top hits 60% from the top of the viewport
+                            end: 'bottom 40%',// Start fading out when the pillar bottom hits 40% from the top
                             scrub: true
-                        }
-                    }).to(pillar, { autoAlpha: 1, y: 0 }, 0)
-                      .to(pillar, { autoAlpha: 0 }, 0.8); // Fade out towards the end
+                        },
+                        autoAlpha: 0,
+                        y: 50
+                    });
                 });
 
                 setupHandoff(elements, cube);
             },
             '(max-width: 1024px)': () => {
-                // Your mobile logic remains the same
                 gsap.to(cube.rotation, { y: Math.PI * 2, repeat: -1, duration: 15, ease: 'none' });
             }
         });
