@@ -158,15 +158,24 @@ const setupTextPillars = (elements) => {
             scrub: 1.5,
             markers: Oracle.config.verbosity > 1, // Only show markers if verbosity is 2+
 
-            // === OVERKILL TRACKER #2: LIVE COMPUTED STYLE TELEMETRY ===
+            // === OVERKILL TRACKER v2.1: FULL SPECTRUM ANALYSIS ===
             onUpdate: (self) => {
                 const data = { 'Master Progress': `${(self.progress * 100).toFixed(1)}%` };
+                
+                // Check the visibility of the parent container itself.
+                const textColStyle = window.getComputedStyle(elements.textCol);
+                data['Parent Visible?'] = textColStyle.visibility;
+                data['Parent Opacity'] = parseFloat(textColStyle.opacity).toFixed(2);
+                
+                // For each wrapper, get its undeniable, browser-rendered style.
                 elements.textWrappers.forEach((wrapper, index) => {
                     const style = window.getComputedStyle(wrapper);
-                    const key = `Pillar ${index + 1} Opacity`;
-                    data[key] = parseFloat(style.opacity).toFixed(2);
+                    const key = `P${index + 1}`;
+                    data[`${key}_Opacity`] = parseFloat(style.opacity).toFixed(2);
+                    data[`${key}_z-index`] = style.zIndex;
+                    data[`${key}_pointer-events`] = style.pointerEvents;
                 });
-                Oracle.scan('Master Timeline (Live Computed Styles)', data);
+                Oracle.scan('Master Timeline (Full Spectrum)', data);
             }
         }
     });
