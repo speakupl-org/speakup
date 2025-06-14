@@ -214,17 +214,13 @@ const setupHeroActor = (elements, masterTl) => {
 // =========================================================================
 //   THE DEFINITIVE BLUEPRINT for Text Pillars (v42 - SYNCHRONIZED Narrative)
 // =========================================================================
-// This function no longer creates its own timeline. Instead, it accepts the 
-// single master timeline (`masterTl`) and adds its animation "chapters" to it.
 const setupTextPillars = (elements, masterTl) => {
 
-    // 1. Establish a clean, known starting state for all wrappers. This remains critical.
+    // 1. Establish a clean, known starting state for all wrappers.
     gsap.set(elements.textWrappers, { autoAlpha: 0, y: 40, rotationX: -15 });
     gsap.set(elements.textWrappers[0], { autoAlpha: 1, y: 0, rotationX: 0 });
 
     // === OVERKILL TRACKER #1: INITIAL STATE VERIFICATION ===
-    // This tracker is preserved. It runs once and provides essential baseline data
-    // before any animation is added to the timeline. It is independent and valuable.
     Oracle.group("Initial Text Pillar States (PRE-ANIMATION)");
     elements.textWrappers.forEach((wrapper, index) => {
         const style = window.getComputedStyle(wrapper);
@@ -240,25 +236,17 @@ const setupTextPillars = (elements, masterTl) => {
     // ========================================================
     
     // 2. Add Synchronized Animations to the Master Timeline.
-    // The previous self-contained timeline and its ScrollTrigger are REMOVED.
-    // We now add tweens directly to the `masterTl` that was passed into this function.
-    // We use absolute time markers to ensure perfect synchronization with the hero animation.
     // The total hero animation duration is 4 seconds (2s rotation one way, 2s back).
-
-    // Transition from Pillar 1 to Pillar 2.
-    // This starts at the 1.0 second mark of the master story.
+    
+    // Transition from Pillar 1 to Pillar 2. Starts at the 1.0s mark of the master story.
     masterTl.to(elements.textWrappers[0], { autoAlpha: 0, y: -40, rotationX: 15, duration: 0.5, ease: "power2.in" }, 1.0)
             .to(elements.textWrappers[1], { autoAlpha: 1, y: 0, rotationX: 0, duration: 0.5, ease: "power2.out" }, "<");
             
-    // Transition from Pillar 2 to Pillar 3.
-    // This starts at the 3.0 second mark of the master story.
+    // Transition from Pillar 2 to Pillar 3. Starts at the 3.0s mark of the master story.
     masterTl.to(elements.textWrappers[1], { autoAlpha: 0, y: -40, rotationX: 15, duration: 0.5, ease: "power2.in" }, 3.0)
             .to(elements.textWrappers[2], { autoAlpha: 1, y: 0, rotationX: 0, duration: 0.5, ease: "power2.out" }, "<");
 
-
     // === OVERKILL TRACKER #2: NARRATIVE INTEGRITY CHECK ===
-    // This is a new tracker that verifies this function's contribution to the master story.
-    // It confirms that this 'recipe' has successfully added its chapters.
     Oracle.scan('Narrative Contribution Check [TextPillars]', {
         'Status': 'Pillar chapters successfully added to master timeline.',
         'Master Timeline New Total Duration': masterTl.duration().toFixed(2) + 's'
