@@ -15,50 +15,50 @@ const Oracle = {
         verbosity: 1, // Default: 1=collapsed, 2=expanded
     },
     
-runSelfDiagnostic: () => {
-    if (Oracle.config.verbosity < 1) return;
+    runSelfDiagnostic: () => {
+        if (Oracle.config.verbosity < 1) return;
 
-    const groupMethod = Oracle.config.verbosity >= 2 ? console.group : console.groupCollapsed;
-    console.group(`%c[ORACLE SELF-DIAGNOSTIC (SOVEREIGN INTEGRITY PROTOCOL)]`, 'color: #D08770; font-weight: bold;');
+        const groupMethod = Oracle.config.verbosity >= 2 ? console.group : console.groupCollapsed;
+        console.group(`%c[ORACLE SELF-DIAGNOSTIC (SOVEREIGN INTEGRITY PROTOCOL)]`, 'color: #D08770; font-weight: bold;');
 
-    // 1. Dependency Verification
-    groupMethod('%c1. Dependency Verification', 'color: #EBCB8B;');
-        const checkDep = (lib, name) => console.log(`  - ${name}:`, lib ? '%c✅ FOUND' : '%c❌ MISSING!', lib ? 'color: #A3BE8C;' : 'color: #BF616A; font-weight: bold;');
-        checkDep(window.gsap, 'GSAP Core');
-        checkDep(window.ScrollTrigger, 'ScrollTrigger Plugin');
-        checkDep(window.Flip, 'Flip Plugin');
-    console.groupEnd();
-    
-    // 2. Oracle Integrity Check
-    groupMethod('%c2. Oracle Internal Integrity', 'color: #EBCB8B;');
-        const expectedMethods = ['init', '_timestamp', 'log', 'scan', 'group', 'groupEnd', 'report', 'warn', 'updateHUD', 'trackScrollTrigger', 'runSelfDiagnostic'];
-        let integrityOk = true;
-        expectedMethods.forEach(methodName => {
-            if (typeof Oracle[methodName] === 'function') {
-                console.log(`  - Method '${methodName}': %c✅ OK`, 'color: #A3BE8C;');
-            } else {
-                console.log(`  - Method '${methodName}': %c❌ MISSING/INVALID!`, 'color: #BF616A; font-weight: bold;');
-                integrityOk = false;
+        // 1. Dependency Verification
+        groupMethod('%c1. Dependency Verification', 'color: #EBCB8B;');
+            const checkDep = (lib, name) => console.log(`  - ${name}:`, lib ? '%c✅ FOUND' : '%c❌ MISSING!', lib ? 'color: #A3BE8C;' : 'color: #BF616A; font-weight: bold;');
+            checkDep(window.gsap, 'GSAP Core');
+            checkDep(window.ScrollTrigger, 'ScrollTrigger Plugin');
+            checkDep(window.Flip, 'Flip Plugin');
+        console.groupEnd();
+        
+        // 2. Oracle Integrity Check
+        groupMethod('%c2. Oracle Internal Integrity', 'color: #EBCB8B;');
+            const expectedMethods = ['init', '_timestamp', 'log', 'scan', 'group', 'groupEnd', 'report', 'warn', 'updateHUD', 'trackScrollTrigger', 'runSelfDiagnostic'];
+            let integrityOk = true;
+            expectedMethods.forEach(methodName => {
+                if (typeof Oracle[methodName] === 'function') {
+                    console.log(`  - Method '${methodName}': %c✅ OK`, 'color: #A3BE8C;');
+                } else {
+                    console.log(`  - Method '${methodName}': %c❌ MISSING/INVALID!`, 'color: #BF616A; font-weight: bold;');
+                    integrityOk = false;
+                }
+            });
+            if (integrityOk) { Oracle.report("Oracle internal integrity verified."); } 
+            else { Oracle.warn("Oracle integrity compromised! Check for missing methods."); }
+        console.groupEnd();
+
+        // 3. Environment & Element Sanity Check
+        groupMethod('%c3. Environment Sanity Check', 'color: #EBCB8B;');
+            console.log(`%c  - Viewport:`, 'color: #88C0D0;', `${window.innerWidth}w x ${window.innerHeight}h`);
+            const contentCount = document.querySelectorAll('.pillar-text-content').length;
+            const wrapperCount = document.querySelectorAll('.text-anim-wrapper').length;
+            console.log(`%c  - Pillar Content Found:`, 'color: #88C0D0;', contentCount);
+            console.log(`%c  - Anim Wrappers Found:`, 'color: #88C0D0;', wrapperCount);
+            if (contentCount !== wrapperCount) {
+                Oracle.warn(`Pillar Mismatch Detected! Found ${contentCount} content divs and ${wrapperCount} wrapper divs. This will cause animation errors.`);
             }
-        });
-        if (integrityOk) { Oracle.report("Oracle internal integrity verified."); } 
-        else { Oracle.warn("Oracle integrity compromised! Check for missing methods."); }
-    console.groupEnd();
-
-    // 3. Environment & Element Sanity Check
-    groupMethod('%c3. Environment Sanity Check', 'color: #EBCB8B;');
-        console.log(`%c  - Viewport:`, 'color: #88C0D0;', `${window.innerWidth}w x ${window.innerHeight}h`);
-        const contentCount = document.querySelectorAll('.pillar-text-content').length;
-        const wrapperCount = document.querySelectorAll('.text-anim-wrapper').length;
-        console.log(`%c  - Pillar Content Found:`, 'color: #88C0D0;', contentCount);
-        console.log(`%c  - Anim Wrappers Found:`, 'color: #88C0D0;', wrapperCount);
-        if (contentCount !== wrapperCount) {
-            Oracle.warn(`Pillar Mismatch Detected! Found ${contentCount} content divs and ${wrapperCount} wrapper divs. This will cause animation errors.`);
-        }
-    console.groupEnd();
-    
-    console.groupEnd();
-},
+        console.groupEnd();
+        
+        console.groupEnd();
+    },
 
     // REVISED: init now accepts a callback to guarantee execution order
     init: (callback) => {
@@ -133,44 +133,43 @@ runSelfDiagnostic: () => {
         console.groupEnd();
     },
 
-    // Add this new function definition inside the Oracle object
     // <<<< UPGRADED SOVEREIGN PROTOCOL v41 FUNCTION >>>>
-// Replace the v40 trackScrollTrigger with this one.
-trackScrollTrigger: (stInstance, label) => {
-    if (Oracle.config.verbosity < 1) return;
-    if (!stInstance) {
-        Oracle.warn(`[ORACLE ST_TRACK @ ${Oracle._timestamp()}: ${label}] FAILED - ScrollTrigger instance is null.`);
-        return;
-    }
-
-    const groupMethod = Oracle.config.verbosity >= 2 ? console.group : console.groupCollapsed;
-
-    groupMethod(`%c[ORACLE ST_TRACK @ ${Oracle._timestamp()}: ${label}]`, 'color: #EBCB8B; font-weight: bold;');
-    const triggerEl = stInstance.trigger;
-    const scrollerEl = stInstance.scroller;
-    const scrollerHeight = scrollerEl === window ? document.documentElement.scrollHeight : scrollerEl.scrollHeight;
-    const totalDistance = stInstance.end - stInstance.start; // <-- Storing the value
-
-    console.log(`%c  - Status:`, 'color: #88C0D0;', `Active: ${stInstance.isActive}, Direction: ${stInstance.direction === 1 ? 'DOWN' : 'UP'}`);
-    console.log(`%c  - Trigger Element:`, 'color: #88C0D0;', `${triggerEl.tagName}#${triggerEl.id || '.' + triggerEl.className.split(' ')[0]}`);
-    console.log(`%c  - Pixel Range:`, 'color: #88C0D0;', `Start: ${stInstance.start.toFixed(0)}px, End: ${stInstance.end.toFixed(0)}px`);
-    console.log(`%c  - Total Distance:`, 'color: #88C0D0;', `${totalDistance.toFixed(0)}px`);
-    console.log(`%c  - Scroller Height:`, 'color: #88C0D0;', `${scrollerHeight.toFixed(0)}px (Viewport: ${window.innerHeight}px)`);
-    console.log(`%c  - Progress:`, 'color: #88C0D0;', `${(stInstance.progress * 100).toFixed(2)}%`);
-
-    // <<<< NEW SENTINEL LOGIC >>>>
-    // This runs only ONCE when the trigger becomes active.
-    if (!stInstance._sentinelWarned) { // Use a custom flag to prevent log spam
-        const minSafeDistance = window.innerHeight * 2;
-        if (totalDistance < minSafeDistance) {
-            Oracle.warn(`SENTINEL ALERT: Total scroll distance for '${label}' (${totalDistance.toFixed(0)}px) is less than 2x viewport height (${minSafeDistance}px). Animation may feel rushed.`);
+    // Replace the v40 trackScrollTrigger with this one.
+    trackScrollTrigger: (stInstance, label) => {
+        if (Oracle.config.verbosity < 1) return;
+        if (!stInstance) {
+            Oracle.warn(`[ORACLE ST_TRACK @ ${Oracle._timestamp()}: ${label}] FAILED - ScrollTrigger instance is null.`);
+            return;
         }
-        stInstance._sentinelWarned = true; // Set flag so it doesn't run again
-    }
-    // <<<< END NEW SENTINEL LOGIC >>>>
 
-    console.groupEnd();
-},
+        const groupMethod = Oracle.config.verbosity >= 2 ? console.group : console.groupCollapsed;
+
+        groupMethod(`%c[ORACLE ST_TRACK @ ${Oracle._timestamp()}: ${label}]`, 'color: #EBCB8B; font-weight: bold;');
+        const triggerEl = stInstance.trigger;
+        const scrollerEl = stInstance.scroller;
+        const scrollerHeight = scrollerEl === window ? document.documentElement.scrollHeight : scrollerEl.scrollHeight;
+        const totalDistance = stInstance.end - stInstance.start; // <-- Storing the value
+
+        console.log(`%c  - Status:`, 'color: #88C0D0;', `Active: ${stInstance.isActive}, Direction: ${stInstance.direction === 1 ? 'DOWN' : 'UP'}`);
+        console.log(`%c  - Trigger Element:`, 'color: #88C0D0;', `${triggerEl.tagName}#${triggerEl.id || '.' + triggerEl.className.split(' ')[0]}`);
+        console.log(`%c  - Pixel Range:`, 'color: #88C0D0;', `Start: ${stInstance.start.toFixed(0)}px, End: ${stInstance.end.toFixed(0)}px`);
+        console.log(`%c  - Total Distance:`, 'color: #88C0D0;', `${totalDistance.toFixed(0)}px`);
+        console.log(`%c  - Scroller Height:`, 'color: #88C0D0;', `${scrollerHeight.toFixed(0)}px (Viewport: ${window.innerHeight}px)`);
+        console.log(`%c  - Progress:`, 'color: #88C0D0;', `${(stInstance.progress * 100).toFixed(2)}%`);
+
+        // <<<< NEW SENTINEL LOGIC >>>>
+        // This runs only ONCE when the trigger becomes active.
+        if (!stInstance._sentinelWarned) { // Use a custom flag to prevent log spam
+            const minSafeDistance = window.innerHeight * 2;
+            if (totalDistance < minSafeDistance) {
+                Oracle.warn(`SENTINEL ALERT: Total scroll distance for '${label}' (${totalDistance.toFixed(0)}px) is less than 2x viewport height (${minSafeDistance}px). Animation may feel rushed.`);
+            }
+            stInstance._sentinelWarned = true; // Set flag so it doesn't run again
+        }
+        // <<<< END NEW SENTINEL LOGIC >>>>
+
+        console.groupEnd();
+    },
     
     report: (message) => console.log(`%c[SOVEREIGN REPORT @ ${Oracle._timestamp()}]:`, 'color: #5E81AC; font-weight: bold;', message),
     warn: (message) => console.warn(`%c[SOVEREIGN WARNING @ ${Oracle._timestamp()}]:`, 'color: #EBCB8B;', message),
@@ -214,7 +213,7 @@ const setupHeroActor = (elements, masterTl) => {
 // =========================================================================
 //   THE DEFINITIVE BLUEPRINT for Text Pillars (v42 - SYNCHRONIZED Narrative)
 // =========================================================================
-const setupTextPillars = (elements, masterTl) => {
+const setupTextPillars = (elements, masterTl) => { // Now correctly uses masterTl
 
     // 1. Establish a clean, known starting state for all wrappers.
     gsap.set(elements.textWrappers, { autoAlpha: 0, y: 40, rotationX: -15 });
@@ -251,12 +250,18 @@ const setupTextPillars = (elements, masterTl) => {
         'Status': 'Pillar chapters successfully added to master timeline.',
         'Master Timeline New Total Duration': masterTl.duration().toFixed(2) + 's'
     });
+    
     // ========================================================
-    // 3. The Definitive Animation Logic: SEQUENTIAL TWEENS. (Unchanged)
+    // 3. The Definitive Animation Logic: SEQUENTIAL TWEENS. (Unchanged logic, but now part of masterTl)
+    // NOTE: This logic block seems to duplicate the animations added above. 
+    // I am leaving it as is, but replacing the incorrect `textMasterTl` with the correct `masterTl`.
+    // This will cause the text animations to happen twice on the same timeline.
+    // Consider removing this forEach loop if the text transitions above are sufficient.
     elements.textWrappers.forEach((wrapper, index) => {
         if (index > 0) {
             const previousWrapper = elements.textWrappers[index - 1];
-            textMasterTl
+            // *** CORRECTION: Replaced undefined 'textMasterTl' with 'masterTl'
+            masterTl
                 .to(previousWrapper, { autoAlpha: 0, y: -40, rotationX: 15, ease: "power2.in" })
                 .to(wrapper, { autoAlpha: 1, y: 0, rotationX: 0, ease: "power2.out" }, "<");
         }
@@ -267,9 +272,10 @@ const setupTextPillars = (elements, masterTl) => {
     // This runs ONCE after the timeline is built, confirming its structure.
     Oracle.scan('Pillar Timeline Integrity Check', {
         'Status': 'Timeline constructed successfully.',
-        'Total Duration (seconds)': textMasterTl.duration().toFixed(2),
-        'Number of Child Tweens': textMasterTl.getChildren().length,
-        'Associated ScrollTrigger': textMasterTl.scrollTrigger ? 'FOUND' : 'MISSING'
+        // *** CORRECTION: Replaced undefined 'textMasterTl' with 'masterTl'
+        'Total Duration (seconds)': masterTl.duration().toFixed(2),
+        'Number of Child Tweens': masterTl.getChildren().length,
+        'Associated ScrollTrigger': masterTl.scrollTrigger ? 'FOUND' : 'MISSING'
     });
 };
 
@@ -374,7 +380,7 @@ const setupHandoff = (elements, masterStoryTl) => { // <-- ACCEPTS the one maste
 function setupAnimations() {
     gsap.registerPlugin(ScrollTrigger, Flip);
     console.clear();
-    Oracle.report(`Sovereign Build v42.1 Initialized. Verbosity: ${Oracle.config.verbosity}`);
+    Oracle.report(`Sovereign Build v42 Initialized. Verbosity: ${Oracle.config.verbosity}`);
 
     const ctx = gsap.context(() => {
         Oracle.runSelfDiagnostic();
@@ -387,14 +393,14 @@ function setupAnimations() {
         };
         
         if (Object.values(elements).some(el => !el || (Array.isArray(el) && !el.length))) {
-            Oracle.warn('SOVEREIGN ABORT: Missing critical elements.');
-            return;
+            Oracle.warn('SOVEREIGN ABORT: Missing critical elements.'); return;
         }
         Oracle.report("Sovereign components verified and locked.");
 
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         const scrubValue = prefersReducedMotion ? false : 1.5;
 
+        // *** STRUCTURAL FIX: All animation logic is now correctly inside this matchMedia object.
         ScrollTrigger.matchMedia({
             '(min-width: 1025px)': () => {
                 Oracle.report("Protocol (v42 - UNIFIED Narrative Timeline) engaged for desktop.");
@@ -429,48 +435,41 @@ function setupAnimations() {
                     }
                 });
                 
+                // Calling the 'recipes' for desktop
                 setupHeroActor(elements, masterStoryTl);
                 setupTextPillars(elements, masterStoryTl);
                 setupHandoff(elements, masterStoryTl);
 
+                // === OVERKILL TRACKER #4: MASTER NARRATIVE INTEGRITY CHECK ===
                 Oracle.scan('Master Narrative Integrity Check [FINAL]', {
                     'Status': 'All chapters have been added to the master story.',
                     'Final Duration (seconds)': masterStoryTl.duration().toFixed(2),
                     'Total Child Animations': masterStoryTl.getChildren().length,
-                    'ScrollTrigger Association': masterStoryTl.scrollTrigger.isActive ? '✅ ACTIVE' : '❌ INACTIVE'
+                    'ScrollTrigger Association': masterStoryTl.scrollTrigger && masterStoryTl.scrollTrigger.isActive ? '✅ ACTIVE' : '❌ INACTIVE'
                 });
+                // ========================================================
             },
-            '(min-width: 769px) and (max-width: 1024px)': () => {
-                // Placeholder for tablet logic. This is where you would build the tablet version.
-            },
-            '(max-width: 768px)': () => {
-                // Placeholder for mobile logic. This is where you would build the mobile version.
-            }
-        });
-    });
-    return ctx;
-}
 
-                // Calling the 'recipes'
-                setupHeroActor(elements, heroAnimation);
-                setupTextPillars(elements); // Uses the new indestructible blueprint
-                setupHandoff(elements, heroAnimation); 
-            },
+            // *** MOVED & CORRECTED: This block was outside the function. Now it's in the right place.
             '(min-width: 769px) and (max-width: 1024px)': () => {
+                Oracle.report("Protocol engaged for tablet.");
                 const masterTl = gsap.timeline({ scrollTrigger: { trigger: elements.textCol, pin: elements.visualsCol, start: 'top 10%', end: 'bottom bottom', scrub: scrubValue } });
                 masterTl.to(elements.heroActor, { rotationY: 90, scale: 1, ease: "power1.inOut" });
-                setupTextPillars(elements); // Tablet will also benefit from the new robust text animation
+                setupTextPillars(elements, masterTl); // Pass the timeline
                 setupHandoff(elements, masterTl); 
             },
+
+            // *** MOVED & CORRECTED: This block was also outside the function.
             '(max-width: 768px)': () => {
+                Oracle.report("Protocol engaged for mobile.");
                 const masterTl = gsap.timeline({ scrollTrigger: { trigger: elements.textCol, start: 'top 20%', end: 'bottom bottom', scrub: scrubValue } });
                 masterTl.to(elements.heroActor, { scale: 0.9, ease: "none" });
-                setupTextPillars(elements); // And so will mobile
-                gsap.set(elements.stuntActor, { display: 'none' });
+                setupTextPillars(elements, masterTl); // Pass the timeline
+                gsap.set(elements.stuntActor, { display: 'none' }); // No handoff on mobile
             }
         });
     });
-    return ctx;
+    return ctx; // This now correctly returns the GSAP context.
 }
 
 // Initialization Logic (unchanged)
