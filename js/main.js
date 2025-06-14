@@ -291,41 +291,35 @@ function setupAnimations() {
                 elements.textPillars.forEach((pillar, i) => {
                     const textWrapper = pillar.querySelector('.text-anim-wrapper');
                     
-                    // Fade In
-                    masterTl.to(textWrapper, { 
-                        autoAlpha: 1, 
-                        y: 0,
+                        if (textWrapper) { 
+                // Reset styles for resize-safety
+                gsap.set(textWrapper, { y: 0, autoAlpha: (i === 0) ? 1 : 0 }); // First is visible, others are not.
+        
+                // Fade Out (if it's not the first pillar)
+                if (i > 0) {
+                    masterTl.from(textWrapper, { 
+                        autoAlpha: 0,
+                        y: 40,
                         duration: 0.5,
                         ease: 'power2.out'
-                    }, i * 0.8); // Stagger the start time of each fade-in
-
-                    // Add a callback to update our new HUD element
-                    masterTl.add(() => Oracle.updateHUD('c-active-pillar', `Pillar ${i + 1}`), i * 0.8);
-
-                    // Fade Out (if it's not the last pillar)
-                    if (i < elements.textPillars.length - 1) {
-                         masterTl.to(textWrapper, {
-                            autoAlpha: 0,
-                            y: -40,
-                            duration: 0.5,
-                            ease: 'power2.in'
-                        }, (i + 1) * 0.8 - 0.25); // Start the fade-out just before the next one fades in
-                    }
-                });
+                    }, i * 0.8);
+                }
                 
-                // NOTE: We have REMOVED the `pin: true` ScrollTrigger.
-                // The CSS `position: sticky` is now handling the pinning.
-
-                // === Setup the Handoff Animation Separately ===
-                setupHandoffAnimation(elements, cube);
-            },
-            
-            // On mobile, do nothing. The CSS handles the layout.
-            '(max-width: 1024px)': () => {
-                Oracle.report("Mobile layout active. Scrollytelling animations disabled.");
-                // Ensure cube is reset if resizing from desktop to mobile
-                gsap.set(cube.rotation, { x: 0, y: 0, z: 0 });
-                gsap.set(cube.scale, { x: 1, y: 1, z: 1 });
+                // Add a callback to update our HUD element
+                masterTl.add(() => Oracle.updateHUD('c-active-pillar', `Pillar ${i + 1}`), i * 0.8);
+        
+                // Fade Out (if it's not the last pillar)
+                if (i < elements.textPillars.length - 1) {
+                     masterTl.to(textWrapper, {
+                        autoAlpha: 0,
+                        y: -40,
+                        duration: 0.5,
+                        ease: 'power2.in'
+                    }, (i + 1) * 0.8 - 0.25);
+                }
+            } else {
+                // If we can't find a wrapper, log a warning but DON'T crash.
+                Oracle.warn(`Could not find a '.text-anim-wrapper' inside pillar number ${i + 1}. Skipping animation for this element.`);
             }
         });
     });
