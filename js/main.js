@@ -250,7 +250,7 @@ function setupAnimations() {
         ScrollTrigger.matchMedia({
             '(min-width: 1025px)': () => {
                 Oracle.report("Desktop animation protocol engaged.");
-
+    
                 const masterTl = gsap.timeline({
                     scrollTrigger: {
                         trigger: elements.masterTrigger,
