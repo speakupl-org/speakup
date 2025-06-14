@@ -252,8 +252,6 @@ const setupTextPillars = (elements, masterTl) => {
         'Master Timeline New Total Duration': masterTl.duration().toFixed(2) + 's'
     });
     // ========================================================
-};
-
     // 3. The Definitive Animation Logic: SEQUENTIAL TWEENS. (Unchanged)
     elements.textWrappers.forEach((wrapper, index) => {
         if (index > 0) {
@@ -273,7 +271,6 @@ const setupTextPillars = (elements, masterTl) => {
         'Number of Child Tweens': textMasterTl.getChildren().length,
         'Associated ScrollTrigger': textMasterTl.scrollTrigger ? 'FOUND' : 'MISSING'
     });
-    // =========================================================
 };
 
 // REVISED AND CORRECTED "ABSORPTION PROTOCOL" HANDOFF v37.6
