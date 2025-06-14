@@ -1137,30 +1137,54 @@ body.no-scroll {
 }
 
 /* ========================================================== */
-/*   FIX FOR PINNING AND ALIGNMENT                            */
+/*   DEFINITIVE PILLAR LAYOUT STYLES (v3)                     */
 /* ========================================================== */
 
-/* This is the container for both columns */
+/* The main container for the two-column scrollytelling effect. */
 .scrolly-container {
-    display: flex;
-    /* This makes the container align items from the top */
-    align-items: flex-start; 
+    display: flex;          /* Creates the two-column layout */
+    align-items: flex-start;  /* Aligns children to the top */
 }
 
-/* 
-  THIS IS THE KEY FIX:
-  We make the visuals column sticky. This tells it to "stick"
-  to the top of its parent container as you scroll past it.
-  GSAP's 'pin: true' will then control this behavior.
-*/
+/* The left column that holds the 3D canvas. */
 .pillar-visuals-col {
-    position: -webkit-sticky; /* For Safari */
-    position: sticky;
-    top: 0; /* Stick to the very top */
-    height: 100vh; /* Make it take up the full viewport height */
+    /* These three properties are the core of the pinning effect. */
+    position: -webkit-sticky; /* Required for Safari */
+    position: sticky;       /* Makes the element 'stick' as the page scrolls */
+    top: 0;                 /* Sticks it to the very top of the viewport */
 
-    /* These are important for centering the canvas inside */
+    width: 50%;             /* Or whatever width you prefer */
+    height: 100vh;          /* Make it exactly the height of the screen */
+    
+    /* These center the canvas within the column */
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+/* The right column that holds the text content. */
+.pillar-text-col {
+    width: 50%; /* Or whatever width you prefer */
+    /* No special positioning needed here. It just needs to scroll normally. */
+}
+
+/* 
+   Each individual text section. This is what CREATES the scroll distance.
+   By giving each one a height, we make the parent text column tall.
+*/
+.pillar-text-content {
+    /* Each pillar must be tall enough to create scroll distance. */
+    min-height: 100vh;
+
+    /* These are just for centering the text nicely within each tall pillar. */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 5%; /* Give the text some breathing room */
+}
+
+/* The actual text wrapper that we will fade in and out. */
+.text-anim-wrapper {
+    max-width: 550px;
+    margin: 0 auto; /* Horizontally center the text block */
 }
