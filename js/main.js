@@ -87,7 +87,7 @@ const Oracle = {
         console.log(JSON.stringify(this.state, null, 2));
         console.groupEnd();
     }
-},
+}
 
 
 // =========================================================================
