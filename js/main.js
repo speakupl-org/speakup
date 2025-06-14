@@ -88,6 +88,30 @@ const Oracle = {
         console.groupEnd();
     },
 
+    // Add this new function definition inside the Oracle object
+    trackScrollTrigger: (stInstance, label) => {
+        if (Oracle.config.verbosity < 1) return;
+        if (!stInstance) {
+            Oracle.warn(`[ORACLE ST_TRACK @ ${Oracle._timestamp()}: ${label}] FAILED - ScrollTrigger instance is null.`);
+            return;
+        }
+        
+        const groupMethod = Oracle.config.verbosity >= 2 ? console.group : console.groupCollapsed;
+        
+        groupMethod(`%c[ORACLE ST_TRACK @ ${Oracle._timestamp()}: ${label}]`, 'color: #EBCB8B; font-weight: bold;');
+        const triggerEl = stInstance.trigger;
+        const scrollerEl = stInstance.scroller;
+        
+        console.log(`%c  - Status:`, 'color: #88C0D0;', `Active: ${stInstance.isActive}, Direction: ${stInstance.direction === 1 ? 'DOWN' : 'UP'}`);
+        console.log(`%c  - Trigger Element:`, 'color: #88C0D0;', `${triggerEl.tagName}#${triggerEl.id || '.' + triggerEl.className.split(' ')[0]}`);
+        console.log(`%c  - Pixel Range:`, 'color: #88C0D0;', `Start: ${stInstance.start.toFixed(0)}px, End: ${stInstance.end.toFixed(0)}px`);
+        console.log(`%c  - Total Distance:`, 'color: #88C0D0;', `${(stInstance.end - stInstance.start).toFixed(0)}px`);
+        console.log(`%c  - Scroller Height:`, 'color: #88C0D0;', `${scrollerEl.scrollHeight}px (Viewport: ${window.innerHeight}px)`);
+        console.log(`%c  - Progress:`, 'color: #88C0D0;', `${(stInstance.progress * 100).toFixed(2)}%`);
+
+        console.groupEnd();
+    },
+    
     report: (message) => console.log(`%c[SOVEREIGN REPORT @ ${Oracle._timestamp()}]:`, 'color: #5E81AC; font-weight: bold;', message),
     warn: (message) => console.warn(`%c[SOVEREIGN WARNING @ ${Oracle._timestamp()}]:`, 'color: #EBCB8B;', message),
     
