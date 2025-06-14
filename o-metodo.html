@@ -130,7 +130,17 @@
                 <div class="summary-thumbnail-placeholder" id="summary-placeholder">
                     <div class="summary-thumbnail-clipper">
                         <div class="object-3d" id="actor-3d-stunt-double">
-                            <div class="face front"></div> <div class="face back"></div>
+                            <!-- THIS IS THE NEW FRONT FACE -->
+                            <div class="face front">
+                                <svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet">
+                                    <!-- 
+                                        This path starts as a 200x200 square. 
+                                        GSAP will target the ID "morph-path" to animate its shape.
+                                    -->
+                                    <path id="morph-path" d="M0,0 H200 V200 H0 Z" />
+                                </svg>
+                            </div>
+                            <div class="face back"></div>
                             <div class="face right"></div> <div class="face left"></div>
                             <div class="face top"></div>   <div class="face bottom"></div>
                         </div>
@@ -191,16 +201,31 @@
         <div class="footer-bottom-bar">
             <p>© <span id="current-year">2024</span> Speak Up por Luiz. Todos os direitos reservados. | <a href="politica-de-privacidade.html">Política de Privacidade</a></p>
         </div>
+        
     </div>
 </footer>
 
-<!-- These are essential for the animation. They must be loaded before your main.js -->
+<!-- 
+    ================================================================
+           ESSENTIAL GSAP ANIMATION LIBRARIES
+    ================================================================
+    These MUST be loaded in this order, and BEFORE your main.js file.
+-->
+
+<!-- 1. The Core GSAP Library - The heart of the animation engine. -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+<!-- 2. The ScrollTrigger Plugin - For scroll-based animations. -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<!-- UPDATE: Added the GSAP Flip Plugin. This is required for the "Exit" animation. -->
+
+<!-- 3. The Flip Plugin - For animating state changes, used in the handoff. -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Flip.min.js"></script>
 
-<!-- Your main JS file where you will write the new GSAP code -->
+
+<script src="https://unpkg.com/gsap@3/dist/MorphSVGPlugin.min.js"></script>
+
+<!-- 
+-->
 <script defer src="js/main.js"></script>
 
 </body>
