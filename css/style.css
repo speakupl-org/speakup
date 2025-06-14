@@ -735,46 +735,6 @@ html.menu-open {
     }
 }
 
-/* ========================================================== */
-/*   FIX FOR SCROLLYTELLING ANIMATION                         */
-/* ========================================================== */
-
-/* Make the text column a flex container to center its content */
-.pillar-text-col {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start; /* Align pillars to the top */
-}
-
-/* 
-  THIS IS THE KEY FIX: 
-  Give each pillar a significant height and margin. This creates
-  the vertical space (scroll distance) needed for the animation.
-*/
-.pillar-text-content {
-    /* Ensure pillars stack vertically, not on top of each other */
-    position: relative; 
-    opacity: 1 !important; /* Let GSAP handle opacity */
-    visibility: visible !important;
-
-    /* Create space for the animation to happen */
-    min-height: 80vh; /* Give each pillar plenty of vertical room */
-    display: flex;
-    align-items: center; /* Vertically center the text inside */
-    justify-content: center;
-    flex-direction: column;
-}
-
-/* Ensure the wrapper inside takes up space */
-.text-anim-wrapper {
-    max-width: 500px; /* Or whatever width you prefer */
-}
-
-/* Initially hide the text wrappers with JS for a clean fade-in */
-.pillar-text-content .text-anim-wrapper {
-    opacity: 0;
-    visibility: hidden;
-}
 
 /* =========================================================================
    11. Contact Page Styles (contato.html)
@@ -1141,59 +1101,37 @@ body.no-scroll {
 #cerebro-hud .label { color: #81A1C1; width: 130px; }
 #cerebro-hud .divider { height: 1px; background: #4C566A; margin: 8px 0; }
 #cerebro-hud span:not(.label) { font-weight: bold; color: #E5E9F0; }
-/* ==========================================================
-   V19 ZERO-MOTION REBUILD PROTOCOL - ESSENTIAL UTILITY
-   ========================================================== */
-body.scroll-locked {
-    overflow: hidden;
+/* ========================================================== */
+/*   FIX FOR SCROLLYTELLING ANIMATION                         */
+/* ========================================================== */
+
+/* Make the text column a flex container */
+.pillar-text-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
 }
 
-/* The stunt double's front face is now just a transparent container */
-#actor-3d-stunt-double .face.front {
-    background: transparent !important;
-    border: 1px solid rgba(255, 255, 255, 0.3); /* Keep a faint border during the animation */
-}
-
-/* Style the path that GSAP will morph. Give it a visible color. */
-#morph-path {
-    fill: #E5E9F0; /* A light, off-white color that should look good */
-    stroke: none;
-    transition: fill 0.3s ease; /* A nice touch for hover effects if you add them later */
-}
-/* === SOVEREIGN v43.2 CSS DIRECTIVES (APPEND TO YOUR CSS) === */
-
-/* Prepare the Thumbnail Container */
-.summary-thumbnail-clipper {
+/* 
+  THIS IS THE KEY: 
+  Give each pillar a significant height. This creates
+  the vertical space (scroll distance) needed for the animation.
+*/
+.pillar-text-content {
+    /* Ensure pillars stack on top of each other in the normal page flow */
     position: relative; 
-    border-radius: 12px; /* Or your preferred border-radius */
-    overflow: hidden;   /* CRITICAL: This clips the cube as it flies in */
-    /* Add a subtle background to suggest an "empty" slot */
-    background: rgba(var(--rgb-primary), 0.05);
+    
+    /* Give each pillar plenty of vertical room */
+    /* This makes the scrolly-container very tall */
+    min-height: 90vh; 
+    
+    /* Use flexbox to vertically center the text within the tall container */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-/* Prepare the Stunt Double and its Morphing Face */
-#actor-3d-stunt-double {
-    /* Hidden by default; GSAP will control its visibility. */
-    opacity: 0;
-    visibility: hidden;
-    /* Correct positioning within the clipper */
-    position: absolute;
-    top: -18.5px; /* Fine-tune to perfectly center a 200px cube inside a 163px container */
-    left: -18.5px;
-    width: 200px; 
-    height: 200px;
-}
-
-#actor-3d-stunt-double .face.front {
-    /* The face becomes a transparent frame for the SVG */
-    background: transparent !important;
-    border: none;
-}
-
-#morph-path {
-    /* CRITICAL FIX: The path must have a FILL to be visible. */
-    fill: var(--color-heading); 
-    stroke: none;
-    /* Ensures the morph happens from the center outward */
-    transform-origin: center center;
+/* This just contains the text inside the pillar */
+.text-anim-wrapper {
+    max-width: 550px;
 }
