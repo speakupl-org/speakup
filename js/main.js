@@ -255,7 +255,22 @@ const setupHandoff = (elements, masterTl) => {
                 }, 1.3)
                 .to(stuntDouble, { scaleX: 1, scaleY: 1, duration: 0.8, ease: 'elastic.out(1, 0.5)' }, 1.3);
         },
-
+   // ======================= v37.4 "AEGIS" PROTOCOL ADDITION: LOGO TRANSFORMATION =======================
+                .to(stuntDouble, {
+                    rotationX: 0,
+                    rotationY: 0,
+                    z: 0, // CORRECTS a-priori rotation state to guarantee a flat final transform
+                    duration: 0.6,
+                    ease: "power3.inOut",
+                    onStart: () => Oracle.report('Phase 3: Initiating logo transformation.'),
+                }, '+=0.2') 
+                
+                .call(() => {
+                    stuntDouble.classList.add('is-logo-final-state');
+                    Oracle.log(stuntDouble, "AEGIS Protocol Complete: Stunt Double is now the final logo.");
+                }, [], '>'); 
+                // =================================== END OF AEGIS PROTOCOL ADDITION ===================================
+        },
         // --- FIX FOR ANOMALY #2: State Corruption ---
         onLeaveBack: () => {
             if (!isSwapped) return;
