@@ -452,7 +452,6 @@ const setupHandoff = (elements, masterStoryTl) => { // <-- ACCEPTS the one maste
                 });
                 return ctx;
             }
-                });
                 
                 // Calling the 'recipes'
                 setupHeroActor(elements, heroAnimation);
