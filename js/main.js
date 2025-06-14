@@ -302,9 +302,10 @@ function setupAnimations() {
 
             },
 
-            '(max-width: 1024px)': () => {
-                Oracle.report("Mobile layout active. Scrollytelling animations disabled.");
-                gsap.set([cube.rotation, cube.scale], {clearProps: "all"});
+                    '(max-width: 1024px)': () => {
+            Oracle.report("Mobile layout active. Scrollytelling animations disabled.");
+            // FIX: Changed `clearProps: "all"` to the correct boolean value `true`.
+            gsap.set([cube.rotation, cube.scale], { clearProps: true });
             }
         });
 
