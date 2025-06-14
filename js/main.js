@@ -258,19 +258,28 @@ function setupAnimations() {
                 
                 // === TIMELINE 1: The Master Scrollytelling Timeline ===
                 const masterTl = gsap.timeline({
-                    scrollTrigger: {
-                        trigger: elements.masterTrigger,
-                        start: 'top top',
-                        end: 'bottom bottom', // Animate across the entire container height
-                        scrub: 1.2, // Smoothly link to scrollbar
-                        onUpdate: self => {
-                            // Update HUD with master progress and cube rotation
-                            Oracle.updateHUD('c-scroll', `${(self.progress * 100).toFixed(0)}%`);
-                            Oracle.updateHUD('c-rot-y', (cube.rotation.y * (180 / Math.PI)).toFixed(1));
-                            Oracle.updateAndLog(cube, self);
+                scrollTrigger: {
+                    trigger: elements.masterTrigger,
+                    start: 'top top',
+                    end: 'bottom bottom',
+                    scrub: 1.2,
+                    onUpdate: self => {
+                        // CONSOLIDATED STATE MANAGEMENT
+                        if (self.progress > 0 && self.progress < 0.99) { // Give a little buffer at the end
+                            Oracle.state.animation_phase = 'PILLARS_SCROLL';
+                        } else if (self.progress >= 0.99) {
+                            Oracle.state.animation_phase = 'HANDOFF_AWAIT';
+                        } else { // self.progress is 0
+                            Oracle.state.animation_phase = 'IDLE';
                         }
+                        
+                        // The rest of the HUD updates remain the same
+                        Oracle.updateHUD('c-scroll', `${(self.progress * 100).toFixed(0)}%`);
+                        Oracle.updateHUD('c-rot-y', (cube.rotation.y * (180 / Math.PI)).toFixed(1));
+                        Oracle.updateAndLog(cube, self); // Log the consolidated state
                     }
-                });
+                }
+            });
 
                 // Add cube animations to the master timeline
                 masterTl
