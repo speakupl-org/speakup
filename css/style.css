@@ -1544,7 +1544,7 @@ body.scroll-locked {
     opacity: 1 !important;
     
     /* === THE FINAL, CORRECTED PATH === */
-    background-image: url('/images/logo.svg'); 
+    background-image: url('../images/icon-bridge.svg'); 
     
     background-size: contain;
     background-position: center;
