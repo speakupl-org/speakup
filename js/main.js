@@ -205,21 +205,38 @@ function setupAnimations() {
 
         ScrollTrigger.matchMedia({
             '(min-width: 1025px)': () => {
-                // Main timeline for the CUBE'S rotation and scaling.
-                const masterTl = gsap.timeline({
-                    scrollTrigger: {
-                        trigger: elements.masterTrigger,
-                        start: 'top top',
-                        end: 'bottom bottom', // Animate across the entire, newly-tall container
-                        scrub: 1.5,
-                        onUpdate: self => {
-                            // THIS WILL NOW FIRE, AND YOUR LOGS WILL APPEAR!
-                            Oracle.updateHUD('c-scroll', `${(self.progress * 100).toFixed(0)}%`);
-                            Oracle.updateHUD('c-rot-y', (cube.rotation.y * (180 / Math.PI)).toFixed(1));
-                            Oracle.updateAndLog(cube, self);
-                        }
-                    }
-                });
+                // Inside your setupAnimations function, find the masterTl and replace it with this:
+
+// Main timeline for the CUBE'S rotation and scaling.
+const masterTl = gsap.timeline({
+    scrollTrigger: {
+        trigger: elements.masterTrigger,
+        start: 'top top',
+        end: 'bottom bottom', // Animate across the entire, newly-tall container
+        scrub: 1.5,
+        onUpdate: self => {
+            // =========================================================
+            //  THE FIX: Centralized State Management
+            // =========================================================
+            // Determine the animation phase based on scroll progress and direction.
+            // This is more robust than relying on onEnter/onLeave.
+            if (self.progress > 0 && self.progress < 1) {
+                Oracle.state.animation_phase = 'PILLARS_SCROLL';
+            } else if (self.progress === 1 && self.direction === 1) {
+                Oracle.state.animation_phase = 'HANDOFF_AWAIT';
+            } else if (self.progress < 1 && self.direction === -1) {
+                Oracle.state.animation_phase = 'PILLARS_SCROLL'; // When scrolling back up
+            } else {
+                 Oracle.state.animation_phase = 'IDLE'; // Before starting or after finishing
+            }
+            
+            // Now, update the HUD and log the full state.
+            Oracle.updateHUD('c-scroll', `${(self.progress * 100).toFixed(0)}%`);
+            Oracle.updateHUD('c-rot-y', (cube.rotation.y * (180 / Math.PI)).toFixed(1));
+            Oracle.updateAndLog(cube, self);
+        }
+    }
+});
 
                 // Pin the visuals column so the cube stays in place while text scrolls.
                 ScrollTrigger.create({
