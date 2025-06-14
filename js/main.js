@@ -423,7 +423,7 @@ function setupAnimations() {
     return ctx;
 }
 
-// --- INITIALIZATION SEQUENCE (FINAL, RESIZE-ROBUST VERSION) ---
+// --- INITIALIZATION SEQUENCE (FINAL, RESIZE-ROBUST VERSION v43.3) ---
 
 // 1. A global variable to hold our GSAP context.
 let gsapCtx;
@@ -445,14 +445,17 @@ function initialAnimationSetup() {
     Oracle.init(() => {
         if (window.gsap && window.ScrollTrigger && window.Flip && window.MorphSVGPlugin) {
             
-            // THE CRITICAL FIX: Before we set up new animations,
-            // we revert any old ones that might exist from a previous resize.
+            // =========================================================================
+            // THE CRITICAL FIX: REVERT & CLEANUP
+            // Before we set up new animations, we revert any old ones that might 
+            // exist from a previous state (like a page resize).
+            // =========================================================================
             if (gsapCtx) {
                 gsapCtx.revert();
-                Oracle.warn("Previous GSAP context reverted due to re-initialization.");
+                Oracle.warn("SOVEREIGN REVERT: Previous GSAP context purged for resize.");
             }
             
-            // Now we run the setup and store the new context in our variable.
+            // Now we run the setup fresh and store the new context in our variable.
             gsapCtx = setupAnimations(); 
 
         } else {
@@ -462,11 +465,13 @@ function initialAnimationSetup() {
     });
 }
 
-// Keep the event listeners the same
+// Bind standard listeners
 document.addEventListener("DOMContentLoaded", setupSiteLogic);
 window.addEventListener("load", initialAnimationSetup);
 
-// BONUS: For ultimate robustness, also re-run the setup on resize.
-// This ensures that even if the user resizes without crossing the breakpoint,
-// positions are recalculated correctly.
-window.addEventListener("resize", initialAnimationSetup);
+// =========================================================================
+// For ultimate robustness, re-run the entire setup on ANY resize.
+// This ensures all calculations are always based on the latest viewport.
+// GSAP is highly optimized to handle this efficiently with Debounce.
+// =========================================================================
+ScrollTrigger.addEventListener("resize", initialAnimationSetup);
