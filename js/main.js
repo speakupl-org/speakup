@@ -283,10 +283,25 @@ function setupAnimations() {
                         y: Math.PI * 2.5, 
                         x: Math.PI * -1, 
                         ease: 'none',
-                        duration: animationDuration // Explicit duration
-                    })
-                    .to(cube.scale, { x: 1.2, y: 1.2, z: 1.2, ease: 'power1.in', duration: animationDuration / 2 }, 0) 
-                    .to(cube.scale, { x: 1, y: 1, z: 1, ease: 'power1.out', duration: animationDuration / 2 }, '>'); 
+                        // Set the duration to match the text pillar animation span.
+                        duration: animationDuration 
+                    }, 0) 
+                    .to(cube.scale, { 
+                        x: 1.2, 
+                        y: 1.2, 
+                        z: 1.2, 
+                        ease: 'power1.in', 
+                        // The scale-up happens over the first half.
+                        duration: animationDuration / 2 
+                    }, 0) 
+                    .to(cube.scale, { 
+                        x: 1, 
+                        y: 1, 
+                        z: 1, 
+                        ease: 'power1.out', 
+                        // The scale-down happens over the second half.
+                        duration: animationDuration / 2 
+                    }, animationDuration / 2); // Start this tween halfway through.
 
                 // The rest of your text pillar animation loop remains the same
                 elements.textPillars.forEach((pillar, i) => {
