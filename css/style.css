@@ -658,6 +658,7 @@ html.menu-open {
     display: flex;
     justify-content: center;
     align-items: center;
+    pointer-events: none; /* <-- THIS IS THE FIX. */
 }
 
 /* --- 2. 3D Scene & Object Setup --- */
