@@ -423,9 +423,9 @@ function setupAnimations() {
     return ctx;
 }
 
-// --- INITIALIZATION SEQUENCE (FINAL, RESIZE-ROBUST VERSION v43.3) ---
+// --- INITIALIZATION SEQUENCE (FINAL, RESIZE-ROBUST PROTOCOL v43.4) ---
 
-// 1. A global variable to hold our GSAP context.
+// A global variable to hold our GSAP context.
 let gsapCtx;
 
 function setupSiteLogic() {
@@ -446,9 +446,10 @@ function initialAnimationSetup() {
         if (window.gsap && window.ScrollTrigger && window.Flip && window.MorphSVGPlugin) {
             
             // =========================================================================
-            // THE CRITICAL FIX: REVERT & CLEANUP
+            // THE DEFINITIVE FIX: REVERT & CLEANUP
             // Before we set up new animations, we revert any old ones that might 
             // exist from a previous state (like a page resize).
+            // This prevents state pollution and ensures all calculations are fresh.
             // =========================================================================
             if (gsapCtx) {
                 gsapCtx.revert();
@@ -471,7 +472,7 @@ window.addEventListener("load", initialAnimationSetup);
 
 // =========================================================================
 // For ultimate robustness, re-run the entire setup on ANY resize.
-// This ensures all calculations are always based on the latest viewport.
-// GSAP is highly optimized to handle this efficiently with Debounce.
+// ScrollTrigger's built-in resize event is automatically debounced,
+// which is highly efficient.
 // =========================================================================
 ScrollTrigger.addEventListener("resize", initialAnimationSetup);
