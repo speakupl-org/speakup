@@ -90,47 +90,6 @@ const Oracle = {
 
     warn: (message) => console.warn(`%c[SOVEREIGN WARNING]:`, 'color: #D08770;', message) // NO comma on the last item
 }; // End of Oracle object
-    
-    updateAndLog: function(three_cube, scroll_trigger) {
-    if (this.config.verbosity < 1) return;
-    const s = this.state;
-    s.log_timestamp = new Date().toISOString();
-    
-    // Only update the log type if it's not a special case like an ERROR
-    if (s.log_type !== "ERROR") {
-        s.log_type = "STATE_UPDATE";
-    }
-
-    if (scroll_trigger) {
-        s.scroll_progress = scroll_trigger.progress.toFixed(4);
-        s.scroll_direction = scroll_trigger.direction === 1 ? 'DOWN' : 'UP';
-        s.scroll_velocity = scroll_trigger.getVelocity().toFixed(2);
-    }
-    if (three_cube && three_cube.userData.canvas) {
-        s.object_position = { x: three_cube.position.x.toFixed(2), y: three_cube.position.y.toFixed(2), z: three_cube.position.z.toFixed(2) };
-        s.object_scale = { x: three_cube.scale.x.toFixed(2), y: three_cube.scale.y.toFixed(2), z: three_cube.scale.z.toFixed(2) };
-        s.object_rotation = { x: three_cube.rotation.x.toFixed(2), y: three_cube.rotation.y.toFixed(2), z: three_cube.rotation.z.toFixed(2) };
-        s.dom_element_bounding_rect = three_cube.userData.canvas.getBoundingClientRect().toJSON();
-    }
-    if (performance.memory) s.javascript_heap_size = performance.memory.jsHeapSizeLimit;
-    
-    if(this.config.logToConsole) {
-        const logTitle = `%c[ORACLE @ ${s.log_timestamp.split('T')[1].slice(0, -1)}] Phase: ${s.animation_phase}`;
-        const logStyle = 'color: #8FBCBB;';
-        
-        // THE FIX FOR YOUR VERBOSITY ISSUE:
-        if (this.config.verbosity > 1) {
-            // High verbosity = expanded logs
-            console.group(logTitle, logStyle);
-        } else {
-            // Low verbosity = collapsed logs
-            console.groupCollapsed(logTitle, logStyle);
-        }
-        
-        console.log(JSON.stringify(this.state, null, 2));
-        console.groupEnd();
-    }
-}
 
 
 // =========================================================================
