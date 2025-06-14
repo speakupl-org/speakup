@@ -3,54 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fluência e Confiança: O Método Speak Up (Three.js Hybrid)</title> 
+    <title>Fluência e Confiança: O Método Speak Up</title> 
 
-    <!-- FONTS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
     
-    <!-- STYLES (EMBEDDED) -->
     <style>
-        /* ================== RESET & BASE STYLES ================== */
-        :root {
-            --color-background: #0D1117;
-            --color-text: #E5E9F0;
-            --color-heading: #ECEFF4;
-            --color-primary: #88C0D0;
-            --color-secondary: #5E81AC;
-            --color-accent: #EBCB8B;
-            --color-warning: #D08770;
-            --color-error: #BF616A;
-            --font-body: 'Inter', sans-serif;
-            --font-heading: 'Poppins', sans-serif;
-        }
-        *, *::before, *::after { box-sizing: border-box; }
-        body {
-            margin: 0;
-            font-family: var(--font-body);
-            background-color: var(--color-background);
-            color: var(--color-text);
-            -webkit-font-smoothing: antialiased;
-        }
-        h1, h2, h3, h4 { font-family: var(--font-heading); color: var(--color-heading); font-weight: 700; line-height: 1.2; }
-        p { line-height: 1.7; color: #a0a0a0;}
-        a { color: var(--color-primary); text-decoration: none; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
-        
-        /* ================== SITE HEADER / MENU ================== */
-        /* (Assuming standard header/menu CSS from original stylesheet) */
-        .site-header-pill {
-            position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000;
-            display: flex; align-items: center; background: rgba(10, 20, 35, 0.7);
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            border: 1px solid #4C566A; border-radius: 99px; padding: 8px 12px;
-        }
-        .logo-area { display: flex; align-items: center; margin-right: 2rem; }
-        .logo-icon { height: 32px; }
-        /* Add other menu styles as needed... */
-
-        /* ================== ORACLE HUD ================== */
+        /* ===================== CEREBRO HUD v43.1 STYLES ===================== */
         #cerebro-hud {
             position: fixed; top: 10px; right: 10px; z-index: 10000;
             background: rgba(10, 20, 35, 0.9); color: #ECEFF4;
@@ -60,133 +21,105 @@
             width: 290px; pointer-events: none;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
-        #cerebro-hud h4 { margin: 0 0 10px; padding-bottom: 8px; border-bottom: 1px solid #4C566A; color: #88C0D0; font-weight: bold; letter-spacing: 1px; }
+        #cerebro-hud h4 {
+            margin: 0 0 10px; padding-bottom: 8px; border-bottom: 1px solid #4C566A;
+            color: #88C0D0; font-weight: bold; letter-spacing: 1px;
+        }
         #cerebro-hud div { display: flex; justify-content: space-between; margin-bottom: 4px; }
         #cerebro-hud .label { color: #81A1C1; width: 170px; }
         #cerebro-hud .divider { height: 1px; background: #4C566A; margin: 8px 0; }
         #cerebro-hud span:not(.label) { font-weight: bold; color: #E5E9F0; }
-        
-        /* ================== MAIN CONTENT STYLES ================== */
-        .page-header { text-align: center; padding: 12rem 0 8rem; }
-        .page-title { font-size: clamp(3rem, 7vw, 5rem); }
-        .page-subtitle { max-width: 60ch; margin: 1rem auto 0; font-size: 1.2rem; }
 
-        /* ================== SCROLLYTELLING SECTION (KEY CHANGES) ================== */
-        .scrolly-container {
-            display: flex;
-            gap: 4rem; 
-            align-items: flex-start;
-            min-height: 240vh; /* This drives the scroll duration */
-        }
-        
+        /* ========= NEW MORPH/ABSORPTION STYLES ========== */
+        /* CRUCIAL FIX: Allows interaction with content that scrolls under the pinned visuals */
         .pillar-visuals-col {
-            flex: 1;
-            width: 45%; 
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            pointer-events: none; /* Let clicks pass through to content behind it */
+            pointer-events: none;
         }
-
-        .scene-3d {
-            width: 500px; /* Container for the canvas */
-            height: 500px;
-            position: relative;
-            pointer-events: auto; /* Allow mouse interaction with the canvas */
+        #actor-3d-stunt-double .face.front {
+            background: transparent !important;
+            border: 1px solid rgba(255, 255, 255, 0.3); 
         }
-
-        /* THE CSS 3D CUBE STYLES (.object-3d, .face) ARE NO LONGER NEEDED */
-
-        #threejs-canvas {
-            width: 100%;
-            height: 100%;
-            display: block;
+        #morph-path {
+            fill: #E5E9F0;
+            stroke: none;
         }
-
-        .pillar-text-col {
-            flex: 1;
-            width: 50%;
-            padding-left: 2rem;
-            position: relative;
-            z-index: 10;
-        }
-        
+        /* Make all text invisible by default to prevent Flash of Unstyled Content (FOUC) */
         .pillar-text-content {
-            min-height: 80vh; 
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            opacity: 0; /* JS will fade them in */
+            opacity: 0;
             visibility: hidden;
         }
+        /* Make the first one visible on page load */
         .pillar-text-content:first-of-type {
             opacity: 1;
             visibility: visible;
         }
-        .text-anim-wrapper { max-width: 45ch; will-change: transform, opacity; }
-        .pillar-number { font-weight: 700; color: var(--color-primary); }
-        .pillar-title { font-size: clamp(2.8rem, 5vw, 4rem); margin: 1.5rem 0; }
-
-        /* ================== SUMMARY & HANDOFF SECTION ================== */
-        .method-summary { text-align: center; padding: 10vh 0; }
-        .summary-thumbnail-placeholder {
-            width: 163px;
-            height: 163px;
-            margin: 0 auto 2rem;
-            position: relative; /* Anchor for the final SVG logo */
-            border-radius: 8px;
-        }
-
-        #final-logo-svg {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            opacity: 0; /* Initially hidden, will be revealed after handoff */
-            visibility: hidden;
-        }
-        #morph-path { fill: var(--color-heading); stroke: none; }
-
-        /* ================== RESPONSIVE STYLES ================== */
-        @media (max-width: 1024px) {
-            .scrolly-container {
-                flex-direction: column;
-                min-height: auto;
-            }
-            .pillar-visuals-col, .pillar-text-col {
-                width: 100%;
-                padding-left: 0;
-            }
-            .pillar-visuals-col {
-                height: 60vh;
-                margin-bottom: 4rem;
-                pointer-events: auto;
-            }
-            .scene-3d { width: 100%; height: 100%; }
-            .pillar-text-content {
-               min-height: auto;
-               padding: 0 0 4rem 0;
-               opacity: 1; visibility: visible; /* Show all text on mobile */
-            }
-        }
     </style>
 </head>
 <body>
-    
-    <!-- ======================= ORACLE HUD v44.0 ======================= -->
+    <!-- ======================= CEREBRO ORACLE HUD v43.1 "SOVEREIGN" ======================= -->
     <div id="cerebro-hud">
-        <h4>ORACLE-HUD v44.0 [HYBRID]</h4>
+        <h4>ORACLE-HUD v43.1 [SOVEREIGN]</h4>
         <div><span class="label">Sovereign Validation:</span><span id="c-validation-status">PENDING...</span></div>
+        <div><span class="label">ST Instances:</span><span id="c-st-instances">0</span></div>
         <div class="divider"></div>
+        <div><span class="label">Master Scroll Trigger:</span><span id="c-master-st-active">INACTIVE</span></div>
         <div><span class="label">Handoff Trigger:</span><span id="c-handoff-st-active">INACTIVE</span></div>
-        <div><span class="label">Handoff State:</span><span id="c-handoff-state">INACTIVE</span></div>
+        <div><span class="label">Handoff State:</span><span id="c-swap-flag">INACTIVE</span></div>
+        <div class="divider"></div>
+        <div><span class="label">Handoff Event:</span><span id="c-event">AWAITING TRIGGER</span></div>
         <div class="divider"></div>
         <div><span class="label">Story Progress:</span><span id="c-scroll">0%</span></div>
-        <div><span class="label">3JS Cube Rot-Y:</span><span id="c-rot-y">0</span></div>
+        <div><span class="label">Hero Actor Rot-X:</span><span id="c-rot-x">0</span></div>
+        <div><span class="label">Hero Actor Rot-Y:</span><span id="c-rot-y">0</span></div>
+        <div><span class="label">Hero Actor Scale:</span><span id="c-scale">1.0</span></div>
     </div>
+    <!-- ====================================================================================== -->
     
-    <!-- HEADER AND MENU -->
-    <!-- (Your header/menu HTML goes here) -->
+    <header class="site-header-pill">
+        <a href="index.html" class="logo-area" aria-label="Speak Up Homepage">
+            <img src="images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon">
+            <span class="logo-text">Speak <span class="up">Up</span></span>
+        </a>
+        <div class="header-desktop-nav-container">
+            <nav class="desktop-nav">
+                <ul>
+                    <li><a href="o-metodo.html">O Método</a></li>
+                    <li><a href="minha-jornada.html">Minha Jornada</a></li>
+                    <li><a href="recursos.html">Recursos</a></li>
+                </ul>
+            </nav>
+            <a href="contato.html" class="cta-button header-cta-desktop">Agende uma Conversa</a>
+        </div>
+        <button class="menu-toggle-button" id="menu-open-button" aria-label="Open menu" aria-expanded="false">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+        </button>
+    </header>
+
+    <div class="fullscreen-menu" id="menu-screen" aria-hidden="true">
+        <div class="fullscreen-menu-header">
+            <a href="index.html" class="logo-area" aria-label="Speak Up Homepage">
+                <img src="images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon">
+            </a>
+            <button class="menu-toggle-button" id="menu-close-button" aria-label="Close menu" aria-expanded="true">
+                <span class="close-line"></span>
+                <span class="close-line"></span>
+            </button>
+        </div>
+        <nav class="fullscreen-menu-nav">
+            <ul>
+                <li><a href="o-metodo.html">O Método</a></li>
+                <li><a href="minha-jornada.html">Minha Jornada</a></li>
+                <li><a href="recursos.html">Recursos</a></li>
+                <li><a href="contato.html">Contato</a></li>
+            </ul>
+        </nav>
+        <div class="fullscreen-menu-action-box">
+            <a href="contato.html" class="cta-button">Agende uma Conversa</a>
+            <a href="https://wa.me/YOURPHONENUMBER" target="_blank" class="link-subtle whatsapp-link">Conversar no WhatsApp</a>
+        </div>
+    </div>
 
     <main>
         <header class="page-header">
@@ -202,38 +135,44 @@
     
                     <div class="pillar-visuals-col">
                         <div class="scene-3d">
-                           <!-- KEY CHANGE: The CSS cube is gone. The Three.js canvas lives here. -->
-                           <canvas id="threejs-canvas"></canvas>
+                            <div class="object-3d" id="actor-3d">
+                                <div class="face front"></div> <div class="face back"></div>
+                                <div class="face right"></div> <div class="face left"></div>
+                                <div class="face top"></div>   <div class="face bottom"></div>
+                            </div>
                         </div>
                     </div>
     
                     <div class="pillar-text-col">
                         <!-- Pillar 1 -->
-                        <div class="pillar-text-content">
+                        <div class="pillar-text-content" data-pillar="1">
                             <div class="text-anim-wrapper">
                                 <span class="pillar-number">Pilar 1</span>
+                                <div class="pillar-line"></div>
                                 <h2 class="pillar-title">Diagnóstico e Imersão</h2>
                                 <p class="pillar-paragraph">Primeiro, eu escuto. Entendemos suas metas, barreiras e o que te move. A partir daqui, criamos um plano de imersão focado, feito unicamente para você.</p>
                             </div>
                         </div>
                         <!-- Pillar 2 -->
-                        <div class="pillar-text-content">
+                        <div class="pillar-text-content" data-pillar="2">
                             <div class="text-anim-wrapper">
                                 <span class="pillar-number">Pilar 2</span>
+                                <div class="pillar-line"></div>
                                 <h2 class="pillar-title">Conexão e Conversação</h2>
                                 <p class="pillar-paragraph">A prática é a prioridade. Desde o primeiro dia, focamos em conversas reais sobre temas do seu universo, transformando teoria em confiança prática.</p>
                             </div>
                         </div>
                         <!-- Pillar 3 -->
-                        <div class="pillar-text-content">
+                        <div class="pillar-text-content" data-pillar="3">
                             <div class="text-anim-wrapper">
                                 <span class="pillar-number">Pilar 3</span>
+                                <div class="pillar-line"></div>
                                 <h2 class="pillar-title">Feedback e Evolução</h2>
                                 <p class="pillar-paragraph">Cada aula é um passo à frente. Meu feedback é constante e construtivo. Juntos, ajustamos o plano para garantir que sua evolução nunca pare.</p>
                             </div>
                         </div>
-                        <!-- THE HANDOFF POINT - This empty div triggers the final animation -->
-                        <div id="handoff-point" style="height: 50vh; width: 100%;"></div>
+                        <!-- THE HANDOFF POINT - Correctly placed as the final child -->
+                        <div id="handoff-point" style="height: 1px; width: 100%;"></div>
                     </div> 
                 </div>
             </div>
@@ -242,16 +181,39 @@
         <section class="method-summary">
             <div class="container">
                 <div class="summary-thumbnail-placeholder" id="summary-placeholder">
-                     <!-- KEY CHANGE: The stunt double is gone. This SVG is revealed after the handoff. -->
-                     <svg viewBox="0 0 163 163" preserveAspectRatio="xMidYMid meet" id="final-logo-svg">
-                        <!-- This path starts as a square and morphs into the logo -->
-                        <path id="morph-path" d="M0,0 H163 V163 H0 Z" />
-                     </svg>
+                    <div class="summary-thumbnail-clipper">
+                       <div class="object-3d" id="actor-3d-stunt-double">
+                            <div class="face front">
+                                <!-- The SVG container for the morph -->
+                                <svg viewBox="0 0 163 163" preserveAspectRatio="xMidYMid meet" style="width: 100%; height: 100%; position: absolute; top:0; left: 0; opacity: 1;">
+                                    <!-- 
+                                        This path starts as a 200x200 square. 
+                                        GSAP will target the ID "morph-path" to animate its shape.
+                                    -->
+                                    <path id="morph-path" d="M0,0 H163 V163 H0 Z" />
+                                </svg>
+                            </div>
+                            <div class="face back"></div>
+                            <div class="face right"></div>
+                            <div class="face left"></div>
+                            <div class="face top"></div>
+                            <div class="face bottom"></div>
+                        </div>
+                    </div>
                 </div>
                 <h3 class="summary-title">Confiança, Clareza e Conexão.</h3>
                 <p>Estes três pilares formam uma jornada que não apenas ensina inglês, mas te devolve a segurança para se expressar no mundo.</p>
             </div>
         </section>
+    
+        <section class="final-cta">
+             <div class="container">
+                <h2 class="final-cta-title">Entendeu o "como"?</h2>
+                <p class="reassurance-text">Agora que você conhece o método, o próximo passo é vivenciá-lo. Vamos ver como ele se aplica aos seus objetivos específicos.</p>
+                <a href="contato.html" class="cta-button cta-button-large final-cta-button">Agende sua conversa</a>
+            </div>
+        </section>
+    
     </main>
 
 <footer class="site-footer">
