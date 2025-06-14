@@ -124,54 +124,55 @@ const setupHeroActor = (elements, masterTl) => {
 };
 
 // Text pillars animation with OMNISCIENT ORACLE (v37.9 - Blueprint Version)
-// THE DEFINITIVE BLUEPRINT for Text Pillars (v38.0 - Single Master Timeline)
+// THE DEFINITIVE BLUEPRINT for Text Pillars (v38.1 - Final)
 const setupTextPillars = (elements) => {
-    // 1. Establish a clean, known starting state for all wrappers.
     gsap.set(elements.textWrappers, { autoAlpha: 0, y: 40, rotationX: -15 });
     gsap.set(elements.textWrappers[0], { autoAlpha: 1, y: 0, rotationX: 0 });
 
-    // 2. Create ONE master timeline to control all text fades.
     const textMasterTl = gsap.timeline({
         scrollTrigger: {
-            trigger: elements.textCol, // The entire column is the trigger
+            trigger: elements.textCol,
             start: "top top",
             end: "bottom bottom",
             scrub: 1.5,
-            
-            // The All-Seeing Eye still works perfectly.
-            markers: Oracle.config.verbosity > 1, 
+            markers: Oracle.config.verbosity > 1,
 
-            // --- BLUEPRINT ORACLE UPGRADE v2.0: MASTER TIMELINE TRACKING ---
             onUpdate: (self) => {
-                const numSections = elements.textWrappers.length - 1;
-                const sectionProgress = self.progress * numSections;
+                const numSections = elements.textWrappers.length;
+                const sectionProgress = self.progress * (numSections - 1);
                 const activeIndex = Math.floor(sectionProgress);
                 const subProgress = sectionProgress - activeIndex;
 
                 const wrapper = elements.textWrappers[activeIndex];
-                const nextWrapper = elements.textWrappers[activeIndex + 1];
+                const nextWrapper = elements.textWrappers[activeIndex + 1]; // This can be undefined on the last element
 
                 const data = {
                     'Master Progress': `${(self.progress * 100).toFixed(1)}%`,
-                    'Active Transition': `${activeIndex + 1} -> ${activeIndex + 2}`,
+                    'Active Index': activeIndex,
                     'Sub-Progress': `${(subProgress * 100).toFixed(1)}%`,
                 };
-                
+
                 try {
-                    data[`Wrapper #${activeIndex+1} Opacity`] = gsap.getProperty(wrapper, 'autoAlpha').toFixed(2);
-                    data[`Wrapper #${activeIndex+2} Opacity`] = gsap.getProperty(nextWrapper, 'autoAlpha').toFixed(2);
-                    data[`W#${activeIndex+1} Y`] = gsap.getProperty(wrapper, 'y').toFixed(1) + 'px';
-                    data[`W#${activeIndex+2} Y`] = gsap.getProperty(nextWrapper, 'y').toFixed(1) + 'px';
-                } catch(e) {
+                    // Always log the current wrapper
+                    data[`W#${activeIndex+1} (Current)`] = `${gsap.getProperty(wrapper, 'autoAlpha').toFixed(2)}`;
+
+                    // --- THE FINAL LOGICAL FIX ---
+                    // ONLY try to log the next wrapper IF it actually exists.
+                    if (nextWrapper) {
+                        data[`W#${activeIndex+2} (Next)`] = `${gsap.getProperty(nextWrapper, 'autoAlpha').toFixed(2)}`;
+                    } else {
+                        data[`W#${activeIndex+2} (Next)`] = 'N/A';
+                    }
+
+                } catch (e) {
                     data['ORACLE_FAILURE'] = e.message;
                 }
-
+                
                 Oracle.scan('Master Text Timeline', data);
             }
         }
     });
 
-    // 3. Add all transitions to the single master timeline in sequence.
     elements.textWrappers.forEach((wrapper, index) => {
         if (index > 0) {
             const previousWrapper = elements.textWrappers[index - 1];
