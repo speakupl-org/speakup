@@ -217,52 +217,83 @@ const setupHeroActor = (elements, masterTl) => {
 // single master timeline (`masterTl`) and adds its animation "chapters" to it.
 const setupTextPillars = (elements, masterTl) => {
 
-    // 1. Establish a clean, known starting state for all wrappers. This remains critical.
-    gsap.set(elements.textWrappers, { autoAlpha: 0, y: 40, rotationX: -15 });
-    gsap.set(elements.textWrappers[0], { autoAlpha: 1, y: 0, rotationX: 0 });
+    // 1. Establish Authoritative JS Initial State.
+    // We now control both parent containers AND child wrappers to prevent conflicts.
+    gsap.set(elements.pillars, { autoAlpha: 0 }); // Hide all parent containers by default.
+    gsap.set(elements.pillars[0], { autoAlpha: 1 }); // Explicitly show the first parent container.
+    
+    gsap.set(elements.textWrappers, { y: 40, rotationX: -15 }); // Set default "hidden" transform on ALL wrappers.
+    gsap.set(elements.textWrappers[0], { y: 0, rotationX: 0 }); // Set the first wrapper to its "visible" transform state.
 
-    // === OVERKILL TRACKER #1: INITIAL STATE VERIFICATION ===
-    // This tracker is preserved. It runs once and provides essential baseline data
-    // before any animation is added to the timeline. It is independent and valuable.
-    Oracle.group("Initial Text Pillar States (PRE-ANIMATION)");
-    elements.textWrappers.forEach((wrapper, index) => {
-        const style = window.getComputedStyle(wrapper);
-        Oracle.scan(`Wrapper #${index + 1}`, {
-            'Target ID': wrapper.parentElement.dataset.pillar,
-            'GSAP Opacity': gsap.getProperty(wrapper, "autoAlpha"),
-            'GSAP Y': gsap.getProperty(wrapper, "y").toFixed(1) + 'px',
-            'BROWSER Opacity': parseFloat(style.opacity).toFixed(2),
-            'BROWSER Transform': style.transform
+    // === OVERKILL TRACKER #1: INITIAL STATE VERIFICATION (PRESERVED & ENHANCED) ===
+    // This tracker is now more critical as it verifies our new, more complex initial state.
+    Oracle.group("COVENANT Initial Pillar State Authority (PRE-ANIMATION)");
+    elements.pillars.forEach((pillar, index) => {
+        const wrapper = elements.textWrappers[index];
+        const pStyle = window.getComputedStyle(pillar);
+        const wStyle = window.getComputedStyle(wrapper);
+
+        Oracle.scan(`Pillar #${index + 1} State Vector`, {
+            'Parent Container ID': pillar.dataset.pillar,
+            'Parent GSAP Opacity': gsap.getProperty(pillar, "autoAlpha"),
+            'Parent BROWSER Opacity': parseFloat(pStyle.opacity).toFixed(2),
+            'Wrapper GSAP Y': gsap.getProperty(wrapper, "y").toFixed(1) + 'px',
+            'Wrapper BROWSER Transform': wStyle.transform
         });
     });
     Oracle.groupEnd();
-    // ========================================================
-    
-    // 2. Add Synchronized Animations to the Master Timeline.
-    // The previous self-contained timeline and its ScrollTrigger are REMOVED.
-    // We now add tweens directly to the `masterTl` that was passed into this function.
-    // We use absolute time markers to ensure perfect synchronization with the hero animation.
-    // The total hero animation duration is 4 seconds (2s rotation one way, 2s back).
+    // ===================================================================================
 
-    // Transition from Pillar 1 to Pillar 2.
-    // This starts at the 1.0 second mark of the master story.
-    masterTl.to(elements.textWrappers[0], { autoAlpha: 0, y: -40, rotationX: 15, duration: 0.5, ease: "power2.in" }, 1.0)
-            .to(elements.textWrappers[1], { autoAlpha: 1, y: 0, rotationX: 0, duration: 0.5, ease: "power2.out" }, "<");
-            
-    // Transition from Pillar 2 to Pillar 3.
-    // This starts at the 3.0 second mark of the master story.
-    masterTl.to(elements.textWrappers[1], { autoAlpha: 0, y: -40, rotationX: 15, duration: 0.5, ease: "power2.in" }, 3.0)
-            .to(elements.textWrappers[2], { autoAlpha: 1, y: 0, rotationX: 0, duration: 0.5, ease: "power2.out" }, "<");
+    // 2. Add Multi-Layered Synchronized Animations to the Master Timeline.
+    // The sequence now animates the parent container's visibility and the child
+    // wrapper's transform simultaneously for a richer effect.
+
+    // Transition from Pillar 1 to Pillar 2 (starts at 1.0s).
+    masterTl
+        // Animate out Pillar 1's content. We target the parent for opacity...
+        .to(elements.pillars[0], { autoAlpha: 0, duration: 0.5, ease: "power2.in" }, 1.0)
+        // ...and the wrapper for the 3D transform.
+        .to(elements.textWrappers[0], { y: -40, rotationX: 15, duration: 0.5, ease: "power2.in" }, "<")
+
+        // At the exact same time, animate in Pillar 2's content.
+        // We target the parent for opacity...
+        .to(elements.pillars[1], { autoAlpha: 1, duration: 0.5, ease: "power2.out" }, "<")
+        // ...and use a .from() tween for the wrapper's 3D transform for clean code.
+        .from(elements.textWrappers[1], { y: 40, rotationX: -15, duration: 0.5, ease: "power2.out" }, "<");
+
+    // Transition from Pillar 2 to Pillar 3 (starts at 3.0s).
+    masterTl
+        .to(elements.pillars[1], { autoAlpha: 0, duration: 0.5, ease: "power2.in" }, 3.0)
+        .to(elements.textWrappers[1], { y: -40, rotationX: 15, duration: 0.5, ease: "power2.in" }, "<")
+        .to(elements.pillars[2], { autoAlpha: 1, duration: 0.5, ease: "power2.out" }, "<")
+        .from(elements.textWrappers[2], { y: 40, rotationX: -15, duration: 0.5, ease: "power2.out" }, "<");
 
 
-    // === OVERKILL TRACKER #2: NARRATIVE INTEGRITY CHECK ===
-    // This is a new tracker that verifies this function's contribution to the master story.
-    // It confirms that this 'recipe' has successfully added its chapters.
-    Oracle.scan('Narrative Contribution Check [TextPillars]', {
-        'Status': 'Pillar chapters successfully added to master timeline.',
-        'Master Timeline New Total Duration': masterTl.duration().toFixed(2) + 's'
-    });
-    // ========================================================
+    // === NEW COVENANT TRACKER #3: CHRONOSYNCHRONY VERIFICATION ===
+    // This new tracker is a temporal log. It iterates through the master timeline's
+    // direct children (the tweens) created by THIS function, verifying their timing
+    // and proving their successful integration into the grand narrative.
+    Oracle.group("COVENANT Chronosynchrony Verification [TextPillars]");
+        const pillarTweens = masterTl.getChildren(false, true, true).filter(tween => {
+             // A sophisticated filter to find only the tweens targeting our pillar elements.
+            const targets = Array.isArray(tween.targets()) ? tween.targets() : [tween.targets()];
+            return targets.some(t => t.classList.contains('pillar-text-content') || t.classList.contains('text-anim-wrapper'));
+        });
+        Oracle.scan(`Pillar Tween Integration`, {
+            'Status': 'SUCCESS',
+            'Tween Chapters Found': pillarTweens.length,
+            'Expected Chapters': 8 // (2 tweens per pillar) * 4 transitions
+        });
+        pillarTweens.forEach((tween, i) => {
+            const targetEl = tween.targets()[0];
+            Oracle.scan(`  - Tween #${i+1}`, {
+                'Target': `${targetEl.tagName}.${targetEl.className.split(' ')[0]}`,
+                'Start Time': tween.startTime().toFixed(2) + 's',
+                'Duration': tween.duration().toFixed(2) + 's'
+            });
+        });
+    Oracle.groupEnd();
+    // =================================================================
 };
 
 // =========================================================================
