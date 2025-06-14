@@ -218,9 +218,19 @@ function setupSite() {
     });
 }
 
-// FINAL VERSION: Replace your setupAnimations function with this.
+// COMPLETELY REPLACE setupAnimations with this final, hardened version.
 
 function setupAnimations() {
+    // ==============================================================
+    // AGGRESSIVE CLEANUP: Kill all previous ScrollTriggers and contexts
+    // This prevents the "6 pillars" and "double animation" bugs.
+    // ==============================================================
+    if (gsapCtx) {
+        gsapCtx.revert();
+    }
+    ScrollTrigger.getAll().forEach(st => st.kill());
+    
+    
     const ctx = gsap.context(() => {
         const elements = {
             canvas: document.querySelector('#threejs-canvas'),
@@ -230,10 +240,13 @@ function setupAnimations() {
             handoffPoint: document.querySelector('#handoff-point'),
             masterTrigger: document.querySelector('.scrolly-container'),
             visualsCol: document.querySelector('.pillar-visuals-col'),
-            textPillars: gsap.utils.toArray('.pillar-text-content')
+            textPillars: gsap.utils.toArray('.pillar-text-content'),
+            textWrappers: gsap.utils.toArray('.text-anim-wrapper') // Get the wrappers to clear them
         };
+
+        // Clear any leftover inline styles from previous runs
+        gsap.set(elements.textWrappers, { clearProps: 'all' });
         
-        // RUN THE DIAGNOSTIC "FILTER" FIRST
         runDiagnostics(elements);
         
         if (!elements.canvas || typeof THREE === 'undefined') {
@@ -248,7 +261,7 @@ function setupAnimations() {
 
         ScrollTrigger.matchMedia({
             '(min-width: 1025px)': () => {
-                // Timeline for the CUBE ONLY
+                // Cube animation timeline
                 const masterTl = gsap.timeline({
                     scrollTrigger: {
                         trigger: elements.masterTrigger,
@@ -268,9 +281,9 @@ function setupAnimations() {
                 masterTl.to(cube.rotation, { y: Math.PI * 3, x: Math.PI * -1.5, ease: 'none' });
                 masterTl.to(cube.scale, { x: 1.2, y: 1.2, z: 1.2, ease: 'power1.inOut', yoyo: true, repeat: 1 }, 0);
                 
-                // Pinning
+                // Pin the visuals column
                 ScrollTrigger.create({
-                    trigger: elements.visualsCol, // Pin the visuals column itself
+                    trigger: elements.visualsCol,
                     start: 'top top',
                     endTrigger: elements.masterTrigger,
                     end: 'bottom bottom',
@@ -285,20 +298,20 @@ function setupAnimations() {
                             trigger: pillar,
                             start: 'top 60%',
                             end: 'bottom 40%',
-                            scrub: true,
+                            scrub: true
                         },
                         autoAlpha: 0,
-                        y: 50,
+                        y: 50
                     });
                 });
 
                 setupHandoff(elements, cube);
-            },
-            '(max-width: 1024px)': () => {
-                gsap.to(cube.rotation, { y: Math.PI * 2, repeat: -1, duration: 15, ease: 'none' });
             }
         });
     });
+    
+    // Set the new context for the next revert() call
+    gsapCtx = ctx; 
     return ctx;
 }
 
