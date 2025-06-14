@@ -1,5 +1,5 @@
 /* ========================================================== */
-/*   GLOBAL BOX SIZING RESET - ADD THIS TO THE TOP          */
+/*   GLOBAL BOX SIZING RESET - (CRITICAL FIX)                 */
 /* ========================================================== */
 *,
 *::before,
@@ -7,10 +7,13 @@
   box-sizing: border-box;
 }
 
-/* This will now work as intended */
+/* Then find this rule and ensure it exists: */
 .pillar-text-col {
-    width: 50%; 
-    padding: 0 5%; /* Now this padding will create space *inside* the column */
+    width: 50%;
+    position: relative;
+    z-index: 10;
+    /* This padding will now create the correct spacing *inside* the column */
+    padding: 0 4rem; 
 }
 /* =========================================================================
    Speak Up v6.0 - "The Empathy Buuild"
