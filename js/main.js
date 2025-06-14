@@ -285,6 +285,11 @@ function setupAnimations() {
             stuntActorFaces: getElement('#actor-3d-stunt-double .face:not(.front)', true)
         };
 
+        // ======================= DIAGNOSTIC TEST - ADD THESE TWO LINES =======================
+        console.log(`Pillars Found: ${elements.pillars.length}`);
+        console.log(`Text Wrappers Found: ${elements.textWrappers.length}`);
+        // ===================================================================================
+
         if (Object.values(elements).some(el => !el)) {
             Oracle.warn('SOVEREIGN ABORT: Missing critical elements.');
             return;
