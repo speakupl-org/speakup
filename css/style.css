@@ -631,38 +631,41 @@ html.menu-open {
     .pull-quote { margin: 2rem 0; }
 }
 /* =========================================================================
-   METHOD PAGE STYLES - SOVEREIGN PROTOCOL v43.1
+   METHOD PAGE STYLES - SOVEREIGN PROTOCOL v43.2
    ========================================================================= */
 
-/* =========================================================================
-   METHOD PAGE STYLES - SOVEREIGN PROTOCOL v43.1
-   ========================================================================= */
-
-/* --- Main Layout Container --- */
+/* --- Main Layout & Scroll Trigger --- */
 .scrolly-container {
     display: flex;
     gap: 4rem; 
     align-items: flex-start;
+    /* CRITICAL: The master trigger for the scrollytelling needs a defined
+       height to scrub through. This creates the necessary scroll distance. */
+    min-height: 240vh;
 }
 
 /* --- 1. The Pinned Visuals Column (The "Sticky" Part) --- */
 .pillar-visuals-col {
     flex: 1;
     width: 45%; 
-    height: 70vh;
-    position: -webkit-sticky; /* Safari */
-    position: sticky;
-    top: 15vh;
+    height: 100vh; /* Set to full viewport height to support GSAP pinning */
+    /* REMOVED: `position: sticky` is now handled by GSAP's `pin:true` for 
+       flawless synchronization with the animation timeline. */
     perspective: 1200px;
     display: flex;
     justify-content: center;
     align-items: center;
-    /* SOVEREIGN FIX: Prevents the pinned column from capturing mouse events
-       and blocking interactions with the text scrolling underneath. CRITICAL. */
+    /* SOVEREIGN FIX: Prevents blocking interactions with scrolling text. */
     pointer-events: none;
 }
+/* This ensures that any actual interactive elements *inside* the pinned
+   column (if you add them later) are still clickable. */
+.pillar-visuals-col > * {
+    pointer-events: auto;
+}
 
-/* --- 2. 3D Scene & Object Setup --- */
+
+/* --- 2. 3D Scene & Object Setup (Unchanged Core) --- */
 .scene-3d {
     width: 200px;
     height: 200px;
@@ -676,7 +679,7 @@ html.menu-open {
     position: absolute;
     transform-style: preserve-3d;
     transform: translateZ(-100px); 
-    will-change: transform; /* Performance optimization */
+    will-change: transform; 
 }
 
 .face {
@@ -696,11 +699,14 @@ html.menu-open {
 .face.top    { transform: rotateX( 90deg) translateZ(100px); }
 .face.bottom { transform: rotateX(-90deg) translateZ(100px); }
 
-/* --- 3. The Scrolling Text Column (The "Trigger" Part) --- */
+
+/* --- 3. The Scrolling Text Column (The "Trigger" Sections) --- */
 .pillar-text-col {
     flex: 1;
     width: 50%;
     padding-left: 2rem;
+    position: relative; /* Essential for positioning children */
+    z-index: 10;      /* Ensures text scrolls OVER the pinned visual */
 }
 
 /*
@@ -708,33 +714,23 @@ html.menu-open {
    THIS IS THE FOUC (Flash Of Unstyled Content) FIX
    ==================================================================
 */
-/* STEP 1: Hide ALL text sections by default using CSS. */
 .pillar-text-content {
     min-height: 80vh; 
     display: flex;
     flex-direction: column;
     justify-content: center;
-    /* This makes them invisible instantly on page load, before JS runs. */
+    /* STEP 1: Hide ALL text sections by default using CSS. */
     opacity: 0;
     visibility: hidden;
 }
 
 /* STEP 2: Make an EXCEPTION for the very first text section. */
 .pillar-text-content:first-of-type {
-    /* This makes it visible on page load so the page isn't blank. */
     opacity: 1;
     visibility: visible;
 }
-/*
-   END FOUC FIX. JS will now handle fade-in/out smoothly.
-   ==================================================================
-*/
-
-
-.pillar-text-content:last-of-type {
-    min-height: 0;
-    padding-bottom: 5vh;
-}
+/* JS now handles the smooth fade in/out transitions from this state.
+   ================================================================== */
 
 .text-anim-wrapper {
     max-width: 45ch;
@@ -750,17 +746,8 @@ html.menu-open {
     color: #43a8b4; 
 }
 
-.pillar-line {
-    width: 60px;
-    height: 3px;
-    margin: 1.5rem 0;
-    background-color: #43a8b4; 
-    transform: scaleX(0); 
-    transform-origin: left;
-}
-
 .pillar-title {
-    margin: 0;
+    margin: 1.5rem 0; /* Adjusted for better flow */
     font-family: 'Poppins', sans-serif;
     font-size: clamp(2.8rem, 5vw, 4rem); 
     font-weight: 700;
@@ -769,7 +756,7 @@ html.menu-open {
 }
 
 .pillar-paragraph {
-    margin-top: 1.5rem;
+    margin-top: 0; /* Adjusted for better flow */
     font-size: 1.1rem;
     line-height: 1.7;
     color: #a0a0a0;
@@ -778,43 +765,49 @@ html.menu-open {
 
 /* --- 4. Handoff & Summary Section Styles --- */
 .method-summary {
-    padding-top: 10vh; /* Give space above the landed logo */
+    padding-top: 10vh; /* Space above the landed logo */
+}
+
+#actor-3d-stunt-double {
+    /* Initially hidden. GSAP will manage its visibility and transforms. */
+    opacity: 0;
+    visibility: hidden;
 }
 
 .summary-thumbnail-placeholder {
-    width: 163px; /* Match SVG viewBox */
+    width: 163px;
     height: 163px;
     margin: 0 auto 2rem;
-    position: relative; 
+    position: relative; /* Acts as a positioning anchor */
 }
 
 .summary-thumbnail-clipper {
     width: 100%;
     height: 100%;
     position: relative; 
-    border-radius: 8px;
-    overflow: hidden; 
+    border-radius: 8px; /* Give the final shape a nice rounded container */
+    overflow: hidden;   /* CRITICAL: This clips the cube as it flies in */
 }
 
-/* The Stunt Double, once inside the clipper, fills the space */
+/* Position the stunt double correctly inside its final container */
 .summary-thumbnail-clipper .object-3d {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    transform: none; /* Reset transform after Flip */
+    transform: none; /* Reset any lingering transforms after the Flip */
 }
 
-/* MORPH STYLES: Define how the morphed shape and its container should look */
+/* STYLES FOR THE ABSORPTION & MORPH EFFECT */
 #actor-3d-stunt-double .face.front {
-    /* Make the front face of the cube invisible, we only want to see the SVG path inside it */
+    /* Front face is transparent so we only see the SVG path inside it */
     background: transparent !important;
     border: none;
 }
 
 #morph-path {
-    /* This is the color of the final logo shape. MUST HAVE A FILL to be visible. */
+    /* CRITICAL FIX: The logo must have a FILL to be visible. */
     fill: #E5E9F0; 
     stroke: none;
 }
@@ -824,6 +817,7 @@ html.menu-open {
 @media (max-width: 1024px) {
     .scrolly-container {
         flex-direction: column;
+        min-height: auto; /* No fixed scroll height needed */
     }
 
     .pillar-visuals-col,
@@ -833,18 +827,17 @@ html.menu-open {
     }
 
     .pillar-visuals-col {
-        position: static; 
-        top: auto;
+        position: static; /* UNDO the pinning */
         height: auto;
         margin-bottom: 4rem;
         perspective: none;
-        pointer-events: auto; /* Re-enable pointer events on mobile */
+        pointer-events: auto; /* Re-enable pointer events */
     }
     
     .pillar-text-content {
        min-height: auto;
        padding: 0 0 4rem 0;
-       /* On mobile, all text is visible from the start. Override the FOUC fix. */
+       /* UNDO THE FOUC FIX: On mobile, all text is visible from the start. */
        opacity: 1;
        visibility: visible;
     }
