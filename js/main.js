@@ -285,54 +285,85 @@ function setupSite() {
 }
 
 // =========================================================================
-//         ENHANCED SCROLLYTELLING DIAGNOSTICS (THE "FILTER")
+//         PINNING CONTEXT INSPECTOR v1.0
+// This is our new, high-precision diagnostic tool.
 // =========================================================================
-function runEnhancedDiagnostics(elements) {
-    if (!elements.masterTrigger || !elements.visualsCol || !elements.textCol) {
-        console.error("❌ DIAGNOSTICS ABORTED: One or more critical elements for scrollytelling are missing.");
+function inspectPinningContext(elementToInspect) {
+    if (!elementToInspect) {
+        console.error("Pinning Inspector: No element provided to inspect.");
         return;
     }
 
-    console.group("%c[SOVEREIGN SCROLLYTELLING ANALYSIS]", "color: #BF616A; font-weight: bold; font-size: 14px;");
+    console.group("%c[SOVEREIGN PINNING CONTEXT INSPECTOR]", "color: #D08770; font-weight: bold; font-size: 14px;");
+    console.log("Inspecting ancestors of:", elementToInspect);
+    console.log("Searching for CSS properties that can 'trap' a pinned element (`transform`, `perspective`, `filter`, `backdrop-filter`).");
+    
+    let problemFound = false;
+    let currentElement = elementToInspect.parentElement;
 
-    let allChecksPassed = true;
-    const report = (message, status, details = '') => {
-        let icon = '✅';
-        if (status === 'FAIL') {
-            icon = '❌';
-            allChecksPassed = false;
-        } else if (status === 'WARN') {
-            icon = '⚠️';
+    while (currentElement && currentElement.tagName !== 'BODY') {
+        const style = window.getComputedStyle(currentElement);
+        // List of properties that create a new stacking/transform context
+        const propertiesToCheck = {
+            transform: style.getPropertyValue('transform'),
+            perspective: style.getPropertyValue('perspective'),
+            filter: style.getPropertyValue('filter'),
+            'backdrop-filter': style.getPropertyValue('backdrop-filter'),
+            // Also check for 'contain' which is a newer, powerful property that can cause this
+            contain: style.getPropertyValue('contain'),
+        };
+
+        for (const prop in propertiesToCheck) {
+            const value = propertiesToCheck[prop];
+            // Check if the property is set to something other than its default/non-trapping value
+            if (value && value !== 'none' && value !== 'normal') {
+                problemFound = true;
+                console.groupCollapsed(`❌ CONFLICT FOUND on ancestor: <${currentElement.tagName.toLowerCase()} class="${currentElement.className}">`);
+                console.log("Element:", currentElement);
+                console.error(`This element has a property that creates a new coordinate system, which will trap the GSAP pin.`);
+                console.log(`- Problem Property: ${prop}: ${value}`);
+                console.groupEnd();
+            }
         }
+
+        currentElement = currentElement.parentElement;
+    }
+
+    console.log("\n"); // Add a blank line for readability
+    if (problemFound) {
+        console.log("%cCONCLUSION: A critical pinning conflict was detected. The element(s) marked with ❌ are trapping the animation. The conflicting properties must be removed from those parent elements for pinning to work relative to the viewport.", 'color: #BF616A; font-weight: bold;');
+    } else {
+        console.log("%cCONCLUSION: No parent elements with conflicting properties were found. The pinning context is clean.", 'color: #A3BE8C; font-weight: bold;');
+    }
+
+    console.groupEnd();
+}
+
+
+// =========================================================================
+//         ENHANCED SCROLLYTELLING DIAGNOSTICS
+// =========================================================================
+function runEnhancedDiagnostics(elements) {
+    if (!elements.masterTrigger || !elements.visualsCol || !elements.textCol) {
+        console.error("❌ Diagnostics Aborted: One or more critical elements for scrollytelling are missing.");
+        return;
+    }
+
+    console.group("%c[SOVEREIGN LAYOUT ANALYSIS]", "color: #5E81AC; font-weight: bold; font-size: 14px;");
+    
+    const report = (message, status, details = '') => {
+        let icon = status === 'OK' ? '✅' : '⚠️';
         console.log(`${icon} ${message}`, details);
     };
 
-    // --- CHECK 1: The Scrolling Container (The trigger) ---
-    const scrollHeight = elements.masterTrigger.scrollHeight;
+    const scrollHeight = elements.textCol.scrollHeight;
     const viewportHeight = window.innerHeight;
-    if (scrollHeight > viewportHeight * 1.5) {
-        report(`Container is scrollable (Height: ${scrollHeight}px vs Viewport: ${viewportHeight}px).`, "OK");
+    if (scrollHeight > viewportHeight) {
+        report(`Container is sufficiently scrollable (Text Column Height: ${scrollHeight}px vs Viewport: ${viewportHeight}px).`, "OK");
     } else {
-        report(`Container is NOT TALL ENOUGH to scroll effectively (Height: ${scrollHeight}px vs Viewport: ${viewportHeight}px). Text pillars need 'min-height'.`, "WARN");
+        report(`Container may not be tall enough to scroll effectively (Text Column Height: ${scrollHeight}px vs Viewport: ${viewportHeight}px). Ensure text pillars have enough min-height.`, "WARN");
     }
 
-    // --- CHECK 2: Ancestor Overflow ---
-    let problemFound = false;
-    let currentElement = elements.masterTrigger.parentElement;
-    while (currentElement && currentElement.tagName !== 'BODY') {
-        const parentStyle = window.getComputedStyle(currentElement);
-        if (parentStyle.overflow === 'hidden' || parentStyle.overflowX === 'hidden' || parentStyle.overflowY === 'hidden') {
-            report(`CONFLICT FOUND on ancestor:`, "FAIL", currentElement);
-            console.log(`- Element has a hidden 'overflow' property, which will break GSAP pinning. This must be changed or removed.`);
-            problemFound = true;
-        }
-        currentElement = currentElement.parentElement;
-    }
-    if (!problemFound) {
-        report("No conflicting 'overflow' properties found on ancestors.", "OK");
-    }
-
-    // --- CHECK 3: Text Column Spacing ---
     const textColStyle = window.getComputedStyle(elements.textCol);
     const paddingLeft = parseInt(textColStyle.paddingLeft, 10);
     if (paddingLeft > 10) {
@@ -341,18 +372,13 @@ function runEnhancedDiagnostics(elements) {
         report(`Text column has little or no horizontal padding. Text may be too close to the visual element.`, "WARN");
     }
     
-    console.log("\n");
-    if (allChecksPassed) {
-        console.log("%cCONCLUSION: All critical checks passed. GSAP pinning should function correctly.", 'color: #A3BE8C; font-weight: bold;');
-    } else {
-        console.log("%cCONCLUSION: A critical check failed. Review the '❌ FAIL' message above to resolve the conflict.", 'color: #D08770; font-weight: bold;');
-    }
     console.groupEnd();
 }
 
 
 // =========================================================================
-//         DEFINITIVE setupAnimations FUNCTION v3
+//         DEFINITIVE setupAnimations FUNCTION
+// This version uses GSAP's robust 'pin' feature and includes all diagnostics.
 // =========================================================================
 function setupAnimations() {
     if (gsapCtx) gsapCtx.revert();
@@ -367,16 +393,16 @@ function setupAnimations() {
             handoffPoint: document.querySelector('#handoff-point'),
             masterTrigger: document.querySelector('.scrolly-container'),
             visualsCol: document.querySelector('.pillar-visuals-col'),
-            textCol: document.querySelector('.pillar-text-col'), // <<< For diagnostics
+            textCol: document.querySelector('.pillar-text-col'),
             textPillars: gsap.utils.toArray('.pillar-text-content'),
         };
-        
-        // --- Run Enhanced Diagnostics ---
+
+        // --- Step 1: Run All Diagnostics First ---
         runEnhancedDiagnostics(elements);
+        inspectPinningContext(elements.visualsCol);
 
         if (!elements.canvas || !elements.masterTrigger || elements.textPillars.length === 0) {
             Oracle.warn('ABORT: A critical animation element was not found in the DOM.');
-            Oracle.updateHUD('c-validation-status', 'FAILED: Missing Element', '#BF616A');
             return;
         }
 
@@ -392,14 +418,12 @@ function setupAnimations() {
                     scrollTrigger: {
                         trigger: elements.masterTrigger,
                         start: 'top top',
-                        // <<< CRITICAL FIX 1: Let GSAP handle the pinning. It's more reliable than CSS sticky.
                         pin: elements.visualsCol,
-                        // <<< CRITICAL FIX 2: Create a predictable scroll length based on content.
-                        end: () => `+=${elements.textCol.offsetHeight - window.innerHeight}`,
                         scrub: 1.2,
-                        invalidateOnRefresh: true, // Recalculate on resize
+                        endTrigger: elements.textCol,
+                        end: 'bottom bottom',
+                        invalidateOnRefresh: true,
                         onUpdate: self => {
-                            // Your existing Oracle logging, no changes needed here.
                             if (self.progress > 0 && self.progress < 0.99) Oracle.state.animation_phase = 'PILLARS_SCROLL';
                             else if (self.progress >= 0.99) Oracle.state.animation_phase = 'HANDOFF_AWAIT';
                             else Oracle.state.animation_phase = 'IDLE';
@@ -411,51 +435,24 @@ function setupAnimations() {
                     }
                 });
 
-                // --- NO CHANGES NEEDED BELOW THIS LINE IN THE TIMELINE ---
-
                 const animationDuration = elements.textPillars.length;
                 masterTl
-                    .to(cube.rotation, {
-                        y: Math.PI * 2.5,
-                        x: Math.PI * -1,
-                        ease: 'none',
-                        duration: animationDuration
-                    }, 0)
-                    .to(cube.scale, {
-                        x: 1.2, y: 1.2, z: 1.2,
-                        ease: 'power1.in',
-                        duration: animationDuration / 2
-                    }, 0)
-                    .to(cube.scale, {
-                        x: 1, y: 1, z: 1,
-                        ease: 'power1.out',
-                        duration: animationDuration / 2
-                    }, '>');
+                    .to(cube.rotation, { y: Math.PI * 2.5, x: Math.PI * -1, ease: 'none', duration: animationDuration }, 0)
+                    .to(cube.scale, { x: 1.2, y: 1.2, z: 1.2, ease: 'power1.in', duration: animationDuration / 2 }, 0)
+                    .to(cube.scale, { x: 1, y: 1, z: 1, ease: 'power1.out', duration: animationDuration / 2 }, '>');
 
                 elements.textPillars.forEach((pillar, i) => {
                     const textWrapper = pillar.querySelector('.text-anim-wrapper');
                     if (textWrapper) {
                         const animationStartTime = i;
-                        masterTl.from(textWrapper, {
-                            autoAlpha: 0,
-                            y: 40,
-                            ease: 'power2.out',
-                        }, animationStartTime);
-
+                        masterTl.from(textWrapper, { autoAlpha: 0, y: 40, ease: 'power2.out' }, animationStartTime);
                         masterTl.add(() => Oracle.updateHUD('c-active-pillar', `Pillar ${i + 1}`), animationStartTime);
-
                         if (i < elements.textPillars.length - 1) {
-                            masterTl.to(textWrapper, {
-                                autoAlpha: 0,
-                                y: -40,
-                                ease: 'power2.in'
-                            }, animationStartTime + 0.75);
+                            masterTl.to(textWrapper, { autoAlpha: 0, y: -40, ease: 'power2.in' }, animationStartTime + 0.75);
                         }
-                    } else {
-                        Oracle.warn(`Could not find a '.text-anim-wrapper' inside pillar number ${i + 1}. Skipping.`);
                     }
                 });
-
+                
                 setupHandoffAnimation(elements, cube);
             },
             '(max-width: 1024px)': () => {
