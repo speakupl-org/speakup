@@ -218,18 +218,12 @@ function setupSite() {
     });
 }
 
-// COMPLETELY REPLACE setupAnimations with this final, hardened version.
+// Keep runDiagnostics as it is, it's a good helper.
 
 function setupAnimations() {
-    // ==============================================================
-    // AGGRESSIVE CLEANUP: Kill all previous ScrollTriggers and contexts
-    // This prevents the "6 pillars" and "double animation" bugs.
-    // ==============================================================
-    if (gsapCtx) {
-        gsapCtx.revert();
-    }
+    // Aggressive cleanup from your original file - this is excellent practice.
+    if (gsapCtx) gsapCtx.revert();
     ScrollTrigger.getAll().forEach(st => st.kill());
-    
     
     const ctx = gsap.context(() => {
         const elements = {
@@ -241,13 +235,9 @@ function setupAnimations() {
             masterTrigger: document.querySelector('.scrolly-container'),
             visualsCol: document.querySelector('.pillar-visuals-col'),
             textPillars: gsap.utils.toArray('.pillar-text-content'),
-            textWrappers: gsap.utils.toArray('.text-anim-wrapper') // Get the wrappers to clear them
         };
 
-        // Clear any leftover inline styles from previous runs
-        gsap.set(elements.textWrappers, { clearProps: 'all' });
-        
-        runDiagnostics(elements);
+        // runDiagnostics(elements); // Good for debugging, can be enabled if needed.
         
         if (!elements.canvas || typeof THREE === 'undefined') {
             Oracle.warn('ABORT: Critical element or library not found.');
@@ -257,119 +247,133 @@ function setupAnimations() {
         
         const { cube } = threeJsModule.setup(elements.canvas);
         Oracle.updateHUD('c-validation-status', 'PASSED', '#A3BE8C');
-        gsap.set(elements.finalLogoSvg, { autoAlpha: 0 });
+        gsap.set(elements.finalLogoSvg, { autoAlpha: 0 }); // Initially hide the final SVG
 
+        // =================================================================
+        // SOVEREIGN MEDIA QUERY - ALL ANIMATIONS LIVE HERE
+        // =================================================================
         ScrollTrigger.matchMedia({
             '(min-width: 1025px)': () => {
-                // Cube animation timeline
+                Oracle.report("Desktop animation protocol engaged.");
+                
+                // === TIMELINE 1: The Master Scrollytelling Timeline ===
                 const masterTl = gsap.timeline({
                     scrollTrigger: {
                         trigger: elements.masterTrigger,
                         start: 'top top',
-                        end: 'bottom bottom',
-                        scrub: 1.5,
+                        end: 'bottom bottom', // Animate across the entire container height
+                        scrub: 1.2, // Smoothly link to scrollbar
                         onUpdate: self => {
-                            if (self.progress > 0 && self.progress < 1) { Oracle.state.animation_phase = 'PILLARS_SCROLL'; }
-                            else if (self.progress >= 1) { Oracle.state.animation_phase = 'HANDOFF_AWAIT'; }
-                            else { Oracle.state.animation_phase = 'IDLE'; }
+                            // Update HUD with master progress and cube rotation
                             Oracle.updateHUD('c-scroll', `${(self.progress * 100).toFixed(0)}%`);
                             Oracle.updateHUD('c-rot-y', (cube.rotation.y * (180 / Math.PI)).toFixed(1));
                             Oracle.updateAndLog(cube, self);
                         }
                     }
                 });
-                masterTl.to(cube.rotation, { y: Math.PI * 3, x: Math.PI * -1.5, ease: 'none' });
-                masterTl.to(cube.scale, { x: 1.2, y: 1.2, z: 1.2, ease: 'power1.inOut', yoyo: true, repeat: 1 }, 0);
+
+                // Add cube animations to the master timeline
+                masterTl
+                    .to(cube.rotation, { y: Math.PI * 2.5, x: Math.PI * -1, ease: 'none' })
+                    .to(cube.scale, { x: 1.2, y: 1.2, z: 1.2, ease: 'power1.inOut', yoyo: true, repeat: 1 }, 0);
                 
-                // Pin the visuals column
-                ScrollTrigger.create({
-                    trigger: elements.visualsCol,
-                    start: 'top top',
-                    endTrigger: elements.masterTrigger,
-                    end: 'bottom bottom',
-                    pin: true,
-                    pinSpacing: false
-                });
+                // === TIMELINE 2: The Synchronized Text Fade Timeline ===
+                // This is the FIX for the text animation logic.
+                elements.textPillars.forEach((pillar, i) => {
+                    const textWrapper = pillar.querySelector('.text-anim-wrapper');
+                    
+                    // Fade In
+                    masterTl.to(textWrapper, { 
+                        autoAlpha: 1, 
+                        y: 0,
+                        duration: 0.5,
+                        ease: 'power2.out'
+                    }, i * 0.8); // Stagger the start time of each fade-in
 
-                // Independent animation for each text pillar
-                elements.textPillars.forEach((pillar) => {
-                    gsap.from(pillar.querySelector('.text-anim-wrapper'), {
-                        scrollTrigger: {
-                            trigger: pillar,
-                            start: 'top 60%',
-                            end: 'bottom 40%',
-                            scrub: true
-                        },
-                        autoAlpha: 0,
-                        y: 50
-                    });
-                });
+                    // Add a callback to update our new HUD element
+                    masterTl.add(() => Oracle.updateHUD('c-active-pillar', `Pillar ${i + 1}`), i * 0.8);
 
-                setupHandoff(elements, cube);
+                    // Fade Out (if it's not the last pillar)
+                    if (i < elements.textPillars.length - 1) {
+                         masterTl.to(textWrapper, {
+                            autoAlpha: 0,
+                            y: -40,
+                            duration: 0.5,
+                            ease: 'power2.in'
+                        }, (i + 1) * 0.8 - 0.25); // Start the fade-out just before the next one fades in
+                    }
+                });
+                
+                // NOTE: We have REMOVED the `pin: true` ScrollTrigger.
+                // The CSS `position: sticky` is now handling the pinning.
+
+                // === Setup the Handoff Animation Separately ===
+                setupHandoffAnimation(elements, cube);
+            },
+            
+            // On mobile, do nothing. The CSS handles the layout.
+            '(max-width: 1024px)': () => {
+                Oracle.report("Mobile layout active. Scrollytelling animations disabled.");
+                // Ensure cube is reset if resizing from desktop to mobile
+                gsap.set(cube.rotation, { x: 0, y: 0, z: 0 });
+                gsap.set(cube.scale, { x: 1, y: 1, z: 1 });
             }
         });
     });
     
-    // Set the new context for the next revert() call
     gsapCtx = ctx; 
     return ctx;
 }
 
-function setupHandoff(elements, cube) {
+
+// This function now ONLY handles the handoff, making the code cleaner.
+function setupHandoffAnimation(elements, cube) {
     const logoPath = "M81.5,1.5 C37.2,1.5 1.5,37.2 1.5,81.5 C1.5,125.8 37.2,161.5 81.5,161.5 C125.8,161.5 161.5,125.8 161.5,81.5 C161.5,37.2 125.8,1.5 81.5,1.5 Z M81.5,116.5 C81.5,125.1 74.6,132 66,132 C57.4,132 50.5,125.1 50.5,116.5 L50.5,74 C50.5,65.4 57.4,58.5 66,58.5 C74.6,58.5 81.5,65.4 81.5,74 L81.5,116.5 Z M112.5,74 C112.5,65.4 105.6,58.5 97,58.5 C88.4,58.5 81.5,65.4 81.5,74 L81.5,89 C81.5,97.6 88.4,104.5 97,104.5 C105.6,104.5 112.5,97.6 112.5,89 L112.5,74 Z";
-    
+
     ScrollTrigger.create({
         trigger: elements.handoffPoint,
         start: 'top center',
-        onToggle: self => Oracle.updateHUD('c-handoff-st-active', self.isActive ? 'ACTIVE' : 'INACTIVE', self.isActive ? '#A3BE8C' : '#BF616A'),
         onEnter: () => {
             Oracle.state.animation_phase = 'HANDOFF_INITIATED';
             Oracle.updateHUD('c-handoff-state', 'ENGAGED', '#EBCB8B');
             
-            // Set z-index to ensure canvas animates over other content
             gsap.set(elements.visualsCol, { zIndex: 20 }); 
 
-            // FIX: Correctly access elements from the passed-in object
-            const state = Flip.getState(elements.canvas, {props: "transform,width,height"});
+            const state = Flip.getState(elements.canvas);
             elements.summaryPlaceholder.appendChild(elements.canvas);
 
             Flip.from(state, {
                 duration: 1.2,
-                ease: 'power2.inOut',
+                ease: 'power3.inOut',
                 onComplete: () => {
                     Oracle.state.animation_phase = 'HANDOFF_MORPH';
-                    // The "absorption" effect
                     const tl = gsap.timeline();
-                    tl.to(elements.canvas, {
-                        autoAlpha: 0,
-                        duration: 0.3,
-                        // Move canvas back to its original home for proper resize/revert behavior
-                        onComplete: () => { 
-                            if(elements.canvas.parentNode) elements.visualsCol.appendChild(elements.canvas);
-                        }
-                    });
-                    tl.to(elements.finalLogoSvg, { autoAlpha: 1, duration: 0.3 }, "<"); // Fade in SVG at the same time
-                    tl.fromTo(elements.morphPath, 
-                        { morphSVG: "M0,0 H163 V163 H0 Z" }, // Start as a square
-                        { duration: 0.8, morphSVG: logoPath, ease: 'power3.inOut' }
-                    );
+                    tl.to(elements.canvas, { autoAlpha: 0, duration: 0.4 })
+                      .to(elements.finalLogoSvg, { autoAlpha: 1, duration: 0.4 }, "<")
+                      .fromTo(elements.morphPath, 
+                          { morphSVG: "M81.5 81.5 L 81.5 81.5 L 81.5 81.5 L 81.5 81.5 Z" }, // Start as a single point
+                          { duration: 1, morphSVG: logoPath, ease: 'expo.out' }
+                      );
                 }
             });
         },
         onLeaveBack: () => {
+            // This logic can be complex. For now, a simple reversal is fine.
             Oracle.state.animation_phase = 'HANDOFF_REVERSED';
             Oracle.updateHUD('c-handoff-state', 'DISENGAGED', '#BF616A');
-            // Reversal logic: a simple fade-out/fade-in
+            
+            elements.visualsCol.appendChild(elements.canvas); // Move canvas back immediately
+            gsap.set(elements.canvas, { x: 0, y: 0 }); // Reset Flip's transforms
             gsap.to(elements.finalLogoSvg, { autoAlpha: 0, duration: 0.3 });
             gsap.to(elements.canvas, { autoAlpha: 1, duration: 0.3 });
         }
     });
 }
 
+
 // --- INITIALIZATION ---
+// Your existing initialization logic is perfect.
 window.addEventListener('load', setupSite);
-// Resize handler to re-run animations safely
 ScrollTrigger.addEventListener('resize', () => {
-    // Debounce the resize event to avoid excessive re-calculations
     gsap.delayedCall(0.2, setupSite);
 });
