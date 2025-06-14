@@ -353,44 +353,75 @@ function setupAnimations() {
 
 // This function now ONLY handles the handoff, making the code cleaner.
 function setupHandoffAnimation(elements, cube) {
+    // --- FIX: Correct HUD IDs to match your HTML ---
+    const hudIds = {
+        handoffState: 'c-swap-flag', // Changed from c-handoff-state
+        handoffEvent: 'c-event'      // This one was correct
+    };
+
     const logoPath = "M81.5,1.5 C37.2,1.5 1.5,37.2 1.5,81.5 C1.5,125.8 37.2,161.5 81.5,161.5 C125.8,161.5 161.5,125.8 161.5,81.5 C161.5,37.2 125.8,1.5 81.5,1.5 Z M81.5,116.5 C81.5,125.1 74.6,132 66,132 C57.4,132 50.5,125.1 50.5,116.5 L50.5,74 C50.5,65.4 57.4,58.5 66,58.5 C74.6,58.5 81.5,65.4 81.5,74 L81.5,116.5 Z M112.5,74 C112.5,65.4 105.6,58.5 97,58.5 C88.4,58.5 81.5,65.4 81.5,74 L81.5,89 C81.5,97.6 88.4,104.5 97,104.5 C105.6,104.5 112.5,97.6 112.5,89 L112.5,74 Z";
 
     ScrollTrigger.create({
         trigger: elements.handoffPoint,
         start: 'top center',
+        // --- FIX: The `toggleActions` property is cleaner for this on/off behavior ---
+        toggleActions: "play none none reverse",
+
         onEnter: () => {
             Oracle.state.animation_phase = 'HANDOFF_INITIATED';
-            Oracle.updateHUD('c-handoff-state', 'ENGAGED', '#EBCB8B');
-            
-            gsap.set(elements.visualsCol, { zIndex: 20 }); 
+            Oracle.updateHUD(hudIds.handoffState, 'ENGAGED', '#EBCB8B');
+            Oracle.updateHUD(hudIds.handoffEvent, 'FLIP > MORPH');
 
+            // Set a higher z-index to ensure the canvas animates OVER the summary text
+            gsap.set(elements.visualsCol, { zIndex: 20 });
+
+            // 1. Get the state of the canvas in its original, sticky position
             const state = Flip.getState(elements.canvas);
+            
+            // 2. Move the canvas in the DOM to its new parent
             elements.summaryPlaceholder.appendChild(elements.canvas);
 
+            // 3. Animate from the original state to the new one
             Flip.from(state, {
                 duration: 1.2,
                 ease: 'power3.inOut',
                 onComplete: () => {
                     Oracle.state.animation_phase = 'HANDOFF_MORPH';
                     const tl = gsap.timeline();
+                    // Morph transition
                     tl.to(elements.canvas, { autoAlpha: 0, duration: 0.4 })
                       .to(elements.finalLogoSvg, { autoAlpha: 1, duration: 0.4 }, "<")
                       .fromTo(elements.morphPath, 
-                          { morphSVG: "M81.5 81.5 L 81.5 81.5 L 81.5 81.5 L 81.5 81.5 Z" }, // Start as a single point
+                          { morphSVG: "M81.5 81.5 L 81.5 81.5 L 81.5 81.5 L 81.5 81.5 Z" }, 
                           { duration: 1, morphSVG: logoPath, ease: 'expo.out' }
                       );
                 }
             });
         },
         onLeaveBack: () => {
-            // This logic can be complex. For now, a simple reversal is fine.
             Oracle.state.animation_phase = 'HANDOFF_REVERSED';
-            Oracle.updateHUD('c-handoff-state', 'DISENGAGED', '#BF616A');
+            Oracle.updateHUD(hudIds.handoffState, 'DISENGAGED', '#BF616A');
+            Oracle.updateHUD(hudIds.handoffEvent, 'REVERTING...');
+
+            // --- THIS IS THE CORRECTED REVERSAL LOGIC ---
+            // 1. Create a timeline to reverse the visual transition
+            const tl = gsap.timeline({
+                onComplete: () => {
+                    // 3. AFTER visuals are reset, move the canvas back to its original parent
+                    elements.visualsCol.appendChild(elements.canvas);
+                     // 4. IMPORTANT: Clear the z-index so it returns to its normal stacking order
+                    gsap.set(elements.visualsCol, { clearProps: "zIndex" });
+                    Oracle.updateHUD(hudIds.handoffEvent, 'AWAITING TRIGGER');
+                }
+            });
+
+            // 2. Animate the SVG out and the Canvas back in
+            tl.to(elements.finalLogoSvg, { autoAlpha: 0, duration: 0.3 })
+              .to(elements.canvas, { autoAlpha: 1, duration: 0.3 }, 0);
             
-            elements.visualsCol.appendChild(elements.canvas); // Move canvas back immediately
-            gsap.set(elements.canvas, { x: 0, y: 0 }); // Reset Flip's transforms
-            gsap.to(elements.finalLogoSvg, { autoAlpha: 0, duration: 0.3 });
-            gsap.to(elements.canvas, { autoAlpha: 1, duration: 0.3 });
+            // By NOT using clearProps on the canvas, we allow the master scroll
+            // timeline to smoothly resume control of its properties (rotation/scale)
+            // without a visual jump.
         }
     });
 }
