@@ -13,27 +13,15 @@
     
 </head>
 <body>
-<!-- ======================= CEREBRO ORACLE HUD v45.0 "SISYPHUS" ======================= -->
-<div id="cerebro-hud">
-    <h4>CEREBRO-HUD v45.0 [<span id="c-oracle-version">SISYPHUS</span>]</h4>
+    <!-- ======================= CEREBRO ORACLE HUD v46.0 "HEPHAESTUS" ======================= -->
+    <div id="cerebro-hud">
+        <h4>CEREBRO-HUD v46.0 [<span id="c-oracle-version">HEPHAESTUS</span>]</h4>
+        <div><span class="label">VALIDATION:</span><span id="c-validation-status">PENDING...</span></div>
+        <div><span class="label">ST Instances:</span><span id="c-st-instances">0</span></div>
+        <div><span class="label">Exec Time:</span><span id="c-exec-time">--ms</span></div>
+    </div>
+    <!-- ====================================================================================== -->
     
-    <div><span class="label">VALIDATION:</span><span id="c-validation-status">PENDING...</span></div>
-    <div><span class="label">EVENT:</span><span id="c-event">--</span></div>
-
-    <div class="divider"></div>
-    <div class="label" style="text-align:center;">- ENGINE TELEMETRY -</div>
-    <div><span class="label">GSAP Targets:</span><span id="c-gsap-targets">0</span></div>
-    <div><span class="label">ST Instances:</span><span id="c-st-instances">0</span></div>
-    <div><span class="label">Exec Time:</span><span id="c-exec-time">--ms</span></div>
-    
-    <div class="divider"></div>
-    <div class="label" style="text-align:center;">- LIVE TRANSFORM (HERO) -</div>
-    <div><span class="label">Scroll %:</span><span id="c-scroll">0%</span></div>
-    <div><span class="label">Rot X:</span><span id="c-rot-x">0</span></div>
-    <div><span class="label">Rot Y:</span><span id="c-rot-y">0</span></div>
-    <div><span class="label">Scale:</span><span id="c-scale">1.0</span></div>
-</div>
-<!-- ====================================================================================== -->
     <header class="site-header-pill">
         <a href="index.html" class="logo-area" aria-label="Speak Up Homepage">
             <img src="images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon">
@@ -56,126 +44,112 @@
         </button>
     </header>
 
-<!-- =========================================================================
-   PART 2: FULLSCREEN MENU (Unchanged)
-   ========================================================================= -->
-<div class="fullscreen-menu" id="menu-screen" aria-hidden="true">
-    <div class="fullscreen-menu-header">
-        <a href="index.html" class="logo-area" aria-label="Speak Up Homepage">
-            <img src="images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon">
-        </a>
-        <button class="menu-toggle-button" id="menu-close-button" aria-label="Close menu" aria-expanded="true">
-            <span class="close-line"></span>
-            <span class="close-line"></span>
-        </button>
-    </div>
-    <nav class="fullscreen-menu-nav">
-        <ul>
-            <li><a href="o-metodo.html">O Método</a></li>
-            <li><a href="minha-jornada.html">Minha Jornada</a></li>
-            <li><a href="recursos.html">Recursos</a></li>
-            <li><a href="contato.html">Contato</a></li>
-        </ul>
-    </nav>
-    <div class="fullscreen-menu-action-box">
-        <a href="contato.html" class="cta-button">Agende uma Conversa</a>
-        <a href="https://wa.me/YOURPHONENUMBER" target="_blank" class="link-subtle whatsapp-link">Conversar no WhatsApp</a>
-    </div>
-</div>
-
-<main>
-    <!-- =========================================================================
-       PAGE HEADER (Unchanged)
-       ========================================================================= -->
-    <header class="page-header">
-        <div class="container">
-            <h1 class="page-title">Um Método Para Quem Fala</h1>
-            <p class="page-subtitle">Não se trata de aprender mais regras. Trata-se de destravar a confiança para usar o inglês que já existe em você. Vamos focar no que realmente importa: a sua voz.</p>
+    <div class="fullscreen-menu" id="menu-screen" aria-hidden="true">
+        <div class="fullscreen-menu-header">
+            <a href="index.html" class="logo-area" aria-label="Speak Up Homepage">
+                <img src="images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon">
+            </a>
+            <button class="menu-toggle-button" id="menu-close-button" aria-label="Close menu" aria-expanded="true">
+                <span class="close-line"></span>
+                <span class="close-line"></span>
+            </button>
         </div>
-    </header>
-    
-    <!-- =========================================================================
-       PILLARS SECTION - UPDATED FOR THE "IGLOO" EFFECT
-       ========================================================================= -->
+        <nav class="fullscreen-menu-nav">
+            <ul>
+                <li><a href="o-metodo.html">O Método</a></li>
+                <li><a href="minha-jornada.html">Minha Jornada</a></li>
+                <li><a href="recursos.html">Recursos</a></li>
+                <li><a href="contato.html">Contato</a></li>
+            </ul>
+        </nav>
+        <div class="fullscreen-menu-action-box">
+            <a href="contato.html" class="cta-button">Agende uma Conversa</a>
+            <a href="https://wa.me/YOURPHONENUMBER" target="_blank" class="link-subtle whatsapp-link">Conversar no WhatsApp</a>
+        </div>
+    </div>
+
+    <main>
+        <header class="page-header">
+            <div class="container">
+                <h1 class="page-title">Um Método Para Quem Fala</h1>
+                <p class="page-subtitle">Não se trata de aprender mais regras. Trata-se de destravar a confiança para usar o inglês que já existe em você. Vamos focar no que realmente importa: a sua voz.</p>
+            </div>
+        </header>
+        
         <section class="method-pillars">
             <div class="container">
                 <div class="scrolly-container">
     
-                 <!-- Column 1: Pinned 3D Visual -->
-    <div class="pillar-visuals-col">
-        <div class="scene-3d">
-            <div class="object-3d" id="actor-3d">
-                <!-- The 6 faces of our starting cube -->
-                <div class="face front"></div>
-                <div class="face back"></div>
-                <div class="face right"></div>
-                <div class="face left"></div>
-                <div class="face top"></div>
-                <div class="face bottom"></div>
-            </div>
-        </div>
-    </div>
-    
-                    <!-- Column 2: Scrolling Text - UPGRADED FOR ART DIRECTION -->
-    <div class="pillar-text-col">
-        <!-- Pillar 1 -->
-        <div class="pillar-text-content" data-pillar="1">
-            <div class="text-anim-wrapper">
-                <span class="pillar-number">Pilar 1</span>
-                <div class="pillar-line"></div> <!-- ADD THIS LINE -->
-                <h2 class="pillar-title">Diagnóstico e Imersão</h2>
-                <p class="pillar-paragraph">Primeiro, eu escuto. Entendemos suas metas, barreiras e o que te move. A partir daqui, criamos um plano de imersão focado, feito unicamente para você.</p>
-            </div>
-        </div>
-        <!-- Pillar 2 -->
-        <div class="pillar-text-content" data-pillar="2">
-            <div class="text-anim-wrapper">
-                <span class="pillar-number">Pilar 2</span>
-                <div class="pillar-line"></div> <!-- ADD THIS LINE -->
-                <h2 class="pillar-title">Conexão e Conversação</h2>
-                <p class="pillar-paragraph">A prática é a prioridade. Desde o primeiro dia, focamos em conversas reais sobre temas do seu universo, transformando teoria em confiança prática.</p>
-            </div>
-        </div>
-<!-- Pillar 3 -->
-<div class="pillar-text-content" data-pillar="3">
-    <div class="text-anim-wrapper">  <!-- <<<< THIS WRAPPER IS ESSENTIAL -->
-        <span class="pillar-number">Pilar 3</span>
-        <div class="pillar-line"></div>
-        <h2 class="pillar-title">Feedback e Evolução</h2>
-        <p class="pillar-paragraph">Cada aula é um passo à frente. Meu feedback é constante e construtivo. Juntos, ajustamos o plano para garantir que sua evolução nunca pare.</p>
-    </div> <!-- <<<< AND ITS CLOSING TAG -->
-</div>
-</section>
-<!-- The next section begins here. There is NOTHING between it and the last section -->
-<section class="method-summary">
-        <div class="container">
-            <div class="summary-thumbnail-placeholder" id="summary-placeholder">
-                <div class="summary-thumbnail-clipper">
-                    <!-- THE STUNT DOUBLE LIVES HERE, PERMANENTLY. -->
-                    <div class="object-3d" id="actor-3d-stunt-double">
-                        <div class="face front"></div> <div class="face back"></div>
-                        <div class="face right"></div> <div class="face left"></div>
-                        <div class="face top"></div>   <div class="face bottom"></div>
+                    <div class="pillar-visuals-col">
+                        <div class="scene-3d">
+                            <div class="object-3d" id="actor-3d">
+                                <div class="face front"></div> <div class="face back"></div>
+                                <div class="face right"></div> <div class="face left"></div>
+                                <div class="face top"></div>   <div class="face bottom"></div>
+                            </div>
+                        </div>
                     </div>
+    
+                    <div class="pillar-text-col">
+                        <!-- Pillar 1 -->
+                        <div class="pillar-text-content" data-pillar="1">
+                            <div class="text-anim-wrapper">
+                                <span class="pillar-number">Pilar 1</span>
+                                <div class="pillar-line"></div>
+                                <h2 class="pillar-title">Diagnóstico e Imersão</h2>
+                                <p class="pillar-paragraph">Primeiro, eu escuto. Entendemos suas metas, barreiras e o que te move. A partir daqui, criamos um plano de imersão focado, feito unicamente para você.</p>
+                            </div>
+                        </div>
+                        <!-- Pillar 2 -->
+                        <div class="pillar-text-content" data-pillar="2">
+                            <div class="text-anim-wrapper">
+                                <span class="pillar-number">Pilar 2</span>
+                                <div class="pillar-line"></div>
+                                <h2 class="pillar-title">Conexão e Conversação</h2>
+                                <p class="pillar-paragraph">A prática é a prioridade. Desde o primeiro dia, focamos em conversas reais sobre temas do seu universo, transformando teoria em confiança prática.</p>
+                            </div>
+                        </div>
+                        <!-- Pillar 3 -->
+                        <div class="pillar-text-content" data-pillar="3">
+                            <div class="text-anim-wrapper">
+                                <span class="pillar-number">Pilar 3</span>
+                                <div class="pillar-line"></div>
+                                <h2 class="pillar-title">Feedback e Evolução</h2>
+                                <p class="pillar-paragraph">Cada aula é um passo à frente. Meu feedback é constante e construtivo. Juntos, ajustamos o plano para garantir que sua evolução nunca pare.</p>
+                            </div>
+                        </div>
+                        <!-- THE HANDOFF POINT - Correctly placed as the final child -->
+                        <div id="handoff-point" style="height: 1px; width: 100%;"></div>
+                    </div> 
                 </div>
             </div>
-            
-            <h3 class="summary-title">Confiança, Clareza e Conexão.</h3>
-            <p>Estes três pilares formam uma jornada que não apenas ensina inglês, mas te devolve a segurança para se expressar no mundo.</p>
-        </div>
-    </section>
-    <!-- =========================================================================
-       FINAL CTA (Unchanged)
-       ========================================================================= -->
-    <section class="final-cta">
-         <div class="container">
-            <h2 class="final-cta-title">Entendeu o "como"?</h2>
-            <p class="reassurance-text">Agora que você conhece o método, o próximo passo é vivenciá-lo. Vamos ver como ele se aplica aos seus objetivos específicos.</p>
-            <a href="contato.html" class="cta-button cta-button-large final-cta-button">Agende sua conversa</a>
-        </div>
-    </section>
-
-</main>
+        </section>
+        
+        <section class="method-summary">
+            <div class="container">
+                <div class="summary-thumbnail-placeholder" id="summary-placeholder">
+                    <div class="summary-thumbnail-clipper">
+                        <div class="object-3d" id="actor-3d-stunt-double">
+                            <div class="face front"></div> <div class="face back"></div>
+                            <div class="face right"></div> <div class="face left"></div>
+                            <div class="face top"></div>   <div class="face bottom"></div>
+                        </div>
+                    </div>
+                </div>
+                <h3 class="summary-title">Confiança, Clareza e Conexão.</h3>
+                <p>Estes três pilares formam uma jornada que não apenas ensina inglês, mas te devolve a segurança para se expressar no mundo.</p>
+            </div>
+        </section>
+    
+        <section class="final-cta">
+             <div class="container">
+                <h2 class="final-cta-title">Entendeu o "como"?</h2>
+                <p class="reassurance-text">Agora que você conhece o método, o próximo passo é vivenciá-lo. Vamos ver como ele se aplica aos seus objetivos específicos.</p>
+                <a href="contato.html" class="cta-button cta-button-large final-cta-button">Agende sua conversa</a>
+            </div>
+        </section>
+    
+    </main>
 
 <!-- =========================================================================
    FOOTER (Unchanged)
