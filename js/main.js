@@ -340,28 +340,51 @@ const setupHandoff = (elements, masterStoryTl) => {
                 }, [], '>');
         },
 
-        onLeaveBack: () => {
-            if (!isSwapped) return;
-            isReversing = true; isSwapped = false;
-            
-            Oracle.group('REVERSE PROTOCOL INITIATED');
-            Oracle.updateHUD('c-swap-flag', 'FALSE', '#BF616A');
-            Oracle.updateHUD('c-event', 'REVERSING');
-            elements.stuntActor.classList.remove('is-logo-final-state');
-            
-            // Kill any active tweens on the elements to prevent conflicts.
-            gsap.killTweensOf([elements.stuntActor, elements.stuntActorFaces, elements.heroActor, elements.placeholderClipper]);
-            
-            Oracle.warn('Active handoff tweens terminated for reversal.');
-            
-            // Just snap back to the beginning state.
-            const reversalTl = gsap.timeline({
-                onComplete: () => {
+        // AROUND LINE 328
+                onLeaveBack: () => {
+                    // Only fire if the swap has actually happened and we are not already in the middle of reversing.
+                    if (!isSwapped || isReversing) return;
+                    isReversing = true; 
+                
+                    Oracle.group('REVERSE PROTOCOL INITIATED (FORCED RESET)');
+                    Oracle.updateHUD('c-swap-flag', 'FALSE', '#BF616A');
+                    Oracle.updateHUD('c-event', 'REVERSING');
+                
+                    // Terminate any ongoing 'absorption' animations IMMEDIATELY. This is crucial for responsiveness.
+                    gsap.killTweensOf([elements.stuntActor, elements.stuntActorFaces, elements.heroActor, elements.placeholderClipper]);
+                    Oracle.report('Absorption timeline tweens terminated for reversal.');
+                
+                    // We can't rely on a timeline here because the context might have been killed.
+                    // We will do a direct, forceful reset of all visual properties using gsap.set().
+                    
+                    // 1. Immediately hide the stunt double and remove its final logo class.
+                    gsap.set(elements.stuntActor, { autoAlpha: 0 });
+                    elements.stuntActor.classList.remove('is-logo-final-state');
+                    
+                    // 2. Show the hero actor again.
+                    gsap.set(elements.heroActor, { autoAlpha: 1 });
+                    
+                    // 3. Clean up any inline styles left over on the other elements.
+                    gsap.set([elements.stuntActorFaces, elements.placeholderClipper], { clearProps: "all" });
+                
+                    Oracle.log(elements.heroActor, "Hero State (Forcefully Restored)");
+                
+                    // THE MOST IMPORTANT FIX: Re-enable the master ScrollTrigger IF it still exists.
+                    // This check prevents errors if the context was killed.
+                    if (masterStoryTl && masterStoryTl.scrollTrigger) {
+                        masterStoryTl.scrollTrigger.enable();
+                        masterStoryTl.scrollTrigger.update(true); // Force an immediate update
+                        Oracle.report('Master ScrollTrigger re-enabled and updated.');
+                    } else {
+                        Oracle.warn('Master ScrollTrigger instance no longer exists. Could not re-enable.');
+                    }
+                
+                    // Finally, reset the state flags.
+                    isSwapped = false;
                     isReversing = false;
-                    masterStoryTl.scrollTrigger.update(); // Force an update to sync scroll position
-                    Oracle.log(elements.heroActor, "Hero State (Restored)");
-                    Oracle.groupEnd(); // End "REVERSE PROTOCOL" group
-                }
+                
+                    Oracle.groupEnd();
+                },
             });
 
             // Clean up properties and visibility
@@ -425,11 +448,13 @@ function setupAnimations() {
                     // === THE ONE MASTER STORY TIMELINE ===
                     // All scroll-based animations will be sequenced on this single timeline.
                     const masterStoryTl = gsap.timeline({
-                        scrollTrigger: {
-                            trigger: elements.textCol,
-                            start: 'top top',
-                            end: 'bottom bottom',
-                            scrub: scrubValue,
+                    // NEW: Add a default ease for all tweens on this timeline
+                    defaults: { ease: "power2.inOut", duration: 1 },
+                    scrollTrigger: {
+                        trigger: elements.textCol,
+                        start: 'top top',
+                        end: 'bottom bottom',
+                        scrub: scrubValue,
                             // This one onUpdate callback controls all primary logging.
                             onUpdate: (self) => {
                                 // Update HUD with live values from hero actor
