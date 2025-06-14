@@ -1135,3 +1135,32 @@ body.no-scroll {
 .text-anim-wrapper {
     max-width: 550px;
 }
+
+/* ========================================================== */
+/*   FIX FOR PINNING AND ALIGNMENT                            */
+/* ========================================================== */
+
+/* This is the container for both columns */
+.scrolly-container {
+    display: flex;
+    /* This makes the container align items from the top */
+    align-items: flex-start; 
+}
+
+/* 
+  THIS IS THE KEY FIX:
+  We make the visuals column sticky. This tells it to "stick"
+  to the top of its parent container as you scroll past it.
+  GSAP's 'pin: true' will then control this behavior.
+*/
+.pillar-visuals-col {
+    position: -webkit-sticky; /* For Safari */
+    position: sticky;
+    top: 0; /* Stick to the very top */
+    height: 100vh; /* Make it take up the full viewport height */
+
+    /* These are important for centering the canvas inside */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
