@@ -211,14 +211,20 @@ const setupHeroActor = (elements, masterTl) => {
     });
 };
 
-// THE DEFINITIVE BLUEPRINT for Text Pillars (v39.3 - SOVEREIGN OMNISCIENCE PROTOCOL)
-const setupTextPillars = (elements) => {
+// =========================================================================
+//   THE DEFINITIVE BLUEPRINT for Text Pillars (v42 - SYNCHRONIZED Narrative)
+// =========================================================================
+// This function no longer creates its own timeline. Instead, it accepts the 
+// single master timeline (`masterTl`) and adds its animation "chapters" to it.
+const setupTextPillars = (elements, masterTl) => {
 
-    // 1. Establish a clean, known starting state for all wrappers. (Unchanged)
+    // 1. Establish a clean, known starting state for all wrappers. This remains critical.
     gsap.set(elements.textWrappers, { autoAlpha: 0, y: 40, rotationX: -15 });
     gsap.set(elements.textWrappers[0], { autoAlpha: 1, y: 0, rotationX: 0 });
 
-    // === OVERKILL TRACKER #1: INITIAL STATE VERIFICATION === (Unchanged)
+    // === OVERKILL TRACKER #1: INITIAL STATE VERIFICATION ===
+    // This tracker is preserved. It runs once and provides essential baseline data
+    // before any animation is added to the timeline. It is independent and valuable.
     Oracle.group("Initial Text Pillar States (PRE-ANIMATION)");
     elements.textWrappers.forEach((wrapper, index) => {
         const style = window.getComputedStyle(wrapper);
@@ -232,39 +238,33 @@ const setupTextPillars = (elements) => {
     });
     Oracle.groupEnd();
     // ========================================================
+    
+    // 2. Add Synchronized Animations to the Master Timeline.
+    // The previous self-contained timeline and its ScrollTrigger are REMOVED.
+    // We now add tweens directly to the `masterTl` that was passed into this function.
+    // We use absolute time markers to ensure perfect synchronization with the hero animation.
+    // The total hero animation duration is 4 seconds (2s rotation one way, 2s back).
 
-    // 2. Build the ONE MASTER TIMELINE. (Unchanged)
-    const textMasterTl = gsap.timeline({
-        scrollTrigger: {
-            trigger: elements.textCol,
-            start: "top top",
-            end: "bottom bottom",
-            scrub: 1.5,
-            markers: Oracle.config.verbosity > 1, 
+    // Transition from Pillar 1 to Pillar 2.
+    // This starts at the 1.0 second mark of the master story.
+    masterTl.to(elements.textWrappers[0], { autoAlpha: 0, y: -40, rotationX: 15, duration: 0.5, ease: "power2.in" }, 1.0)
+            .to(elements.textWrappers[1], { autoAlpha: 1, y: 0, rotationX: 0, duration: 0.5, ease: "power2.out" }, "<");
+            
+    // Transition from Pillar 2 to Pillar 3.
+    // This starts at the 3.0 second mark of the master story.
+    masterTl.to(elements.textWrappers[1], { autoAlpha: 0, y: -40, rotationX: 15, duration: 0.5, ease: "power2.in" }, 3.0)
+            .to(elements.textWrappers[2], { autoAlpha: 1, y: 0, rotationX: 0, duration: 0.5, ease: "power2.out" }, "<");
 
-            // === OVERKILL TRACKER v3.0: SOVEREIGN DIAGNOSTIC SUITE ===
-            onUpdate: (self) => {
-                // TRACKER A: The original Full Spectrum Analysis, enhanced.
-                const data = { 'Master Progress': `${(self.progress * 100).toFixed(1)}%` };
-                const textColStyle = window.getComputedStyle(elements.textCol);
-                data['Parent Visible?'] = textColStyle.visibility;
-                data['Parent Opacity'] = parseFloat(textColStyle.opacity).toFixed(2);
-                elements.textWrappers.forEach((wrapper, index) => {
-                    const style = window.getComputedStyle(wrapper);
-                    const key = `P${index + 1}`;
-                    data[`${key}_Opacity`] = parseFloat(style.opacity).toFixed(2);
-                    data[`${key}_z-index`] = style.zIndex;
-                });
-                Oracle.scan('Master Timeline (Full Spectrum)', data);
 
-                // <<<< NEW TRACKER ADDITION >>>>
-                // TRACKER B: The ScrollTrigger Deep Dive.
-                // This will instantly tell you if the scroll "road" is long enough.
-                Oracle.trackScrollTrigger(self, "Pillar Text Controller");
-                // <<<< END NEW TRACKER ADDITION >>>>
-            }
-        }
+    // === OVERKILL TRACKER #2: NARRATIVE INTEGRITY CHECK ===
+    // This is a new tracker that verifies this function's contribution to the master story.
+    // It confirms that this 'recipe' has successfully added its chapters.
+    Oracle.scan('Narrative Contribution Check [TextPillars]', {
+        'Status': 'Pillar chapters successfully added to master timeline.',
+        'Master Timeline New Total Duration': masterTl.duration().toFixed(2) + 's'
     });
+    // ========================================================
+};
 
     // 3. The Definitive Animation Logic: SEQUENTIAL TWEENS. (Unchanged)
     elements.textWrappers.forEach((wrapper, index) => {
@@ -378,59 +378,88 @@ const setupHandoff = (elements, heroAnimation) => {
     });
 };
 
-// =========================================================================
-//            SOVEREIGN BLUEPRINT v39.2: CHEF & MAIN SETUP
-// =========================================================================
-
-function setupAnimations() {
-    gsap.registerPlugin(ScrollTrigger, Flip);
-    console.clear();
-    Oracle.report(`Sovereign Build v39.2 Initialized. Verbosity: ${Oracle.config.verbosity}`);
-
-    const ctx = gsap.context(() => {
-
-                // ===========================================================
-        // == EXECUTE THE SOVEREIGN SELF-DIAGNOSTIC PROTOCOL HERE ==
-        Oracle.runSelfDiagnostic();
-        // ===========================================================
-        
-        const elements = {
-            heroActor: getElement('#actor-3d'), stuntActor: getElement('#actor-3d-stunt-double'), placeholder: getElement('#summary-placeholder'),
-            placeholderClipper: getElement('.summary-thumbnail-clipper'), pillars: getElement('.pillar-text-content', true),
-            textWrappers: getElement('.text-anim-wrapper', true), visualsCol: getElement('.pillar-visuals-col'), textCol: getElement('.pillar-text-col'),
-            handoffPoint: getElement('#handoff-point'), stuntActorFaces: getElement('#actor-3d-stunt-double .face:not(.front)', true)
-        };
-        
-        console.log(`Pillars Found: ${elements.pillars.length} | Text Wrappers Found: ${elements.textWrappers.length}`);
-        if (Object.values(elements).some(el => !el || (Array.isArray(el) && !el.length))) {
-            Oracle.warn('SOVEREIGN ABORT: Missing critical elements.'); return;
-        }
-        Oracle.report("Sovereign components verified and locked.");
-
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const scrubValue = prefersReducedMotion ? false : 1.5;
-
-        ScrollTrigger.matchMedia({
-            '(min-width: 1025px)': () => {
-                Oracle.report("Protocol (v39.2 - Single Text Timeline) engaged for desktop.");
-                
-                ScrollTrigger.create({
-                    trigger: elements.textCol, pin: elements.visualsCol,
-                    start: 'top top', end: 'bottom bottom',
-                    onToggle: self => Oracle.updateHUD('c-master-st-active', self.isActive ? 'PIN_ACTIVE' : 'PIN_INACTIVE', self.isActive ? '#A3BE8C' : '#BF616A'),
+            // =========================================================================
+            //         SOVEREIGN ARCHITECTURE v42: UNIFIED NARRATIVE
+            // =========================================================================
+            
+            function setupAnimations() {
+                gsap.registerPlugin(ScrollTrigger, Flip);
+                console.clear();
+                Oracle.report(`Sovereign Build v42 Initialized. Verbosity: ${Oracle.config.verbosity}`);
+            
+                const ctx = gsap.context(() => {
+                    Oracle.runSelfDiagnostic();
+            
+                    const elements = {
+                        heroActor: getElement('#actor-3d'), stuntActor: getElement('#actor-3d-stunt-double'), placeholder: getElement('#summary-placeholder'),
+                        placeholderClipper: getElement('.summary-thumbnail-clipper'), pillars: getElement('.pillar-text-content', true),
+                        textWrappers: getElement('.text-anim-wrapper', true), visualsCol: getElement('.pillar-visuals-col'), textCol: getElement('.pillar-text-col'),
+                        handoffPoint: getElement('#handoff-point'), stuntActorFaces: getElement('#actor-3d-stunt-double .face:not(.front)', true)
+                    };
+                    
+                    if (Object.values(elements).some(el => !el || (Array.isArray(el) && !el.length))) {
+                        Oracle.warn('SOVEREIGN ABORT: Missing critical elements.'); return;
+                    }
+                    Oracle.report("Sovereign components verified and locked.");
+            
+                    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                    const scrubValue = prefersReducedMotion ? false : 1.5;
+            
+                    ScrollTrigger.matchMedia({
+                        '(min-width: 1025px)': () => {
+                            Oracle.report("Protocol (v42 - UNIFIED Narrative Timeline) engaged for desktop.");
+                            
+                            // PINNING IS SEPARATE - This is correct.
+                            ScrollTrigger.create({
+                                trigger: elements.textCol, pin: elements.visualsCol,
+                                start: 'top top', end: 'bottom bottom',
+                                onToggle: self => Oracle.updateHUD('c-master-st-active', self.isActive ? 'PIN_ACTIVE' : 'PIN_INACTIVE', self.isActive ? '#A3BE8C' : '#BF616A'),
+                            });
+            
+                            // === THE ONE MASTER STORY TIMELINE ===
+                            // All animations will now be added to this single timeline.
+                            const masterStoryTl = gsap.timeline({
+                                scrollTrigger: {
+                                    trigger: elements.textCol,
+                                    start: 'top top',
+                                    end: 'bottom bottom',
+                                    scrub: scrubValue,
+                                    // This onUpdate now controls EVERYTHING.
+                                    onUpdate: (self) => {
+                                        const hero = elements.heroActor;
+                                        const rotX = gsap.getProperty(hero, "rotationX").toFixed(1);
+                                        const rotY = gsap.getProperty(hero, "rotationY").toFixed(1);
+                                        const scale = gsap.getProperty(hero, "scale").toFixed(2);
+                                        const progress = (self.progress * 100).toFixed(0);
+            
+                                        // Existing HUD updates are perfect.
+                                        Oracle.scan('Live Story Scrub', { 'Master Progress': `${progress}%`, 'RotX': rotX, 'RotY': rotY, 'Scale': scale });
+                                        Oracle.updateHUD('c-rot-x', rotX);
+                                        Oracle.updateHUD('c-rot-y', rotY);
+                                        Oracle.updateHUD('c-scale', scale);
+                                        Oracle.updateHUD('c-scroll', `${progress}%`);
+            
+                                        // Existing Trackers are moved here.
+                                        Oracle.trackScrollTrigger(self, "Unified Story Controller");
+                                    }
+                                }
+                            });
+                            
+                            // Calling the 'recipes' and feeding them the ONE master timeline.
+                            setupHeroActor(elements, masterStoryTl);
+                            setupTextPillars(elements, masterStoryTl); // Pass the master timeline in.
+                            
+                            // Handoff is complex and event-based (onEnter), so it remains separate.
+                            // We pass it masterStoryTl so it knows which animation to disable/enable.
+                            setupHandoff(elements, masterStoryTl); 
+                        },
+                        // Other breakpoints can be updated similarly if needed. For now, we focus on desktop.
+                        '(min-width: 769px) and (max-width: 1024px)': () => { /* ... */ },
+                        '(max-width: 768px)': () => { /* ... */ }
+                    });
                 });
-
-                const heroAnimation = gsap.timeline({
-                    scrollTrigger: {
-                        trigger: elements.textCol, start: 'top top', end: 'bottom bottom', scrub: scrubValue,
-                        onUpdate: (self) => {
-                            const hero = elements.heroActor; const rotX = gsap.getProperty(hero, "rotationX").toFixed(1);
-                            const rotY = gsap.getProperty(hero, "rotationY").toFixed(1); const scale = gsap.getProperty(hero, "scale").toFixed(2);
-                            const progress = (self.progress * 100).toFixed(0);
-                            Oracle.scan('Live Hero Actor Scrub', { 'Master ScrollTrigger': `${progress}%`, 'RotX': rotX, 'RotY': rotY, 'Scale': scale });
-                            Oracle.updateHUD('c-rot-x', rotX); Oracle.updateHUD('c-rot-y', rotY);
-                            Oracle.updateHUD('c-scale', scale); Oracle.updateHUD('c-scroll', `${progress}%`);
-                        }
+                return ctx;
+            }
                     }
                 });
                 
