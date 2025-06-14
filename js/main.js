@@ -368,91 +368,88 @@ const setupHandoff = (elements, masterStoryTl) => { // <-- ACCEPTS the one maste
     });
 };
 
-            // =========================================================================
-            //            SOVEREIGN ARCHITECTURE v42: UNIFIED NARRATIVE SETUP
-            // =========================================================================
-            function setupAnimations() {
-                gsap.registerPlugin(ScrollTrigger, Flip);
-                console.clear();
-                Oracle.report(`Sovereign Build v42 Initialized. Verbosity: ${Oracle.config.verbosity}`);
-            
-                const ctx = gsap.context(() => {
-                    Oracle.runSelfDiagnostic();
-            
-                    const elements = {
-                        heroActor: getElement('#actor-3d'), stuntActor: getElement('#actor-3d-stunt-double'), placeholder: getElement('#summary-placeholder'),
-                        placeholderClipper: getElement('.summary-thumbnail-clipper'), pillars: getElement('.pillar-text-content', true),
-                        textWrappers: getElement('.text-anim-wrapper', true), visualsCol: getElement('.pillar-visuals-col'), textCol: getElement('.pillar-text-col'),
-                        handoffPoint: getElement('#handoff-point'), stuntActorFaces: getElement('#actor-3d-stunt-double .face:not(.front)', true)
-                    };
-                    
-                    if (Object.values(elements).some(el => !el || (Array.isArray(el) && !el.length))) {
-                        Oracle.warn('SOVEREIGN ABORT: Missing critical elements.'); return;
-                    }
-                    Oracle.report("Sovereign components verified and locked.");
-            
-                    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-                    const scrubValue = prefersReducedMotion ? false : 1.5;
-            
-                    ScrollTrigger.matchMedia({
-                        '(min-width: 1025px)': () => {
-                            Oracle.report("Protocol (v42 - UNIFIED Narrative Timeline) engaged for desktop.");
-                            
-                            ScrollTrigger.create({
-                                trigger: elements.textCol, pin: elements.visualsCol,
-                                start: 'top top', end: 'bottom bottom',
-                                onToggle: self => Oracle.updateHUD('c-master-st-active', self.isActive ? 'PIN_ACTIVE' : 'PIN_INACTIVE', self.isActive ? '#A3BE8C' : '#BF616A'),
-                            });
-            
-                            const masterStoryTl = gsap.timeline({
-                                scrollTrigger: {
-                                    trigger: elements.textCol,
-                                    start: 'top top',
-                                    end: 'bottom bottom',
-                                    scrub: scrubValue,
-                                    markers: Oracle.config.verbosity > 1,
-                                    onUpdate: (self) => {
-                                        const hero = elements.heroActor;
-                                        const rotX = gsap.getProperty(hero, "rotationX").toFixed(1);
-                                        const rotY = gsap.getProperty(hero, "rotationY").toFixed(1);
-                                        const scale = gsap.getProperty(hero, "scale").toFixed(2);
-                                        const progress = (self.progress * 100).toFixed(0);
-            
-                                        Oracle.scan('Live Story Scrub', { 'Master Progress': `${progress}%`, 'RotX': rotX, 'RotY': rotY, 'Scale': scale });
-                                        Oracle.updateHUD('c-rot-x', rotX);
-                                        Oracle.updateHUD('c-rot-y', rotY);
-                                        Oracle.updateHUD('c-scale', scale);
-                                        Oracle.updateHUD('c-scroll', `${progress}%`);
-                                        Oracle.trackScrollTrigger(self, "Unified Story Controller");
-                                    }
-                                }
-                            });
-                            
-                            setupHeroActor(elements, masterStoryTl);
-                            setupTextPillars(elements, masterStoryTl);
-                            setupHandoff(elements, masterStoryTl);
-            
-                            // === OVERKILL TRACKER #4: MASTER NARRATIVE INTEGRITY CHECK ===
-                            // This is the sophisticated replacement for the lost tracker.
-                            Oracle.scan('Master Narrative Integrity Check [FINAL]', {
-                                'Status': 'All chapters have been added to the master story.',
-                                'Final Duration (seconds)': masterStoryTl.duration().toFixed(2),
-                                'Total Child Animations': masterStoryTl.getChildren().length,
-                                'ScrollTrigger Association': masterStoryTl.scrollTrigger.isActive ? '✅ ACTIVE' : '❌ INACTIVE'
-                            });
-                            // ========================================================
-                        },
-                        '(min-width: 769px) and (max-width: 1024px)': () => {
-                            // Placeholder for tablet logic
-                        },
-                        '(max-width: 768px)': () => {
-                            // Placeholder for mobile logic
-                        }
-                    });
+// =========================================================================
+//            SOVEREIGN ARCHITECTURE v42: UNIFIED NARRATIVE SETUP
+// =========================================================================
+function setupAnimations() {
+    gsap.registerPlugin(ScrollTrigger, Flip);
+    console.clear();
+    Oracle.report(`Sovereign Build v42.1 Initialized. Verbosity: ${Oracle.config.verbosity}`);
+
+    const ctx = gsap.context(() => {
+        Oracle.runSelfDiagnostic();
+
+        const elements = {
+            heroActor: getElement('#actor-3d'), stuntActor: getElement('#actor-3d-stunt-double'), placeholder: getElement('#summary-placeholder'),
+            placeholderClipper: getElement('.summary-thumbnail-clipper'), pillars: getElement('.pillar-text-content', true),
+            textWrappers: getElement('.text-anim-wrapper', true), visualsCol: getElement('.pillar-visuals-col'), textCol: getElement('.pillar-text-col'),
+            handoffPoint: getElement('#handoff-point'), stuntActorFaces: getElement('#actor-3d-stunt-double .face:not(.front)', true)
+        };
+        
+        if (Object.values(elements).some(el => !el || (Array.isArray(el) && !el.length))) {
+            Oracle.warn('SOVEREIGN ABORT: Missing critical elements.');
+            return;
+        }
+        Oracle.report("Sovereign components verified and locked.");
+
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const scrubValue = prefersReducedMotion ? false : 1.5;
+
+        ScrollTrigger.matchMedia({
+            '(min-width: 1025px)': () => {
+                Oracle.report("Protocol (v42 - UNIFIED Narrative Timeline) engaged for desktop.");
+                
+                ScrollTrigger.create({
+                    trigger: elements.textCol, pin: elements.visualsCol,
+                    start: 'top top', end: 'bottom bottom',
+                    onToggle: self => Oracle.updateHUD('c-master-st-active', self.isActive ? 'PIN_ACTIVE' : 'PIN_INACTIVE', self.isActive ? '#A3BE8C' : '#BF616A'),
                 });
-                return ctx;
-            // The stray brace that was here has been purged.
-} // Correct: This is the real closing brace for the setupAnimations function.
+
+                const masterStoryTl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: elements.textCol,
+                        start: 'top top',
+                        end: 'bottom bottom',
+                        scrub: scrubValue,
+                        markers: Oracle.config.verbosity > 1,
+                        onUpdate: (self) => {
+                            const hero = elements.heroActor;
+                            const rotX = gsap.getProperty(hero, "rotationX").toFixed(1);
+                            const rotY = gsap.getProperty(hero, "rotationY").toFixed(1);
+                            const scale = gsap.getProperty(hero, "scale").toFixed(2);
+                            const progress = (self.progress * 100).toFixed(0);
+
+                            Oracle.scan('Live Story Scrub', { 'Master Progress': `${progress}%`, 'RotX': rotX, 'RotY': rotY, 'Scale': scale });
+                            Oracle.updateHUD('c-rot-x', rotX);
+                            Oracle.updateHUD('c-rot-y', rotY);
+                            Oracle.updateHUD('c-scale', scale);
+                            Oracle.updateHUD('c-scroll', `${progress}%`);
+                            Oracle.trackScrollTrigger(self, "Unified Story Controller");
+                        }
+                    }
+                });
+                
+                setupHeroActor(elements, masterStoryTl);
+                setupTextPillars(elements, masterStoryTl);
+                setupHandoff(elements, masterStoryTl);
+
+                Oracle.scan('Master Narrative Integrity Check [FINAL]', {
+                    'Status': 'All chapters have been added to the master story.',
+                    'Final Duration (seconds)': masterStoryTl.duration().toFixed(2),
+                    'Total Child Animations': masterStoryTl.getChildren().length,
+                    'ScrollTrigger Association': masterStoryTl.scrollTrigger.isActive ? '✅ ACTIVE' : '❌ INACTIVE'
+                });
+            },
+            '(min-width: 769px) and (max-width: 1024px)': () => {
+                // Placeholder for tablet logic. This is where you would build the tablet version.
+            },
+            '(max-width: 768px)': () => {
+                // Placeholder for mobile logic. This is where you would build the mobile version.
+            }
+        });
+    });
+    return ctx;
+}
 
                 // Calling the 'recipes'
                 setupHeroActor(elements, heroAnimation);
