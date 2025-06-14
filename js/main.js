@@ -147,24 +147,28 @@ const threeJsModule = {
 let gsapCtx;
 function setupSite() {
     Oracle.init(() => {
-        // FIX #1: The check for the existence of `THREE` is removed from here. 
-        // We will check for it right before we need it, which is more robust.
-        if (gsap && ScrollTrigger && Flip && MorphSVGPlugin) {
+        // Now checks for THREE.js as well
+        if (gsap && ScrollTrigger && Flip && MorphSVGPlugin && typeof THREE !== 'undefined') {
+            gsap.registerPlugin(ScrollTrigger, Flip, MorphSVGPlugin); // Ensure plugins are registered
             if (gsapCtx) {
                 gsapCtx.revert(); // Clean up previous animations if resizing
             }
             gsapCtx = setupAnimations();
         } else {
-            Oracle.warn("CRITICAL FAILURE: A required GSAP library failed to load.");
+            const missing = !gsap ? 'GSAP Core' : !ScrollTrigger ? 'ScrollTrigger' : !Flip ? 'Flip' : !MorphSVGPlugin ? 'MorphSVG' : 'THREE.js';
+            Oracle.warn(`CRITICAL FAILURE: ${missing} library failed to load.`);
+            Oracle.updateHUD('c-validation-status', 'FAILED', '#BF616A');
         }
     });
 }
 
 function setupAnimations() {
     const ctx = gsap.context(() => {
+        // FIX: Added missing selectors for the handoff animation
         const elements = {
             canvas: document.querySelector('#threejs-canvas'),
-            finalLogoSvg: document.querySelector('#final-logo-svg'),
+            summaryPlaceholder: document.querySelector('#summary-placeholder'), // Added
+            finalLogoSvg: document.querySelector('#final-logo-svg'),         // Added
             morphPath: document.querySelector('#morph-path'),
             handoffPoint: document.querySelector('#handoff-point'),
             masterTrigger: document.querySelector('.scrolly-container'),
@@ -172,20 +176,19 @@ function setupAnimations() {
             textPillars: gsap.utils.toArray('.pillar-text-content .text-anim-wrapper')
         };
         
-        // FIX #1 (Continued): This is the new, more robust check.
-        // We only proceed if both the canvas element exists AND the THREE library is loaded.
         if (!elements.canvas || typeof THREE === 'undefined') {
-            const errorMessage = !elements.canvas ? 'Critical canvas element not found.' : 'THREE.js library not loaded.';
+            const errorMessage = !elements.canvas ? 'Critical canvas element #threejs-canvas not found.' : 'THREE.js library not loaded.';
             Oracle.warn('ABORT: ' + errorMessage);
             Oracle.updateHUD('c-validation-status', 'FAILED', '#BF616A');
             return;
         }
         
         const { cube } = threeJsModule.setup(elements.canvas);
-        
         Oracle.updateHUD('c-validation-status', 'PASSED', '#A3BE8C');
 
-        // ... The rest of the animation logic remains the same ...
+        // Initially hide the final SVG logo
+        gsap.set(elements.finalLogoSvg, { autoAlpha: 0 });
+
         ScrollTrigger.matchMedia({
             '(min-width: 1025px)': () => {
                 const masterTl = gsap.timeline({
@@ -206,7 +209,7 @@ function setupAnimations() {
                     trigger: elements.masterTrigger,
                     start: 'top top',
                     endTrigger: elements.handoffPoint,
-                    end: 'top bottom',
+                    end: 'top center', // Changed to 'top center' for better alignment
                     pin: elements.visualsCol,
                     pinSpacing: false
                 });
@@ -215,10 +218,13 @@ function setupAnimations() {
                 masterTl.to(cube.scale, { x: 1.2, y: 1.2, z: 1.2, ease: 'power1.inOut', yoyo: true, repeat: 1 }, 0);
 
                 elements.textPillars.forEach((pillar, index) => {
-                    if (index > 0) { masterTl.from(pillar, { autoAlpha: 0, y: 50, duration: 0.2 }, index * 0.25); }
-                    if (index < elements.textPillars.length - 1) { masterTl.to(pillar, { autoAlpha: 0, y: -50, duration: 0.2 }, (index * 0.25) + 0.2); }
+                    masterTl.from(pillar, { autoAlpha: 0, y: 50, duration: 0.2 }, index * 0.25);
+                    if (index < elements.textPillars.length - 1) { 
+                        masterTl.to(pillar, { autoAlpha: 0, y: -50, duration: 0.2 }, (index * 0.25) + 0.22); 
+                    }
                 });
-
+                
+                // FIX: Pass the 'elements' object to the handoff function
                 setupHandoff(elements, cube);
             },
             '(max-width: 1024px)': () => {
@@ -240,7 +246,10 @@ function setupHandoff(elements, cube) {
             Oracle.state.animation_phase = 'HANDOFF_INITIATED';
             Oracle.updateHUD('c-handoff-state', 'ENGAGED', '#EBCB8B');
             
-            gsap.set(elements.visualsCol, { zIndex: 20 });
+            // Set z-index to ensure canvas animates over other content
+            gsap.set(elements.visualsCol, { zIndex: 20 }); 
+
+            // FIX: Correctly access elements from the passed-in object
             const state = Flip.getState(elements.canvas, {props: "transform,width,height"});
             elements.summaryPlaceholder.appendChild(elements.canvas);
 
@@ -249,22 +258,30 @@ function setupHandoff(elements, cube) {
                 ease: 'power2.inOut',
                 onComplete: () => {
                     Oracle.state.animation_phase = 'HANDOFF_MORPH';
-                    gsap.to(elements.canvas, {
+                    // The "absorption" effect
+                    const tl = gsap.timeline();
+                    tl.to(elements.canvas, {
                         autoAlpha: 0,
                         duration: 0.3,
                         // Move canvas back to its original home for proper resize/revert behavior
-                        onComplete: () => { if(elements.canvas.parentNode) elements.visualsCol.appendChild(elements.canvas); }
+                        onComplete: () => { 
+                            if(elements.canvas.parentNode) elements.visualsCol.appendChild(elements.canvas);
+                        }
                     });
-                    gsap.to(elements.finalLogoSvg, { autoAlpha: 1, duration: 0.3 });
-                    gsap.to(elements.morphPath, { duration: 0.8, morphSVG: logoPath, ease: 'power3.inOut' });
+                    tl.to(elements.finalLogoSvg, { autoAlpha: 1, duration: 0.3 }, "<"); // Fade in SVG at the same time
+                    tl.fromTo(elements.morphPath, 
+                        { morphSVG: "M0,0 H163 V163 H0 Z" }, // Start as a square
+                        { duration: 0.8, morphSVG: logoPath, ease: 'power3.inOut' }
+                    );
                 }
             });
         },
         onLeaveBack: () => {
             Oracle.state.animation_phase = 'HANDOFF_REVERSED';
             Oracle.updateHUD('c-handoff-state', 'DISENGAGED', '#BF616A');
-            // Reversal logic would be complex and is omitted for clarity,
-            // but would involve reversing the Flip/Morph tweens.
+            // Reversal logic: a simple fade-out/fade-in
+            gsap.to(elements.finalLogoSvg, { autoAlpha: 0, duration: 0.3 });
+            gsap.to(elements.canvas, { autoAlpha: 1, duration: 0.3 });
         }
     });
 }
