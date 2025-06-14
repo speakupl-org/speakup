@@ -734,6 +734,48 @@ html.menu-open {
         height: 100%;
     }
 }
+
+/* ========================================================== */
+/*   FIX FOR SCROLLYTELLING ANIMATION                         */
+/* ========================================================== */
+
+/* Make the text column a flex container to center its content */
+.pillar-text-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Align pillars to the top */
+}
+
+/* 
+  THIS IS THE KEY FIX: 
+  Give each pillar a significant height and margin. This creates
+  the vertical space (scroll distance) needed for the animation.
+*/
+.pillar-text-content {
+    /* Ensure pillars stack vertically, not on top of each other */
+    position: relative; 
+    opacity: 1 !important; /* Let GSAP handle opacity */
+    visibility: visible !important;
+
+    /* Create space for the animation to happen */
+    min-height: 80vh; /* Give each pillar plenty of vertical room */
+    display: flex;
+    align-items: center; /* Vertically center the text inside */
+    justify-content: center;
+    flex-direction: column;
+}
+
+/* Ensure the wrapper inside takes up space */
+.text-anim-wrapper {
+    max-width: 500px; /* Or whatever width you prefer */
+}
+
+/* Initially hide the text wrappers with JS for a clean fade-in */
+.pillar-text-content .text-anim-wrapper {
+    opacity: 0;
+    visibility: hidden;
+}
+
 /* =========================================================================
    11. Contact Page Styles (contato.html)
    ========================================================================= */
