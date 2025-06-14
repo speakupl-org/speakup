@@ -134,28 +134,40 @@ runSelfDiagnostic: () => {
     },
 
     // Add this new function definition inside the Oracle object
-    trackScrollTrigger: (stInstance, label) => {
+    // <<<< UPGRADED SOVEREIGN PROTOCOL v41 FUNCTION >>>>
+// Replace the v40 trackScrollTrigger with this one.
+trackScrollTrigger: (stInstance, label) => {
     if (Oracle.config.verbosity < 1) return;
     if (!stInstance) {
         Oracle.warn(`[ORACLE ST_TRACK @ ${Oracle._timestamp()}: ${label}] FAILED - ScrollTrigger instance is null.`);
         return;
     }
-    
+
     const groupMethod = Oracle.config.verbosity >= 2 ? console.group : console.groupCollapsed;
-    
+
     groupMethod(`%c[ORACLE ST_TRACK @ ${Oracle._timestamp()}: ${label}]`, 'color: #EBCB8B; font-weight: bold;');
     const triggerEl = stInstance.trigger;
-
-    // THE FIX: Correctly determine the scroller and its height.
     const scrollerEl = stInstance.scroller;
     const scrollerHeight = scrollerEl === window ? document.documentElement.scrollHeight : scrollerEl.scrollHeight;
+    const totalDistance = stInstance.end - stInstance.start; // <-- Storing the value
 
     console.log(`%c  - Status:`, 'color: #88C0D0;', `Active: ${stInstance.isActive}, Direction: ${stInstance.direction === 1 ? 'DOWN' : 'UP'}`);
     console.log(`%c  - Trigger Element:`, 'color: #88C0D0;', `${triggerEl.tagName}#${triggerEl.id || '.' + triggerEl.className.split(' ')[0]}`);
     console.log(`%c  - Pixel Range:`, 'color: #88C0D0;', `Start: ${stInstance.start.toFixed(0)}px, End: ${stInstance.end.toFixed(0)}px`);
-    console.log(`%c  - Total Distance:`, 'color: #88C0D0;', `${(stInstance.end - stInstance.start).toFixed(0)}px`);
+    console.log(`%c  - Total Distance:`, 'color: #88C0D0;', `${totalDistance.toFixed(0)}px`);
     console.log(`%c  - Scroller Height:`, 'color: #88C0D0;', `${scrollerHeight.toFixed(0)}px (Viewport: ${window.innerHeight}px)`);
     console.log(`%c  - Progress:`, 'color: #88C0D0;', `${(stInstance.progress * 100).toFixed(2)}%`);
+
+    // <<<< NEW SENTINEL LOGIC >>>>
+    // This runs only ONCE when the trigger becomes active.
+    if (!stInstance._sentinelWarned) { // Use a custom flag to prevent log spam
+        const minSafeDistance = window.innerHeight * 2;
+        if (totalDistance < minSafeDistance) {
+            Oracle.warn(`SENTINEL ALERT: Total scroll distance for '${label}' (${totalDistance.toFixed(0)}px) is less than 2x viewport height (${minSafeDistance}px). Animation may feel rushed.`);
+        }
+        stInstance._sentinelWarned = true; // Set flag so it doesn't run again
+    }
+    // <<<< END NEW SENTINEL LOGIC >>>>
 
     console.groupEnd();
 },
