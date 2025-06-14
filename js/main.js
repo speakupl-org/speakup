@@ -139,14 +139,10 @@ const setupTextPillars = (elements) => {
                         Oracle.scan('Pillar Text Transition', {
                             'Triggering Pillar': `#${index + 1}`,
                             'ScrollTrigger Progress': `${(progress * 100).toFixed(1)}%`,
-                            'Fading Out (Wrapper)': `#${index + 1}`, // This is the CURRENT pillar, which is fading out
-                            ' -> Opacity': (1 - gsap.getProperty(nextWrapper, 'autoAlpha')).toFixed(2), // Its opacity is the inverse of the next one
-                            ' -> Y': gsap.getProperty(wrapper, 'y').toFixed(1) + 'px',
-                            ' -> RotX': gsap.getProperty(wrapper, 'rotationX').toFixed(1) + '°',
-                            'Fading In (Wrapper)': `#${index + 2}`, // This is the NEXT pillar, which is fading in
-                            ' -> Opacity': gsap.getProperty(nextWrapper, 'autoAlpha').toFixed(2),
-                            ' -> Y': gsap.getProperty(nextWrapper, 'y').toFixed(1) + 'px',
-                            ' -> RotX': gsap.getProperty(nextWrapper, 'rotationX').toFixed(1) + '°',
+                            'Fading Out (Wrapper)': `#${index + 1}`, ' -> Opacity': (1 - gsap.getProperty(nextWrapper, 'autoAlpha')).toFixed(2),
+                            ' -> Y': gsap.getProperty(wrapper, 'y').toFixed(1) + 'px', ' -> RotX': gsap.getProperty(wrapper, 'rotationX').toFixed(1) + '°',
+                            'Fading In (Wrapper)': `#${index + 2}`, ' -> Opacity': gsap.getProperty(nextWrapper, 'autoAlpha').toFixed(2),
+                            ' -> Y': gsap.getProperty(nextWrapper, 'y').toFixed(1) + 'px', ' -> RotX': gsap.getProperty(nextWrapper, 'rotationX').toFixed(1) + '°',
                         });
                         Oracle.updateHUD('c-active-pillar', `P${index + 1}`, '#A3BE8C');
                         Oracle.updateHUD('c-scroll-progress', `${(progress * 100).toFixed(0)}%`);
@@ -160,7 +156,7 @@ const setupTextPillars = (elements) => {
 };
 
 // REVISED AND CORRECTED "ABSORPTION PROTOCOL" HANDOFF v37.6
-const setupHandoff = (elements, heroAnimation) => { // It now receives heroAnimation
+const setupHandoff = (elements, heroAnimation) => {
     let isSwapped = false;
     let isReversing = false;
     Oracle.updateHUD('c-swap-flag', 'FALSE', '#BF616A');
@@ -184,34 +180,51 @@ const setupHandoff = (elements, heroAnimation) => { // It now receives heroAnima
             Oracle.updateHUD('c-swap-flag', 'TRUE', '#A3BE8C');
             Oracle.updateHUD('c-event', 'ABSORPTION');
 
-            // FAILSAFE FIX: Force last pillar text to be visible.
             gsap.set(elements.textWrappers[elements.textWrappers.length - 1], { autoAlpha: 1, y: 0, rotationX: 0 });
-            
-            // CORE FIX #1: Disable ONLY the heroAnimation's trigger, not the pinning.
             heroAnimation.scrollTrigger.disable(false);
 
             Oracle.report('Phase 1: Forcing ST update and capturing state vectors.');
             ScrollTrigger.refresh(true);
 
-            // ... your state capture logic here remains the same ...
             const heroProps = { scale: gsap.getProperty(hero, "scale"), rotationX: gsap.getProperty(hero, "rotationX"), rotationY: gsap.getProperty(hero, "rotationY") };
+            Oracle.log(hero, `Hero State (Pre-Absorption) | Captured RotY: ${heroProps.rotationY.toFixed(2)}`);
+
             const state = Flip.getState(stuntDouble, { props: "transform, opacity" });
-            gsap.set(stuntDouble, { autoAlpha: 1, x: hero.getBoundingClientRect().left - placeholder.getBoundingClientRect().left, y: hero.getBoundingClientRect().top - placeholder.getBoundingClientRect().top, scale: heroProps.scale, rotationX: heroProps.rotationX, rotationY: heroProps.rotationY, });
+            gsap.set(stuntDouble, {
+                autoAlpha: 1, x: hero.getBoundingClientRect().left - placeholder.getBoundingClientRect().left, y: hero.getBoundingClientRect().top - placeholder.getBoundingClientRect().top,
+                scale: heroProps.scale, rotationX: heroProps.rotationX, rotationY: heroProps.rotationY,
+            });
+            Oracle.log(stuntDouble, "Stunt Double State (Teleported & Matched)");
             
             const absorptionTl = gsap.timeline({
-                // CORE FIX #2: Re-enable the animation trigger when the absorption is complete.
                 onComplete: () => {
                     heroAnimation.scrollTrigger.enable();
                     Oracle.updateHUD('c-event', 'STABILIZED / SCROLL ENABLED');
+                    Oracle.log(stuntDouble, "Stunt Double State (Post-Absorption/Logo)");
                     Oracle.groupEnd();
                 }
             });
 
-            // ... your absorptionTl tweening here remains the same ...
-            absorptionTl.add(Flip.from(state, { targets: stuntDouble, duration: 1.5, ease: 'power3.inOut' }));
+            Oracle.report('Phase 2: Initiating travel and absorption sequence.');
+            absorptionTl.add(
+                Flip.from(state, {
+                    targets: stuntDouble, duration: 1.5, ease: 'power3.inOut',
+                    onUpdate: function() {
+                        Oracle.scan('Absorption Vector Trace', {
+                            'Target': 'Stunt Double', 'Progress': `${(this.progress() * 100).toFixed(1)}%`, 'X': gsap.getProperty(stuntDouble, 'x').toFixed(1),
+                            'Y': gsap.getProperty(stuntDouble, 'y').toFixed(1), 'Scale': gsap.getProperty(stuntDouble, 'scale').toFixed(2), 'RotY': gsap.getProperty(stuntDouble, 'rotationY').toFixed(1)
+                        });
+                    }
+                })
+            );
             absorptionTl
                 .to(hero, { autoAlpha: 0, scale: '-=0.1', duration: 0.4, ease: "power2.in" }, 0)
-                // ... all the way to the end ...
+                .to(stuntActorFaces, { opacity: 0, duration: 0.6, ease: "power2.in", stagger: 0.05 }, 0.6)
+                .to(placeholderClipper, { clipPath: "inset(20% 20% 20% 20%)", duration: 0.6, ease: 'expo.in' }, 0.7)
+                .to(stuntDouble, { scaleX: 1.2, scaleY: 0.8, duration: 0.4, ease: 'circ.in' }, 0.9)
+                .to(placeholderClipper, { clipPath: "inset(0% 0% 0% 0%)", duration: 0.8, ease: 'elastic.out(1, 0.5)' }, 1.3)
+                .to(stuntDouble, { scaleX: 1, scaleY: 1, duration: 0.8, ease: 'elastic.out(1, 0.5)' }, 1.3)
+                .to(stuntDouble, { rotationX: 0, rotationY: 0, z: 0, duration: 0.6, ease: "power3.inOut", onStart: () => Oracle.report('Phase 3: Initiating logo transformation.') }, '+=0.2')
                 .call(() => {
                     stuntDouble.classList.add('is-logo-final-state');
                     Oracle.log(stuntDouble, "AEGIS Protocol Complete: Stunt Double is now the final logo.");
@@ -220,24 +233,43 @@ const setupHandoff = (elements, heroAnimation) => { // It now receives heroAnima
 
         onLeaveBack: () => {
             if (!isSwapped) return;
-            // ... this logic should now work perfectly because the scroll is not locked ...
-            isReversing = true;
-            isSwapped = false;
+            isReversing = true; isSwapped = false;
+            
+            Oracle.group('REVERSE PROTOCOL INITIATED');
+            Oracle.updateHUD('c-swap-flag', 'FALSE', '#BF616A');
+            Oracle.updateHUD('c-event', 'REVERSING');
+            
             stuntDouble.classList.remove('is-logo-final-state');
             gsap.killTweensOf([stuntDouble, stuntActorFaces, hero, placeholderClipper]);
-            // This now correctly re-enables the animation
-            heroAnimation.scrollTrigger.enable(); 
-            reversalTl.set(stuntDouble, { autoAlpha: 0 }).set(stuntActorFaces, { clearProps: "opacity" }).set(placeholderClipper, { clearProps: "clipPath" }).set(hero, { autoAlpha: 1 });
+
+            const reversalTl = gsap.timeline({
+                onComplete: () => {
+                    heroAnimation.scrollTrigger.enable();
+                    heroAnimation.scrollTrigger.update();
+                    
+                    Oracle.updateHUD('c-event', 'SCROLLING');
+                    Oracle.log(hero, "Hero State (Restored)");
+                    Oracle.groupEnd();
+                    
+                    isReversing = false;
+                }
+            });
+
+            reversalTl
+                .set(stuntDouble, { autoAlpha: 0 })
+                .set(stuntActorFaces, { clearProps: "opacity" })
+                .set(placeholderClipper, { clearProps: "clipPath" })
+                .set(hero, { autoAlpha: 1 });
         }
     });
 };
+
 
 // REVISED Main animation setup
 function setupAnimations() {
     gsap.registerPlugin(ScrollTrigger, Flip);
     console.clear();
-    // New report confirms the final verbosity level
-    Oracle.report(`Covenant Build v37.2 Initialized. Verbosity Level: ${Oracle.config.verbosity} [SOVEREIGN ONLINE]`);
+    Oracle.report(`Covenant Build v37.6 Initialized. Verbosity Level: ${Oracle.config.verbosity} [SOVEREIGN ONLINE]`);
 
     const ctx = gsap.context(() => {
         const elements = {
@@ -263,132 +295,47 @@ function setupAnimations() {
         const scrubValue = prefersReducedMotion ? false : 1.5;
 
         ScrollTrigger.matchMedia({
-            // REVISED AND CORRECTED "ABSORPTION PROTOCOL" HANDOFF v37.6
-const setupHandoff = (elements, heroAnimation) => { // It now receives heroAnimation
-    let isSwapped = false;
-    let isReversing = false;
-    Oracle.updateHUD('c-swap-flag', 'FALSE', '#BF616A');
+            '(min-width: 1025px)': () => {
+                Oracle.report("Sovereign Protocol (v37.6 - Decoupled Architecture) engaged for desktop.");
+                
+                ScrollTrigger.create({
+                    trigger: elements.textCol,
+                    pin: elements.visualsCol,
+                    start: 'top top',
+                    end: 'bottom bottom',
+                    onToggle: self => Oracle.updateHUD('c-master-st-active', self.isActive ? 'PIN_ACTIVE' : 'PIN_INACTIVE', self.isActive ? '#A3BE8C' : '#BF616A'),
+                });
 
-    const hero = elements.heroActor;
-    const stuntDouble = elements.stuntActor;
-    const placeholder = elements.placeholder;
-    const placeholderClipper = elements.placeholderClipper;
-    const stuntActorFaces = elements.stuntActorFaces;
-
-    ScrollTrigger.create({
-        trigger: elements.handoffPoint,
-        start: 'top 70%',
-        onToggle: self => Oracle.updateHUD('c-handoff-st-active', self.isActive ? 'TRUE' : 'FALSE', self.isActive ? '#A3BE8C' : '#BF616A'),
-        
-        onEnter: () => {
-            if (isSwapped || isReversing) return;
-            isSwapped = true;
-            
-            Oracle.group('ABSORPTION PROTOCOL INITIATED');
-            Oracle.updateHUD('c-swap-flag', 'TRUE', '#A3BE8C');
-            Oracle.updateHUD('c-event', 'ABSORPTION');
-
-            // FAILSAFE FIX: Force last pillar text to be visible.
-            gsap.set(elements.textWrappers[elements.textWrappers.length - 1], { autoAlpha: 1, y: 0, rotationX: 0 });
-            
-            // CORE FIX #1: Disable ONLY the heroAnimation's trigger, not the pinning.
-            // The `false` parameter prevents the animation from reverting, which helps prevent a "blip".
-            heroAnimation.scrollTrigger.disable(false);
-
-            Oracle.report('Phase 1: Forcing ST update and capturing state vectors.');
-            ScrollTrigger.refresh(true);
-
-            const heroProps = { scale: gsap.getProperty(hero, "scale"), rotationX: gsap.getProperty(hero, "rotationX"), rotationY: gsap.getProperty(hero, "rotationY") };
-            Oracle.log(hero, `Hero State (Pre-Absorption) | Captured RotY: ${heroProps.rotationY.toFixed(2)}`);
-
-            const state = Flip.getState(stuntDouble, { props: "transform, opacity" });
-            gsap.set(stuntDouble, {
-                autoAlpha: 1, x: hero.getBoundingClientRect().left - placeholder.getBoundingClientRect().left, y: hero.getBoundingClientRect().top - placeholder.getBoundingClientRect().top,
-                scale: heroProps.scale, rotationX: heroProps.rotationX, rotationY: heroProps.rotationY,
-            });
-            Oracle.log(stuntDouble, "Stunt Double State (Teleported & Matched)");
-            
-            const absorptionTl = gsap.timeline({
-                // CORE FIX #2: Re-enable the animation trigger when the absorption is complete.
-                // THIS UNLOCKS THE REVERSE SCROLL.
-                onComplete: () => {
-                    heroAnimation.scrollTrigger.enable();
-                    Oracle.updateHUD('c-event', 'STABILIZED / SCROLL ENABLED');
-                    Oracle.log(stuntDouble, "Stunt Double State (Post-Absorption/Logo)");
-                    Oracle.groupEnd();
-                }
-            });
-
-            Oracle.report('Phase 2: Initiating travel and absorption sequence.');
-
-            absorptionTl.add(
-                Flip.from(state, {
-                    targets: stuntDouble, duration: 1.5, ease: 'power3.inOut',
-                    // PRESERVED: Your vector trace reporting is fully intact here.
-                    onUpdate: function() {
-                        Oracle.scan('Absorption Vector Trace', {
-                            'Target': 'Stunt Double', 'Progress': `${(this.progress() * 100).toFixed(1)}%`, 'X': gsap.getProperty(stuntDouble, 'x').toFixed(1),
-                            'Y': gsap.getProperty(stuntDouble, 'y').toFixed(1), 'Scale': gsap.getProperty(stuntDouble, 'scale').toFixed(2), 'RotY': gsap.getProperty(stuntDouble, 'rotationY').toFixed(1)
-                        });
+                const heroAnimation = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: elements.textCol,
+                        start: 'top top',
+                        end: 'bottom bottom',
+                        scrub: scrubValue,
+                        onUpdate: (self) => {
+                            const hero = elements.heroActor;
+                            const rotX = gsap.getProperty(hero, "rotationX").toFixed(1);
+                            const rotY = gsap.getProperty(hero, "rotationY").toFixed(1);
+                            const scale = gsap.getProperty(hero, "scale").toFixed(2);
+                            const progress = (self.progress * 100).toFixed(0);
+                            Oracle.scan('Live Hero Actor Scrub', { 'Master ScrollTrigger': `${progress}%`, 'RotX': rotX, 'RotY': rotY, 'Scale': scale });
+                            Oracle.updateHUD('c-rot-x', rotX);
+                            Oracle.updateHUD('c-rot-y', rotY);
+                            Oracle.updateHUD('c-scale', scale);
+                            Oracle.updateHUD('c-scroll', `${progress}%`);
+                        }
                     }
-                })
-            );
-
-            absorptionTl
-                .to(hero, { autoAlpha: 0, scale: '-=0.1', duration: 0.4, ease: "power2.in" }, 0)
-                .to(stuntActorFaces, { opacity: 0, duration: 0.6, ease: "power2.in", stagger: 0.05 }, 0.6)
-                .to(placeholderClipper, { clipPath: "inset(20% 20% 20% 20%)", duration: 0.6, ease: 'expo.in' }, 0.7)
-                .to(stuntDouble, { scaleX: 1.2, scaleY: 0.8, duration: 0.4, ease: 'circ.in' }, 0.9)
-                .to(placeholderClipper, { clipPath: "inset(0% 0% 0% 0%)", duration: 0.8, ease: 'elastic.out(1, 0.5)' }, 1.3)
-                .to(stuntDouble, { scaleX: 1, scaleY: 1, duration: 0.8, ease: 'elastic.out(1, 0.5)' }, 1.3)
-                .to(stuntDouble, {
-                    rotationX: 0, rotationY: 0, z: 0, duration: 0.6, ease: "power3.inOut",
-                    onStart: () => Oracle.report('Phase 3: Initiating logo transformation.'),
-                }, '+=0.2')
-                .call(() => {
-                    stuntDouble.classList.add('is-logo-final-state');
-                    Oracle.log(stuntDouble, "AEGIS Protocol Complete: Stunt Double is now the final logo.");
-                }, [], '>');
-        },
-
-        onLeaveBack: () => {
-            if (!isSwapped) return;
-            isReversing = true; isSwapped = false;
-            
-            Oracle.group('REVERSE PROTOCOL INITIATED');
-            Oracle.updateHUD('c-swap-flag', 'FALSE', '#BF616A');
-            Oracle.updateHUD('c-event', 'REVERSING');
-            
-            stuntDouble.classList.remove('is-logo-final-state');
-            gsap.killTweensOf([stuntDouble, stuntActorFaces, hero, placeholderClipper]);
-
-            const reversalTl = gsap.timeline({
-                onComplete: () => {
-                    // CORE FIX #3: Explicitly enable the correct trigger on reversal.
-                    heroAnimation.scrollTrigger.enable();
-                    heroAnimation.scrollTrigger.update(); // Force an immediate state update
-                    
-                    Oracle.updateHUD('c-event', 'SCROLLING');
-                    Oracle.log(hero, "Hero State (Restored)");
-                    Oracle.groupEnd();
-                    
-                    isReversing = false;
-                }
-            });
-
-            reversalTl
-                .set(stuntDouble, { autoAlpha: 0 })
-                .set(stuntActorFaces, { clearProps: "opacity" })
-                .set(placeholderClipper, { clearProps: "clipPath" })
-                .set(hero, { autoAlpha: 1 });
-        }
-    });
-};
+                });
+                
+                setupHeroActor(elements, heroAnimation);
+                setupTextPillars(elements);
+                setupHandoff(elements, heroAnimation); 
+            },
             '(min-width: 769px) and (max-width: 1024px)': () => {
                 const masterTl = gsap.timeline({ scrollTrigger: { trigger: elements.textCol, pin: elements.visualsCol, start: 'top 10%', end: 'bottom bottom', scrub: scrubValue } });
                 masterTl.to(elements.heroActor, { rotationY: 90, scale: 1, ease: "power1.inOut" });
                 setupTextPillars(elements);
-                setupHandoff(elements, masterTl);
+                setupHandoff(elements, masterTl); 
             },
             '(max-width: 768px)': () => {
                 const masterTl = gsap.timeline({ scrollTrigger: { trigger: elements.textCol, start: 'top 20%', end: 'bottom bottom', scrub: scrubValue } });
@@ -418,10 +365,9 @@ function setupSiteLogic() {
     Oracle.report("Site logic initialized.");
 }
 
-// REVISED initialization sequence to fix race condition
+// REVISED initialization sequence
 function initialAnimationSetup() {
     if (window.gsap && window.ScrollTrigger && window.Flip) {
-        // Oracle.init will now call setupAnimations after it's done configuring.
         Oracle.init(setupAnimations); 
     } else {
         Oracle.warn("GSAP libraries failed to load. SOVEREIGN protocol aborted.");
