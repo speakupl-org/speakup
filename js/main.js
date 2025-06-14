@@ -124,74 +124,60 @@ const setupHeroActor = (elements, masterTl) => {
 };
 
 // Text pillars animation with OMNISCIENT ORACLE (v37.9 - Blueprint Version)
+// THE DEFINITIVE BLUEPRINT for Text Pillars (v38.0 - Single Master Timeline)
 const setupTextPillars = (elements) => {
-    elements.pillars.forEach((pillar, index) => {
-        const wrapper = elements.textWrappers[index];
-        if (index > 0) gsap.set(wrapper, { autoAlpha: 0, y: 40, rotationX: -15 });
+    // 1. Establish a clean, known starting state for all wrappers.
+    gsap.set(elements.textWrappers, { autoAlpha: 0, y: 40, rotationX: -15 });
+    gsap.set(elements.textWrappers[0], { autoAlpha: 1, y: 0, rotationX: 0 });
 
-        if (index < elements.pillars.length - 1) {
-            const nextWrapper = elements.textWrappers[index + 1];
-            gsap.timeline({
-                scrollTrigger: {
-                    trigger: pillar,
-                    
-                    // CORE FIX: Let's try tighter, more specific trigger zones.
-                    // This creates a smaller active window and is less prone to overlap.
-                    start: "top 60%",      
-                    end: "top 20%",
-                    
-                    scrub: 1.5,
+    // 2. Create ONE master timeline to control all text fades.
+    const textMasterTl = gsap.timeline({
+        scrollTrigger: {
+            trigger: elements.textCol, // The entire column is the trigger
+            start: "top top",
+            end: "bottom bottom",
+            scrub: 1.5,
+            
+            // The All-Seeing Eye still works perfectly.
+            markers: Oracle.config.verbosity > 1, 
 
-                    // ================= OMNISCIENT ORACLE UPGRADE v1.0 =================
-                    markers: Oracle.config.verbosity > 1, // The All-Seeing Eye. Activates with verbosity level 2+.
-                    
-                    onEnter: (self) => Oracle.report(`Pillar ST#${index + 1} ENTERED`),
-                    onLeave: (self) => Oracle.report(`Pillar ST#${index + 1} EXITED`),
-                    onEnterBack: (self) => Oracle.report(`Pillar ST#${index + 1} ENTERED (Back)`),
-                    onLeaveBack: (self) => Oracle.report(`Pillar ST#${index + 1} EXITED (Back)`),
-                    
-                    // OMNISCIENT ORACLE onUpdate with Indestructible Blueprint logging
-                    onUpdate: (self) => {
-                        // A more robust way to build the log object, preventing crashes.
-                        const data = {
-                            'Triggering Pillar': `#${index + 1}`,
-                            'ScrollTrigger Progress': `${(self.progress * 100).toFixed(1)}%`,
-                            'ST Active': self.isActive,
-                            'ST Geometry': `start: ${self.start.toFixed(0)}px | end: ${self.end.toFixed(0)}px`
-                        };
-                    
-                        try {
-                            // Instead of calculating opacity, let's log the direct, raw values.
-                            const outWrapperOpacity = gsap.getProperty(wrapper, 'autoAlpha');
-                            const inWrapperOpacity = gsap.getProperty(nextWrapper, 'autoAlpha');
-                            
-                            data['Fading Out (#_Opacity)'] = `#${index+1}_${outWrapperOpacity.toFixed(2)}`;
-                            data[' -> Fading In (#_Opacity)'] = `#${index+2}_${inWrapperOpacity.toFixed(2)}`;
-                    
-                            const outWrapperY = gsap.getProperty(wrapper, 'y');
-                            const inWrapperY = gsap.getProperty(nextWrapper, 'y');
-                    
-                            data['Out Y vs In Y'] = `${outWrapperY.toFixed(1)}px vs ${inWrapperY.toFixed(1)}px`;
-                    
-                        } catch (e) {
-                            // If ANY of the gsap.getProperty calls fail, this will catch it
-                            // without crashing the entire script.
-                            data['ORACLE_SYSTEM_FAILURE'] = `A property could not be read for pillar #${index+1}`;
-                            data['ERROR_MESSAGE'] = e.message;
-                        }
-                        
-                        // Now, send the fully (or partially) constructed data object.
-                        Oracle.scan('Pillar Text Transition', data);
-                    
-                        // The HUD updates are separate and safe.
-                        Oracle.updateHUD('c-active-pillar', `P${index + 1}`, '#A3BE8C');
-                        Oracle.updateHUD('c-scroll-progress', `${(self.progress * 100).toFixed(0)}%`);
-                    }
-                    // ======================== END ORACLE UPGRADE =========================
+            // --- BLUEPRINT ORACLE UPGRADE v2.0: MASTER TIMELINE TRACKING ---
+            onUpdate: (self) => {
+                const numSections = elements.textWrappers.length - 1;
+                const sectionProgress = self.progress * numSections;
+                const activeIndex = Math.floor(sectionProgress);
+                const subProgress = sectionProgress - activeIndex;
+
+                const wrapper = elements.textWrappers[activeIndex];
+                const nextWrapper = elements.textWrappers[activeIndex + 1];
+
+                const data = {
+                    'Master Progress': `${(self.progress * 100).toFixed(1)}%`,
+                    'Active Transition': `${activeIndex + 1} -> ${activeIndex + 2}`,
+                    'Sub-Progress': `${(subProgress * 100).toFixed(1)}%`,
+                };
+                
+                try {
+                    data[`Wrapper #${activeIndex+1} Opacity`] = gsap.getProperty(wrapper, 'autoAlpha').toFixed(2);
+                    data[`Wrapper #${activeIndex+2} Opacity`] = gsap.getProperty(nextWrapper, 'autoAlpha').toFixed(2);
+                    data[`W#${activeIndex+1} Y`] = gsap.getProperty(wrapper, 'y').toFixed(1) + 'px';
+                    data[`W#${activeIndex+2} Y`] = gsap.getProperty(nextWrapper, 'y').toFixed(1) + 'px';
+                } catch(e) {
+                    data['ORACLE_FAILURE'] = e.message;
                 }
-            })
-            .to(wrapper, { autoAlpha: 0, y: -40, rotationX: 15, ease: "power2.in" })
-            .to(nextWrapper, { autoAlpha: 1, y: 0, rotationX: 0, ease: "power2.out" }, "<");
+
+                Oracle.scan('Master Text Timeline', data);
+            }
+        }
+    });
+
+    // 3. Add all transitions to the single master timeline in sequence.
+    elements.textWrappers.forEach((wrapper, index) => {
+        if (index > 0) {
+            const previousWrapper = elements.textWrappers[index - 1];
+            textMasterTl
+                .to(previousWrapper, { autoAlpha: 0, y: -40, rotationX: 15, ease: "power2.in" })
+                .to(wrapper, { autoAlpha: 1, y: 0, rotationX: 0, ease: "power2.out" }, "<");
         }
     });
 };
