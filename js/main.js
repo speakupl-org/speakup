@@ -266,18 +266,20 @@ ScrollTrigger.matchMedia({
 
 
 // =========================================================================
-//         SOVEREIGN ARCHITECTURE v43.1: UNIFIED & BENCHMARKED NARRATIVE
+//         SOVEREIGN ARCHITECTURE v43.2: UNIFIED & BENCHMARKED NARRATIVE
 // =========================================================================
 function setupAnimations() {
     gsap.registerPlugin(ScrollTrigger, Flip, MorphSVGPlugin);
     console.clear();
-    Oracle.report(`Sovereign Build v43.1 Initialized. Verbosity: ${Oracle.config.verbosity}. Use ?oracle_verbosity=2 for max scrutiny.`);
+    Oracle.report(`Sovereign Build v43.2 Initialized. Verbosity: ${Oracle.config.verbosity}. Use ?oracle_verbosity=2 for max scrutiny.`);
     
-    // THE DEFINITIVE RESIZE FIX: GSAP Context is used to contain all animations.
-    // This allows for easy and complete cleanup on resize.
+    // The gsap.context() function is the key to robust, resize-safe animations.
+    // It keeps all our selectors and animations contained.
     const ctx = gsap.context(() => {
         Oracle.runSelfDiagnostic();
 
+        // ** 'elements' is defined HERE, inside the GSAP context. **
+        // Any code that uses 'elements' must also be inside this context function.
         const elements = {
             heroActor: getElement('#actor-3d'),
             stuntActor: getElement('#actor-3d-stunt-double'),
@@ -297,23 +299,29 @@ function setupAnimations() {
         Oracle.report("All Sovereign components verified and locked.");
         Oracle.updateHUD('c-st-instances', ScrollTrigger.getAll().length);
 
+        // ** The matchMedia call is placed HERE, correctly inside the context **
+        // This gives its inner functions access to the 'elements' object defined above.
         ScrollTrigger.matchMedia({
             '(min-width: 1025px)': () => {
                 Oracle.report("Protocol engaged for desktop. Constructing unified timeline.");
 
-                ScrollTrigger.create({
+                // Use a shared config for the trigger and pin to ensure they are
+                // perfectly synchronized for the entire scroll distance.
+                const triggerConfig = {
                     trigger: elements.textCol,
-                    pin: elements.visualsCol,
                     start: 'top top',
-                    end: () => `+=${elements.textCol.offsetHeight - window.innerHeight}`,
+                    end: 'bottom bottom',
+                };
+
+                ScrollTrigger.create({
+                    ...triggerConfig,
+                    pin: elements.visualsCol,
                     onToggle: self => Oracle.updateHUD('c-master-st-active', self.isActive ? 'PIN_ACTIVE' : 'PIN_INACTIVE', self.isActive ? '#A3BE8C' : '#BF616A'),
                 });
 
                 const masterStoryTl = gsap.timeline({
                     scrollTrigger: {
-                        trigger: elements.textCol,
-                        start: 'top top',
-                        end: 'bottom bottom',
+                        ...triggerConfig,
                         scrub: 1.5,
                         onUpdate: (self) => {
                             Oracle.updateHUD('c-rot-x', gsap.getProperty(elements.heroActor, "rotationX").toFixed(1));
@@ -325,17 +333,18 @@ function setupAnimations() {
                     }
                 });
 
+                // These functions will be called correctly and can access the timeline
                 setupHeroActor(elements, masterStoryTl);
-                setupTextPillars(elements, masterStoryTl);
+                setupTextPillars(elements, masterStoryTl); // This now contains the 'once: true' fix
                 setupHandoff(elements, masterStoryTl); 
             },
             '(max-width: 1024px)': () => {
                 Oracle.report("Sovereign Protocol STANDBY. No scrollytelling animations on mobile view.");
             }
         });
-    }); // END GSAP CONTEXT
+    }); // --- END GSAP CONTEXT ---
 
-    return ctx; // Return the context so it can be cleaned up
+    return ctx; // Return the context so it can be cleaned up on resize
 }
 
 // =========================================================================
