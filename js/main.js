@@ -249,13 +249,9 @@ const setupTextPillars = (elements, masterTl) => {
     Oracle.groupEnd();
 };
 
+// THIS IS THE SINGLE, CORRECT, AND COMPLETE setupHandoff FUNCTION
 // =========================================================================
 //   REVISED "ABSORPTION PROTOCOL" HANDOFF (v43.1 - SYNCHRONIZED)
-// =========================================================================
-const // =========================================================================
-//   REVISED "ABSORPTION PROTOCOL" HANDOFF (v43.1 - SYNCHRONIZED)
-// =========================================================================
-// ***** THIS IS THE COMPLETE, CORRECTED VERSION OF THE FUNCTION *****
 // =========================================================================
 const setupHandoff = (elements, masterStoryTl) => {
 
@@ -345,10 +341,9 @@ const setupHandoff = (elements, masterStoryTl) => {
                 .call(() => {
                     Oracle.log(elements.stuntActor, "AEGIS Protocol Complete: SVG Morph complete.");
                 });
-        }, // <-- onEnter ends here
+        },
 
         onLeaveBack: () => {
-            // Only fire if the swap has actually happened and we are not already in the middle of reversing.
             if (!isSwapped || isReversing) return;
             isReversing = true; 
 
@@ -356,19 +351,12 @@ const setupHandoff = (elements, masterStoryTl) => {
             Oracle.updateHUD('c-swap-flag', 'FALSE', '#BF616A');
             Oracle.updateHUD('c-event', 'REVERSING');
 
-            gsap.killTweensOf([elements.stuntActor, elements.stuntActorFaces, elements.heroActor, elements.placeholderClipper]);
+            gsap.killTweensOf([elements.stuntActor, elements.stuntActorFaces, elements.heroActor, elements.placeholderClipper, '#morph-path']);
             Oracle.report('Absorption timeline tweens terminated for reversal.');
             
-            // Immediately hide the stunt double and clean up its properties.
             gsap.set(elements.stuntActor, { autoAlpha: 0, clearProps: "all" });
-
-            // Restore the original hero actor's visibility.
             gsap.set(elements.heroActor, { autoAlpha: 1 });
-            
-            // Restore the original square path for the next time
             gsap.set('#morph-path', { morphSVG: "M0,0 H200 V200 H0 Z" });
-
-            // Clean up any inline styles left over on the other elements.
             gsap.set([elements.stuntActorFaces, elements.placeholderClipper], { clearProps: "all" });
 
             Oracle.log(elements.heroActor, "Hero State (Forcefully Restored)");
@@ -380,21 +368,15 @@ const setupHandoff = (elements, masterStoryTl) => {
             } else {
                 Oracle.warn('Master ScrollTrigger instance no longer exists. Could not re-enable.');
             }
-
-            // Finally, reset the state flags.
+            
             isSwapped = false;
             isReversing = false;
 
             Oracle.groupEnd();
-        }, // <-- onLeaveBack ends here
+        },
         
-    }); // <-- ScrollTrigger.create() ends here
-}; // <-- setupHandoff() ends here
-
-
-// =========================================================================
-//         SOVEREIGN ARCHITECTURE v43.1: UNIFIED & BENCHMARKED NARRATIVE
-// =========================================================================
+    });
+}; // <-- This curly brace '}' and semicolon ';' properly closes the entire setupHandoff function.
 
 // =========================================================================
 //         SOVEREIGN ARCHITECTURE v43.1: UNIFIED & BENCHMARKED NARRATIVE
