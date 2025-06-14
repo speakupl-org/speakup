@@ -338,10 +338,27 @@ function setupAnimations() {
 
         ScrollTrigger.matchMedia({
             '(min-width: 1025px)': () => {
-                const masterTl = gsap.timeline({
+                Oracle.report("Sovereign Protocol (v37.5 - Decoupled Architecture) engaged for desktop.");
+                
+                // --- ARCHITECTURE REVISION: DECOUPLED SCROLLTRIGGERS ---
+
+                // ScrollTrigger 1: PURELY for pinning the column. No animation.
+                ScrollTrigger.create({
+                    trigger: elements.textCol,
+                    pin: elements.visualsCol,
+                    start: 'top top',
+                    end: 'bottom bottom',
+                    // No scrub, no masterTl. This just handles the pinning.
+                    onToggle: self => Oracle.updateHUD('c-master-st-active', self.isActive ? 'PIN_ACTIVE' : 'PIN_INACTIVE', self.isActive ? '#A3BE8C' : '#BF616A'),
+                });
+
+                // ScrollTrigger 2: PURELY for animating the hero actor.
+                const heroAnimation = gsap.timeline({
                     scrollTrigger: {
-                        trigger: elements.textCol, pin: elements.visualsCol, start: 'top top', end: 'bottom bottom', scrub: scrubValue,
-                        onToggle: self => Oracle.updateHUD('c-master-st-active', self.isActive ? 'TRUE' : 'FALSE', self.isActive ? '#A3BE8C' : '#BF616A'),
+                        trigger: elements.textCol,
+                        start: 'top top',
+                        end: 'bottom bottom',
+                        scrub: scrubValue,
                         onUpdate: (self) => {
                             const hero = elements.heroActor;
                             const rotX = gsap.getProperty(hero, "rotationX").toFixed(1);
@@ -358,9 +375,15 @@ function setupAnimations() {
                         }
                     }
                 });
-                setupHeroActor(elements, masterTl);
+                
+                // We pass the heroAnimation timeline to setupHeroActor now.
+                setupHeroActor(elements, heroAnimation);
+                
+                // This is now independent and will continue to work even when the hero animation is disabled.
                 setupTextPillars(elements);
-                setupHandoff(elements, masterTl);
+                
+                // Pass the heroAnimation to the handoff so we can disable IT, not the pinning.
+                setupHandoff(elements, heroAnimation); 
             },
             '(min-width: 769px) and (max-width: 1024px)': () => {
                 const masterTl = gsap.timeline({ scrollTrigger: { trigger: elements.textCol, pin: elements.visualsCol, start: 'top 10%', end: 'bottom bottom', scrub: scrubValue } });
