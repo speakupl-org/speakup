@@ -8,16 +8,17 @@ begins. The initialization flow is now restructured for guaranteed order of oper
 
 */
 
-// Oracle v39.0 - The "Sovereign" Protocol with "Aegis" Throttling Utility
+// Oracle v40.1 - The "Sovereign" Protocol with "Architect" Status Reporting
 const Oracle = {
     // Configuration Sub-protocol
     config: {
         verbosity: 1, // Default: 1=collapsed, 2=expanded
     },
 
-    // <<<< AEGIS PROTOCOL v39.0 UPGRADE >>>>
-    // The Utility sub-protocol for performance-critical operations.
+    // Aegis Protocol v39.0 Utility
     utility: {
+        // Higher-order function to limit execution rate of another function.
+        // Essential for performance-heavy tasks tied to frequent events like scrolling.
         throttle: (func, limit) => {
             let inThrottle;
             return function() {
@@ -32,15 +33,17 @@ const Oracle = {
         }
     },
     
-    // Performance Sub-protocol (v43.1)
+    // Performance Sub-protocol v43.1
     performance: {
+        // Wraps a function, logs its execution time, and updates the HUD.
+        // It now correctly handles and returns the result of the wrapped function.
         benchmark: (label, functionToTest) => {
-            if (Oracle.config.verbosity < 1) {
-                functionToTest();
-                return;
+            if (Oracle.config.verbosity < 1) { 
+                const res = functionToTest(); 
+                return res; 
             }
             const startTime = performance.now();
-            functionToTest(); // Execute the function
+            const result = functionToTest();
             const endTime = performance.now();
             const duration = (endTime - startTime).toFixed(3);
             const color = duration < 50 ? '#A3BE8C' : (duration < 200 ? '#EBCB8B' : '#BF616A');
@@ -50,6 +53,9 @@ const Oracle = {
                 'color: #8FBCBB; font-weight: bold;',
                 `color: ${color}; font-weight: normal;`
             );
+            // Directly updates the HUD with benchmark results.
+            Oracle.updateHUD('c-exec-time', `${duration}ms`, color);
+            return result;
         }
     },
     
@@ -67,9 +73,9 @@ const Oracle = {
             checkDep(window.Flip, 'Flip Plugin');
         console.groupEnd();
         
-        // 2. Oracle Integrity Check (Updated for Aegis)
+        // 2. Oracle Integrity Check
         groupMethod('%c2. Oracle Internal Integrity', 'color: #EBCB8B;');
-            const expectedMethods = ['init', 'utility', 'performance', '_timestamp', 'log', 'scan', 'group', 'groupEnd', 'report', 'warn', 'updateHUD', 'trackScrollTrigger', 'runSelfDiagnostic'];
+            const expectedMethods = ['init', 'utility', 'performance', 'reportStatus', '_timestamp', 'log', 'scan', 'group', 'groupEnd', 'report', 'warn', 'updateHUD', 'trackScrollTrigger', 'runSelfDiagnostic'];
             let integrityOk = true;
             expectedMethods.forEach(methodName => {
                 if (typeof Oracle[methodName] !== 'undefined') {
@@ -98,7 +104,6 @@ const Oracle = {
         console.groupEnd();
     },
 
-    // REVISED: init now accepts a callback to guarantee execution order
     init: (callback) => {
         const storedVerbosity = localStorage.getItem('oracleVerbosity');
         if (storedVerbosity !== null) Oracle.config.verbosity = parseInt(storedVerbosity, 10);
@@ -166,15 +171,11 @@ const Oracle = {
         const groupMethod = Oracle.config.verbosity >= 2 ? console.group : console.groupCollapsed;
         groupMethod(`%c[ORACLE ST_TRACK @ ${Oracle._timestamp()}: ${label}]`, 'color: #EBCB8B; font-weight: bold;');
         const triggerEl = stInstance.trigger;
-        const scrollerEl = stInstance.scroller;
-        const scrollerHeight = scrollerEl === window ? document.documentElement.scrollHeight : scrollerEl.scrollHeight;
         const totalDistance = stInstance.end - stInstance.start;
 
         console.log(`%c  - Status:`, 'color: #88C0D0;', `Active: ${stInstance.isActive}, Direction: ${stInstance.direction === 1 ? 'DOWN' : 'UP'}`);
         console.log(`%c  - Trigger Element:`, 'color: #88C0D0;', `${triggerEl.tagName}#${triggerEl.id || '.' + triggerEl.className.split(' ')[0]}`);
         console.log(`%c  - Pixel Range:`, 'color: #88C0D0;', `Start: ${stInstance.start.toFixed(0)}px, End: ${stInstance.end.toFixed(0)}px`);
-        console.log(`%c  - Total Distance:`, 'color: #88C0D0;', `${totalDistance.toFixed(0)}px`);
-        console.log(`%c  - Scroller Height:`, 'color: #88C0D0;', `${scrollerHeight.toFixed(0)}px (Viewport: ${window.innerHeight}px)`);
         console.log(`%c  - Progress:`, 'color: #88C0D0;', `${(stInstance.progress * 100).toFixed(2)}%`);
         if (!stInstance._sentinelWarned) {
             const minSafeDistance = window.innerHeight * 2;
@@ -188,7 +189,14 @@ const Oracle = {
     
     report: (message) => console.log(`%c[SOVEREIGN REPORT @ ${Oracle._timestamp()}]:`, 'color: #5E81AC; font-weight: bold;', message),
     warn: (message) => console.warn(`%c[SOVEREIGN WARNING @ ${Oracle._timestamp()}]:`, 'color: #EBCB8B;', message),
+
+    // <<<< ARCHITECT v40.0 UPGRADE >>>>
+    // Centralized HUD status reporting. Allows a single, consistent line for critical system state.
+    reportStatus: (message, color = '#88C0D0') => {
+        Oracle.updateHUD('c-protocol-status', message, color);
+    },
     
+    // The core function for updating any HUD element.
     updateHUD: (id, value, color = '#E5E9F0') => {
         const el = document.getElementById(id);
         if (el) {
@@ -286,113 +294,149 @@ const setupTextPillars = (elements, masterTl) => {
 };
 
 // =========================================================================
-//   REVISED "ABSORPTION PROTOCOL" HANDOFF (v42 - UNIFIED)
+//   THE ARCHITECT PROTOCOL HANDOFF (v40.1 - DECOUPLED & ARMED)
 // =========================================================================
-const setupHandoff = (elements, masterStoryTl) => { // <-- ACCEPTS the one master timeline, renamed for clarity.
+const setupHandoff = (elements, masterStoryTl) => {
 
     let isSwapped = false;
     let isReversing = false;
-    Oracle.updateHUD('c-swap-flag', 'FALSE', '#BF616A');
+    Oracle.updateHUD('c-handoff-armed-flag', 'FALSE', '#BF616A');
 
-    const hero = elements.heroActor;
-    const stuntDouble = elements.stuntActor;
-    const placeholder = elements.placeholder;
-    const placeholderClipper = elements.placeholderClipper;
-    const stuntActorFaces = elements.stuntActorFaces;
+    // STAGE 1: Define the complex logic as standalone functions.
+    // This keeps the trigger creation clean and readable.
+    const performAbsorption = (self) => {
+        if (isSwapped || isReversing) return;
+        isSwapped = true;
+        
+        Oracle.group('ABSORPTION PROTOCOL INITIATED');
+        Oracle.reportStatus('ABSORPTION', '#D08770');
+        Oracle.updateHUD('c-event', 'ABSORPTION');
+        
+        // Disable the master scroll timeline to prevent conflicts during the FLIP.
+        masterStoryTl.scrollTrigger.disable(false);
+        Oracle.report('Phase 1: Forcing ST update and capturing state vectors.');
+        ScrollTrigger.refresh(true); // Force a refresh to get latest values
 
+        const hero = elements.heroActor;
+        const stuntDouble = elements.stuntActor;
+
+        // Capture state for FLIP animation
+        const state = Flip.getState(stuntDouble, { props: "transform, opacity" });
+        const heroProps = { 
+            scale: gsap.getProperty(hero, "scale"), 
+            rotationX: gsap.getProperty(hero, "rotationX"), 
+            rotationY: gsap.getProperty(hero, "rotationY") 
+        };
+        Oracle.log(hero, `Hero State (Pre-Absorption) | Captured RotY: ${heroProps.rotationY.toFixed(2)}`);
+
+        // Teleport the stunt double to the hero's position and match its state
+        gsap.set(stuntDouble, {
+            autoAlpha: 1,
+            x: hero.getBoundingClientRect().left - elements.placeholder.getBoundingClientRect().left,
+            y: hero.getBoundingClientRect().top - elements.placeholder.getBoundingClientRect().top,
+            scale: heroProps.scale,
+            rotationX: heroProps.rotationX,
+            rotationY: heroProps.rotationY,
+        });
+        Oracle.log(stuntDouble, "Stunt Double State (Teleported & Matched)");
+
+        const absorptionTl = gsap.timeline({
+            onComplete: () => {
+                masterStoryTl.scrollTrigger.enable(); // Re-enable master scroll
+                Oracle.reportStatus('STABILIZED', '#A3BE8C');
+                Oracle.updateHUD('c-event', 'STABILIZED / SCROLL ENABLED');
+                Oracle.log(stuntDouble, "Stunt Double State (Post-Absorption/Logo)");
+                Oracle.groupEnd();
+            }
+        });
+
+        Oracle.report('Phase 2: Initiating travel and absorption sequence.');
+        // The FLIP animation itself
+        absorptionTl.add(Flip.from(state, { 
+            targets: stuntDouble, 
+            duration: 1.5, 
+            ease: 'power3.inOut', 
+            onUpdate: function() { 
+                Oracle.scan('Absorption Vector Trace', { 'Progress': `${(this.progress() * 100).toFixed(1)}%` });
+            } 
+        }));
+
+        // The rest of the synchronized absorption animation
+        absorptionTl
+            .to(hero, { autoAlpha: 0, scale: '-=0.1', duration: 0.4, ease: "power2.in" }, 0)
+            .to(elements.stuntActorFaces, { opacity: 0, duration: 0.6, ease: "power2.in", stagger: 0.05 }, 0.6)
+            .to(elements.placeholderClipper, { clipPath: "inset(20% 20% 20% 20%)", duration: 0.6, ease: 'expo.in' }, 0.7)
+            .to(stuntDouble, { scaleX: 1.2, scaleY: 0.8, duration: 0.4, ease: 'circ.in' }, 0.9)
+            .to(elements.placeholderClipper, { clipPath: "inset(0% 0% 0% 0%)", duration: 0.8, ease: 'elastic.out(1, 0.5)' }, 1.3)
+            .to(stuntDouble, { scaleX: 1, scaleY: 1, duration: 0.8, ease: 'elastic.out(1, 0.5)' }, 1.3)
+            .to(stuntDouble, { rotationX: 0, rotationY: 0, z: 0, duration: 0.6, ease: "power3.inOut" }, '+=0.2')
+            .call(() => stuntDouble.classList.add('is-logo-final-state'), [], '>');
+    };
+
+    const performReversal = (self) => {
+        if (!isSwapped) return; // Prevent this from running if it hasn't swapped yet
+        isReversing = true;
+        isSwapped = false;
+
+        Oracle.group('REVERSE PROTOCOL INITIATED');
+        Oracle.reportStatus('REVERSING', '#EBCB8B');
+        Oracle.updateHUD('c-event', 'REVERSAL');
+        
+        elements.stuntActor.classList.remove('is-logo-final-state');
+        gsap.killTweensOf([elements.stuntActor, elements.stuntActorFaces, elements.heroActor, elements.placeholderClipper]);
+
+        // Create a dedicated reversal timeline to ensure clean state restoration
+        const reversalTl = gsap.timeline({
+            onComplete: () => {
+                masterStoryTl.scrollTrigger.enable(); // Ensure master scroll is enabled
+                masterStoryTl.scrollTrigger.update(); // Force an update
+                Oracle.reportStatus('SCROLLING', '#88C0D0');
+                Oracle.updateHUD('c-event', 'SCROLLING');
+                Oracle.log(elements.heroActor, "Hero State (Restored)");
+                Oracle.groupEnd();
+                isReversing = false;
+            }
+        });
+        
+        // Immediately set elements back to their pre-absorption state
+        reversalTl
+            .set(elements.stuntActor, { autoAlpha: 0 })
+            .set(elements.stuntActorFaces, { clearProps: "opacity" })
+            .set(elements.placeholderClipper, { clearProps: "clipPath" })
+            .set(elements.heroActor, { autoAlpha: 1 });
+    };
+
+    // STAGE 2: Create the SKELETAL trigger.
+    // It contains NO complex logic initially, only simple HUD updates. This prevents the freeze.
     ScrollTrigger.create({
         trigger: elements.handoffPoint,
         start: 'top 70%',
         onToggle: self => Oracle.updateHUD('c-handoff-st-active', self.isActive ? 'TRUE' : 'FALSE', self.isActive ? '#A3BE8C' : '#BF616A'),
         
-        onEnter: () => {
-            if (isSwapped || isReversing) return;
-            isSwapped = true;
-            
-            Oracle.group('ABSORPTION PROTOCOL INITIATED');
-            Oracle.updateHUD('c-swap-flag', 'TRUE', '#A3BE8C');
-            Oracle.updateHUD('c-event', 'ABSORPTION');
-
-            // THE FIX: Correctly disable the MASTER scrollTrigger instance.
-            masterStoryTl.scrollTrigger.disable(false);
-
-            Oracle.report('Phase 1: Forcing ST update and capturing state vectors.');
-            ScrollTrigger.refresh(true);
-
-            const heroProps = { scale: gsap.getProperty(hero, "scale"), rotationX: gsap.getProperty(hero, "rotationX"), rotationY: gsap.getProperty(hero, "rotationY") };
-            Oracle.log(hero, `Hero State (Pre-Absorption) | Captured RotY: ${heroProps.rotationY.toFixed(2)}`);
-
-            const state = Flip.getState(stuntDouble, { props: "transform, opacity" });
-            gsap.set(stuntDouble, {
-                autoAlpha: 1, x: hero.getBoundingClientRect().left - placeholder.getBoundingClientRect().left, y: hero.getBoundingClientRect().top - placeholder.getBoundingClientRect().top,
-                scale: heroProps.scale, rotationX: heroProps.rotationX, rotationY: heroProps.rotationY,
-            });
-            Oracle.log(stuntDouble, "Stunt Double State (Teleported & Matched)");
-            
-            const absorptionTl = gsap.timeline({
-                onComplete: () => {
-                    // THE FIX: Re-enable the MASTER scrollTrigger.
-                    masterStoryTl.scrollTrigger.enable();
-                    Oracle.updateHUD('c-event', 'STABILIZED / SCROLL ENABLED');
-                    Oracle.log(stuntDouble, "Stunt Double State (Post-Absorption/Logo)");
-                    Oracle.groupEnd();
-                }
-            });
-
-            Oracle.report('Phase 2: Initiating travel and absorption sequence.');
-            absorptionTl.add( Flip.from(state, { targets: stuntDouble, duration: 1.5, ease: 'power3.inOut', onUpdate: function() { Oracle.scan('Absorption Vector Trace', { 'Target': 'Stunt Double', 'Progress': `${(this.progress() * 100).toFixed(1)}%`, 'X': gsap.getProperty(stuntDouble, 'x').toFixed(1), 'Y': gsap.getProperty(stuntDouble, 'y').toFixed(1), 'Scale': gsap.getProperty(stuntDouble, 'scale').toFixed(2), 'RotY': gsap.getProperty(stuntDouble, 'rotationY').toFixed(1) }); } }) );
-            absorptionTl
-                .to(hero, { autoAlpha: 0, scale: '-=0.1', duration: 0.4, ease: "power2.in" }, 0)
-                .to(stuntActorFaces, { opacity: 0, duration: 0.6, ease: "power2.in", stagger: 0.05 }, 0.6)
-                .to(placeholderClipper, { clipPath: "inset(20% 20% 20% 20%)", duration: 0.6, ease: 'expo.in' }, 0.7)
-                .to(stuntDouble, { scaleX: 1.2, scaleY: 0.8, duration: 0.4, ease: 'circ.in' }, 0.9)
-                .to(placeholderClipper, { clipPath: "inset(0% 0% 0% 0%)", duration: 0.8, ease: 'elastic.out(1, 0.5)' }, 1.3)
-                .to(stuntDouble, { scaleX: 1, scaleY: 1, duration: 0.8, ease: 'elastic.out(1, 0.5)' }, 1.3)
-                .to(stuntDouble, { rotationX: 0, rotationY: 0, z: 0, duration: 0.6, ease: "power3.inOut", onStart: () => Oracle.report('Phase 3: Initiating logo transformation.') }, '+=0.2')
-                .call(() => {
-                    stuntDouble.classList.add('is-logo-final-state');
-                    Oracle.log(stuntDouble, "AEGIS Protocol Complete: Stunt Double is now the final logo.");
-                }, [], '>');
-        },
-
-        onLeaveBack: () => {
-            if (!isSwapped) return;
-            isReversing = true; isSwapped = false;
-            
-            Oracle.group('REVERSE PROTOCOL INITIATED');
-            Oracle.updateHUD('c-swap-flag', 'FALSE', '#BF616A'); Oracle.updateHUD('c-event', 'REVERSING');
-            stuntDouble.classList.remove('is-logo-final-state');
-            gsap.killTweensOf([stuntDouble, stuntActorFaces, hero, placeholderClipper]);
-
-            const reversalTl = gsap.timeline({
-                onComplete: () => {
-                    // THE FIX: Re-enable the MASTER scrollTrigger.
-                    masterStoryTl.scrollTrigger.enable();
-                    masterStoryTl.scrollTrigger.update();
-                    Oracle.updateHUD('c-event', 'SCROLLING'); Oracle.log(hero, "Hero State (Restored)");
-                    Oracle.groupEnd();
-                    isReversing = false;
-                }
-            });
-
-            reversalTl.set(stuntDouble, { autoAlpha: 0 }).set(stuntActorFaces, { clearProps: "opacity" }).set(placeholderClipper, { clearProps: "clipPath" }).set(hero, { autoAlpha: 1 });
+        // STAGE 3: ARM the trigger after layout calculation.
+        // onRefresh is the safe moment to attach heavy event listeners, solving the race condition.
+        onRefresh: (self) => {
+            self.onEnter = () => performAbsorption(self);
+            self.onLeaveBack = () => performReversal(self);
+            Oracle.reportStatus('HANDOFF ARMED', '#A3BE8C');
+            Oracle.updateHUD('c-handoff-armed-flag', 'TRUE', '#A3BE8C');
         }
     });
 };
 
 // =========================================================================
-//         SOVEREIGN ARCHITECTURE v39.1: AEGIS-REGULATED NARRATIVE
+//         SOVEREIGN ARCHITECTURE v40.1: ARCHITECT-DRIVEN NARRATIVE
 // =========================================================================
-
 function setupAnimations() {
     gsap.registerPlugin(ScrollTrigger, Flip);
     console.clear();
-    Oracle.report(`Sovereign Build v39.1 "Aegis" Initialized. Verbosity: ${Oracle.config.verbosity}`);
+    Oracle.report(`Sovereign Build v40.1 "Architect" Initialized. Verbosity: ${Oracle.config.verbosity}`);
+    Oracle.reportStatus('SYSTEM BOOT', '#5E81AC');
 
-    let ctx; 
-
-    Oracle.performance.benchmark('Sovereign Animation Architecture Setup', () => {
-        ctx = gsap.context(() => {
+    // Use the performance benchmark to wrap the entire setup and capture the return value (ctx)
+    const ctx = Oracle.performance.benchmark('Sovereign Animation Architecture Setup', () => {
+        // gsap.context() is essential for proper cleanup with React/Vue, and good practice everywhere.
+        return gsap.context(() => {
             Oracle.runSelfDiagnostic();
 
             const elements = {
@@ -407,73 +451,65 @@ function setupAnimations() {
                 handoffPoint: getElement('#handoff-point'),
                 stuntActorFaces: getElement('#actor-3d-stunt-double .face:not(.front)', true)
             };
-            
+
             if (Object.values(elements).some(el => !el || (Array.isArray(el) && !el.length))) {
                 Oracle.warn('SOVEREIGN ABORT: Missing critical elements.');
                 return;
             }
             Oracle.report("Sovereign components verified and locked.");
     
-            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-            const scrubValue = prefersReducedMotion ? false : 1.5;
+            const scrubValue = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? false : 1.5;
     
             ScrollTrigger.matchMedia({
                 '(min-width: 1025px)': () => {
-                    Oracle.report("Aegis Protocol engaged for desktop narrative.");
+                    Oracle.reportStatus('SCROLLING', '#88C0D0');
                     
-                    ScrollTrigger.create({
-                        trigger: elements.textCol,
-                        pin: elements.visualsCol,
-                        start: 'top top',
-                        end: 'bottom bottom',
-                        onToggle: self => Oracle.updateHUD('c-master-st-active', self.isActive ? 'PIN_ACTIVE' : 'PIN_INACTIVE', self.isActive ? '#A3BE8C' : '#BF616A'),
+                    ScrollTrigger.create({ 
+                        trigger: elements.textCol, 
+                        pin: elements.visualsCol, 
+                        start: 'top top', 
+                        end: 'bottom bottom' 
                     });
                     
-                    // <<<< AEGIS PROTOCOL IMPLEMENTATION >>>>
-                    // Create a throttled function to handle heavy console logging.
-                    // This function will now only execute once every 150ms, maximum.
-                    const throttledLogger = Oracle.utility.throttle((self, hero) => {
+                    // Throttled logger remains from the "Aegis" protocol for run-time safety.
+                    const throttledLogger = Oracle.utility.throttle((self) => {
+                        const hero = elements.heroActor;
                         const rotX = gsap.getProperty(hero, "rotationX").toFixed(1);
                         const rotY = gsap.getProperty(hero, "rotationY").toFixed(1);
                         const scale = gsap.getProperty(hero, "scale").toFixed(2);
                         const progress = (self.progress * 100).toFixed(0);
 
-                        // Call the heavy console logging functions within this safe, regulated context.
                         Oracle.scan('Live Story Scrub (Throttled)', { 'Master Progress': `${progress}%`, 'RotX': rotX, 'RotY': rotY, 'Scale': scale });
                         Oracle.trackScrollTrigger(self, "Unified Story Controller (Throttled)");
-                    }, 150); // 150ms delay between log groups ensures performance.
+
+                        // Lightweight updates that were dependent on these values now also live here.
+                        Oracle.updateHUD('c-rot-x', rotX);
+                        Oracle.updateHUD('c-rot-y', rotY);
+                        Oracle.updateHUD('c-scale', scale);
+
+                    }, 150);
 
                     const masterStoryTl = gsap.timeline({
                         scrollTrigger: {
-                            trigger: elements.textCol,
-                            start: 'top top',
-                            end: 'bottom bottom',
+                            trigger: elements.textCol, 
+                            start: 'top top', 
+                            end: 'bottom bottom', 
                             scrub: scrubValue,
                             onUpdate: (self) => {
-                                // 1. Perform lightweight HUD updates on EVERY tick for a responsive feel.
-                                const hero = elements.heroActor;
-                                const progress = (self.progress * 100).toFixed(0);
-                                Oracle.updateHUD('c-rot-x', gsap.getProperty(hero, "rotationX").toFixed(1));
-                                Oracle.updateHUD('c-rot-y', gsap.getProperty(hero, "rotationY").toFixed(1));
-                                Oracle.updateHUD('c-scale', gsap.getProperty(hero, "scale").toFixed(2));
-                                Oracle.updateHUD('c-scroll', `${progress}%`);
-
-                                // 2. Defer all heavy console logging to the throttled function.
-                                // This is the fix that prevents the system freeze.
-                                throttledLogger(self, hero);
+                                // The main onUpdate is now extremely lightweight.
+                                Oracle.updateHUD('c-scroll', `${(self.progress * 100).toFixed(0)}%`);
+                                throttledLogger(self);
                             }
                         }
                     });
                     
-                    // Call the function 'recipes' to build the master timeline.
+                    // Assemble the animation narrative
                     setupHeroActor(elements, masterStoryTl);
-                    setupTextPillars(elements, masterStoryTl); 
+                    setupTextPillars(elements, masterStoryTl);
                     
-                    // Handoff is event-based and remains separate.
-                    setupHandoff(elements, masterStoryTl); 
+                    // Initiate the handoff protocol, which now safely arms itself.
+                    setupHandoff(elements, masterStoryTl);
                 },
-                '(min-width: 769px) and (max-width: 1024px)': () => { /* Future tablet protocols */ },
-                '(max-width: 768px)': () => { /* Future mobile protocols */ }
             });
         });
     });
