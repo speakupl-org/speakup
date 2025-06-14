@@ -345,7 +345,7 @@ function setupAnimations() {
                     }
                 });
                             
-    });           
+    );           
     gsapCtx = ctx; 
     return ctx;
 }
