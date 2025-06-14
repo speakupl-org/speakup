@@ -1539,12 +1539,8 @@ body.scroll-locked {
 }
 
 #actor-3d-stunt-double.is-logo-final-state .face.front {
-    /* We ensure only the front face is visible and transformed into the logo */
-    transform: none !important;
-    opacity: 1 !important;
-    background-image: url('/images/logo.svg'); /* Path seems correct. Verify it. */
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
+    /* ... other styles ... */
+    /* background-image: url('../images/logo.svg'); */ /* Temporarily disabled */
+    background-color: red !important; /* <--- TEMPORARY TEST LINE */
+    /* ... other styles ... */
 }
-
