@@ -189,6 +189,8 @@ function setupSite() {
 
 // COMPLETELY REPLACE your old setupAnimations function with this one.
 
+// COMPLETELY REPLACE your old setupAnimations function with this one.
+
 function setupAnimations() {
     const ctx = gsap.context(() => {
         const elements = {
@@ -199,8 +201,7 @@ function setupAnimations() {
             handoffPoint: document.querySelector('#handoff-point'),
             masterTrigger: document.querySelector('.scrolly-container'),
             visualsCol: document.querySelector('.pillar-visuals-col'),
-            // We select the parent .pillar-text-content for triggering
-            textPillars: gsap.utils.toArray('.pillar-text-content') 
+            textPillars: gsap.utils.toArray('.pillar-text-content') // Trigger based on the parent
         };
         
         if (!elements.canvas || typeof THREE === 'undefined') {
@@ -217,9 +218,10 @@ function setupAnimations() {
 
         ScrollTrigger.matchMedia({
             '(min-width: 1025px)': () => {
-                // ============================================
-                // CUBE ANIMATION - This timeline ONLY controls the cube.
-                // ============================================
+                // =============================================================
+                // FIX: This timeline NOW ONLY controls the cube.
+                // The pillar animations have been completely removed from here.
+                // =============================================================
                 const masterTl = gsap.timeline({
                     scrollTrigger: {
                         trigger: elements.masterTrigger,
@@ -240,11 +242,10 @@ function setupAnimations() {
                         }
                     }
                 });
-
                 masterTl.to(cube.rotation, { y: Math.PI * 3, x: Math.PI * -1.5, ease: 'none' });
                 masterTl.to(cube.scale, { x: 1.2, y: 1.2, z: 1.2, ease: 'power1.inOut', yoyo: true, repeat: 1 }, 0);
                 
-                // Pin the visuals column so it stays in view
+                // --- Pinning ---
                 ScrollTrigger.create({
                     trigger: elements.masterTrigger,
                     start: 'top top',
@@ -253,22 +254,20 @@ function setupAnimations() {
                     pinSpacing: false
                 });
 
-                // ============================================
-                // TEXT PILLAR ANIMATION - This is handled SEPARATELY.
-                // ============================================
+                // --- Independent Pillar Text Animation ---
                 elements.textPillars.forEach((pillar) => {
-                    // We animate the inner wrapper, but trigger based on the parent pillar element
-                    gsap.from(pillar.querySelector('.text-anim-wrapper'), {
-                        scrollTrigger: {
-                            trigger: pillar, // Trigger is the whole pillar section
-                            start: 'top 60%', // Animation starts when the top of the pillar is 60% down the screen
-                            end: 'bottom 40%',// Animation ends when the bottom of the pillar is 40% down the screen
-                            scrub: true,
-                        },
-                        autoAlpha: 0,
-                        y: 50, // Animate it moving up slightly as it fades in
-                        ease: 'power1.inOut'
-                    });
+                    gsap.fromTo(pillar.querySelector('.text-anim-wrapper'), 
+                        { autoAlpha: 0, y: 50 }, // From State
+                        { // To State
+                            autoAlpha: 1, y: 0,
+                            scrollTrigger: {
+                                trigger: pillar,
+                                start: 'top center+=100', // Start when the pillar's top hits below the center
+                                end: 'bottom bottom-=100',// End when the pillar's bottom leaves the bottom
+                                scrub: true,
+                            },
+                        }
+                    );
                 });
 
                 setupHandoff(elements, cube);
