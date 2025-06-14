@@ -114,6 +114,10 @@ const getElement = (selector, isArray = false) => {
     }
 };
 
+// =========================================================================
+//         SOVEREIGN BLUEPRINT v39.2: FUNCTION DEFINITIONS
+// =========================================================================
+
 // Hero actor animation setup (unchanged)
 const setupHeroActor = (elements, masterTl) => {
     masterTl.to(elements.heroActor, {
@@ -123,105 +127,61 @@ const setupHeroActor = (elements, masterTl) => {
     });
 };
 
-// Text pillars animation with OMNISCIENT ORACLE (v37.9 - Blueprint Version)
-// THE DEFINITIVE BLUEPRINT v39 - INDESTRUCTIBLE & OMNISCIENT
-// THE DEFINITIVE BLUEPRINT v39.1 - Syntax Corrected
+// THE DEFINITIVE BLUEPRINT for Text Pillars (v39.2 - INDESTRUCTIBLE & OMNISCIENT)
 const setupTextPillars = (elements) => {
 
-    // 1. Establish the clean starting state.
+    // 1. Establish a clean, known starting state for all wrappers.
     gsap.set(elements.textWrappers, { autoAlpha: 0, y: 40, rotationX: -15 });
     gsap.set(elements.textWrappers[0], { autoAlpha: 1, y: 0, rotationX: 0 });
 
-    // === OVERKILL TRACKER 1: INITIAL STATE VERIFICATION ===
-    Oracle.group("Initial Text Pillar States");
+    // === OVERKILL TRACKER #1: INITIAL STATE VERIFICATION ===
+    Oracle.group("Initial Text Pillar States (PRE-ANIMATION)");
     elements.textWrappers.forEach((wrapper, index) => {
+        const style = window.getComputedStyle(wrapper);
         Oracle.scan(`Wrapper #${index + 1}`, {
-            'Initial Opacity': gsap.getProperty(wrapper, "autoAlpha"),
-            'Initial Y': gsap.getProperty(wrapper, "y").toFixed(1) + 'px'
+            'Target ID': wrapper.parentElement.dataset.pillar,
+            'GSAP Opacity': gsap.getProperty(wrapper, "autoAlpha"),
+            'GSAP Y': gsap.getProperty(wrapper, "y").toFixed(1) + 'px',
+            'BROWSER Opacity': parseFloat(style.opacity).toFixed(2),
+            'BROWSER Transform': style.transform
         });
     });
     Oracle.groupEnd();
     // ========================================================
 
-    // 2. Build the ONE master timeline.
+    // 2. Build the ONE MASTER TIMELINE. This architecture prevents all animation race conditions.
     const textMasterTl = gsap.timeline({
         scrollTrigger: {
             trigger: elements.textCol,
             start: "top top",
             end: "bottom bottom",
             scrub: 1.5,
-            markers: Oracle.config.verbosity > 1,
+            markers: Oracle.config.verbosity > 1, // Only show markers if verbosity is 2+
 
-            // === OVERKILL TRACKER 2: COMPUTED STYLE TELEMETRY ===
+            // === OVERKILL TRACKER #2: LIVE COMPUTED STYLE TELEMETRY ===
             onUpdate: (self) => {
                 const data = { 'Master Progress': `${(self.progress * 100).toFixed(1)}%` };
                 elements.textWrappers.forEach((wrapper, index) => {
                     const style = window.getComputedStyle(wrapper);
-                    data[`W#${index + 1}_Opacity`] = parseFloat(style.opacity).toFixed(2);
-                    data[`W#${index + 1}_Transform`] = style.transform === "none" ? "none" : "ACTIVE";
+                    const key = `Pillar ${index + 1} Opacity`;
+                    data[key] = parseFloat(style.opacity).toFixed(2);
                 });
-                Oracle.scan('Master Timeline (Computed Styles)', data);
+                Oracle.scan('Master Timeline (Live Computed Styles)', data);
             }
-        } // <- This was a source of a potential error, ensuring it's correct now.
+        }
     });
 
-    // 3. The Definitive Animation Logic: Positional Tweens.
-    const numTransitions = elements.textWrappers.length - 1;
-    const segmentDuration = 1;
-    
-    for (let i = 0; i < numTransitions; i++) {
-        const outWrapper = elements.textWrappers[i];
-        const inWrapper = elements.textWrappers[i + 1];
-        const position = i * segmentDuration;
-
-        textMasterTl.fromTo(outWrapper, 
-            { autoAlpha: 1, y: 0, rotationX: 0 },
-            { autoAlpha: 0, y: -40, rotationX: 15, ease: "power2.in", duration: segmentDuration },
-            position
-        );
-        
-        textMasterTl.fromTo(inWrapper,
-            { autoAlpha: 0, y: 40, rotationX: -15 },
-            { autoAlpha: 1, y: 0, rotationX: 0, ease: "power2.out", duration: segmentDuration },
-            position
-        );
-    }
-};
-
-    // 3. The Definitive Animation Logic: Positional Tweens. This is the fix.
-    // Instead of chaining `.to().to()`, we explicitly place tweens on the timeline.
-    const numTransitions = elements.textWrappers.length - 1;
-    const segmentDuration = 1; // Each transition gets its own "1 second" block of time.
-    
-    for (let i = 0; i < numTransitions; i++) {
-        const outWrapper = elements.textWrappers[i];
-        const inWrapper = elements.textWrappers[i + 1];
-
-        // The starting point for this segment in the master timeline
-        const position = i * segmentDuration;
-
-        // Animate the outgoing wrapper from its defaults to its "out" state.
-        textMasterTl.fromTo(outWrapper, 
-            { autoAlpha: 1, y: 0, rotationX: 0 },
-            { autoAlpha: 0, y: -40, rotationX: 15, ease: "power2.in", duration: segmentDuration },
-            position // Position this tween at the calculated start time
-        );
-        
-        // Animate the incoming wrapper from its "in" state to its default state.
-        textMasterTl.fromTo(inWrapper,
-            { autoAlpha: 0, y: 40, rotationX: -15 },
-            { autoAlpha: 1, y: 0, rotationX: 0, ease: "power2.out", duration: segmentDuration },
-            position // Position this tween at the SAME start time (<)
-        );
-    }
-};
-
+    // 3. The Definitive Animation Logic: SEQUENTIAL TWEENS.
+    // This adds each cross-fade animation to the timeline one after another.
     elements.textWrappers.forEach((wrapper, index) => {
+        // Skip the first one, since it starts visible and never fades out on its own.
         if (index > 0) {
             const previousWrapper = elements.textWrappers[index - 1];
+
+            // Add the fade-out of the PREVIOUS wrapper, then the fade-in of the CURRENT one.
             textMasterTl
                 .to(previousWrapper, { autoAlpha: 0, y: -40, rotationX: 15, ease: "power2.in" })
-                .to(wrapper, { autoAlpha: 1, y: 0, rotationX: 0, ease: "power2.out" }, "<");
+                .to(wrapper, { autoAlpha: 1, y: 0, rotationX: 0, ease: "power2.out" }, "<"); // "<" starts them at the same time
         }
     });
 };
@@ -277,17 +237,7 @@ const setupHandoff = (elements, heroAnimation) => {
             });
 
             Oracle.report('Phase 2: Initiating travel and absorption sequence.');
-            absorptionTl.add(
-                Flip.from(state, {
-                    targets: stuntDouble, duration: 1.5, ease: 'power3.inOut',
-                    onUpdate: function() {
-                        Oracle.scan('Absorption Vector Trace', {
-                            'Target': 'Stunt Double', 'Progress': `${(this.progress() * 100).toFixed(1)}%`, 'X': gsap.getProperty(stuntDouble, 'x').toFixed(1),
-                            'Y': gsap.getProperty(stuntDouble, 'y').toFixed(1), 'Scale': gsap.getProperty(stuntDouble, 'scale').toFixed(2), 'RotY': gsap.getProperty(stuntDouble, 'rotationY').toFixed(1)
-                        });
-                    }
-                })
-            );
+            absorptionTl.add( Flip.from(state, { targets: stuntDouble, duration: 1.5, ease: 'power3.inOut', onUpdate: function() { Oracle.scan('Absorption Vector Trace', { 'Target': 'Stunt Double', 'Progress': `${(this.progress() * 100).toFixed(1)}%`, 'X': gsap.getProperty(stuntDouble, 'x').toFixed(1), 'Y': gsap.getProperty(stuntDouble, 'y').toFixed(1), 'Scale': gsap.getProperty(stuntDouble, 'scale').toFixed(2), 'RotY': gsap.getProperty(stuntDouble, 'rotationY').toFixed(1) }); } }) );
             absorptionTl
                 .to(hero, { autoAlpha: 0, scale: '-=0.1', duration: 0.4, ease: "power2.in" }, 0)
                 .to(stuntActorFaces, { opacity: 0, duration: 0.6, ease: "power2.in", stagger: 0.05 }, 0.6)
@@ -307,9 +257,7 @@ const setupHandoff = (elements, heroAnimation) => {
             isReversing = true; isSwapped = false;
             
             Oracle.group('REVERSE PROTOCOL INITIATED');
-            Oracle.updateHUD('c-swap-flag', 'FALSE', '#BF616A');
-            Oracle.updateHUD('c-event', 'REVERSING');
-            
+            Oracle.updateHUD('c-swap-flag', 'FALSE', '#BF616A'); Oracle.updateHUD('c-event', 'REVERSING');
             stuntDouble.classList.remove('is-logo-final-state');
             gsap.killTweensOf([stuntDouble, stuntActorFaces, hero, placeholderClipper]);
 
@@ -317,52 +265,37 @@ const setupHandoff = (elements, heroAnimation) => {
                 onComplete: () => {
                     heroAnimation.scrollTrigger.enable();
                     heroAnimation.scrollTrigger.update();
-                    
-                    Oracle.updateHUD('c-event', 'SCROLLING');
-                    Oracle.log(hero, "Hero State (Restored)");
+                    Oracle.updateHUD('c-event', 'SCROLLING'); Oracle.log(hero, "Hero State (Restored)");
                     Oracle.groupEnd();
-                    
                     isReversing = false;
                 }
             });
 
-            reversalTl
-                .set(stuntDouble, { autoAlpha: 0 })
-                .set(stuntActorFaces, { clearProps: "opacity" })
-                .set(placeholderClipper, { clearProps: "clipPath" })
-                .set(hero, { autoAlpha: 1 });
+            reversalTl.set(stuntDouble, { autoAlpha: 0 }).set(stuntActorFaces, { clearProps: "opacity" }).set(placeholderClipper, { clearProps: "clipPath" }).set(hero, { autoAlpha: 1 });
         }
     });
 };
 
+// =========================================================================
+//            SOVEREIGN BLUEPRINT v39.2: CHEF & MAIN SETUP
+// =========================================================================
 
-// REVISED Main animation setup
 function setupAnimations() {
     gsap.registerPlugin(ScrollTrigger, Flip);
     console.clear();
-    Oracle.report(`Covenant Build v37.6 Initialized. Verbosity Level: ${Oracle.config.verbosity} [SOVEREIGN ONLINE]`);
+    Oracle.report(`Sovereign Build v39.2 Initialized. Verbosity: ${Oracle.config.verbosity}`);
 
     const ctx = gsap.context(() => {
         const elements = {
-            heroActor: getElement('#actor-3d'),
-            stuntActor: getElement('#actor-3d-stunt-double'),
-            placeholder: getElement('#summary-placeholder'),
-            placeholderClipper: getElement('.summary-thumbnail-clipper'), 
-            pillars: getElement('.pillar-text-content', true),
-            textWrappers: getElement('.text-anim-wrapper', true),
-            visualsCol: getElement('.pillar-visuals-col'),
-            textCol: getElement('.pillar-text-col'),
-            handoffPoint: getElement('#handoff-point'),
-            stuntActorFaces: getElement('#actor-3d-stunt-double .face:not(.front)', true)
+            heroActor: getElement('#actor-3d'), stuntActor: getElement('#actor-3d-stunt-double'), placeholder: getElement('#summary-placeholder'),
+            placeholderClipper: getElement('.summary-thumbnail-clipper'), pillars: getElement('.pillar-text-content', true),
+            textWrappers: getElement('.text-anim-wrapper', true), visualsCol: getElement('.pillar-visuals-col'), textCol: getElement('.pillar-text-col'),
+            handoffPoint: getElement('#handoff-point'), stuntActorFaces: getElement('#actor-3d-stunt-double .face:not(.front)', true)
         };
-
-          // ============================ THE DEFINITIVE TEST ============================
-        console.log(`Pillars Found: ${elements.pillars.length} | Text Wrappers Found: ${elements.textWrappers.length}`);
-        // =============================================================================
         
-        if (Object.values(elements).some(el => !el)) {
-            Oracle.warn('SOVEREIGN ABORT: Missing critical elements.');
-            return;
+        console.log(`Pillars Found: ${elements.pillars.length} | Text Wrappers Found: ${elements.textWrappers.length}`);
+        if (Object.values(elements).some(el => !el || (Array.isArray(el) && !el.length))) {
+            Oracle.warn('SOVEREIGN ABORT: Missing critical elements.'); return;
         }
         Oracle.report("Sovereign components verified and locked.");
 
@@ -371,51 +304,43 @@ function setupAnimations() {
 
         ScrollTrigger.matchMedia({
             '(min-width: 1025px)': () => {
-                Oracle.report("Sovereign Protocol (v37.6 - Decoupled Architecture) engaged for desktop.");
+                Oracle.report("Protocol (v39.2 - Single Text Timeline) engaged for desktop.");
                 
                 ScrollTrigger.create({
-                    trigger: elements.textCol,
-                    pin: elements.visualsCol,
-                    start: 'top top',
-                    end: 'bottom bottom',
+                    trigger: elements.textCol, pin: elements.visualsCol,
+                    start: 'top top', end: 'bottom bottom',
                     onToggle: self => Oracle.updateHUD('c-master-st-active', self.isActive ? 'PIN_ACTIVE' : 'PIN_INACTIVE', self.isActive ? '#A3BE8C' : '#BF616A'),
                 });
 
                 const heroAnimation = gsap.timeline({
                     scrollTrigger: {
-                        trigger: elements.textCol,
-                        start: 'top top',
-                        end: 'bottom bottom',
-                        scrub: scrubValue,
+                        trigger: elements.textCol, start: 'top top', end: 'bottom bottom', scrub: scrubValue,
                         onUpdate: (self) => {
-                            const hero = elements.heroActor;
-                            const rotX = gsap.getProperty(hero, "rotationX").toFixed(1);
-                            const rotY = gsap.getProperty(hero, "rotationY").toFixed(1);
-                            const scale = gsap.getProperty(hero, "scale").toFixed(2);
+                            const hero = elements.heroActor; const rotX = gsap.getProperty(hero, "rotationX").toFixed(1);
+                            const rotY = gsap.getProperty(hero, "rotationY").toFixed(1); const scale = gsap.getProperty(hero, "scale").toFixed(2);
                             const progress = (self.progress * 100).toFixed(0);
                             Oracle.scan('Live Hero Actor Scrub', { 'Master ScrollTrigger': `${progress}%`, 'RotX': rotX, 'RotY': rotY, 'Scale': scale });
-                            Oracle.updateHUD('c-rot-x', rotX);
-                            Oracle.updateHUD('c-rot-y', rotY);
-                            Oracle.updateHUD('c-scale', scale);
-                            Oracle.updateHUD('c-scroll', `${progress}%`);
+                            Oracle.updateHUD('c-rot-x', rotX); Oracle.updateHUD('c-rot-y', rotY);
+                            Oracle.updateHUD('c-scale', scale); Oracle.updateHUD('c-scroll', `${progress}%`);
                         }
                     }
                 });
                 
+                // Calling the 'recipes'
                 setupHeroActor(elements, heroAnimation);
-                setupTextPillars(elements);
+                setupTextPillars(elements); // Uses the new indestructible blueprint
                 setupHandoff(elements, heroAnimation); 
             },
             '(min-width: 769px) and (max-width: 1024px)': () => {
                 const masterTl = gsap.timeline({ scrollTrigger: { trigger: elements.textCol, pin: elements.visualsCol, start: 'top 10%', end: 'bottom bottom', scrub: scrubValue } });
                 masterTl.to(elements.heroActor, { rotationY: 90, scale: 1, ease: "power1.inOut" });
-                setupTextPillars(elements);
+                setupTextPillars(elements); // Tablet will also benefit from the new robust text animation
                 setupHandoff(elements, masterTl); 
             },
             '(max-width: 768px)': () => {
                 const masterTl = gsap.timeline({ scrollTrigger: { trigger: elements.textCol, start: 'top 20%', end: 'bottom bottom', scrub: scrubValue } });
                 masterTl.to(elements.heroActor, { scale: 0.9, ease: "none" });
-                setupTextPillars(elements);
+                setupTextPillars(elements); // And so will mobile
                 gsap.set(elements.stuntActor, { display: 'none' });
             }
         });
@@ -423,7 +348,7 @@ function setupAnimations() {
     return ctx;
 }
 
-// Initialization Logic
+// Initialization Logic (unchanged)
 function setupSiteLogic() {
     const menuOpen = getElement('#menu-open-button');
     const menuClose = getElement('#menu-close-button');
@@ -440,7 +365,7 @@ function setupSiteLogic() {
     Oracle.report("Site logic initialized.");
 }
 
-// REVISED initialization sequence
+// REVISED initialization sequence (unchanged)
 function initialAnimationSetup() {
     if (window.gsap && window.ScrollTrigger && window.Flip) {
         Oracle.init(setupAnimations); 
