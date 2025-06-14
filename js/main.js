@@ -309,20 +309,43 @@ function setupAnimations() {
                 masterTl.add(() => Oracle.updateHUD('c-active-pillar', `Pillar ${i + 1}`), i * 0.8);
         
                 // Fade Out (if it's not the last pillar)
-                if (i < elements.textPillars.length - 1) {
-                     masterTl.to(textWrapper, {
-                        autoAlpha: 0,
-                        y: -40,
-                        duration: 0.5,
-                        ease: 'power2.in'
-                    }, (i + 1) * 0.8 - 0.25);
-                }
-            } else {
-                // If we can't find a wrapper, log a warning but DON'T crash.
-                Oracle.warn(`Could not find a '.text-anim-wrapper' inside pillar number ${i + 1}. Skipping animation for this element.`);
-            }
-        });
-                
+                            elements.textPillars.forEach((pillar, i) => {
+                    const textWrapper = pillar.querySelector('.text-anim-wrapper');
+                    
+                    // Harden the logic: only animate if we found the wrapper element.
+                    if (textWrapper) { 
+                        // The position parameter in GSAP timelines is key.
+                        // We will place all animations for one pillar within the same time window.
+                        const animationStartTime = i; // Pillar 1 at 0s, Pillar 2 at 1s, etc.
+
+                        // 1. FADE IN:
+                        // Animate FROM a hidden/offset state TO the default state.
+                        masterTl.from(textWrapper, {
+                            autoAlpha: 0,
+                            y: 40,
+                            ease: 'power2.out',
+                        }, animationStartTime); // Position the start of this animation
+
+                        // 2. UPDATE HUD:
+                        // Add a callback to say this pillar is now active.
+                        masterTl.add(() => Oracle.updateHUD('c-active-pillar', `Pillar ${i + 1}`), animationStartTime);
+                        
+                        // 3. FADE OUT:
+                        // If this ISN'T the last pillar, fade it out to make room for the next one.
+                        if (i < elements.textPillars.length - 1) {
+                           masterTl.to(textWrapper, {
+                                autoAlpha: 0,
+                                y: -40,
+                                ease: 'power2.in'
+                            }, animationStartTime + 0.75); // Start the fade-out 75% of the way through its "time"
+                        }
+                    } else {
+                        // If we can't find a wrapper, log a warning but DON'T crash.
+                        Oracle.warn(`Could not find a '.text-anim-wrapper' inside pillar number ${i + 1}. Skipping its animation.`);
+                    }
+                });
+                            
+    });           
     gsapCtx = ctx; 
     return ctx;
 }
