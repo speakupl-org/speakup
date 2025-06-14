@@ -46,41 +46,51 @@ const Oracle = {
     }, // Comma is here
     
     updateAndLog: function(three_cube, scroll_trigger) {
-        if (this.config.verbosity < 1) return;
-        const s = this.state;
-        s.log_timestamp = new Date().toISOString();
-        
-        if (s.log_type !== "ERROR") {
-            s.log_type = "STATE_UPDATE";
-        }
+    // Stop if logging is turned off
+    if (this.config.verbosity < 1) return;
+    
+    // --- Update State ---
+    const s = this.state;
+    s.log_timestamp = new Date().toISOString();
+    
+    if (s.log_type !== "ERROR") {
+        s.log_type = "STATE_UPDATE";
+    }
 
-        if (scroll_trigger) {
-            s.scroll_progress = scroll_trigger.progress.toFixed(4);
-            s.scroll_direction = scroll_trigger.direction === 1 ? 'DOWN' : 'UP';
-            s.scroll_velocity = scroll_trigger.getVelocity().toFixed(2);
-        }
-        if (three_cube && three_cube.userData.canvas) {
-            s.object_position = { x: three_cube.position.x.toFixed(2), y: three_cube.position.y.toFixed(2), z: three_cube.position.z.toFixed(2) };
-            s.object_scale = { x: three_cube.scale.x.toFixed(2), y: three_cube.scale.y.toFixed(2), z: three_cube.scale.z.toFixed(2) };
-            s.object_rotation = { x: three_cube.rotation.x.toFixed(2), y: three_cube.rotation.y.toFixed(2), z: three_cube.rotation.z.toFixed(2) };
-            s.dom_element_bounding_rect = three_cube.userData.canvas.getBoundingClientRect().toJSON();
-        }
-        if (performance.memory) s.javascript_heap_size = performance.memory.jsHeapSizeLimit;
+    if (scroll_trigger) {
+        s.scroll_progress = scroll_trigger.progress.toFixed(4);
+        s.scroll_direction = scroll_trigger.direction === 1 ? 'DOWN' : 'UP';
+        s.scroll_velocity = scroll_trigger.getVelocity().toFixed(2);
+    }
+    if (three_cube && three_cube.userData.canvas) {
+        s.object_position = { x: three_cube.position.x.toFixed(2), y: three_cube.position.y.toFixed(2), z: three_cube.position.z.toFixed(2) };
+        s.object_scale = { x: three_cube.scale.x.toFixed(2), y: three_cube.scale.y.toFixed(2), z: three_cube.scale.z.toFixed(2) };
+        s.object_rotation = { x: three_cube.rotation.x.toFixed(2), y: three_cube.rotation.y.toFixed(2), z: three_cube.rotation.z.toFixed(2) };
+        s.dom_element_bounding_rect = three_cube.userData.canvas.getBoundingClientRect().toJSON();
+    }
+    if (performance.memory) s.javascript_heap_size = performance.memory.jsHeapSizeLimit;
+    
+    // --- Log to Console ---
+    if(this.config.logToConsole) {
+        const logTitle = `%c[ORACLE @ ${s.log_timestamp.split('T')[1].slice(0, -1)}] Phase: ${s.animation_phase}`;
+        const logStyle = 'color: #8FBCBB;';
         
-        if(this.config.logToConsole) {
-            const logTitle = `%c[ORACLE @ ${s.log_timestamp.split('T')[1].slice(0, -1)}] Phase: ${s.animation_phase}`;
-            const logStyle = 'color: #8FBCBB;';
-            
-            if (this.config.verbosity > 1) {
-                console.group(logTitle, logStyle);
-            } else {
-                console.groupCollapsed(logTitle, logStyle);
-            }
-            
-            console.log(JSON.stringify(this.state, null, 2));
-            console.groupEnd();
+        // =========================================================
+        //  THE FIX IS HERE: Check verbosity to decide how to log.
+        // =========================================================
+        if (this.config.verbosity > 1) {
+            // Verbosity 2 or higher: Log is EXPANDED by default.
+            console.group(logTitle, logStyle);
+        } else {
+            // Verbosity 1: Log is COLLAPSED by default.
+            console.groupCollapsed(logTitle, logStyle);
         }
-    }, // <<<<<<<<<<<<< THIS WAS THE MISSING COMMA <<<<<<<<<<<<<
+        
+        // This part stays the same
+        console.log(JSON.stringify(this.state, null, 2));
+        console.groupEnd();
+    }
+}, // <<<<<<<<<<<<< THIS WAS THE MISSING COMMA <<<<<<<<<<<<<
 
     updateHUD: (id, value, color = '#E5E9F0') => {
         const el = document.getElementById(id);
