@@ -251,6 +251,9 @@ function setupAnimations() {
             '(min-width: 1025px)': () => {
                 Oracle.report("Desktop animation protocol engaged.");
     
+// Locate this block within your setupAnimations() function
+// And replace it entirely with this corrected version.
+
                 const masterTl = gsap.timeline({
                     scrollTrigger: {
                         trigger: elements.masterTrigger,
@@ -263,20 +266,27 @@ function setupAnimations() {
                             else Oracle.state.animation_phase = 'IDLE';
                             Oracle.updateHUD('c-scroll', `${(self.progress * 100).toFixed(0)}%`);
                             Oracle.updateHUD('c-rot-y', (cube.rotation.y * (180 / Math.PI)).toFixed(1));
+                            // === Let's add scale to the HUD for better telemetry ===
+                            Oracle.updateHUD('c-scale', cube.scale.x.toFixed(2)); 
                             Oracle.updateAndLog(cube, self);
-                        }
+                        },
+                        // Keep this invalidate logic. It's a robust safeguard.
+                        onLeaveBack: self => self.animation.invalidate()
                     }
                 });
 
+                // FIX: Replaced the single yoyo tween with two explicit, scrub-friendly tweens.
                 masterTl
                     .to(cube.rotation, { y: Math.PI * 2.5, x: Math.PI * -1, ease: 'none' })
-                    .to(cube.scale, { x: 1.2, y: 1.2, z: 1.2, ease: 'power1.inOut', yoyo: true, repeat: 1 }, 0);
+                    .to(cube.scale,   { x: 1.2, y: 1.2, z: 1.2, ease: 'power1.in' }, 0) // Scale UP during the first part of the animation.
+                    .to(cube.scale,   { x: 1, y: 1, z: 1, ease: 'power1.out' }, '>');  // Scale DOWN immediately after. '>' places it at the end of the previous tween.
 
                 elements.textPillars.forEach((pillar, i) => {
                     const textWrapper = pillar.querySelector('.text-anim-wrapper');
                     
                     if (textWrapper) {
-                        const animationStartTime = i;
+                        // The time placement logic remains the same.
+                        const animationStartTime = i; 
                         masterTl.from(textWrapper, {
                             autoAlpha: 0,
                             y: 40,
@@ -297,8 +307,9 @@ function setupAnimations() {
                     }
                 });
                 
-                // On a successful run, set up the final animation
                 setupHandoffAnimation(elements, cube);
+
+// End of the replacement block.
 
             },
 
