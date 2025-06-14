@@ -425,91 +425,90 @@ const setupHandoff = (elements, masterStoryTl) => {
 //         SOVEREIGN ARCHITECTURE v43.1: UNIFIED & BENCHMARKED NARRATIVE
 // =========================================================================
 
+// =========================================================================
+//         SOVEREIGN ARCHITECTURE v43.1: UNIFIED & BENCHMARKED NARRATIVE
+// =========================================================================
+//  ***** THIS IS THE FULLY CORRECTED VERSION *****
+// =========================================================================
 function setupAnimations() {
-    gsap.registerPlugin(ScrollTrigger, Flip);
+    gsap.registerPlugin(ScrollTrigger, Flip, MorphSVGPlugin);
     console.clear();
     Oracle.report(`Sovereign Build v43.1 Initialized. Verbosity: ${Oracle.config.verbosity}. To change, use ?oracle_verbosity=2 in the URL.`);
 
-    let ctx; 
+    let ctx;
 
     // WRAP ENTIRE SETUP IN THE NEW PERFORMANCE BENCHMARK
     Oracle.performance.benchmark('Sovereign Animation Architecture Setup', () => {
-        
-        ctx = gsap.context(() => {
+
+        ctx = gsap.context(() => { // <--- Context starts here
             Oracle.runSelfDiagnostic();
 
             const elements = {
-                heroActor: getElement('#actor-3d'), stuntActor: getElement('#actor-3d-stunt-double'),
-                placeholder: getElement('#summary-placeholder'), placeholderClipper: getElement('.summary-thumbnail-clipper'),
-                pillars: getElement('.pillar-text-content', true), textWrappers: getElement('.text-anim-wrapper', true),
-                visualsCol: getElement('.pillar-visuals-col'), textCol: getElement('.pillar-text-col'),
-                handoffPoint: getElement('#handoff-point'), stuntActorFaces: getElement('#actor-3d-stunt-double .face:not(.front)', true)
+                heroActor: getElement('#actor-3d'),
+                stuntActor: getElement('#actor-3d-stunt-double'),
+                placeholder: getElement('#summary-placeholder'),
+                placeholderClipper: getElement('.summary-thumbnail-clipper'),
+                pillars: getElement('.pillar-text-content', true),
+                textWrappers: getElement('.text-anim-wrapper', true),
+                visualsCol: getElement('.pillar-visuals-col'),
+                textCol: getElement('.pillar-text-col'),
+                handoffPoint: getElement('#handoff-point'),
+                stuntActorFaces: getElement('#actor-3d-stunt-double .face:not(.front)', true)
             };
-            
+
             if (Object.values(elements).some(el => !el || (Array.isArray(el) && !el.length))) {
-                Oracle.warn('SOVEREIGN ABORT: Missing critical elements. Halting animation setup.'); 
+                Oracle.warn('SOVEREIGN ABORT: Missing critical elements. Halting animation setup.');
                 return;
             }
             Oracle.report("All required Sovereign components verified and locked.");
-    
+
             const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             const scrubValue = prefersReducedMotion ? false : 1.5;
-    
+
             ScrollTrigger.matchMedia({
                 '(min-width: 1025px)': () => {
                     Oracle.report("Protocol (v43.1 - UNIFIED) engaged for desktop.");
-                    
-                    // The pinning ScrollTrigger is kept separate from the animation one. This is good.
+
                     ScrollTrigger.create({
-                        trigger: elements.textCol, 
+                        trigger: elements.textCol,
                         pin: elements.visualsCol,
-                        start: 'top top', 
+                        start: 'top top',
                         end: 'bottom bottom',
                         onToggle: self => Oracle.updateHUD('c-master-st-active', self.isActive ? 'PIN_ACTIVE' : 'PIN_INACTIVE', self.isActive ? '#A3BE8C' : '#BF616A'),
                     });
-    
-                    // === THE ONE MASTER STORY TIMELINE ===
-                    // All scroll-based animations will be sequenced on this single timeline.
+
                     const masterStoryTl = gsap.timeline({
-                    // NEW: Add a default ease for all tweens on this timeline
-                    defaults: { ease: "power2.inOut", duration: 1 },
-                    scrollTrigger: {
-                        trigger: elements.textCol,
-                        start: 'top top',
-                        end: 'bottom bottom',
-                        scrub: scrubValue,
-                            // This one onUpdate callback controls all primary logging.
+                        defaults: { ease: "power2.inOut", duration: 1 },
+                        scrollTrigger: {
+                            trigger: elements.textCol,
+                            start: 'top top',
+                            end: 'bottom bottom',
+                            scrub: scrubValue,
                             onUpdate: (self) => {
-                                // Update HUD with live values from hero actor
                                 Oracle.updateHUD('c-rot-x', gsap.getProperty(elements.heroActor, "rotationX").toFixed(1));
                                 Oracle.updateHUD('c-rot-y', gsap.getProperty(elements.heroActor, "rotationY").toFixed(1));
                                 Oracle.updateHUD('c-scale', gsap.getProperty(elements.heroActor, "scale").toFixed(2));
                                 Oracle.updateHUD('c-scroll', `${(self.progress * 100).toFixed(0)}%`);
-    
-                                // Throttle detailed logging for performance
                                 if (self.progress.toFixed(2) !== (self._lastProgress || '')) {
-                                     Oracle.trackScrollTrigger(self, "Unified Story Controller");
-                                     self._lastProgress = self.progress.toFixed(2);
+                                    Oracle.trackScrollTrigger(self, "Unified Story Controller");
+                                    self._lastProgress = self.progress.toFixed(2);
                                 }
                             }
                         }
                     });
-                    
-                    // Call the "recipe" functions and feed them the ONE master timeline.
+
                     setupHeroActor(elements, masterStoryTl);
-                    setupTextPillars(elements, masterStoryTl); // Now uses the corrected "Unbroken Chain" logic.
-                    
-                    // The handoff logic remains separate (as it's event-based), but it is
-                    // given the master timeline so it knows what to disable/enable.
-                    setupHandoff(elements, masterStoryTl); 
+                    setupTextPillars(elements, masterStoryTl);
+                    setupHandoff(elements, masterStoryTl);
                 },
                 '(max-width: 1024px)': () => {
                     Oracle.report("Sovereign Protocol STANDBY. No animations on tablet/mobile view.");
-                    // No animations for tablet/mobile, everything should just stack normally.
                 }
-            });
-        });
-    });
+            }); // <--- matchMedia closes here
+            
+        }); // <--- **** THIS IS THE CRUCIAL FIX. This closes the gsap.context() function. ****
+    
+    }); // <--- And this closes the Oracle.performance.benchmark() function.
 
     return ctx;
 }
