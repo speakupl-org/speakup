@@ -164,6 +164,39 @@ const threeJsModule = {
     }
 };
 
+// ==========================================================
+// PASTE THE ENTIRE runDiagnostics FUNCTION HERE
+// ==========================================================
+function runDiagnostics(elements) {
+    console.group("%c[SOVEREIGN DIAGNOSTICS]", "color: #D08770; font-weight: bold;");
+
+    if (!elements.masterTrigger) {
+        console.error("CRITICAL FAILURE: '.scrolly-container' not found!");
+    } else {
+        console.log("✅ '.scrolly-container' found.", {
+            height: elements.masterTrigger.offsetHeight + 'px'
+        });
+    }
+
+    if (elements.textPillars.length === 0) {
+        console.error("CRITICAL FAILURE: No '.pillar-text-content' elements found!");
+    } else {
+        console.log(`✅ Found ${elements.textPillars.length} text pillars.`);
+    }
+
+    // After a brief delay to ensure layout is calculated, re-check heights.
+    setTimeout(() => {
+        console.log("Height of .scrolly-container after 100ms delay:", elements.masterTrigger.offsetHeight + 'px');
+        if (elements.masterTrigger.offsetHeight < window.innerHeight * 2) {
+             console.warn("WARNING: The .scrolly-container is not tall enough to support a long scroll animation.");
+        } else {
+             console.log("Container height appears sufficient for scroll animation.");
+        }
+    }, 100);
+
+    console.groupEnd();
+}
+
 // =========================================================================
 //         SOVEREIGN ARCHITECTURE & ANIMATION SETUP
 // =========================================================================
