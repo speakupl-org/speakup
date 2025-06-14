@@ -220,11 +220,11 @@ function setupSite() {
 
 // Keep runDiagnostics as it is, it's a good helper.
 
+// CORRECTED setupAnimations FUNCTION
 function setupAnimations() {
-    // Aggressive cleanup from your original file - this is excellent practice.
     if (gsapCtx) gsapCtx.revert();
     ScrollTrigger.getAll().forEach(st => st.kill());
-    
+
     const ctx = gsap.context(() => {
         const elements = {
             canvas: document.querySelector('#threejs-canvas'),
@@ -237,116 +237,80 @@ function setupAnimations() {
             textPillars: gsap.utils.toArray('.pillar-text-content'),
         };
 
-        // runDiagnostics(elements); // Good for debugging, can be enabled if needed.
-        
-        if (!elements.canvas || typeof THREE === 'undefined') {
-            Oracle.warn('ABORT: Critical element or library not found.');
-            Oracle.updateHUD('c-validation-status', 'FAILED', '#BF616A');
+        if (!elements.canvas || !elements.masterTrigger || elements.textPillars.length === 0) {
+            Oracle.warn('ABORT: A critical animation element was not found in the DOM.');
+            Oracle.updateHUD('c-validation-status', 'FAILED: Missing Element', '#BF616A');
             return;
         }
-        
+
         const { cube } = threeJsModule.setup(elements.canvas);
         Oracle.updateHUD('c-validation-status', 'PASSED', '#A3BE8C');
-        gsap.set(elements.finalLogoSvg, { autoAlpha: 0 }); // Initially hide the final SVG
+        gsap.set(elements.finalLogoSvg, { autoAlpha: 0 });
 
-        // =================================================================
-        // SOVEREIGN MEDIA QUERY - ALL ANIMATIONS LIVE HERE
-        // =================================================================
         ScrollTrigger.matchMedia({
             '(min-width: 1025px)': () => {
                 Oracle.report("Desktop animation protocol engaged.");
-                
-                // === TIMELINE 1: The Master Scrollytelling Timeline ===
-                const masterTl = gsap.timeline({
-                scrollTrigger: {
-                    trigger: elements.masterTrigger,
-                    start: 'top top',
-                    end: 'bottom bottom',
-                    scrub: 1.2,
-                    onUpdate: self => {
-                        // CONSOLIDATED STATE MANAGEMENT
-                        if (self.progress > 0 && self.progress < 0.99) { // Give a little buffer at the end
-                            Oracle.state.animation_phase = 'PILLARS_SCROLL';
-                        } else if (self.progress >= 0.99) {
-                            Oracle.state.animation_phase = 'HANDOFF_AWAIT';
-                        } else { // self.progress is 0
-                            Oracle.state.animation_phase = 'IDLE';
-                        }
-                        
-                        // The rest of the HUD updates remain the same
-                        Oracle.updateHUD('c-scroll', `${(self.progress * 100).toFixed(0)}%`);
-                        Oracle.updateHUD('c-rot-y', (cube.rotation.y * (180 / Math.PI)).toFixed(1));
-                        Oracle.updateAndLog(cube, self); // Log the consolidated state
-                    }
-                }
-            });
 
-                // Add cube animations to the master timeline
+                const masterTl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: elements.masterTrigger,
+                        start: 'top top',
+                        end: 'bottom bottom',
+                        scrub: 1.2,
+                        onUpdate: self => {
+                            if (self.progress > 0 && self.progress < 0.99) Oracle.state.animation_phase = 'PILLARS_SCROLL';
+                            else if (self.progress >= 0.99) Oracle.state.animation_phase = 'HANDOFF_AWAIT';
+                            else Oracle.state.animation_phase = 'IDLE';
+                            Oracle.updateHUD('c-scroll', `${(self.progress * 100).toFixed(0)}%`);
+                            Oracle.updateHUD('c-rot-y', (cube.rotation.y * (180 / Math.PI)).toFixed(1));
+                            Oracle.updateAndLog(cube, self);
+                        }
+                    }
+                });
+
                 masterTl
                     .to(cube.rotation, { y: Math.PI * 2.5, x: Math.PI * -1, ease: 'none' })
                     .to(cube.scale, { x: 1.2, y: 1.2, z: 1.2, ease: 'power1.inOut', yoyo: true, repeat: 1 }, 0);
-                
-                // === TIMELINE 2: The Synchronized Text Fade Timeline ===
-                // This is the FIX for the text animation logic.
+
                 elements.textPillars.forEach((pillar, i) => {
                     const textWrapper = pillar.querySelector('.text-anim-wrapper');
                     
-                        if (textWrapper) { 
-                // Reset styles for resize-safety
-                gsap.set(textWrapper, { y: 0, autoAlpha: (i === 0) ? 1 : 0 }); // First is visible, others are not.
-        
-                // Fade Out (if it's not the first pillar)
-                if (i > 0) {
-                    masterTl.from(textWrapper, { 
-                        autoAlpha: 0,
-                        y: 40,
-                        duration: 0.5,
-                        ease: 'power2.out'
-                    }, i * 0.8);
-                }
-                
-                // Add a callback to update our HUD element
-                masterTl.add(() => Oracle.updateHUD('c-active-pillar', `Pillar ${i + 1}`), i * 0.8);
-        
-                // Fade Out (if it's not the last pillar)
-                            elements.textPillars.forEach((pillar, i) => {
-                    const textWrapper = pillar.querySelector('.text-anim-wrapper');
-                    
-                    // Harden the logic: only animate if we found the wrapper element.
-                    if (textWrapper) { 
-                        // The position parameter in GSAP timelines is key.
-                        // We will place all animations for one pillar within the same time window.
-                        const animationStartTime = i; // Pillar 1 at 0s, Pillar 2 at 1s, etc.
-
-                        // 1. FADE IN:
-                        // Animate FROM a hidden/offset state TO the default state.
+                    if (textWrapper) {
+                        const animationStartTime = i;
                         masterTl.from(textWrapper, {
                             autoAlpha: 0,
                             y: 40,
                             ease: 'power2.out',
-                        }, animationStartTime); // Position the start of this animation
+                        }, animationStartTime);
 
-                        // 2. UPDATE HUD:
-                        // Add a callback to say this pillar is now active.
                         masterTl.add(() => Oracle.updateHUD('c-active-pillar', `Pillar ${i + 1}`), animationStartTime);
                         
-                        // 3. FADE OUT:
-                        // If this ISN'T the last pillar, fade it out to make room for the next one.
                         if (i < elements.textPillars.length - 1) {
                            masterTl.to(textWrapper, {
                                 autoAlpha: 0,
                                 y: -40,
                                 ease: 'power2.in'
-                            }, animationStartTime + 0.75); // Start the fade-out 75% of the way through its "time"
+                            }, animationStartTime + 0.75);
                         }
                     } else {
-                        // If we can't find a wrapper, log a warning but DON'T crash.
                         Oracle.warn(`Could not find a '.text-anim-wrapper' inside pillar number ${i + 1}. Skipping its animation.`);
                     }
                 });
-                            
-    );           
-    gsapCtx = ctx; 
+                
+                // On a successful run, set up the final animation
+                setupHandoffAnimation(elements, cube);
+
+            },
+
+            '(max-width: 1024px)': () => {
+                Oracle.report("Mobile layout active. Scrollytelling animations disabled.");
+                gsap.set([cube.rotation, cube.scale], {clearProps: "all"});
+            }
+        });
+
+    });
+
+    gsapCtx = ctx;
     return ctx;
 }
 
