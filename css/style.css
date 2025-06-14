@@ -1230,3 +1230,40 @@ body.scroll-locked {
     stroke: none;
     transition: fill 0.3s ease; /* A nice touch for hover effects if you add them later */
 }
+/* === SOVEREIGN v43.2 CSS DIRECTIVES (APPEND TO YOUR CSS) === */
+
+/* Prepare the Thumbnail Container */
+.summary-thumbnail-clipper {
+    position: relative; 
+    border-radius: 12px; /* Or your preferred border-radius */
+    overflow: hidden;   /* CRITICAL: This clips the cube as it flies in */
+    /* Add a subtle background to suggest an "empty" slot */
+    background: rgba(var(--rgb-primary), 0.05);
+}
+
+/* Prepare the Stunt Double and its Morphing Face */
+#actor-3d-stunt-double {
+    /* Hidden by default; GSAP will control its visibility. */
+    opacity: 0;
+    visibility: hidden;
+    /* Correct positioning within the clipper */
+    position: absolute;
+    top: -18.5px; /* Fine-tune to perfectly center a 200px cube inside a 163px container */
+    left: -18.5px;
+    width: 200px; 
+    height: 200px;
+}
+
+#actor-3d-stunt-double .face.front {
+    /* The face becomes a transparent frame for the SVG */
+    background: transparent !important;
+    border: none;
+}
+
+#morph-path {
+    /* CRITICAL FIX: The path must have a FILL to be visible. */
+    fill: var(--color-heading); 
+    stroke: none;
+    /* Ensures the morph happens from the center outward */
+    transform-origin: center center;
+}
