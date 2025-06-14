@@ -125,9 +125,10 @@ const setupHeroActor = (elements, masterTl) => {
 
 // Text pillars animation with OMNISCIENT ORACLE (v37.9 - Blueprint Version)
 // THE DEFINITIVE BLUEPRINT v39 - INDESTRUCTIBLE & OMNISCIENT
+// THE DEFINITIVE BLUEPRINT v39.1 - Syntax Corrected
 const setupTextPillars = (elements) => {
 
-    // 1. Establish the clean starting state. This is correct.
+    // 1. Establish the clean starting state.
     gsap.set(elements.textWrappers, { autoAlpha: 0, y: 40, rotationX: -15 });
     gsap.set(elements.textWrappers[0], { autoAlpha: 1, y: 0, rotationX: 0 });
 
@@ -142,7 +143,7 @@ const setupTextPillars = (elements) => {
     Oracle.groupEnd();
     // ========================================================
 
-    // 2. Build the ONE master timeline. This architecture is correct.
+    // 2. Build the ONE master timeline.
     const textMasterTl = gsap.timeline({
         scrollTrigger: {
             trigger: elements.textCol,
@@ -153,21 +154,39 @@ const setupTextPillars = (elements) => {
 
             // === OVERKILL TRACKER 2: COMPUTED STYLE TELEMETRY ===
             onUpdate: (self) => {
-                const data = {
-                    'Master Progress': `${(self.progress * 100).toFixed(1)}%`
-                };
-                
-                // For each wrapper, get its undeniable, browser-rendered style.
+                const data = { 'Master Progress': `${(self.progress * 100).toFixed(1)}%` };
                 elements.textWrappers.forEach((wrapper, index) => {
                     const style = window.getComputedStyle(wrapper);
                     data[`W#${index + 1}_Opacity`] = parseFloat(style.opacity).toFixed(2);
-                    // The 'transform' property is a matrix, harder to read, but proves if an animation is active.
                     data[`W#${index + 1}_Transform`] = style.transform === "none" ? "none" : "ACTIVE";
                 });
                 Oracle.scan('Master Timeline (Computed Styles)', data);
             }
-        }
+        } // <- This was a source of a potential error, ensuring it's correct now.
     });
+
+    // 3. The Definitive Animation Logic: Positional Tweens.
+    const numTransitions = elements.textWrappers.length - 1;
+    const segmentDuration = 1;
+    
+    for (let i = 0; i < numTransitions; i++) {
+        const outWrapper = elements.textWrappers[i];
+        const inWrapper = elements.textWrappers[i + 1];
+        const position = i * segmentDuration;
+
+        textMasterTl.fromTo(outWrapper, 
+            { autoAlpha: 1, y: 0, rotationX: 0 },
+            { autoAlpha: 0, y: -40, rotationX: 15, ease: "power2.in", duration: segmentDuration },
+            position
+        );
+        
+        textMasterTl.fromTo(inWrapper,
+            { autoAlpha: 0, y: 40, rotationX: -15 },
+            { autoAlpha: 1, y: 0, rotationX: 0, ease: "power2.out", duration: segmentDuration },
+            position
+        );
+    }
+};
 
     // 3. The Definitive Animation Logic: Positional Tweens. This is the fix.
     // Instead of chaining `.to().to()`, we explicitly place tweens on the timeline.
