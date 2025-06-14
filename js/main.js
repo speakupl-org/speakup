@@ -251,59 +251,50 @@ function setupAnimations() {
             '(min-width: 1025px)': () => {
                 Oracle.report("Desktop animation protocol engaged.");
     
-// Inside your '(min-width: 1025px)' media query...
-
-                const masterTl = gsap.timeline({
-                    scrollTrigger: {
-                        trigger: elements.masterTrigger,
-                        start: 'top top',
-                        end: 'bottom bottom',
-                        scrub: 1.2,
-                        onUpdate: self => {
-                            if (self.progress > 0 && self.progress < 0.99) Oracle.state.animation_phase = 'PILLARS_SCROLL';
-                            else if (self.progress >= 0.99) Oracle.state.animation_phase = 'HANDOFF_AWAIT';
-                            else Oracle.state.animation_phase = 'IDLE';
-                            Oracle.updateHUD('c-scroll', `${(self.progress * 100).toFixed(0)}%`);
-                            Oracle.updateHUD('c-rot-y', (cube.rotation.y * (180 / Math.PI)).toFixed(1));
-                            Oracle.updateHUD('c-scale', cube.scale.x.toFixed(2));
-                            Oracle.updateAndLog(cube, self);
-                        },
-                        onLeaveBack: self => self.animation.invalidate()
-                    }
-                });
-
-                // --- MAJOR FIX: Added an explicit duration to the main rotation tween. ---
-                // We tie its duration to the number of pillars to keep it synchronized
-                // with the text animations. This ensures the rotation completes over
-                // the same "time" as the pillars, not over the entire scroll height.
-                const animationDuration = elements.textPillars.length;
-
-                masterTl
-                    .to(cube.rotation, { 
-                        y: Math.PI * 2.5, 
-                        x: Math.PI * -1, 
-                        ease: 'none',
-                        // Set the duration to match the text pillar animation span.
-                        duration: animationDuration 
-                    }, 0) 
-                    .to(cube.scale, { 
-                        x: 1.2, 
-                        y: 1.2, 
-                        z: 1.2, 
-                        ease: 'power1.in', 
-                        // The scale-up happens over the first half.
-                        duration: animationDuration / 2 
-                    }, 0) 
-                    .to(cube.scale, { 
-                        x: 1, 
-                        y: 1, 
-                        z: 1, 
-                        ease: 'power1.out', 
-                        // The scale-down happens over the second half.
-                        duration: animationDuration / 2 
-                    }, animationDuration / 2); // Start this tween halfway through.
-
-                // The rest of your text pillar animation loop remains the same
+            // ...inside your '(min-width: 1025px)' function...
+            
+            const masterTl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: elements.masterTrigger,
+                    start: 'top top',
+                    // === CRITICAL PACING FIX: Change this line ===
+                    end: '+=300%', // Use a relative distance, not the container bottom.
+                    scrub: 1.2,
+                    onUpdate: self => {
+                        if (self.progress > 0 && self.progress < 0.99) Oracle.state.animation_phase = 'PILLARS_SCROLL';
+                        else if (self.progress >= 0.99) Oracle.state.animation_phase = 'HANDOFF_AWAIT';
+                        else Oracle.state.animation_phase = 'IDLE';
+                        Oracle.updateHUD('c-scroll', `${(self.progress * 100).toFixed(0)}%`);
+                        Oracle.updateHUD('c-rot-y', (cube.rotation.y * (180 / Math.PI)).toFixed(1));
+                        Oracle.updateHUD('c-scale', cube.scale.x.toFixed(2));
+                        Oracle.updateAndLog(cube, self);
+                    },
+                    onLeaveBack: self => self.animation.invalidate()
+                }
+            });
+            
+            // The duration here sets the internal proportions of the timeline.
+            const animationDuration = elements.textPillars.length; 
+            
+            masterTl
+                .to(cube.rotation, {
+                    y: Math.PI * 2.5,
+                    x: Math.PI * -1,
+                    ease: 'none',
+                    duration: animationDuration
+                }, 0)
+                .to(cube.scale, {
+                    x: 1.2, y: 1.2, z: 1.2,
+                    ease: 'power1.in',
+                    duration: animationDuration / 2
+                }, 0)
+                .to(cube.scale, {
+                    x: 1, y: 1, z: 1,
+                    ease: 'power1.out',
+                    duration: animationDuration / 2
+                }, '>'); // The '>' position remains correct.
+            
+            // ...The rest of the function continues as before...
                 elements.textPillars.forEach((pillar, i) => {
                     const textWrapper = pillar.querySelector('.text-anim-wrapper');
                     
