@@ -451,8 +451,9 @@ const setupHandoff = (elements, masterStoryTl) => { // <-- ACCEPTS the one maste
                     });
                 });
                 return ctx;
-            }
-                
+            // The stray brace that was here has been purged.
+} // Correct: This is the real closing brace for the setupAnimations function.
+
                 // Calling the 'recipes'
                 setupHeroActor(elements, heroAnimation);
                 setupTextPillars(elements); // Uses the new indestructible blueprint
