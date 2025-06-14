@@ -49,36 +49,46 @@ const Oracle = {
     },
     
     updateAndLog: function(three_cube, scroll_trigger) {
-        if (this.config.verbosity < 1) return;
-        const s = this.state;
-        s.log_timestamp = new Date().toISOString();
-        s.log_type = "PERFORMANCE_STATE_UPDATE";
-        if (scroll_trigger) {
-            s.scroll_progress = scroll_trigger.progress.toFixed(4);
-            s.scroll_direction = scroll_trigger.direction === 1 ? 'DOWN' : 'UP';
-            s.scroll_velocity = scroll_trigger.getVelocity().toFixed(2);
-        }
-        if (three_cube && three_cube.userData.canvas) { // Check that cube and its properties exist
-            s.object_position = { x: three_cube.position.x.toFixed(2), y: three_cube.position.y.toFixed(2), z: three_cube.position.z.toFixed(2) };
-            s.object_scale = { x: three_cube.scale.x.toFixed(2), y: three_cube.scale.y.toFixed(2), z: three_cube.scale.z.toFixed(2) };
-            s.object_rotation = { x: three_cube.rotation.x.toFixed(2), y: three_cube.rotation.y.toFixed(2), z: three_cube.rotation.z.toFixed(2) };
-            s.dom_element_bounding_rect = three_cube.userData.canvas.getBoundingClientRect().toJSON();
-        }
-        if (performance.memory) s.javascript_heap_size = performance.memory;
+    if (this.config.verbosity < 1) return;
+    const s = this.state;
+    s.log_timestamp = new Date().toISOString();
+    
+    // Only update the log type if it's not a special case like an ERROR
+    if (s.log_type !== "ERROR") {
+        s.log_type = "STATE_UPDATE";
+    }
+
+    if (scroll_trigger) {
+        s.scroll_progress = scroll_trigger.progress.toFixed(4);
+        s.scroll_direction = scroll_trigger.direction === 1 ? 'DOWN' : 'UP';
+        s.scroll_velocity = scroll_trigger.getVelocity().toFixed(2);
+    }
+    if (three_cube && three_cube.userData.canvas) {
+        s.object_position = { x: three_cube.position.x.toFixed(2), y: three_cube.position.y.toFixed(2), z: three_cube.position.z.toFixed(2) };
+        s.object_scale = { x: three_cube.scale.x.toFixed(2), y: three_cube.scale.y.toFixed(2), z: three_cube.scale.z.toFixed(2) };
+        s.object_rotation = { x: three_cube.rotation.x.toFixed(2), y: three_cube.rotation.y.toFixed(2), z: three_cube.rotation.z.toFixed(2) };
+        s.dom_element_bounding_rect = three_cube.userData.canvas.getBoundingClientRect().toJSON();
+    }
+    if (performance.memory) s.javascript_heap_size = performance.memory.jsHeapSizeLimit;
+    
+    if(this.config.logToConsole) {
+        const logTitle = `%c[ORACLE @ ${s.log_timestamp.split('T')[1].slice(0, -1)}] Phase: ${s.animation_phase}`;
+        const logStyle = 'color: #8FBCBB;';
         
-        if(this.config.logToConsole) {
-            console.groupCollapsed(`%c[ORACLE @ ${s.log_timestamp.split('T')[1].slice(0, -1)}] Phase: ${s.animation_phase}`, 'color: #8FBCBB;');
-            console.log(JSON.stringify(this.state, null, 2));
-            console.groupEnd();
+        // THE FIX FOR YOUR VERBOSITY ISSUE:
+        if (this.config.verbosity > 1) {
+            // High verbosity = expanded logs
+            console.group(logTitle, logStyle);
+        } else {
+            // Low verbosity = collapsed logs
+            console.groupCollapsed(logTitle, logStyle);
         }
-    },
-    updateHUD: (id, value, color = '#E5E9F0') => {
-        const el = document.getElementById(id);
-        if (el) { el.textContent = value; if(color) el.style.color = color; }
-    },
-    report: (message) => console.log(`%c[SOVEREIGN REPORT]:`, 'color: #5E81AC; font-weight: bold;', message),
-    warn: (message) => console.warn(`%c[SOVEREIGN WARNING]:`, 'color: #D08770;', message),
-};
+        
+        console.log(JSON.stringify(this.state, null, 2));
+        console.groupEnd();
+    }
+},
+
 
 // =========================================================================
 //         THREE.JS HYBRID MODULE
@@ -164,11 +174,10 @@ function setupSite() {
 
 function setupAnimations() {
     const ctx = gsap.context(() => {
-        // FIX: Added missing selectors for the handoff animation
         const elements = {
             canvas: document.querySelector('#threejs-canvas'),
-            summaryPlaceholder: document.querySelector('#summary-placeholder'), // Added
-            finalLogoSvg: document.querySelector('#final-logo-svg'),         // Added
+            summaryPlaceholder: document.querySelector('#summary-placeholder'),
+            finalLogoSvg: document.querySelector('#final-logo-svg'),
             morphPath: document.querySelector('#morph-path'),
             handoffPoint: document.querySelector('#handoff-point'),
             masterTrigger: document.querySelector('.scrolly-container'),
@@ -186,30 +195,36 @@ function setupAnimations() {
         const { cube } = threeJsModule.setup(elements.canvas);
         Oracle.updateHUD('c-validation-status', 'PASSED', '#A3BE8C');
 
-        // Initially hide the final SVG logo
         gsap.set(elements.finalLogoSvg, { autoAlpha: 0 });
 
         ScrollTrigger.matchMedia({
             '(min-width: 1025px)': () => {
+                // Main timeline for cube rotation and scaling
                 const masterTl = gsap.timeline({
                     scrollTrigger: {
                         trigger: elements.masterTrigger,
                         start: 'top top',
-                        end: 'bottom bottom-=' + elements.handoffPoint.offsetHeight,
+                        end: 'bottom bottom', // Animate across the entire container
                         scrub: 1.5,
+                        // FIX: Update animation phase for better logging
+                        onEnter: () => Oracle.state.animation_phase = 'PILLARS_SCROLL',
+                        onLeave: () => Oracle.state.animation_phase = 'HANDOFF_AWAIT',
+                        onEnterBack: () => Oracle.state.animation_phase = 'PILLARS_SCROLL',
+                        onLeaveBack: () => Oracle.state.animation_phase = 'IDLE',
                         onUpdate: self => {
                             Oracle.updateHUD('c-scroll', `${(self.progress * 100).toFixed(0)}%`);
                             Oracle.updateHUD('c-rot-y', (cube.rotation.y * (180 / Math.PI)).toFixed(1));
-                            Oracle.updateAndLog(cube, self);
+                            // We don't call Oracle.updateAndLog here anymore to prevent log spam.
+                            // The animate() loop will handle that.
                         }
                     }
                 });
 
+                // Pin the visuals column
                 ScrollTrigger.create({
                     trigger: elements.masterTrigger,
                     start: 'top top',
-                    endTrigger: elements.handoffPoint,
-                    end: 'top center', // Changed to 'top center' for better alignment
+                    end: 'bottom bottom',
                     pin: elements.visualsCol,
                     pinSpacing: false
                 });
@@ -217,17 +232,23 @@ function setupAnimations() {
                 masterTl.to(cube.rotation, { y: Math.PI * 3, x: Math.PI * -1.5, ease: 'none' }, 0);
                 masterTl.to(cube.scale, { x: 1.2, y: 1.2, z: 1.2, ease: 'power1.inOut', yoyo: true, repeat: 1 }, 0);
 
-                elements.textPillars.forEach((pillar, index) => {
-                    masterTl.from(pillar, { autoAlpha: 0, y: 50, duration: 0.2 }, index * 0.25);
-                    if (index < elements.textPillars.length - 1) { 
-                        masterTl.to(pillar, { autoAlpha: 0, y: -50, duration: 0.2 }, (index * 0.25) + 0.22); 
-                    }
+                // Animate each text pillar as it comes into view
+                elements.textPillars.forEach((pillar) => {
+                    gsap.timeline({
+                        scrollTrigger: {
+                            trigger: pillar,
+                            start: 'top 70%', // Start fading in when it's 70% down the screen
+                            end: 'bottom 30%', // Start fading out when its bottom is 30% from top
+                            scrub: true
+                        }
+                    }).to(pillar, { autoAlpha: 1, y: 0 }, 0)
+                      .to(pillar, { autoAlpha: 0 }, 0.8); // Fade out towards the end
                 });
-                
-                // FIX: Pass the 'elements' object to the handoff function
+
                 setupHandoff(elements, cube);
             },
             '(max-width: 1024px)': () => {
+                // Your mobile logic remains the same
                 gsap.to(cube.rotation, { y: Math.PI * 2, repeat: -1, duration: 15, ease: 'none' });
             }
         });
