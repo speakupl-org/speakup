@@ -1,5 +1,3 @@
-
-<!DOCTYPE html>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -216,9 +214,6 @@
     
     </main>
 
-<!-- =========================================================================
-   FOOTER (Unchanged)
-   ========================================================================= -->
 <footer class="site-footer">
     <div class="container">
         <div class="footer-content-block">
@@ -260,30 +255,14 @@
     </div>
 </footer>
 
-<!-- 
-    ================================================================
-           ESSENTIAL GSAP ANIMATION LIBRARIES
-    ================================================================
-    These MUST be loaded in this order, and BEFORE your main.js file.
--->
-
-<!-- 1. The Core GSAP Library - The heart of the animation engine. -->
+<!-- ESSENTIAL GSAP LIBRARIES (Corrected Order and Inclusion) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-
-<!-- 2. The ScrollTrigger Plugin - For scroll-based animations. -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-
-<!-- 3. The Flip Plugin - For animating state changes, used in the handoff. -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Flip.min.js"></script>
+<!-- MorphSVGPlugin is critical for the absorption effect -->
+<script src="https://unpkg.com/gsap@3/dist/MorphSVGPlugin.min.js"></script>
 
-<!-- 4. NEW: MorphSVG Plugin - MUST BE INCLUDED -->
-    <script src="https://unpkg.com/gsap@3/dist/MorphSVGPlugin.min.js"></script>
-
-    
-    <script src="https://unpkg.com/gsap@3/dist/MorphSVGPlugin.min.js"></script>
-
-<!-- 
--->
+<!-- The Sovereign Protocol Script -->
 <script defer src="js/main.js"></script>
 
 </body>
