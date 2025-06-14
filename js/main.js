@@ -15,6 +15,51 @@ const Oracle = {
         verbosity: 1, // Default: 1=collapsed, 2=expanded
     },
     
+runSelfDiagnostic: () => {
+    if (Oracle.config.verbosity < 1) return;
+
+    const groupMethod = Oracle.config.verbosity >= 2 ? console.group : console.groupCollapsed;
+    console.group(`%c[ORACLE SELF-DIAGNOSTIC (SOVEREIGN INTEGRITY PROTOCOL)]`, 'color: #D08770; font-weight: bold;');
+
+    // 1. Dependency Verification
+    groupMethod('%c1. Dependency Verification', 'color: #EBCB8B;');
+        const checkDep = (lib, name) => console.log(`  - ${name}:`, lib ? '%c✅ FOUND' : '%c❌ MISSING!', lib ? 'color: #A3BE8C;' : 'color: #BF616A; font-weight: bold;');
+        checkDep(window.gsap, 'GSAP Core');
+        checkDep(window.ScrollTrigger, 'ScrollTrigger Plugin');
+        checkDep(window.Flip, 'Flip Plugin');
+    console.groupEnd();
+    
+    // 2. Oracle Integrity Check
+    groupMethod('%c2. Oracle Internal Integrity', 'color: #EBCB8B;');
+        const expectedMethods = ['init', '_timestamp', 'log', 'scan', 'group', 'groupEnd', 'report', 'warn', 'updateHUD', 'trackScrollTrigger', 'runSelfDiagnostic'];
+        let integrityOk = true;
+        expectedMethods.forEach(methodName => {
+            if (typeof Oracle[methodName] === 'function') {
+                console.log(`  - Method '${methodName}': %c✅ OK`, 'color: #A3BE8C;');
+            } else {
+                console.log(`  - Method '${methodName}': %c❌ MISSING/INVALID!`, 'color: #BF616A; font-weight: bold;');
+                integrityOk = false;
+            }
+        });
+        if (integrityOk) { Oracle.report("Oracle internal integrity verified."); } 
+        else { Oracle.warn("Oracle integrity compromised! Check for missing methods."); }
+    console.groupEnd();
+
+    // 3. Environment & Element Sanity Check
+    groupMethod('%c3. Environment Sanity Check', 'color: #EBCB8B;');
+        console.log(`%c  - Viewport:`, 'color: #88C0D0;', `${window.innerWidth}w x ${window.innerHeight}h`);
+        const contentCount = document.querySelectorAll('.pillar-text-content').length;
+        const wrapperCount = document.querySelectorAll('.text-anim-wrapper').length;
+        console.log(`%c  - Pillar Content Found:`, 'color: #88C0D0;', contentCount);
+        console.log(`%c  - Anim Wrappers Found:`, 'color: #88C0D0;', wrapperCount);
+        if (contentCount !== wrapperCount) {
+            Oracle.warn(`Pillar Mismatch Detected! Found ${contentCount} content divs and ${wrapperCount} wrapper divs. This will cause animation errors.`);
+        }
+    console.groupEnd();
+    
+    console.groupEnd();
+},
+
     // REVISED: init now accepts a callback to guarantee execution order
     init: (callback) => {
         // Set verbosity from localStorage first
@@ -90,27 +135,30 @@ const Oracle = {
 
     // Add this new function definition inside the Oracle object
     trackScrollTrigger: (stInstance, label) => {
-        if (Oracle.config.verbosity < 1) return;
-        if (!stInstance) {
-            Oracle.warn(`[ORACLE ST_TRACK @ ${Oracle._timestamp()}: ${label}] FAILED - ScrollTrigger instance is null.`);
-            return;
-        }
-        
-        const groupMethod = Oracle.config.verbosity >= 2 ? console.group : console.groupCollapsed;
-        
-        groupMethod(`%c[ORACLE ST_TRACK @ ${Oracle._timestamp()}: ${label}]`, 'color: #EBCB8B; font-weight: bold;');
-        const triggerEl = stInstance.trigger;
-        const scrollerEl = stInstance.scroller;
-        
-        console.log(`%c  - Status:`, 'color: #88C0D0;', `Active: ${stInstance.isActive}, Direction: ${stInstance.direction === 1 ? 'DOWN' : 'UP'}`);
-        console.log(`%c  - Trigger Element:`, 'color: #88C0D0;', `${triggerEl.tagName}#${triggerEl.id || '.' + triggerEl.className.split(' ')[0]}`);
-        console.log(`%c  - Pixel Range:`, 'color: #88C0D0;', `Start: ${stInstance.start.toFixed(0)}px, End: ${stInstance.end.toFixed(0)}px`);
-        console.log(`%c  - Total Distance:`, 'color: #88C0D0;', `${(stInstance.end - stInstance.start).toFixed(0)}px`);
-        console.log(`%c  - Scroller Height:`, 'color: #88C0D0;', `${scrollerEl.scrollHeight}px (Viewport: ${window.innerHeight}px)`);
-        console.log(`%c  - Progress:`, 'color: #88C0D0;', `${(stInstance.progress * 100).toFixed(2)}%`);
+    if (Oracle.config.verbosity < 1) return;
+    if (!stInstance) {
+        Oracle.warn(`[ORACLE ST_TRACK @ ${Oracle._timestamp()}: ${label}] FAILED - ScrollTrigger instance is null.`);
+        return;
+    }
+    
+    const groupMethod = Oracle.config.verbosity >= 2 ? console.group : console.groupCollapsed;
+    
+    groupMethod(`%c[ORACLE ST_TRACK @ ${Oracle._timestamp()}: ${label}]`, 'color: #EBCB8B; font-weight: bold;');
+    const triggerEl = stInstance.trigger;
 
-        console.groupEnd();
-    },
+    // THE FIX: Correctly determine the scroller and its height.
+    const scrollerEl = stInstance.scroller;
+    const scrollerHeight = scrollerEl === window ? document.documentElement.scrollHeight : scrollerEl.scrollHeight;
+
+    console.log(`%c  - Status:`, 'color: #88C0D0;', `Active: ${stInstance.isActive}, Direction: ${stInstance.direction === 1 ? 'DOWN' : 'UP'}`);
+    console.log(`%c  - Trigger Element:`, 'color: #88C0D0;', `${triggerEl.tagName}#${triggerEl.id || '.' + triggerEl.className.split(' ')[0]}`);
+    console.log(`%c  - Pixel Range:`, 'color: #88C0D0;', `Start: ${stInstance.start.toFixed(0)}px, End: ${stInstance.end.toFixed(0)}px`);
+    console.log(`%c  - Total Distance:`, 'color: #88C0D0;', `${(stInstance.end - stInstance.start).toFixed(0)}px`);
+    console.log(`%c  - Scroller Height:`, 'color: #88C0D0;', `${scrollerHeight.toFixed(0)}px (Viewport: ${window.innerHeight}px)`);
+    console.log(`%c  - Progress:`, 'color: #88C0D0;', `${(stInstance.progress * 100).toFixed(2)}%`);
+
+    console.groupEnd();
+},
     
     report: (message) => console.log(`%c[SOVEREIGN REPORT @ ${Oracle._timestamp()}]:`, 'color: #5E81AC; font-weight: bold;', message),
     warn: (message) => console.warn(`%c[SOVEREIGN WARNING @ ${Oracle._timestamp()}]:`, 'color: #EBCB8B;', message),
@@ -328,6 +376,12 @@ function setupAnimations() {
     Oracle.report(`Sovereign Build v39.2 Initialized. Verbosity: ${Oracle.config.verbosity}`);
 
     const ctx = gsap.context(() => {
+
+                // ===========================================================
+        // == EXECUTE THE SOVEREIGN SELF-DIAGNOSTIC PROTOCOL HERE ==
+        Oracle.runSelfDiagnostic();
+        // ===========================================================
+        
         const elements = {
             heroActor: getElement('#actor-3d'), stuntActor: getElement('#actor-3d-stunt-double'), placeholder: getElement('#summary-placeholder'),
             placeholderClipper: getElement('.summary-thumbnail-clipper'), pillars: getElement('.pillar-text-content', true),
