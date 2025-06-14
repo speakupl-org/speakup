@@ -127,14 +127,14 @@ const setupHeroActor = (elements, masterTl) => {
     });
 };
 
-// THE DEFINITIVE BLUEPRINT for Text Pillars (v39.2 - INDESTRUCTIBLE & OMNISCIENT)
+// THE DEFINITIVE BLUEPRINT for Text Pillars (v39.3 - SOVEREIGN OMNISCIENCE PROTOCOL)
 const setupTextPillars = (elements) => {
 
-    // 1. Establish a clean, known starting state for all wrappers.
+    // 1. Establish a clean, known starting state for all wrappers. (Unchanged)
     gsap.set(elements.textWrappers, { autoAlpha: 0, y: 40, rotationX: -15 });
     gsap.set(elements.textWrappers[0], { autoAlpha: 1, y: 0, rotationX: 0 });
 
-    // === OVERKILL TRACKER #1: INITIAL STATE VERIFICATION ===
+    // === OVERKILL TRACKER #1: INITIAL STATE VERIFICATION === (Unchanged)
     Oracle.group("Initial Text Pillar States (PRE-ANIMATION)");
     elements.textWrappers.forEach((wrapper, index) => {
         const style = window.getComputedStyle(wrapper);
@@ -149,50 +149,59 @@ const setupTextPillars = (elements) => {
     Oracle.groupEnd();
     // ========================================================
 
-    // 2. Build the ONE MASTER TIMELINE. This architecture prevents all animation race conditions.
+    // 2. Build the ONE MASTER TIMELINE. (Unchanged)
     const textMasterTl = gsap.timeline({
         scrollTrigger: {
             trigger: elements.textCol,
             start: "top top",
             end: "bottom bottom",
             scrub: 1.5,
-            markers: Oracle.config.verbosity > 1, // Only show markers if verbosity is 2+
+            markers: Oracle.config.verbosity > 1, 
 
-            // === OVERKILL TRACKER v2.1: FULL SPECTRUM ANALYSIS ===
+            // === OVERKILL TRACKER v3.0: SOVEREIGN DIAGNOSTIC SUITE ===
             onUpdate: (self) => {
+                // TRACKER A: The original Full Spectrum Analysis, enhanced.
                 const data = { 'Master Progress': `${(self.progress * 100).toFixed(1)}%` };
-                
-                // Check the visibility of the parent container itself.
                 const textColStyle = window.getComputedStyle(elements.textCol);
                 data['Parent Visible?'] = textColStyle.visibility;
                 data['Parent Opacity'] = parseFloat(textColStyle.opacity).toFixed(2);
-                
-                // For each wrapper, get its undeniable, browser-rendered style.
                 elements.textWrappers.forEach((wrapper, index) => {
                     const style = window.getComputedStyle(wrapper);
                     const key = `P${index + 1}`;
                     data[`${key}_Opacity`] = parseFloat(style.opacity).toFixed(2);
                     data[`${key}_z-index`] = style.zIndex;
-                    data[`${key}_pointer-events`] = style.pointerEvents;
                 });
                 Oracle.scan('Master Timeline (Full Spectrum)', data);
+
+                // <<<< NEW TRACKER ADDITION >>>>
+                // TRACKER B: The ScrollTrigger Deep Dive.
+                // This will instantly tell you if the scroll "road" is long enough.
+                Oracle.trackScrollTrigger(self, "Pillar Text Controller");
+                // <<<< END NEW TRACKER ADDITION >>>>
             }
         }
     });
 
-    // 3. The Definitive Animation Logic: SEQUENTIAL TWEENS.
-    // This adds each cross-fade animation to the timeline one after another.
+    // 3. The Definitive Animation Logic: SEQUENTIAL TWEENS. (Unchanged)
     elements.textWrappers.forEach((wrapper, index) => {
-        // Skip the first one, since it starts visible and never fades out on its own.
         if (index > 0) {
             const previousWrapper = elements.textWrappers[index - 1];
-
-            // Add the fade-out of the PREVIOUS wrapper, then the fade-in of the CURRENT one.
             textMasterTl
                 .to(previousWrapper, { autoAlpha: 0, y: -40, rotationX: 15, ease: "power2.in" })
-                .to(wrapper, { autoAlpha: 1, y: 0, rotationX: 0, ease: "power2.out" }, "<"); // "<" starts them at the same time
+                .to(wrapper, { autoAlpha: 1, y: 0, rotationX: 0, ease: "power2.out" }, "<");
         }
     });
+    
+    // <<<< NEW TRACKER ADDITION >>>>
+    // === OVERKILL TRACKER #3: TIMELINE INTEGRITY CHECK ===
+    // This runs ONCE after the timeline is built, confirming its structure.
+    Oracle.scan('Pillar Timeline Integrity Check', {
+        'Status': 'Timeline constructed successfully.',
+        'Total Duration (seconds)': textMasterTl.duration().toFixed(2),
+        'Number of Child Tweens': textMasterTl.getChildren().length,
+        'Associated ScrollTrigger': textMasterTl.scrollTrigger ? 'FOUND' : 'MISSING'
+    });
+    // =========================================================
 };
 
 // REVISED AND CORRECTED "ABSORPTION PROTOCOL" HANDOFF v37.6
