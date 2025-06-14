@@ -185,7 +185,9 @@ function setupSite() {
     });
 }
 
-// Replace your existing setupAnimations function with this one.
+// COMPLETELY REPLACE your old setupAnimations function with this one.
+
+// COMPLETELY REPLACE your old setupAnimations function with this one.
 
 function setupAnimations() {
     const ctx = gsap.context(() => {
@@ -197,59 +199,52 @@ function setupAnimations() {
             handoffPoint: document.querySelector('#handoff-point'),
             masterTrigger: document.querySelector('.scrolly-container'),
             visualsCol: document.querySelector('.pillar-visuals-col'),
-            // IMPORTANT: We now target the parent .pillar-text-content
+            // We select the parent .pillar-text-content for triggering
             textPillars: gsap.utils.toArray('.pillar-text-content') 
         };
         
         if (!elements.canvas || typeof THREE === 'undefined') {
-            const errorMessage = !elements.canvas ? 'Critical canvas element #threejs-canvas not found.' : 'THREE.js library not loaded.';
-            Oracle.warn('ABORT: ' + errorMessage);
+            Oracle.warn('ABORT: Critical element or library not found.');
             Oracle.updateHUD('c-validation-status', 'FAILED', '#BF616A');
             return;
         }
         
         const { cube } = threeJsModule.setup(elements.canvas);
-        Oracle.report("Three.js Module Initialized."); // You will still see this message.
+        Oracle.report("Three.js Module Initialized.");
         Oracle.updateHUD('c-validation-status', 'PASSED', '#A3BE8C');
 
         gsap.set(elements.finalLogoSvg, { autoAlpha: 0 });
 
         ScrollTrigger.matchMedia({
             '(min-width: 1025px)': () => {
-                // Inside your setupAnimations function, find the masterTl and replace it with this:
+                // ============================================
+                // CUBE ANIMATION - This timeline ONLY controls the cube.
+                // ============================================
+                const masterTl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: elements.masterTrigger,
+                        start: 'top top',
+                        end: 'bottom bottom',
+                        scrub: 1.5,
+                        onUpdate: self => {
+                            if (self.progress > 0 && self.progress < 1) {
+                                Oracle.state.animation_phase = 'PILLARS_SCROLL';
+                            } else if (self.progress >= 1) {
+                                Oracle.state.animation_phase = 'HANDOFF_AWAIT';
+                            } else {
+                                Oracle.state.animation_phase = 'IDLE';
+                            }
+                            Oracle.updateHUD('c-scroll', `${(self.progress * 100).toFixed(0)}%`);
+                            Oracle.updateHUD('c-rot-y', (cube.rotation.y * (180 / Math.PI)).toFixed(1));
+                            Oracle.updateAndLog(cube, self);
+                        }
+                    }
+                });
 
-// Main timeline for the CUBE'S rotation and scaling.
-const masterTl = gsap.timeline({
-    scrollTrigger: {
-        trigger: elements.masterTrigger,
-        start: 'top top',
-        end: 'bottom bottom', // Animate across the entire, newly-tall container
-        scrub: 1.5,
-        onUpdate: self => {
-            // =========================================================
-            //  THE FIX: Centralized State Management
-            // =========================================================
-            // Determine the animation phase based on scroll progress and direction.
-            // This is more robust than relying on onEnter/onLeave.
-            if (self.progress > 0 && self.progress < 1) {
-                Oracle.state.animation_phase = 'PILLARS_SCROLL';
-            } else if (self.progress === 1 && self.direction === 1) {
-                Oracle.state.animation_phase = 'HANDOFF_AWAIT';
-            } else if (self.progress < 1 && self.direction === -1) {
-                Oracle.state.animation_phase = 'PILLARS_SCROLL'; // When scrolling back up
-            } else {
-                 Oracle.state.animation_phase = 'IDLE'; // Before starting or after finishing
-            }
-            
-            // Now, update the HUD and log the full state.
-            Oracle.updateHUD('c-scroll', `${(self.progress * 100).toFixed(0)}%`);
-            Oracle.updateHUD('c-rot-y', (cube.rotation.y * (180 / Math.PI)).toFixed(1));
-            Oracle.updateAndLog(cube, self);
-        }
-    }
-});
-
-                // Pin the visuals column so the cube stays in place while text scrolls.
+                masterTl.to(cube.rotation, { y: Math.PI * 3, x: Math.PI * -1.5, ease: 'none' });
+                masterTl.to(cube.scale, { x: 1.2, y: 1.2, z: 1.2, ease: 'power1.inOut', yoyo: true, repeat: 1 }, 0);
+                
+                // Pin the visuals column so it stays in view
                 ScrollTrigger.create({
                     trigger: elements.masterTrigger,
                     start: 'top top',
@@ -257,22 +252,22 @@ const masterTl = gsap.timeline({
                     pin: elements.visualsCol,
                     pinSpacing: false
                 });
-                
-                masterTl.to(cube.rotation, { y: Math.PI * 3, x: Math.PI * -1.5, ease: 'none' }, 0);
-                masterTl.to(cube.scale, { x: 1.2, y: 1.2, z: 1.2, ease: 'power1.inOut', yoyo: true, repeat: 1 }, 0);
 
-                // NEW, SIMPLER TEXT ANIMATION:
-                // Create a separate, simple animation for each text pillar.
+                // ============================================
+                // TEXT PILLAR ANIMATION - This is handled SEPARATELY.
+                // ============================================
                 elements.textPillars.forEach((pillar) => {
+                    // We animate the inner wrapper, but trigger based on the parent pillar element
                     gsap.from(pillar.querySelector('.text-anim-wrapper'), {
                         scrollTrigger: {
-                            trigger: pillar,
-                            start: 'top 60%', // Start fading in when the pillar top hits 60% from the top of the viewport
-                            end: 'bottom 40%',// Start fading out when the pillar bottom hits 40% from the top
-                            scrub: true
+                            trigger: pillar, // Trigger is the whole pillar section
+                            start: 'top 60%', // Animation starts when the top of the pillar is 60% down the screen
+                            end: 'bottom 40%',// Animation ends when the bottom of the pillar is 40% down the screen
+                            scrub: true,
                         },
                         autoAlpha: 0,
-                        y: 50
+                        y: 50, // Animate it moving up slightly as it fades in
+                        ease: 'power1.inOut'
                     });
                 });
 
