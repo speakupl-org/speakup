@@ -631,19 +631,14 @@ html.menu-open {
     .pull-quote { margin: 2rem 0; }
 }
 /* =========================================================================
-   10. METHOD PAGE STYLES - REVISED FOR "IGLOO" SCROLLYTELLING EFFECT
+   METHOD PAGE STYLES - SOVEREIGN PROTOCOL v43.1
    ========================================================================= */
 
-/* --- Main Layout & Handoff Helpers --- */
+/* --- Main Layout Container --- */
 .scrolly-container {
     display: flex;
     gap: 4rem; 
     align-items: flex-start;
-}
-
-/* This class is added by JS to hide the original column during Flip */
-.pillar-visuals-col.is-exiting {
-    visibility: hidden;
 }
 
 /* --- 1. The Pinned Visuals Column (The "Sticky" Part) --- */
@@ -658,7 +653,9 @@ html.menu-open {
     display: flex;
     justify-content: center;
     align-items: center;
-    pointer-events: none; /* <-- THIS IS THE FIX. */
+    /* SOVEREIGN FIX: Prevents the pinned column from capturing mouse events
+       and blocking interactions with the text scrolling underneath. */
+    pointer-events: none;
 }
 
 /* --- 2. 3D Scene & Object Setup --- */
@@ -667,7 +664,6 @@ html.menu-open {
     height: 200px;
     position: relative;
     transform-style: preserve-3d;
-    transform: translateZ(100px); 
 }
 
 .object-3d {
@@ -676,16 +672,17 @@ html.menu-open {
     position: absolute;
     transform-style: preserve-3d;
     transform: translateZ(-100px); 
-    will-change: transform; /* Optimization for animation */
+    will-change: transform; /* Performance optimization */
 }
 
 .face {
     position: absolute;
     width: 200px;
     height: 200px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
 }
 
 .face.front  { transform: rotateY(  0deg) translateZ(100px); }
@@ -700,33 +697,33 @@ html.menu-open {
     flex: 1;
     width: 50%;
     padding-left: 2rem;
-    min-height: 300vh;
 }
 
 .pillar-text-content {
-    padding-top: 15vh;
-    padding-bottom: 25vh;
+    min-height: 80vh; /* Give each section enough space to trigger its animation */
     display: flex;
     flex-direction: column;
     justify-content: center;
-    /* FOUC FIX: Hide all text sections by default */
+
+    /* SOVEREIGN FIX (FOUC): Hide all text sections by default. */
     opacity: 0;
     visibility: hidden;
 }
 
-/* FOUC FIX: Make the first text section visible on page load. */
+/* SOVEREIGN FIX (FOUC): Make an EXCEPTION for the first text section. */
 .pillar-text-content:first-of-type {
     opacity: 1;
     visibility: visible;
 }
 
 .pillar-text-content:last-of-type {
-    padding-bottom: 15vh;
+    min-height: 0;
+    padding-bottom: 5vh;
 }
 
 .text-anim-wrapper {
     max-width: 45ch;
-    will-change: transform, opacity; /* Optimization for animation */
+    will-change: transform, opacity; /* Performance optimization */
 }
 
 .pillar-number {
@@ -761,18 +758,19 @@ html.menu-open {
     font-size: 1.1rem;
     line-height: 1.7;
     color: #a0a0a0;
+} 
+
 }
 
-
-/* --- 4. Styles for the "Landed" Thumbnail in Summary Section --- */
+/* --- 4. Handoff & Summary Section Styles --- */
 .method-summary {
-    text-align: center; /* Center the content of the summary section */
+    text-align: center;
+    padding-top: 10vh; /* Give space above the landed logo */
 }
 
 .summary-thumbnail-placeholder {
-    width: 200px;
-    max-width: 40%;
-    aspect-ratio: 1 / 1;
+    width: 163px; /* Match SVG viewBox */
+    height: 163px;
     margin: 0 auto 2rem;
     position: relative; 
 }
@@ -780,27 +778,35 @@ html.menu-open {
 .summary-thumbnail-clipper {
     width: 100%;
     height: 100%;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    /* This ensures the 3D object inside behaves correctly */
     position: relative; 
+    border-radius: 8px; /* Optional: if you want a rounded container */
+    overflow: hidden; /* Optional */
 }
 
-/* This targets the cube *after* it has been Flipped into the clipper */
+/* The Stunt Double, once inside the clipper, fills the space */
 .summary-thumbnail-clipper .object-3d {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    /* We reset the transform so it fits nicely inside the clipper */
-    transform: none; 
+    transform: none; /* Reset transform after Flip */
+}
+
+/* MORPH STYLES: Define how the morphed shape and its container should look */
+#actor-3d-stunt-double .face.front {
+    background: transparent !important;
+    border: none;
+}
+
+#morph-path {
+    fill: #f0f0f0; /* Color of the final logo shape */
+    stroke: none;
 }
 
 
-/* --- 5. Mobile & Responsive Styles --- */
-@media (max-width: 768px) {
+/* --- 5. Mobile & Responsive Fallbacks --- */
+@media (max-width: 1024px) {
     .scrolly-container {
         flex-direction: column;
     }
@@ -815,24 +821,20 @@ html.menu-open {
         position: static; 
         top: auto;
         height: auto;
-        margin-bottom: 2rem;
+        margin-bottom: 4rem;
         perspective: none;
     }
     
     .pillar-text-content {
        min-height: auto;
        padding: 0 0 4rem 0;
-       /* On mobile, all text is visible from the start. No JS animation. */
+       /* On mobile, all text is visible from the start. */
        opacity: 1;
        visibility: visible;
     }
 
     .pillar-text-content:last-of-type {
         padding-bottom: 0;
-    }
-
-    .text-anim-wrapper {
-        text-align: left;
     }
 }
 
@@ -1501,26 +1503,6 @@ body.no-scroll {
 body.scroll-locked {
     overflow: hidden;
 }
-
-/* V30.1 "AEGIS" PROTOCOL - REMOVE THIS ENTIRE BLOCK */
-#actor-3d-stunt-double.is-logo-final-state {
-    transform-style: flat;
-    transform: none !important; 
-}
-
-#actor-3d-stunt-double.is-logo-final-state .face {
-    background: transparent !important;
-    border: none !important;
-    transition: background 0.3s ease, border 0.3s ease;
-}
-
-#actor-3d-stunt-double.is-logo-final-state .face.front {
-    transform: none !important;
-    opacity: 1 !important;
-    background: url('../images/logo.svg') center / contain no-repeat !important; 
-}
-
-/* NEW MORPHSVG STYLES */
 
 /* The stunt double's front face is now just a transparent container */
 #actor-3d-stunt-double .face.front {
