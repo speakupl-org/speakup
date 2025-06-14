@@ -8,59 +8,100 @@ begins. The initialization flow is now restructured for guaranteed order of oper
 
 */
 
-// Oracle v44.0 - The "Sovereign" Protocol (Diagnostic Correction)
+// Oracle v45.0 - The "Sovereign" Protocol with "Sisyphus" Pre-Flight Validation
 const Oracle = {
-    // config, utility, performance, init, _timestamp, etc., remain the same.
     config: { verbosity: 1, },
-    utility: { throttle: (func, limit) => { let inThrottle; return function() { const args = arguments; const context = this; if (!inThrottle) { func.apply(context, args); inThrottle = true; setTimeout(() => inThrottle = false, limit); } }; } },
-    performance: { benchmark: (label, functionToTest) => { const s=performance.now(); const r=functionToTest(); const e=performance.now(); const d=(e-s).toFixed(3); const c=d<50?'#A3BE8C':(d<200?'#EBCB8B':'#BF616A'); if(Oracle.config.verbosity>0){console.log(`%c[ORACLE BENCHMARK @ ${Oracle._timestamp()}: ${label}] - %cExecution Time: ${d}ms`, 'color: #8FBCBB; font-weight: bold;',`color: ${c};`); Oracle.updateHUD('c-exec-time',`${d}ms`,c);} return r;} },
-
-    runSelfDiagnostic: () => {
-        if (Oracle.config.verbosity < 1) return;
-        const groupMethod = Oracle.config.verbosity >= 2 ? console.group : console.groupCollapsed;
-        console.group(`%c[ORACLE SELF-DIAGNOSTIC (SOVEREIGN INTEGRITY PROTOCOL)]`, 'color: #D08770; font-weight: bold;');
-        
-        // --- 1. Dependency Verification ---
-        groupMethod('%c1. Dependency Verification', 'color: #EBCB8B;');
-            const checkDep = (lib, name) => console.log(`  - ${name}:`, lib ? '%c✅ FOUND' : '%c❌ MISSING!', lib ? 'color: #A3BE8C;' : 'color: #BF616A; font-weight: bold;');
-            checkDep(window.gsap, 'GSAP Core');
-            checkDep(window.ScrollTrigger, 'ScrollTrigger Plugin');
-            checkDep(window.Flip, 'Flip Plugin');
-        console.groupEnd();
-        
-        // --- 2. Oracle Internal Integrity ---
-        groupMethod('%c2. Oracle Internal Integrity', 'color: #EBCB8B;');
-            const expectedMethods = ['init', 'utility', 'performance', 'reportStatus', '_timestamp', 'log', 'scan', 'group', 'groupEnd', 'report', 'warn', 'updateHUD', 'trackScrollTrigger', 'runSelfDiagnostic'];
-            let integrityOk = true;
-            expectedMethods.forEach(methodName => {
-                if (typeof Oracle[methodName] !== 'undefined') {
-                    console.log(`  - Property/Method '${methodName}': %c✅ OK`, 'color: #A3BE8C;');
-                } else {
-                    console.log(`  - Property/Method '${methodName}': %c❌ MISSING/INVALID!`, 'color: #BF616A; font-weight: bold;');
-                    integrityOk = false;
+    
+    utility: { 
+        throttle: (func, limit) => {
+            let inThrottle;
+            return function() {
+                const args = arguments;
+                const context = this;
+                if (!inThrottle) {
+                    func.apply(context, args);
+                    inThrottle = true;
+                    setTimeout(() => inThrottle = false, limit);
                 }
-            });
-            if (integrityOk) { Oracle.report("Oracle internal integrity verified."); } 
-            else { Oracle.warn("Oracle integrity compromised! Check for missing methods."); }
-        console.groupEnd();
+            };
+        }
+    },
+    
+    performance: { 
+        benchmark: (label, functionToTest) => { 
+            const s = performance.now(); 
+            const r = functionToTest(); 
+            const e = performance.now(); 
+            const d = (e-s).toFixed(3); 
+            const c = d < 50 ? '#A3BE8C' : (d < 200 ? '#EBCB8B' : '#BF616A'); 
+            if(Oracle.config.verbosity > 0) {
+                console.log(`%c[ORACLE BENCHMARK @ ${Oracle._timestamp()}: ${label}] - %cExecution Time: ${d}ms`, 'color: #8FBCBB; font-weight: bold;',`color: ${c};`); 
+                Oracle.updateHUD('c-exec-time',`${d}ms`,c);
+            } 
+            return r;
+        }
+    },
 
-        // --- 3. Basic Environment Sanity Check ---
-        // The flawed architectural check has been REMOVED.
-        groupMethod('%c3. Environment Sanity Check', 'color: #EBCB8B;');
-            console.log(`%c  - Viewport:`, 'color: #88C0D0;', `${window.innerWidth}w x ${window.innerHeight}h`);
-            const contentCount = document.querySelectorAll('.pillar-text-content').length;
-            const wrapperCount = document.querySelectorAll('.text-anim-wrapper').length;
-            console.log(`%c  - Pillar Content Found:`, 'color: #88C0D0;', contentCount);
-            console.log(`%c  - Anim Wrappers Found:`, 'color: #88C0D0;', wrapperCount);
-            if (contentCount !== wrapperCount) {
-                Oracle.warn(`Pillar Mismatch Detected! Found ${contentCount} content divs and ${wrapperCount} wrapper divs. This will cause animation errors.`);
-            }
-        console.groupEnd();
+    // <<<< SISYPHUS v45 UPGRADE: PRE-FLIGHT VALIDATION >>>>
+    // This function runs BEFORE animation setup to catch critical DOM errors.
+    validate: (elements) => {
+        let isValid = true;
+        const groupMethod = Oracle.config.verbosity >= 2 ? console.group : console.groupCollapsed;
+        groupMethod('%c[ORACLE PRE-FLIGHT VALIDATION]', 'color: #D08770; font-weight: bold;');
+        
+        // 1. Pillar-Wrapper Integrity Check
+        const contentCount = elements.pillars?.length || 0;
+        const wrapperCount = elements.textWrappers?.length || 0;
+        if (contentCount !== wrapperCount) {
+            console.error(`%c  - Pillar Integrity: ❌ FAILED! Mismatch detected.`, 'color: #BF616A; font-weight: bold;');
+            console.log(`    - Found ${contentCount} '.pillar-text-content' elements.`);
+            console.log(`    - Found ${wrapperCount} '.text-anim-wrapper' elements.`);
+            Oracle.updateHUD('c-validation-status', 'PILLAR FAIL', '#BF616A');
+            isValid = false;
+        } else {
+            console.log(`%c  - Pillar Integrity: ✅ OK (${contentCount} pairs found)`, 'color: #A3BE8C;');
+        }
+        
+        // Add any future critical DOM checks here. For example:
+        // if (!elements.heroActor) { /* ... fail validation ... */ }
         
         console.groupEnd();
+        
+        // Throw a blocking error if validation fails, preventing the freeze.
+        if (!isValid) {
+            throw new Error("Sovereign Validation Failed: Critical DOM structure error detected. Halting execution to prevent system freeze.");
+        }
+        
+        Oracle.report("All Pre-Flight checks passed.");
+        Oracle.updateHUD('c-validation-status', 'PASS', '#A3BE8C');
     },
-    // The rest of the Oracle object...
-    init: (callback) => {const s=localStorage.getItem('oracleVerbosity');if(s!==null)Oracle.config.verbosity=parseInt(s,10);const p=new URLSearchParams(window.location.search);const v=p.get('oracle_verbosity');if(v!==null&&v!==''){const u=parseInt(v,10);if(!isNaN(u))Oracle.config.verbosity=u}if(callback&&typeof callback==='function')callback()},_timestamp:()=>new Date().toLocaleTimeString('en-US',{hour12:false}),log:(e,l)=>{if(Oracle.config.verbosity<1||!e)return;const m=Oracle.config.verbosity>=2?console.group:console.groupCollapsed;m(`%c[ORACLE LOG @ ${Oracle._timestamp()}: ${l}]`,'color:#D81B60; font-weight:bold;');const s=window.getComputedStyle(e);const t={scale:gsap.getProperty(e,"scale"),rotationX:gsap.getProperty(e,"rotationX"),rotationY:gsap.getProperty(e,"rotationY"),z:gsap.getProperty(e,"z")};const b=e.getBoundingClientRect();console.log(`%c  - Target:`,'color:#81A1C1;',`${e.tagName}#${e.id||e.className}`);console.log(`%c  - Transform:`,'color:#81A1C1;',`{ RotX: ${t.rotationX.toFixed(2)}, RotY: ${t.rotationY.toFixed(2)}, Scale: ${t.scale.toFixed(2)}, Z: ${t.z.toFixed(2)} }`);console.groupEnd()},scan:(l,d)=>{if(Oracle.config.verbosity<1)return;const m=Oracle.config.verbosity>=2?console.group:console.groupCollapsed;m(`%c[ORACLE SCAN @ ${Oracle._timestamp()}: ${l}]`,'color:#B48EAD;');for(const k in d){console.log(`%c  - ${k}:`,'color:#88C0D0;',d[k])}console.groupEnd()},group:(l)=>{if(Oracle.config.verbosity<1)return;console.group(`%c[ORACLE ACTION @ ${Oracle._timestamp()}: ${l}]`,'color:#A3BE8C;font-weight:bold;')},groupEnd:()=>{if(Oracle.config.verbosity<1)return;console.groupEnd()},trackScrollTrigger:(i,l)=>{},report:(m)=>console.log(`%c[SOVEREIGN REPORT @ ${Oracle._timestamp()}]:`,'color:#5E81AC; font-weight:bold;',m),warn:(m)=>console.warn(`%c[SOVEREIGN WARNING @ ${Oracle._timestamp()}]:`,'color:#EBCB8B;',m),reportStatus:(m,c='#88C0D0')=>{Oracle.updateHUD('c-protocol-status',m,c)},updateHUD:(i,v,c='#E5E9F0')=>{const e=document.getElementById(i);if(e){e.textContent=v;e.style.color=c}}
+
+    init: (callback) => {
+        const storedVerbosity = localStorage.getItem('oracleVerbosity');
+        if (storedVerbosity !== null) Oracle.config.verbosity = parseInt(storedVerbosity, 10);
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlVerbosity = urlParams.get('oracle_verbosity');
+        if (urlVerbosity !== null && urlVerbosity !== '') { const parsedVerbosity = parseInt(urlVerbosity, 10); if (!isNaN(parsedVerbosity)) Oracle.config.verbosity = parsedVerbosity; }
+        if(callback && typeof callback === 'function') callback();
+    },
+    
+    _timestamp: () => new Date().toLocaleTimeString('en-US', {hour12: false}),
+    
+    log: (el, label) => { if (Oracle.config.verbosity < 1 || !el) return; const groupMethod = Oracle.config.verbosity >= 2 ? console.group : console.groupCollapsed; groupMethod(`%c[ORACLE LOG @ ${Oracle._timestamp()}: ${label}]`, 'color: #D81B60; font-weight: bold;'); const style = window.getComputedStyle(el); const transform = {scale:gsap.getProperty(el,"scale"),rotationX:gsap.getProperty(el,"rotationX"),rotationY:gsap.getProperty(el,"rotationY"),z:gsap.getProperty(el,"z")}; const bounds = el.getBoundingClientRect(); console.log(`%c  - Target:`, 'color: #81A1C1;',`${el.tagName}#${el.id||el.className.split(' ')[0]}`); console.log(`%c  - Transform:`, 'color: #81A1C1;',`{ RotX: ${transform.rotationX.toFixed(2)}, RotY: ${transform.rotationY.toFixed(2)}, Scale: ${transform.scale.toFixed(2)}, Z: ${transform.z.toFixed(2)} }`); console.log(`%c  - Style:`, 'color: #81A1C1;',`{ Opacity: ${style.opacity}, Visibility: ${style.visibility} }`); console.log(`%c  - Geometry:`, 'color: #81A1C1;',`{ X: ${bounds.left.toFixed(1)}, Y: ${bounds.top.toFixed(1)}, W: ${bounds.width.toFixed(1)}, H: ${bounds.height.toFixed(1)} }`); console.groupEnd(); },
+    
+    scan: (label, data) => { if(Oracle.config.verbosity < 1) return; const groupMethod = Oracle.config.verbosity >= 2 ? console.group : console.groupCollapsed; groupMethod(`%c[ORACLE SCAN @ ${Oracle._timestamp()}: ${label}]`, 'color: #B48EAD; font-weight: normal;'); for(const key in data) { console.log(`%c  - ${key}:`, 'color: #88C0D0;', data[key]); } console.groupEnd(); },
+    
+    group: (label) => { if(Oracle.config.verbosity < 1) return; console.group(`%c[ORACLE ACTION @ ${Oracle._timestamp()}: ${label}]`, 'color: #A3BE8C; font-weight: bold;'); },
+    
+    groupEnd: () => { if (Oracle.config.verbosity < 1) return; console.groupEnd(); },
+    
+    report: (message) => console.log(`%c[SOVEREIGN REPORT @ ${Oracle._timestamp()}]:`, 'color: #5E81AC; font-weight: bold;', message),
+    
+    warn: (message) => console.warn(`%c[SOVEREIGN WARNING @ ${Oracle._timestamp()}]:`, 'color: #EBCB8B;', message),
+    
+    reportStatus: (message, color = '#88C0D0') => { Oracle.updateHUD('c-protocol-status', message, color); },
+    
+    updateHUD: (id, value, color = '#E5E9F0') => { const el = document.getElementById(id); if(el){el.textContent=value;el.style.color=color;} }
 };
 
 // --- The rest of your functions are here, unmodified ---
@@ -236,100 +277,83 @@ const setupHandoff = (elements, masterStoryTl) => {
 };
 
 // =========================================================================
-//         CYNOSURE ARCHITECTURE v44: Decoupled Pin & Animation
+//         SISYPHUS ARCHITECTURE v45: Pre-Flight Validation
 // =========================================================================
 function setupAnimations() {
     gsap.registerPlugin(ScrollTrigger, Flip);
     console.clear();
-    Oracle.report(`Sovereign Build v44 "Cynosure" Initialized. Verbosity: ${Oracle.config.verbosity}`);
+    Oracle.report(`Sovereign Build v45 "Sisyphus" Initialized. Verbosity: ${Oracle.config.verbosity}`);
+    Oracle.updateHUD('c-oracle-version', 'SISYPHUS', '#D08770');
     Oracle.reportStatus('SYSTEM BOOT', '#5E81AC');
+    
+    // Step 1: Get all elements FIRST, outside of any GSAP context or benchmark.
+    // This makes them available for validation.
+    const elements = {
+        heroActor: getElement('#actor-3d'),
+        stuntActor: getElement('#actor-3d-stunt-double'),
+        placeholder: getElement('#summary-placeholder'),
+        placeholderClipper: getElement('.summary-thumbnail-clipper'),
+        pillars: getElement('.pillar-text-content', true),
+        textWrappers: getElement('.text-anim-wrapper', true),
+        visualsCol: getElement('.pillar-visuals-col'),
+        textCol: getElement('.pillar-text-col'), 
+        handoffPoint: getElement('#handoff-point'),
+        stuntActorFaces: getElement('#actor-3d-stunt-double .face:not(.front)', true)
+    };
+    
+    // Step 2: Perform Pre-Flight Validation.
+    // The try/catch block ensures that if validation fails, the script halts gracefully
+    // instead of proceeding to a guaranteed freeze.
+    try {
+        Oracle.validate(elements);
+    } catch (e) {
+        Oracle.warn(e.message);
+        Oracle.reportStatus('VALIDATION HALT', '#BF616A');
+        return; // Halt all further execution cleanly.
+    }
 
+    // Step 3: Proceed with animation setup only if validation passes.
     const ctx = Oracle.performance.benchmark('Sovereign Animation Architecture Setup', () => {
         return gsap.context(() => {
-            // This diagnostic is now corrected and will no longer fire false warnings.
-            Oracle.runSelfDiagnostic();
-
-            const elements = {
-                heroActor: getElement('#actor-3d'),
-                stuntActor: getElement('#actor-3d-stunt-double'),
-                placeholder: getElement('#summary-placeholder'),
-                placeholderClipper: getElement('.summary-thumbnail-clipper'),
-                pillars: getElement('.pillar-text-content', true),
-                textWrappers: getElement('.text-anim-wrapper', true),
-                visualsCol: getElement('.pillar-visuals-col'),
-                textCol: getElement('.pillar-text-col'), 
-                handoffPoint: getElement('#handoff-point'),
-                stuntActorFaces: getElement('#actor-3d-stunt-double .face:not(.front)', true)
-            };
-
-            if (Object.values(elements).some(el => !el || (Array.isArray(el) && !el.length))) {
-                Oracle.warn('SOVEREIGN ABORT: Missing critical elements.'); 
-                return;
-            }
-            Oracle.report("Sovereign components verified and locked.");
-    
+            // All code inside this block now runs with the certainty that the DOM is structured correctly.
+            
             const scrubValue = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? false : 1.5;
     
             ScrollTrigger.matchMedia({
                 '(min-width: 1025px)': () => {
-                    Oracle.reportStatus('SCROLLING', '#88C0D0');
-                    
-                    // --- THE CYNOSURE PROTOCOL FIX ---
-                    
-                    // INSTRUCTION 1: THE PINNER. Its only job is to pin the element.
-                    // This creates a stable, predictable layout for other triggers to measure.
-                    ScrollTrigger.create({ 
-                        trigger: elements.textCol, 
-                        pin: elements.visualsCol, 
-                        start: 'top top', 
-                        end: 'bottom bottom' 
-                    });
-                    
-                    // The Aegis throttled logger remains correct and essential for performance.
+                    // Decoupled Pin & Animation pattern is the correct and stable approach.
+                    ScrollTrigger.create({ trigger: elements.textCol, pin: elements.visualsCol, start: 'top top', end: 'bottom bottom' });
+
                     const throttledLogger = Oracle.utility.throttle((self) => {
                         const hero = elements.heroActor;
                         const rotX = gsap.getProperty(hero, "rotationX").toFixed(1);
                         const rotY = gsap.getProperty(hero, "rotationY").toFixed(1);
                         const scale = gsap.getProperty(hero, "scale").toFixed(2);
-                        
-                        Oracle.scan('Live Story Scrub (Throttled)', { 
-                            'Master Progress': `${(self.progress * 100).toFixed(0)}%`, 
-                            'RotX': rotX, 
-                            'RotY': rotY, 
-                            'Scale': scale 
-                        });
-                        
+                        Oracle.scan('Live Story Scrub (Throttled)', { 'Progress': `${(self.progress * 100).toFixed(0)}%`, 'RotX': rotX, 'RotY': rotY, 'Scale': scale });
                         Oracle.updateHUD('c-rot-x', rotX);
                         Oracle.updateHUD('c-rot-y', rotY);
                         Oracle.updateHUD('c-scale', scale);
-                    }, 150); // Log no more than once every 150ms
+                    }, 150);
 
-                    // INSTRUCTION 2: THE ANIMATOR. It scrubs the timeline but does NOT pin.
-                    // It measures the layout created by the Pinner and works reliably within it.
                     const masterStoryTl = gsap.timeline({
                         scrollTrigger: {
-                            trigger: elements.textCol, 
-                            start: 'top top', 
-                            end: 'bottom bottom', 
-                            scrub: scrubValue,
-                            // NO pin property here. This is the key.
+                            trigger: elements.textCol, start: 'top top', end: 'bottom bottom', scrub: scrubValue,
                             onUpdate: (self) => {
-                                // The main onUpdate loop is now extremely lightweight.
                                 Oracle.updateHUD('c-scroll', `${(self.progress * 100).toFixed(0)}%`);
-                                // Heavy console logging is deferred to the throttled function.
                                 throttledLogger(self);
-                            }
+                            },
                         }
                     });
                     
-                    // Assemble the animation narrative as before.
                     setupHeroActor(elements, masterStoryTl);
                     setupTextPillars(elements, masterStoryTl);
-                    
-                    // The handoff function works correctly within this new stable architecture.
                     setupHandoff(elements, masterStoryTl);
                 },
             });
+
+             // --- Final Holistic Telemetry Update ---
+            Oracle.updateHUD('c-gsap-targets', gsap.context.get().targets().length);
+            Oracle.updateHUD('c-st-instances', ScrollTrigger.getAll().length);
         });
     });
 
