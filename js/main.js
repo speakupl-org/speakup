@@ -4,10 +4,10 @@ This version resolves initialization race conditions and fixes internal function
 */
 
 // =========================================================================
-//         ORACLE v44.1 - GRANULAR TELEMETRY ENGINE
+//         ORACLE v44.1 - GRANULAR TELEMETRY ENGINE (CORRECTED)
 // =========================================================================
 const Oracle = {
-    config: { verbosity: 1, logToConsole: true },
+    config: { verbosity: 1, logToConsole: true }, // Comma is here
     state: {
         log_timestamp: null, log_type: "INITIAL_STATE", session_id: `sid-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         scroll_progress: 0, scroll_direction: "NONE", scroll_velocity: 0, animation_phase: "IDLE",
@@ -17,7 +17,7 @@ const Oracle = {
         error_message_text: null, error_stack_trace: null,
         last_network_request: { network_request_url: null, network_request_status_code: null, network_request_response_time: null },
         dom_element_bounding_rect: {}, threejs_renderer_info: {}, gpu_adapter_info: "Unavailable"
-    },
+    }, // Comma is here
     
     init: function(callback) {
         const urlParams = new URLSearchParams(window.location.search);
@@ -30,23 +30,66 @@ const Oracle = {
         this.initPerformanceObserver();
         this.initGlobalErrorHandler();
         if (callback) callback();
-    },
+    }, // Comma is here
 
-    initPerformanceObserver: function() { /* (Listeners for network resources) */ },
+    initPerformanceObserver: function() { /* (Listeners for network resources) */ }, // Comma is here
     
     initGlobalErrorHandler: function() {
         window.onerror = (message, source, lineno, colno, error) => {
             this.state.log_type = "ERROR";
             this.state.error_message_text = message;
             this.state.error_stack_trace = error ? error.stack : `${source} ${lineno}:${colno}`;
-            
-            // FIX #2: Renamed this from the non-existent 'logFullState' to the correct function 'updateAndLog'.
-            // We pass null values because at the time of a global error, we likely don't have a cube or scroll trigger context.
             this.updateAndLog(null, null); 
-            
             return false;
         };
-    },
+    }, // Comma is here
+    
+    updateAndLog: function(three_cube, scroll_trigger) {
+        if (this.config.verbosity < 1) return;
+        const s = this.state;
+        s.log_timestamp = new Date().toISOString();
+        
+        if (s.log_type !== "ERROR") {
+            s.log_type = "STATE_UPDATE";
+        }
+
+        if (scroll_trigger) {
+            s.scroll_progress = scroll_trigger.progress.toFixed(4);
+            s.scroll_direction = scroll_trigger.direction === 1 ? 'DOWN' : 'UP';
+            s.scroll_velocity = scroll_trigger.getVelocity().toFixed(2);
+        }
+        if (three_cube && three_cube.userData.canvas) {
+            s.object_position = { x: three_cube.position.x.toFixed(2), y: three_cube.position.y.toFixed(2), z: three_cube.position.z.toFixed(2) };
+            s.object_scale = { x: three_cube.scale.x.toFixed(2), y: three_cube.scale.y.toFixed(2), z: three_cube.scale.z.toFixed(2) };
+            s.object_rotation = { x: three_cube.rotation.x.toFixed(2), y: three_cube.rotation.y.toFixed(2), z: three_cube.rotation.z.toFixed(2) };
+            s.dom_element_bounding_rect = three_cube.userData.canvas.getBoundingClientRect().toJSON();
+        }
+        if (performance.memory) s.javascript_heap_size = performance.memory.jsHeapSizeLimit;
+        
+        if(this.config.logToConsole) {
+            const logTitle = `%c[ORACLE @ ${s.log_timestamp.split('T')[1].slice(0, -1)}] Phase: ${s.animation_phase}`;
+            const logStyle = 'color: #8FBCBB;';
+            
+            if (this.config.verbosity > 1) {
+                console.group(logTitle, logStyle);
+            } else {
+                console.groupCollapsed(logTitle, logStyle);
+            }
+            
+            console.log(JSON.stringify(this.state, null, 2));
+            console.groupEnd();
+        }
+    }, // <<<<<<<<<<<<< THIS WAS THE MISSING COMMA <<<<<<<<<<<<<
+
+    updateHUD: (id, value, color = '#E5E9F0') => {
+        const el = document.getElementById(id);
+        if (el) { el.textContent = value; if(color) el.style.color = color; }
+    }, // Comma is here
+
+    report: (message) => console.log(`%c[SOVEREIGN REPORT]:`, 'color: #5E81AC; font-weight: bold;', message), // Comma is here
+
+    warn: (message) => console.warn(`%c[SOVEREIGN WARNING]:`, 'color: #D08770;', message) // NO comma on the last item
+}; // End of Oracle object
     
     updateAndLog: function(three_cube, scroll_trigger) {
     if (this.config.verbosity < 1) return;
