@@ -273,7 +273,7 @@ function setupAnimations() {
     console.clear();
     Oracle.report(`Sovereign Build v43.2 Initialized. Verbosity: ${Oracle.config.verbosity}. Use ?oracle_verbosity=2 for max scrutiny.`);
     
-    // The gsap.context(// =========================================================================
+// =========================================================================
 //         SOVEREIGN ARCHITECTURE v43.2: UNIFIED & BENCHMARKED NARRATIVE
 // =========================================================================
 function setupAnimations() {
