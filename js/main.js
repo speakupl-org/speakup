@@ -179,136 +179,90 @@ const setupHeroActor = (elements, masterTl) => {
     Oracle.groupEnd();
 };
 
+// Replace this function
 // SOVEREIGN PROTOCOL: The "Unbroken Chain" for Text Pillars
 const setupTextPillars = (elements, masterTl) => {
     Oracle.group("Text Pillar 'Unbroken Chain' Setup");
 
-    // FIX: This establishes an authoritative JS initial state, overriding the CSS and preventing FOUC "blips".
+    // Establish Authoritative JS Initial State to prevent CSS race conditions
     gsap.set(elements.pillars, { autoAlpha: 0 }); 
     gsap.set(elements.pillars[0], { autoAlpha: 1 });
     gsap.set(elements.textWrappers, { y: 40, rotationX: -15 }); 
     gsap.set(elements.textWrappers[0], { y: 0, rotationX: 0 });
     Oracle.log(elements.pillars[0], "Pillar 1 Initial State (JS Authoritative)");
 
-    // FIX: The single, monolithic animation chain. No ambiguity, no race conditions. This is what stops the blinking.
-    // Transition 1 -> 2
+    // The single, monolithic animation chain.
+    // FIX v43.2: Timings are now more spaced out for a smoother feel.
+    // The relative position markers '<' ensure perfect sequence.
     masterTl
-        .to(elements.textWrappers[0], { y: -40, rotationX: 15, autoAlpha: 0, duration: 0.5, ease: "power2.in" }, 0.5)
-        .set(elements.pillars[1], { autoAlpha: 1 }, ">") // Show new immediately
-        .from(elements.textWrappers[1], { y: 40, rotationX: -15, autoAlpha: 0, duration: 0.5, ease: "power2.out", 
-            onStart: () => Oracle.log(elements.pillars[1], "Pillar 2 Activated")
-        }, "<");
+        // Transition 1 -> 2 (Starts at timeline position 1.0s)
+        .to(elements.textWrappers[0], { y: -40, rotationX: 15, autoAlpha: 0, duration: 0.5, ease: "power2.in" }, 1.0)
+        .set(elements.pillars[1], { autoAlpha: 1 }, "<+=0.25")     // Show new
+        .from(elements.textWrappers[1], { 
+            y: 40, rotationX: -15, autoAlpha: 0, duration: 0.5, ease: "power2.out",
+            // FIX v43.2: "Idempotent Covenant" - `once: true` ensures this log only ever fires ONCE.
+            onStart: () => Oracle.log(elements.pillars[1], "Pillar 2 Activated"),
+            once: true 
+        }, "<")
 
-    // Transition 2 -> 3
-    masterTl
-        .to(elements.textWrappers[1], { y: -40, rotationX: 15, autoAlpha: 0, duration: 0.5, ease: "power2.in" }, 1.5)
-        .set(elements.pillars[2], { autoAlpha: 1 }, ">")
-        .from(elements.textWrappers[2], { y: 40, rotationX: -15, autoAlpha: 0, duration: 0.5, ease: "power2.out",
-             onStart: () => Oracle.log(elements.pillars[2], "Pillar 3 Activated")
+        // Transition 2 -> 3 (Starts at timeline position 3.0s)
+        .to(elements.textWrappers[1], { y: -40, rotationX: 15, autoAlpha: 0, duration: 0.5, ease: "power2.in" }, 3.0)
+        .set(elements.pillars[2], { autoAlpha: 1 }, "<+=0.25")
+        .from(elements.textWrappers[2], { 
+            y: 40, rotationX: -15, autoAlpha: 0, duration: 0.5, ease: "power2.out",
+            // FIX v43.2: "Idempotent Covenant"
+             onStart: () => Oracle.log(elements.pillars[2], "Pillar 3 Activated"),
+             once: true
         }, "<");
     
-    Oracle.report("Unbroken Chain timeline for pillars constructed.");
-    masterTl.totalDuration(4); // Define a clear total duration for the scroll
-    Oracle.scan('Master Timeline Final Duration', { total: masterTl.totalDuration() + 's' });
+    // Let the animations dictate the total duration naturally.
+    Oracle.report(`Unbroken Chain timeline for pillars constructed. Natural duration: ${masterTl.duration()}s`);
     Oracle.groupEnd();
 };
 
 
-// SOVEREIGN PROTOCOL: The "Absorption & Morph" Handoff (Corrected)
-const setupHandoff = (elements, masterStoryTl) => {
-    Oracle.group("Handoff Protocol Setup ('Absorption & Morph')");
+// Replace the 'matchMedia' section inside setupAnimations()
+ScrollTrigger.matchMedia({
+    '(min-width: 1025px)': () => {
+        Oracle.report("Protocol engaged for desktop. Constructing unified timeline.");
 
-    let isAbsorbed = false;
-    // This is the shape of your SVG logo icon from images/logo.svg
-    const logoPathData = "M81.5 1.5C125.8 1.5 161.5 37.2 161.5 81.5C161.5 125.8 125.8 161.5 81.5 161.5C37.2 161.5 1.5 125.8 1.5 81.5C1.5 37.2 37.2 1.5 81.5 1.5Z";
+        // FIX v43.2: Synchronized the pin and scrub end points for perfect alignment.
+        // 'bottom bottom' is the most robust way to ensure the animation lasts exactly
+        // as long as the trigger element is scrolling through the viewport.
+        const triggerConfig = {
+            trigger: elements.textCol,
+            start: 'top top',
+            end: 'bottom bottom', // Use the same end for both for perfect sync
+        };
 
-    ScrollTrigger.create({
-        trigger: elements.handoffPoint,
-        start: 'top 70%', 
-        onToggle: self => Oracle.updateHUD('c-handoff-st-active', self.isActive ? 'ACTIVE' : 'INACTIVE', self.isActive ? '#A3BE8C' : '#BF616A'),
-        
-        onEnter: () => {
-            if (isAbsorbed) return;
-            isAbsorbed = true;
-            
-            Oracle.group('ABSORPTION PROTOCOL INITIATED');
-            Oracle.updateHUD('c-swap-flag', 'ABSORBED', '#EBCB8B');
-            
-            // FIX: Pause the main scroll animation to prevent state conflicts during handoff.
-            masterStoryTl.scrollTrigger.disable(false); // false means don't kill it
-            Oracle.warn('Master ScrollTrigger DISABLED for handoff.');
-            
-            // Capture the final state of the hero actor FROM the master timeline
-            const heroState = {
-                scale: gsap.getProperty(elements.heroActor, "scale"),
-                rotationX: gsap.getProperty(elements.heroActor, "rotationX"),
-                rotationY: gsap.getProperty(elements.heroActor, "rotationY"),
-            };
-            Oracle.scan('Hero Actor State Vector (Pre-Absorption)', heroState);
-            
-            const state = Flip.getState(elements.stuntActor, { props: "transform, opacity" });
-            
-            // Teleport the stunt double and match its state to the hero
-            gsap.set(elements.stuntActor, {
-                autoAlpha: 1,
-                x: elements.heroActor.getBoundingClientRect().left - elements.placeholder.getBoundingClientRect().left,
-                y: elements.heroActor.getBoundingClientRect().top - elements.placeholder.getBoundingClientRect().top,
-                scale: heroState.scale,
-                rotationX: heroState.rotationX,
-                rotationY: heroState.rotationY,
-            });
-            Oracle.log(elements.stuntActor, "Stunt Double State (Teleported & Matched)");
+        ScrollTrigger.create({
+            ...triggerConfig, // Spread the shared config
+            pin: elements.visualsCol,
+            onToggle: self => Oracle.updateHUD('c-master-st-active', self.isActive ? 'PIN_ACTIVE' : 'PIN_INACTIVE', self.isActive ? '#A3BE8C' : '#BF616A'),
+        });
 
-            // FIX: Seamlessly hide the original hero actor. The glitch is gone.
-            gsap.set(elements.heroActor, { autoAlpha: 0 });
-            
-            const absorptionTl = gsap.timeline({
-                onComplete: () => {
-                    // Re-enable scrubbing now that the handoff is done.
-                    masterStoryTl.scrollTrigger.enable();
-                    Oracle.report('Master ScrollTrigger RE-ENABLED. Handoff complete.');
-                    Oracle.groupEnd();
+        const masterStoryTl = gsap.timeline({
+            scrollTrigger: {
+                ...triggerConfig, // Spread the shared config
+                scrub: 1.5,
+                onUpdate: (self) => {
+                    Oracle.updateHUD('c-rot-x', gsap.getProperty(elements.heroActor, "rotationX").toFixed(1));
+                    Oracle.updateHUD('c-rot-y', gsap.getProperty(elements.heroActor, "rotationY").toFixed(1));
+                    Oracle.updateHUD('c-scale', gsap.getProperty(elements.heroActor, "scale").toFixed(2));
+                    Oracle.updateHUD('c-scroll', `${(self.progress * 100).toFixed(0)}%`);
+                    Oracle.trackScrollTrigger(self, "Unified Story Controller");
                 }
-            });
+            }
+        });
 
-            Oracle.report('Phase 2: Initiating FLIP travel, morph, and stabilization.');
-            absorptionTl
-                .add(Flip.from(state, { 
-                    targets: elements.stuntActor, 
-                    duration: 1.2, 
-                    ease: 'power3.inOut'
-                }))
-                // Stabilize rotation and morph into the logo simultaneously
-                .to(elements.stuntActor, { rotationX: 0, rotationY: 0, z: 0, duration: 1.0, ease: "power3.inOut" }, 0.2)
-                .to('#morph-path', { morphSVG: logoPathData, duration: 1.0, ease: 'power3.inOut' }, 0.2)
-                .to(elements.stuntActorFaces, { opacity: 0, duration: 0.4, stagger: 0.05 }, 0.1);
-        },
-
-        // FIX: Implement the "Forced Reset Protocol" for maximum stability on scroll up.
-        onLeaveBack: () => {
-            if (!isAbsorbed) return;
-            isAbsorbed = false;
-
-            Oracle.group('REVERSE PROTOCOL INITIATED (FORCED RESET)');
-            Oracle.updateHUD('c-swap-flag', 'REVERSING', '#BF616A');
-            
-            // Kill any active handoff animations instantly
-            gsap.killTweensOf([elements.stuntActor, '#morph-path', elements.heroActor]);
-            
-            // Reset state to pre-handoff conditions
-            gsap.set(elements.stuntActor, { autoAlpha: 0, clearProps: "all" });
-            gsap.set(elements.heroActor, { autoAlpha: 1 });
-            gsap.set('#morph-path', { morphSVG: "M0,0 H200 V200 H0 Z" }); // Reset morph shape
-            
-            masterStoryTl.scrollTrigger.enable();
-            Oracle.warn('Master ScrollTrigger RE-ENABLED after forced reset.');
-            Oracle.log(elements.heroActor, "Hero Actor State (Forcefully Restored)");
-
-            Oracle.groupEnd();
-        },
-    });
-    Oracle.groupEnd();
-};
+        setupHeroActor(elements, masterStoryTl);
+        setupTextPillars(elements, masterStoryTl);
+        setupHandoff(elements, masterStoryTl); 
+    },
+    '(max-width: 1024px)': () => {
+        Oracle.report("Sovereign Protocol STANDBY. No scrollytelling animations on mobile view.");
+    }
+});
 
 
 // =========================================================================
