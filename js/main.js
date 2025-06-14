@@ -273,8 +273,11 @@ const setupTextPillars = (elements, masterTl) => {
     });
 };
 
-// REVISED AND CORRECTED "ABSORPTION PROTOCOL" HANDOFF v37.6
-const setupHandoff = (elements, heroAnimation) => {
+// =========================================================================
+//   REVISED "ABSORPTION PROTOCOL" HANDOFF (v42 - UNIFIED)
+// =========================================================================
+const setupHandoff = (elements, masterStoryTl) => { // <-- ACCEPTS the one master timeline, renamed for clarity.
+
     let isSwapped = false;
     let isReversing = false;
     Oracle.updateHUD('c-swap-flag', 'FALSE', '#BF616A');
@@ -298,8 +301,8 @@ const setupHandoff = (elements, heroAnimation) => {
             Oracle.updateHUD('c-swap-flag', 'TRUE', '#A3BE8C');
             Oracle.updateHUD('c-event', 'ABSORPTION');
 
-            gsap.set(elements.textWrappers[elements.textWrappers.length - 1], { autoAlpha: 1, y: 0, rotationX: 0 });
-            heroAnimation.scrollTrigger.disable(false);
+            // THE FIX: Correctly disable the MASTER scrollTrigger instance.
+            masterStoryTl.scrollTrigger.disable(false);
 
             Oracle.report('Phase 1: Forcing ST update and capturing state vectors.');
             ScrollTrigger.refresh(true);
@@ -316,7 +319,8 @@ const setupHandoff = (elements, heroAnimation) => {
             
             const absorptionTl = gsap.timeline({
                 onComplete: () => {
-                    heroAnimation.scrollTrigger.enable();
+                    // THE FIX: Re-enable the MASTER scrollTrigger.
+                    masterStoryTl.scrollTrigger.enable();
                     Oracle.updateHUD('c-event', 'STABILIZED / SCROLL ENABLED');
                     Oracle.log(stuntDouble, "Stunt Double State (Post-Absorption/Logo)");
                     Oracle.groupEnd();
@@ -350,8 +354,9 @@ const setupHandoff = (elements, heroAnimation) => {
 
             const reversalTl = gsap.timeline({
                 onComplete: () => {
-                    heroAnimation.scrollTrigger.enable();
-                    heroAnimation.scrollTrigger.update();
+                    // THE FIX: Re-enable the MASTER scrollTrigger.
+                    masterStoryTl.scrollTrigger.enable();
+                    masterStoryTl.scrollTrigger.update();
                     Oracle.updateHUD('c-event', 'SCROLLING'); Oracle.log(hero, "Hero State (Restored)");
                     Oracle.groupEnd();
                     isReversing = false;
@@ -364,9 +369,8 @@ const setupHandoff = (elements, heroAnimation) => {
 };
 
             // =========================================================================
-            //         SOVEREIGN ARCHITECTURE v42: UNIFIED NARRATIVE
+            //            SOVEREIGN ARCHITECTURE v42: UNIFIED NARRATIVE SETUP
             // =========================================================================
-            
             function setupAnimations() {
                 gsap.registerPlugin(ScrollTrigger, Flip);
                 console.clear();
@@ -394,22 +398,19 @@ const setupHandoff = (elements, heroAnimation) => {
                         '(min-width: 1025px)': () => {
                             Oracle.report("Protocol (v42 - UNIFIED Narrative Timeline) engaged for desktop.");
                             
-                            // PINNING IS SEPARATE - This is correct.
                             ScrollTrigger.create({
                                 trigger: elements.textCol, pin: elements.visualsCol,
                                 start: 'top top', end: 'bottom bottom',
                                 onToggle: self => Oracle.updateHUD('c-master-st-active', self.isActive ? 'PIN_ACTIVE' : 'PIN_INACTIVE', self.isActive ? '#A3BE8C' : '#BF616A'),
                             });
             
-                            // === THE ONE MASTER STORY TIMELINE ===
-                            // All animations will now be added to this single timeline.
                             const masterStoryTl = gsap.timeline({
                                 scrollTrigger: {
                                     trigger: elements.textCol,
                                     start: 'top top',
                                     end: 'bottom bottom',
                                     scrub: scrubValue,
-                                    // This onUpdate now controls EVERYTHING.
+                                    markers: Oracle.config.verbosity > 1,
                                     onUpdate: (self) => {
                                         const hero = elements.heroActor;
                                         const rotX = gsap.getProperty(hero, "rotationX").toFixed(1);
@@ -417,30 +418,36 @@ const setupHandoff = (elements, heroAnimation) => {
                                         const scale = gsap.getProperty(hero, "scale").toFixed(2);
                                         const progress = (self.progress * 100).toFixed(0);
             
-                                        // Existing HUD updates are perfect.
                                         Oracle.scan('Live Story Scrub', { 'Master Progress': `${progress}%`, 'RotX': rotX, 'RotY': rotY, 'Scale': scale });
                                         Oracle.updateHUD('c-rot-x', rotX);
                                         Oracle.updateHUD('c-rot-y', rotY);
                                         Oracle.updateHUD('c-scale', scale);
                                         Oracle.updateHUD('c-scroll', `${progress}%`);
-            
-                                        // Existing Trackers are moved here.
                                         Oracle.trackScrollTrigger(self, "Unified Story Controller");
                                     }
                                 }
                             });
                             
-                            // Calling the 'recipes' and feeding them the ONE master timeline.
                             setupHeroActor(elements, masterStoryTl);
-                            setupTextPillars(elements, masterStoryTl); // Pass the master timeline in.
-                            
-                            // Handoff is complex and event-based (onEnter), so it remains separate.
-                            // We pass it masterStoryTl so it knows which animation to disable/enable.
-                            setupHandoff(elements, masterStoryTl); 
+                            setupTextPillars(elements, masterStoryTl);
+                            setupHandoff(elements, masterStoryTl);
+            
+                            // === OVERKILL TRACKER #4: MASTER NARRATIVE INTEGRITY CHECK ===
+                            // This is the sophisticated replacement for the lost tracker.
+                            Oracle.scan('Master Narrative Integrity Check [FINAL]', {
+                                'Status': 'All chapters have been added to the master story.',
+                                'Final Duration (seconds)': masterStoryTl.duration().toFixed(2),
+                                'Total Child Animations': masterStoryTl.getChildren().length,
+                                'ScrollTrigger Association': masterStoryTl.scrollTrigger.isActive ? '✅ ACTIVE' : '❌ INACTIVE'
+                            });
+                            // ========================================================
                         },
-                        // Other breakpoints can be updated similarly if needed. For now, we focus on desktop.
-                        '(min-width: 769px) and (max-width: 1024px)': () => { /* ... */ },
-                        '(max-width: 768px)': () => { /* ... */ }
+                        '(min-width: 769px) and (max-width: 1024px)': () => {
+                            // Placeholder for tablet logic
+                        },
+                        '(max-width: 768px)': () => {
+                            // Placeholder for mobile logic
+                        }
                     });
                 });
                 return ctx;
