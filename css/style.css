@@ -1547,3 +1547,20 @@ body.scroll-locked {
     background-position: center;
     background-repeat: no-repeat;
 }
+
+// ======================= v37.4 "AEGIS" PROTOCOL ADDITION: LOGO TRANSFORMATION =======================
+.to(stuntDouble, {
+    rotationX: 0,
+    rotationY: 0,
+    z: 0, // CORRECTS a-priori rotation state to guarantee a flat final transform
+    duration: 0.6,
+    ease: "power3.inOut",
+    onStart: () => Oracle.report('Phase 3: Initiating logo transformation.'),
+}, '+=0.2') // Start 0.2s after the elastic animation completes for a smooth transition
+
+.call(() => {
+    // This call triggers your CSS to apply the final logo styles
+    stuntDouble.classList.add('is-logo-final-state');
+    Oracle.log(stuntDouble, "AEGIS Protocol Complete: Stunt Double is now the final logo.");
+}, [], '>'); // Fires immediately after the flattening animation is complete
+
