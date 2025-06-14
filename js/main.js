@@ -177,7 +177,7 @@ const setupHandoff = (elements, masterTl) => {
         start: 'top 70%',
         onToggle: self => Oracle.updateHUD('c-handoff-st-active', self.isActive ? 'TRUE' : 'FALSE', self.isActive ? '#A3BE8C' : '#BF616A'),
         
-        onEnter: () => {
+                onEnter: () => {
             if (isSwapped || isReversing) return;
             isSwapped = true;
             
@@ -187,9 +187,8 @@ const setupHandoff = (elements, masterTl) => {
             
             masterTl.scrollTrigger.disable();
 
-            // --- FIX FOR ANOMALY #1: State Matching ---
             Oracle.report('Phase 1: Forcing ST update and capturing state vectors.');
-            ScrollTrigger.refresh(true); // Force ScrollTrigger to render the latest scrub values
+            ScrollTrigger.refresh(true);
 
             const heroProps = {
                 scale: gsap.getProperty(hero, "scale"),
@@ -209,12 +208,10 @@ const setupHandoff = (elements, masterTl) => {
             });
             Oracle.log(stuntDouble, "Stunt Double State (Teleported & Matched)");
             
-            // Phase 2: The Absorption Timeline
             const absorptionTl = gsap.timeline({
                 onComplete: () => {
-                    stuntDouble.classList.add('is-logo-final-state');
                     Oracle.updateHUD('c-event', 'STABILIZED');
-                    Oracle.log(stuntDouble, "Stunt Double State (Post-Absorption)");
+                    Oracle.log(stuntDouble, "Stunt Double State (Post-Absorption/Logo)");
                     Oracle.groupEnd();
                 }
             });
@@ -239,6 +236,7 @@ const setupHandoff = (elements, masterTl) => {
                 })
             );
 
+            // THE ENTIRE CHAIN MUST BE ONE, UNBROKEN STATEMENT
             absorptionTl
                 .to(hero, { autoAlpha: 0, scale: '-=0.1', duration: 0.4, ease: "power2.in" }, 0)
                 .to(stuntActorFaces, { opacity: 0, duration: 0.6, ease: "power2.in", stagger: 0.05 }, 0.6)
@@ -253,24 +251,24 @@ const setupHandoff = (elements, masterTl) => {
                     duration: 0.8,
                     ease: 'elastic.out(1, 0.5)'
                 }, 1.3)
-                .to(stuntDouble, { scaleX: 1, scaleY: 1, duration: 0.8, ease: 'elastic.out(1, 0.5)' }, 1.3)
-        }
-   // ======================= v37.4 "AEGIS" PROTOCOL ADDITION: LOGO TRANSFORMATION =======================
+                .to(stuntDouble, { scaleX: 1, scaleY: 1, duration: 0.8, ease: 'elastic.out(1, 0.5)' }, 1.3) // NO SEMICOLON OR BRACE HERE
+
+                // ======================= v37.4 "AEGIS" PROTOCOL ADDITION: LOGO TRANSFORMATION =======================
                 .to(stuntDouble, {
                     rotationX: 0,
                     rotationY: 0,
-                    z: 0, // CORRECTS a-priori rotation state to guarantee a flat final transform
+                    z: 0,
                     duration: 0.6,
                     ease: "power3.inOut",
                     onStart: () => Oracle.report('Phase 3: Initiating logo transformation.'),
-                }, '+=0.2') 
+                }, '+=0.2')
                 
                 .call(() => {
                     stuntDouble.classList.add('is-logo-final-state');
                     Oracle.log(stuntDouble, "AEGIS Protocol Complete: Stunt Double is now the final logo.");
-                }, [], '>'); 
+                }, [], '>');
                 // =================================== END OF AEGIS PROTOCOL ADDITION ===================================
-        },
+        }, 
         // --- FIX FOR ANOMALY #2: State Corruption ---
         onLeaveBack: () => {
             if (!isSwapped) return;
