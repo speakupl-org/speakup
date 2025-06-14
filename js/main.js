@@ -350,7 +350,7 @@ const setupHandoff = (elements, masterStoryTl) => {
                 
                 .call(() => {
                     Oracle.log(elements.stuntActor, "AEGIS Protocol Complete: SVG Morph complete.");
-                }, [], '>');
+                });
         },
 
         // AROUND LINE 328
