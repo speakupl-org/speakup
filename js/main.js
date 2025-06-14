@@ -8,15 +8,31 @@ begins. The initialization flow is now restructured for guaranteed order of oper
 
 */
 
-// Oracle v38.0 - The "Sovereign" Protocol with Performance & Covenant Sub-protocols
+// Oracle v39.0 - The "Sovereign" Protocol with "Aegis" Throttling Utility
 const Oracle = {
     // Configuration Sub-protocol
     config: {
         verbosity: 1, // Default: 1=collapsed, 2=expanded
     },
 
-    // <<<< NEW SOVEREIGN PROTOCOL v43.1 UPGRADE >>>>
-    // The Performance Sub-protocol for monitoring execution bottlenecks.
+    // <<<< AEGIS PROTOCOL v39.0 UPGRADE >>>>
+    // The Utility sub-protocol for performance-critical operations.
+    utility: {
+        throttle: (func, limit) => {
+            let inThrottle;
+            return function() {
+                const args = arguments;
+                const context = this;
+                if (!inThrottle) {
+                    func.apply(context, args);
+                    inThrottle = true;
+                    setTimeout(() => inThrottle = false, limit);
+                }
+            };
+        }
+    },
+    
+    // Performance Sub-protocol (v43.1)
     performance: {
         benchmark: (label, functionToTest) => {
             if (Oracle.config.verbosity < 1) {
@@ -43,6 +59,7 @@ const Oracle = {
         const groupMethod = Oracle.config.verbosity >= 2 ? console.group : console.groupCollapsed;
         console.group(`%c[ORACLE SELF-DIAGNOSTIC (SOVEREIGN INTEGRITY PROTOCOL)]`, 'color: #D08770; font-weight: bold;');
 
+        // 1. Dependency Verification
         groupMethod('%c1. Dependency Verification', 'color: #EBCB8B;');
             const checkDep = (lib, name) => console.log(`  - ${name}:`, lib ? '%c✅ FOUND' : '%c❌ MISSING!', lib ? 'color: #A3BE8C;' : 'color: #BF616A; font-weight: bold;');
             checkDep(window.gsap, 'GSAP Core');
@@ -50,8 +67,9 @@ const Oracle = {
             checkDep(window.Flip, 'Flip Plugin');
         console.groupEnd();
         
+        // 2. Oracle Integrity Check (Updated for Aegis)
         groupMethod('%c2. Oracle Internal Integrity', 'color: #EBCB8B;');
-            const expectedMethods = ['init', '_timestamp', 'log', 'scan', 'group', 'groupEnd', 'report', 'warn', 'updateHUD', 'trackScrollTrigger', 'runSelfDiagnostic', 'performance'];
+            const expectedMethods = ['init', 'utility', 'performance', '_timestamp', 'log', 'scan', 'group', 'groupEnd', 'report', 'warn', 'updateHUD', 'trackScrollTrigger', 'runSelfDiagnostic'];
             let integrityOk = true;
             expectedMethods.forEach(methodName => {
                 if (typeof Oracle[methodName] !== 'undefined') {
@@ -65,6 +83,7 @@ const Oracle = {
             else { Oracle.warn("Oracle integrity compromised! Check for missing methods."); }
         console.groupEnd();
 
+        // 3. Environment & Element Sanity Check
         groupMethod('%c3. Environment Sanity Check', 'color: #EBCB8B;');
             console.log(`%c  - Viewport:`, 'color: #88C0D0;', `${window.innerWidth}w x ${window.innerHeight}h`);
             const contentCount = document.querySelectorAll('.pillar-text-content').length;
@@ -78,7 +97,8 @@ const Oracle = {
         
         console.groupEnd();
     },
-    
+
+    // REVISED: init now accepts a callback to guarantee execution order
     init: (callback) => {
         const storedVerbosity = localStorage.getItem('oracleVerbosity');
         if (storedVerbosity !== null) Oracle.config.verbosity = parseInt(storedVerbosity, 10);
@@ -96,7 +116,9 @@ const Oracle = {
     log: (el, label) => {
         if (Oracle.config.verbosity < 1) return;
         if (!el) { console.error(`%c[ORACLE LOG @ ${Oracle._timestamp()}: ${label}] ERROR - Element is null.`, 'color: #BF616A;'); return; }
+        
         const groupMethod = Oracle.config.verbosity >= 2 ? console.group : console.groupCollapsed;
+
         groupMethod(`%c[ORACLE LOG @ ${Oracle._timestamp()}: ${label}]`, 'color: #D81B60; font-weight: bold;');
         const style = window.getComputedStyle(el);
         const transform = {
@@ -106,6 +128,7 @@ const Oracle = {
             z: gsap.getProperty(el, "z")
         };
         const bounds = el.getBoundingClientRect();
+
         console.log(`%c  - Target:`, 'color: #81A1C1;', `${el.tagName}#${el.id || el.className}`);
         console.log(`%c  - Transform:`, 'color: #81A1C1;', `{ RotX: ${transform.rotationX.toFixed(2)}, RotY: ${transform.rotationY.toFixed(2)}, Scale: ${transform.scale.toFixed(2)}, Z: ${transform.z.toFixed(2)} }`);
         console.log(`%c  - Style:`, 'color: #81A1C1;', `{ Opacity: ${style.opacity}, Visibility: ${style.visibility} }`);
@@ -118,7 +141,9 @@ const Oracle = {
         if (Oracle.config.verbosity < 1) return;
         const groupMethod = Oracle.config.verbosity >= 2 ? console.group : console.groupCollapsed;
         groupMethod(`%c[ORACLE SCAN @ ${Oracle._timestamp()}: ${label}]`, 'color: #B48EAD; font-weight: normal;');
-        for (const key in data) console.log(`%c  - ${key}:`, 'color: #88C0D0;', data[key]);
+        for (const key in data) {
+            console.log(`%c  - ${key}:`, 'color: #88C0D0;', data[key]);
+        }
         console.groupEnd();
     },
     
@@ -127,22 +152,35 @@ const Oracle = {
         console.group(`%c[ORACLE ACTION @ ${Oracle._timestamp()}: ${label}]`, 'color: #A3BE8C; font-weight: bold;');
     },
     
-    groupEnd: () => { if (Oracle.config.verbosity < 1) return; console.groupEnd(); },
+    groupEnd: () => {
+        if (Oracle.config.verbosity < 1) return;
+        console.groupEnd();
+    },
 
     trackScrollTrigger: (stInstance, label) => {
-        if (Oracle.config.verbosity < 1 || !stInstance) return;
+        if (Oracle.config.verbosity < 1) return;
+        if (!stInstance) {
+            Oracle.warn(`[ORACLE ST_TRACK @ ${Oracle._timestamp()}: ${label}] FAILED - ScrollTrigger instance is null.`);
+            return;
+        }
         const groupMethod = Oracle.config.verbosity >= 2 ? console.group : console.groupCollapsed;
         groupMethod(`%c[ORACLE ST_TRACK @ ${Oracle._timestamp()}: ${label}]`, 'color: #EBCB8B; font-weight: bold;');
         const triggerEl = stInstance.trigger;
+        const scrollerEl = stInstance.scroller;
+        const scrollerHeight = scrollerEl === window ? document.documentElement.scrollHeight : scrollerEl.scrollHeight;
         const totalDistance = stInstance.end - stInstance.start;
+
         console.log(`%c  - Status:`, 'color: #88C0D0;', `Active: ${stInstance.isActive}, Direction: ${stInstance.direction === 1 ? 'DOWN' : 'UP'}`);
         console.log(`%c  - Trigger Element:`, 'color: #88C0D0;', `${triggerEl.tagName}#${triggerEl.id || '.' + triggerEl.className.split(' ')[0]}`);
         console.log(`%c  - Pixel Range:`, 'color: #88C0D0;', `Start: ${stInstance.start.toFixed(0)}px, End: ${stInstance.end.toFixed(0)}px`);
         console.log(`%c  - Total Distance:`, 'color: #88C0D0;', `${totalDistance.toFixed(0)}px`);
+        console.log(`%c  - Scroller Height:`, 'color: #88C0D0;', `${scrollerHeight.toFixed(0)}px (Viewport: ${window.innerHeight}px)`);
         console.log(`%c  - Progress:`, 'color: #88C0D0;', `${(stInstance.progress * 100).toFixed(2)}%`);
         if (!stInstance._sentinelWarned) {
             const minSafeDistance = window.innerHeight * 2;
-            if (totalDistance < minSafeDistance) Oracle.warn(`SENTINEL ALERT: Total scroll distance for '${label}' (${totalDistance.toFixed(0)}px) is less than 2x viewport height (${minSafeDistance}px). Animation may feel rushed.`);
+            if (totalDistance < minSafeDistance) {
+                Oracle.warn(`SENTINEL ALERT: Total scroll distance for '${label}' (${totalDistance.toFixed(0)}px) is less than 2x viewport height (${minSafeDistance}px). Animation may feel rushed.`);
+            }
             stInstance._sentinelWarned = true;
         }
         console.groupEnd();
@@ -153,7 +191,10 @@ const Oracle = {
     
     updateHUD: (id, value, color = '#E5E9F0') => {
         const el = document.getElementById(id);
-        if (el) { el.textContent = value; el.style.color = color; }
+        if (el) {
+            el.textContent = value;
+            el.style.color = color;
+        }
     }
 };
 
@@ -340,33 +381,36 @@ const setupHandoff = (elements, masterStoryTl) => { // <-- ACCEPTS the one maste
 };
 
 // =========================================================================
-//         SOVEREIGN ARCHITECTURE v43.1: UNIFIED & BENCHMARKED NARRATIVE
+//         SOVEREIGN ARCHITECTURE v39.1: AEGIS-REGULATED NARRATIVE
 // =========================================================================
 
 function setupAnimations() {
     gsap.registerPlugin(ScrollTrigger, Flip);
     console.clear();
-    // Report the new, corrected build version.
-    Oracle.report(`Sovereign Build v43.1 Initialized. Verbosity: ${Oracle.config.verbosity}`);
+    Oracle.report(`Sovereign Build v39.1 "Aegis" Initialized. Verbosity: ${Oracle.config.verbosity}`);
 
-    let ctx; // Define ctx in the outer scope so it can be returned after the benchmark.
+    let ctx; 
 
-    // <<<< ENHANCEMENT: WRAP ENTIRE SETUP IN THE NEW PERFORMANCE BENCHMARK >>>>
-    // This will now measure the execution time of the entire animation architecture setup.
     Oracle.performance.benchmark('Sovereign Animation Architecture Setup', () => {
-        
         ctx = gsap.context(() => {
             Oracle.runSelfDiagnostic();
 
             const elements = {
-                heroActor: getElement('#actor-3d'), stuntActor: getElement('#actor-3d-stunt-double'), placeholder: getElement('#summary-placeholder'),
-                placeholderClipper: getElement('.summary-thumbnail-clipper'), pillars: getElement('.pillar-text-content', true),
-                textWrappers: getElement('.text-anim-wrapper', true), visualsCol: getElement('.pillar-visuals-col'), textCol: getElement('.pillar-text-col'),
-                handoffPoint: getElement('#handoff-point'), stuntActorFaces: getElement('#actor-3d-stunt-double .face:not(.front)', true)
+                heroActor: getElement('#actor-3d'),
+                stuntActor: getElement('#actor-3d-stunt-double'),
+                placeholder: getElement('#summary-placeholder'),
+                placeholderClipper: getElement('.summary-thumbnail-clipper'),
+                pillars: getElement('.pillar-text-content', true),
+                textWrappers: getElement('.text-anim-wrapper', true),
+                visualsCol: getElement('.pillar-visuals-col'),
+                textCol: getElement('.pillar-text-col'),
+                handoffPoint: getElement('#handoff-point'),
+                stuntActorFaces: getElement('#actor-3d-stunt-double .face:not(.front)', true)
             };
             
             if (Object.values(elements).some(el => !el || (Array.isArray(el) && !el.length))) {
-                Oracle.warn('SOVEREIGN ABORT: Missing critical elements.'); return;
+                Oracle.warn('SOVEREIGN ABORT: Missing critical elements.');
+                return;
             }
             Oracle.report("Sovereign components verified and locked.");
     
@@ -375,52 +419,61 @@ function setupAnimations() {
     
             ScrollTrigger.matchMedia({
                 '(min-width: 1025px)': () => {
-                    Oracle.report("Protocol (v43.1 - UNIFIED Narrative Timeline) engaged for desktop.");
+                    Oracle.report("Aegis Protocol engaged for desktop narrative.");
                     
-                    // PINNING IS SEPARATE - This is correct.
                     ScrollTrigger.create({
-                        trigger: elements.textCol, pin: elements.visualsCol,
-                        start: 'top top', end: 'bottom bottom',
+                        trigger: elements.textCol,
+                        pin: elements.visualsCol,
+                        start: 'top top',
+                        end: 'bottom bottom',
                         onToggle: self => Oracle.updateHUD('c-master-st-active', self.isActive ? 'PIN_ACTIVE' : 'PIN_INACTIVE', self.isActive ? '#A3BE8C' : '#BF616A'),
                     });
-    
-                    // === THE ONE MASTER STORY TIMELINE ===
-                    // All animations will now be added to this single timeline.
+                    
+                    // <<<< AEGIS PROTOCOL IMPLEMENTATION >>>>
+                    // Create a throttled function to handle heavy console logging.
+                    // This function will now only execute once every 150ms, maximum.
+                    const throttledLogger = Oracle.utility.throttle((self, hero) => {
+                        const rotX = gsap.getProperty(hero, "rotationX").toFixed(1);
+                        const rotY = gsap.getProperty(hero, "rotationY").toFixed(1);
+                        const scale = gsap.getProperty(hero, "scale").toFixed(2);
+                        const progress = (self.progress * 100).toFixed(0);
+
+                        // Call the heavy console logging functions within this safe, regulated context.
+                        Oracle.scan('Live Story Scrub (Throttled)', { 'Master Progress': `${progress}%`, 'RotX': rotX, 'RotY': rotY, 'Scale': scale });
+                        Oracle.trackScrollTrigger(self, "Unified Story Controller (Throttled)");
+                    }, 150); // 150ms delay between log groups ensures performance.
+
                     const masterStoryTl = gsap.timeline({
                         scrollTrigger: {
                             trigger: elements.textCol,
                             start: 'top top',
                             end: 'bottom bottom',
                             scrub: scrubValue,
-                            // This onUpdate now controls EVERYTHING.
                             onUpdate: (self) => {
+                                // 1. Perform lightweight HUD updates on EVERY tick for a responsive feel.
                                 const hero = elements.heroActor;
-                                const rotX = gsap.getProperty(hero, "rotationX").toFixed(1);
-                                const rotY = gsap.getProperty(hero, "rotationY").toFixed(1);
-                                const scale = gsap.getProperty(hero, "scale").toFixed(2);
                                 const progress = (self.progress * 100).toFixed(0);
-    
-                                Oracle.scan('Live Story Scrub', { 'Master Progress': `${progress}%`, 'RotX': rotX, 'RotY': rotY, 'Scale': scale });
-                                Oracle.updateHUD('c-rot-x', rotX);
-                                Oracle.updateHUD('c-rot-y', rotY);
-                                Oracle.updateHUD('c-scale', scale);
+                                Oracle.updateHUD('c-rot-x', gsap.getProperty(hero, "rotationX").toFixed(1));
+                                Oracle.updateHUD('c-rot-y', gsap.getProperty(hero, "rotationY").toFixed(1));
+                                Oracle.updateHUD('c-scale', gsap.getProperty(hero, "scale").toFixed(2));
                                 Oracle.updateHUD('c-scroll', `${progress}%`);
-    
-                                Oracle.trackScrollTrigger(self, "Unified Story Controller");
+
+                                // 2. Defer all heavy console logging to the throttled function.
+                                // This is the fix that prevents the system freeze.
+                                throttledLogger(self, hero);
                             }
                         }
                     });
                     
-                    // Calling the 'recipes' and feeding them the ONE master timeline.
+                    // Call the function 'recipes' to build the master timeline.
                     setupHeroActor(elements, masterStoryTl);
-                    setupTextPillars(elements, masterStoryTl); // This now calls the corrected v43.1 "Unbroken Chain" function
+                    setupTextPillars(elements, masterStoryTl); 
                     
-                    // Handoff remains separate and is passed masterStoryTl so it knows what to control.
+                    // Handoff is event-based and remains separate.
                     setupHandoff(elements, masterStoryTl); 
                 },
-                // Other breakpoints remain for future expansion.
-                '(min-width: 769px) and (max-width: 1024px)': () => { /* ... */ },
-                '(max-width: 768px)': () => { /* ... */ }
+                '(min-width: 769px) and (max-width: 1024px)': () => { /* Future tablet protocols */ },
+                '(max-width: 768px)': () => { /* Future mobile protocols */ }
             });
         });
     });
