@@ -273,6 +273,14 @@ function setupAnimations() {
     console.clear();
     Oracle.report(`Sovereign Build v43.2 Initialized. Verbosity: ${Oracle.config.verbosity}. Use ?oracle_verbosity=2 for max scrutiny.`);
     
+    // The gsap.context(// =========================================================================
+//         SOVEREIGN ARCHITECTURE v43.2: UNIFIED & BENCHMARKED NARRATIVE
+// =========================================================================
+function setupAnimations() {
+    gsap.registerPlugin(ScrollTrigger, Flip, MorphSVGPlugin);
+    console.clear();
+    Oracle.report(`Sovereign Build v43.2 Initialized. Verbosity: ${Oracle.config.verbosity}. Use ?oracle_verbosity=2 for max scrutiny.`);
+    
     // The gsap.context() function is the key to robust, resize-safe animations.
     // It keeps all our selectors and animations contained.
     const ctx = gsap.context(() => {
