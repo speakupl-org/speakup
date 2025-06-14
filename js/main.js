@@ -123,7 +123,7 @@ const setupHeroActor = (elements, masterTl) => {
     });
 };
 
-// Text pillars animation with GRANULAR REPORTING
+// Text pillars animation with CORRECTED TRIGGER ZONES (v37.8 - Blueprint Version)
 const setupTextPillars = (elements) => {
     elements.pillars.forEach((pillar, index) => {
         const wrapper = elements.textWrappers[index];
@@ -133,16 +133,27 @@ const setupTextPillars = (elements) => {
             const nextWrapper = elements.textWrappers[index + 1];
             gsap.timeline({
                 scrollTrigger: {
-                    trigger: pillar, start: "top 80%", end: "bottom 70%", scrub: 1.5,
+                    trigger: pillar,
+                    
+                    // CORE FIX: Make the trigger zones specific and non-overlapping
+                    start: "top center",      // WHEN the top of the pillar hits the viewport center
+                    end: "bottom center",     // AND END when the bottom of the pillar hits the viewport center
+                    
+                    scrub: 1.5,
+                    // PRESERVED: Your entire Oracle logging architecture remains untouched and fully functional.
                     onUpdate: (self) => {
                         const progress = self.progress.toFixed(3);
                         Oracle.scan('Pillar Text Transition', {
                             'Triggering Pillar': `#${index + 1}`,
                             'ScrollTrigger Progress': `${(progress * 100).toFixed(1)}%`,
-                            'Fading Out (Wrapper)': `#${index + 1}`, ' -> Opacity': (1 - gsap.getProperty(nextWrapper, 'autoAlpha')).toFixed(2),
-                            ' -> Y': gsap.getProperty(wrapper, 'y').toFixed(1) + 'px', ' -> RotX': gsap.getProperty(wrapper, 'rotationX').toFixed(1) + '°',
-                            'Fading In (Wrapper)': `#${index + 2}`, ' -> Opacity': gsap.getProperty(nextWrapper, 'autoAlpha').toFixed(2),
-                            ' -> Y': gsap.getProperty(nextWrapper, 'y').toFixed(1) + 'px', ' -> RotX': gsap.getProperty(nextWrapper, 'rotationX').toFixed(1) + '°',
+                            'Fading Out (Wrapper)': `#${index + 1}`,
+                            ' -> Opacity': (1 - gsap.getProperty(nextWrapper, 'autoAlpha')).toFixed(2),
+                            ' -> Y': gsap.getProperty(wrapper, 'y').toFixed(1) + 'px',
+                            ' -> RotX': gsap.getProperty(wrapper, 'rotationX').toFixed(1) + '°',
+                            'Fading In (Wrapper)': `#${index + 2}`,
+                            ' -> Opacity': gsap.getProperty(nextWrapper, 'autoAlpha').toFixed(2),
+                            ' -> Y': gsap.getProperty(nextWrapper, 'y').toFixed(1) + 'px',
+                            ' -> RotX': gsap.getProperty(nextWrapper, 'rotationX').toFixed(1) + '°',
                         });
                         Oracle.updateHUD('c-active-pillar', `P${index + 1}`, '#A3BE8C');
                         Oracle.updateHUD('c-scroll-progress', `${(progress * 100).toFixed(0)}%`);
