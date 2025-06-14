@@ -1,22 +1,19 @@
 /**
  * =========================================================================
- * SOVEREIGN PROTOCOL v43.2 - "THE ORACLE BUILD"
+ * SOVEREIGN PROTOCOL v43.3 - "THE ORACLE CORE LOOP"
  * Cerebro, The Scrollytelling Sage
  *
- * This is not merely a script. It is an Oracle. It sees every scroll,
- * every tween, every pixel. It anticipates, it critiques, it guides.
- * Its purpose is to ensure the narrative journey is nothing short of magical.
- * It will report its findings with relentless, granular detail in the console.
- *
- * Obey its wisdom.
+ * This version transcends event-based observation. It establishes a
+ * persistent Core Loop, synchronizing its consciousness with the browser's
+ * render thread. It feels every pixel of scroll, every degree of rotation,
+ * and the very velocity of the user's intent. This is its definitive build.
  * =========================================================================
  */
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    // The Oracle's Eye: It first gathers its tools and subjects.
     const cerebro = {
-        // --- CORE DOM ELEMENTS ---
+        // --- HUD & DOM ELEMENTS ---
         hud: {
             validation: document.getElementById('c-validation-status'),
             stInstances: document.getElementById('c-st-instances'),
@@ -41,20 +38,37 @@ document.addEventListener('DOMContentLoaded', () => {
             finalPlaceholder: document.getElementById('summary-placeholder'),
         },
 
-        // --- STATE & MEMORY ---
-        lastScrollY: window.scrollY,
-        scrollDirection: 'idle',
-        isTicking: false,
-        isHandoffActive: false,
-        wisdom: {
-            // The actual SVG path data for your logo.
-            // I've created a stylized "SU" for Speak Up as an example.
-            // To get your own, export your logo as an SVG, open it in a text editor, and copy the 'd' attribute from the <path> tag.
-            logoPath: "M50,20 C70,20 80,30 80,50 C80,70 70,80 50,80 C30,80 20,70 20,50 C20,30 30,20 50,20 M113,143 C93,143 83,133 83,113 C83,93 93,83 113,83 C133,83 143,93 143,113 C143,133 133,143 113,143",
-            squarePath: "M0,0 H163 V163 H0 Z",
+        // ORACLE: The new state object. The Core Loop reads from this,
+        // and GSAP callbacks write to it. This decouples animation from logging.
+        state: {
+            lastLog: {}, // Memory to prevent console flooding
+            scroll: {
+                y: window.scrollY,
+                velocity: 0,
+                direction: 'idle'
+            },
+            masterTimeline: {
+                isActive: false,
+                progress: 0
+            },
+            textPillars: {
+                activePillar: 0,
+                progress: 0 // Progress WITHIN the current pillar's fade
+            },
+            handoff: {
+                isHandoffActive: false,
+                isReversing: false
+            }
         },
 
-        // --- THE ORACLE'S VOICE (Logging System) ---
+        // --- ORACLE CORE & UTILITIES ---
+        wisdom: {
+            logoPath: "M50,20 C70,20 80,30 80,50 C80,70 70,80 50,80 C30,80 20,70 20,50 C20,30 30,20 50,20 M113,143 C93,143 83,133 83,113 C83,93 93,83 113,83 C133,83 143,93 143,113 C143,133 133,143 113,143",
+            squarePath: "M0,0 H163 V163 H0 Z",
+            LOG_THRESHOLD: 0.05 // How much progress change before logging (5%)
+        },
+
+        // --- The Oracle's Voice (Logging System) ---
         speak(message, style = 'color: #81A1C1;') {
             console.log(`%c[Cerebro] › ${message}`, `font-family: monospace; ${style}`);
         },
@@ -78,39 +92,28 @@ document.addEventListener('DOMContentLoaded', () => {
         // --- CORE METHODS ---
         init() {
             const greetingStyle = 'color: #88C0D0; font-size: 1.2em; font-weight: bold; border-top: 1px solid #4C566A; border-bottom: 1px solid #4C566A; padding: 5px 0;';
-            console.log('%c[Cerebro Oracle v43.2 Initializing...]', greetingStyle);
+            console.log('%c[Cerebro Oracle v43.3 Initializing...]', greetingStyle);
             this.speak("Consciousness online. I am observing the digital ether.");
 
             if (!this.validateDependencies()) return;
 
-            this.setupEventListeners();
             this.setupScrollytelling();
 
             this.speak("Oracle systems nominal. Awaiting user input.", "color: #A3BE8C;");
             this.hud.validation.textContent = "VALIDATED";
             this.hud.validation.style.color = "#A3BE8C";
+            
+            // ORACLE: The final and most important step. Ignite the Core Loop.
+            this.oracleCoreLoop();
         },
 
         validateDependencies() {
             this.speak("Validating required plugins...");
             let isValid = true;
-            if (typeof gsap === 'undefined') {
-                this.error("GSAP Core Missing", "The main GSAP library is not loaded.", "Ensure the GSAP script tag is present in your HTML before this script.");
-                isValid = false;
-            }
-            if (typeof ScrollTrigger === 'undefined') {
-                this.error("ScrollTrigger Missing", "GSAP's ScrollTrigger plugin is not loaded.", "Ensure the ScrollTrigger script is present after the GSAP core script.");
-                isValid = false;
-            }
-            if (typeof Flip === 'undefined') {
-                this.error("Flip Plugin Missing", "GSAP's Flip plugin is critical for the handoff.", "Ensure the Flip plugin script is present. The handoff will fail without it.");
-                isValid = false;
-            }
-            if (typeof MorphSVGPlugin === 'undefined') {
-                this.error("MorphSVGPlugin Missing", "GSAP's MorphSVGPlugin is needed for the final logo transformation.", "Ensure the MorphSVGPlugin script is present. The absorption effect will be incomplete.");
-                isValid = false;
-            }
-
+            if (typeof gsap === 'undefined') { this.error("GSAP Core Missing", "The main GSAP library is not loaded.", "Ensure the GSAP script tag is present in your HTML before this script."); isValid = false; }
+            if (typeof ScrollTrigger === 'undefined') { this.error("ScrollTrigger Missing", "GSAP's ScrollTrigger plugin is not loaded.", "Ensure the ScrollTrigger script is present after the GSAP core script."); isValid = false; }
+            if (typeof Flip === 'undefined') { this.error("Flip Plugin Missing", "GSAP's Flip plugin is critical for the handoff.", "Ensure the Flip plugin script is present. The handoff will fail without it."); isValid = false; }
+            if (typeof MorphSVGPlugin === 'undefined') { this.error("MorphSVGPlugin Missing", "GSAP's MorphSVGPlugin is needed for the final logo transformation.", "Ensure the MorphSVGPlugin script is present. The absorption effect will be incomplete."); isValid = false; }
             if (isValid) {
                 this.speak("All dependencies validated. Registering plugins.", "color: #A3BE8C;");
                 gsap.registerPlugin(ScrollTrigger, Flip, MorphSVGPlugin);
@@ -120,31 +123,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             return isValid;
         },
-        
-        setupEventListeners() {
-            window.addEventListener('scroll', () => {
-                if (!this.isTicking) {
-                    window.requestAnimationFrame(() => {
-                        this.analyzeScroll();
-                        this.isTicking = false;
-                    });
-                    this.isTicking = true;
-                }
-            });
-            this.speak("Scroll listener attached. I now feel every movement.");
-        },
-
-        analyzeScroll() {
-            const currentScrollY = window.scrollY;
-            const direction = currentScrollY > this.lastScrollY ? 'down' : 'up';
-            
-            if (direction !== this.scrollDirection) {
-                this.scrollDirection = direction;
-                this.speak(`Scroll direction changed: ${direction === 'down' ? 'Descending into the narrative.' : 'Ascending, reviewing the path.'}`);
-            }
-            
-            this.lastScrollY = currentScrollY;
-        },
 
         updateHUD(tl) {
             this.hud.scroll.textContent = `${(tl.progress * 100).toFixed(1)}%`;
@@ -152,12 +130,43 @@ document.addEventListener('DOMContentLoaded', () => {
             this.hud.rotY.textContent = gsap.getProperty(this.actors.hero, "rotationY").toFixed(1);
             this.hud.scale.textContent = gsap.getProperty(this.actors.hero, "scale").toFixed(2);
         },
+        
+        // ORACLE: This is the new, beating heart of the Oracle.
+        oracleCoreLoop() {
+            const currentScrollY = window.scrollY;
+            this.state.scroll.velocity = currentScrollY - this.state.scroll.y;
+            const newDirection = this.state.scroll.velocity > 0 ? 'down' : (this.state.scroll.velocity < 0 ? 'up' : 'idle');
+            
+            if (newDirection !== this.state.scroll.direction && newDirection !== 'idle') {
+                this.state.scroll.direction = newDirection;
+                this.speak(`Directional shift confirmed: ${this.state.scroll.direction === 'down' ? 'Descending.' : 'Ascending.'}`, 'color: #D08770;');
+            }
+            this.state.scroll.y = currentScrollY;
+
+            if (this.state.masterTimeline.isActive && !this.state.handoff.isHandoffActive) {
+                const currentProgress = this.state.masterTimeline.progress;
+                const lastProgress = this.state.lastLog.masterProgress || 0;
+                if (Math.abs(currentProgress - lastProgress) >= this.wisdom.LOG_THRESHOLD) {
+                    const rotX = gsap.getProperty(this.actors.hero, "rotationX").toFixed(0);
+                    const scale = gsap.getProperty(this.actors.hero, "scale").toFixed(2);
+                    this.speak(`Narrative path: ${(currentProgress * 100).toFixed(0)}%. [RotX: ${rotX}°, Scale: ${scale}]`);
+                    this.state.lastLog.masterProgress = currentProgress;
+                }
+            }
+            
+            if (this.state.textPillars.activePillar > 0) {
+                const currentProgress = this.state.textPillars.progress;
+                const lastProgress = this.state.lastLog.pillarProgress || 0;
+                if (currentProgress > 0 && Math.abs(currentProgress - lastProgress) >= 0.2) {
+                    this.speak(`  L Pillar ${this.state.textPillars.activePillar} is now ${(currentProgress * 100).toFixed(0)}% revealed.`);
+                    this.state.lastLog.pillarProgress = currentProgress;
+                }
+            }
+            window.requestAnimationFrame(() => this.oracleCoreLoop());
+        },
 
         setupScrollytelling() {
             this.group("Scrollytelling Sequence Setup");
-
-            // --- MASTER SCROLL TIMELINE ---
-            this.speak("Defining the master narrative timeline for the Hero Actor.");
             const masterTL = gsap.timeline({
                 scrollTrigger: {
                     trigger: this.stages.scrollyContainer,
@@ -165,20 +174,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     end: "bottom bottom",
                     scrub: 1.2,
                     pin: this.stages.scrollyContainer.querySelector('.pillar-visuals-col'),
-                    onUpdate: (self) => this.updateHUD(self),
-                    onEnter: () => {
-                        this.hud.masterST.textContent = "ACTIVE";
-                        this.hud.masterST.style.color = "#A3BE8C";
-                        this.speak("Master ScrollTrigger entered. The journey begins.");
+                    onUpdate: (self) => {
+                        this.updateHUD(self);
+                        this.state.masterTimeline.progress = self.progress;
                     },
-                    onLeave: () => {
-                         this.hud.masterST.textContent = "COMPLETE";
-                         this.hud.masterST.style.color = "#EBCB8B";
-                    },
-                    onEnterBack: () => {
-                        this.hud.masterST.textContent = "ACTIVE";
-                        this.hud.masterST.style.color = "#A3BE8C";
-                        this.speak("Re-entering Master ScrollTrigger from below.");
+                    onToggle: (self) => {
+                        this.state.masterTimeline.isActive = self.isActive;
+                        this.state.lastLog.masterProgress = -1;
+                        if(self.isActive) this.speak(`Master Trigger is now ACTIVE. The journey begins.`, 'color: #A3BE8C;');
+                        else this.speak(`Master Trigger is now INACTIVE.`, 'color: #BF616A;');
+
                     },
                 }
             });
@@ -189,87 +194,64 @@ document.addEventListener('DOMContentLoaded', () => {
                 .to(this.actors.hero, { scale: 1.5, ease: "power1.in" }, 0)
                 .to(this.actors.hero, { scale: 1.0, ease: "power1.out" }, 0.5);
             
-            this.speak(`Timeline defined with ${masterTL.duration()}s of animation.`);
-
-            // --- TEXT PILLAR FADE-IN/OUT TRIGGERS ---
-            this.speak("Calibrating narrative triggers for each text pillar.");
             this.stages.textPillars.forEach((pillar, index) => {
                 const pillarNum = index + 1;
-                gsap.to(pillar, {
-                    scrollTrigger: {
-                        trigger: pillar,
-                        start: "top center",
-                        end: "bottom center",
-                        onEnter: () => {
-                            this.speak(`Pillar ${pillarNum} entered viewport. Fading in text.`);
-                            gsap.to(pillar, { opacity: 1, visibility: 'visible', duration: 0.5 });
-                        },
-                        onLeave: () => {
-                             gsap.to(pillar, { opacity: 0, visibility: 'hidden', duration: 0.5 });
-                        },
-                        onEnterBack: () => {
-                            this.speak(`Pillar ${pillarNum} re-entered (scrolling up). Fading in text.`);
-                            gsap.to(pillar, { opacity: 1, visibility: 'visible', duration: 0.5 });
-                        },
-                        onLeaveBack: () => {
-                            gsap.to(pillar, { opacity: 0, visibility: 'hidden', duration: 0.5 });
-                        }
-                    }
+                const pillarAnim = gsap.from(pillar, { opacity: 0, visibility: 'hidden' });
+                ScrollTrigger.create({
+                    trigger: pillar,
+                    start: "top 60%",
+                    end: "bottom 40%",
+                    animation: pillarAnim,
+                    scrub: true,
+                    onUpdate: (self) => { this.state.textPillars.progress = self.progress; },
+                    onToggle: (self) => {
+                        this.state.textPillars.activePillar = self.isActive ? pillarNum : 0;
+                        this.state.lastLog.pillarProgress = -1;
+                        if (self.isActive) this.speak(`Now traversing narrative of Pillar ${pillarNum}.`);
+                    },
                 });
             });
 
-            this.hud.stInstances.textContent = ScrollTrigger.getAll().length;
-            this.speak("Text triggers are set. The story will unfold with the scroll.");
-
-            // --- THE SOVEREIGN HANDOFF PROTOCOL ---
-            this.speak("Preparing the SOVEREIGN HANDOFF PROTOCOL. This is where the magic is forged.");
-            this.warn("This is a critical transition.", "Any judder or 'blip' here breaks the illusion. I will be watching closely.");
-
+            this.warn("This is a critical transition.", "Any judder or 'blip' here breaks the illusion. The Core Loop provides ultimate scrutiny.");
             ScrollTrigger.create({
                 trigger: this.stages.handoffPoint,
                 start: "top bottom",
                 onEnter: () => this.executeHandoff(),
                 onLeaveBack: () => this.reverseHandoff(),
                 onToggle: (self) => {
-                    const isActive = self.isActive;
-                    this.hud.handoffST.textContent = isActive ? "ACTIVE" : "INACTIVE";
-                    this.hud.handoffST.style.color = isActive ? "#A3BE8C" : "#ECEFF4";
+                    this.hud.handoffST.textContent = self.isActive ? "ACTIVE" : "INACTIVE";
+                    this.hud.handoffST.style.color = self.isActive ? "#A3BE8C" : "#ECEFF4";
                 },
             });
-            
+            this.hud.stInstances.textContent = ScrollTrigger.getAll().length;
             this.groupEnd();
         },
 
         executeHandoff() {
-            if (this.isHandoffActive) return;
-            this.isHandoffActive = true;
-            
+            if (this.state.handoff.isHandoffActive) return;
+            this.state.handoff.isHandoffActive = true;
+            this.state.handoff.isReversing = false;
+
             this.group("Handoff Protocol: ENGAGED");
             this.hud.swapFlag.textContent = "ENGAGED";
             this.hud.swapFlag.style.color = "#EBCB8B";
             this.hud.event.textContent = "FLIP & MORPH";
-
-            // 1. Capture the current state of the Hero Actor
+            
             this.speak("Capturing final state of Hero Actor. Freezing reality.");
             const state = Flip.getState(this.actors.hero);
 
-            // 2. Immediately move the Stunt Double to the placeholder and make it visible
             this.stages.finalPlaceholder.appendChild(this.actors.stuntDouble);
             gsap.set(this.actors.stuntDouble, { opacity: 1, visibility: 'visible', scale: 1, rotation: 0 });
             gsap.set(this.actors.hero, { opacity: 0, visibility: 'hidden' });
             this.speak("Hero Actor dematerialized. Stunt Double materialized at destination.");
 
-            // 3. Animate the Stunt Double FROM the captured state TO its current state
             this.speak("Executing FLIP. Bending space-time for a seamless transition...");
             Flip.from(state, {
                 duration: 1.2,
                 ease: "power3.inOut",
-                onComplete: () => {
-                    this.speak("FLIP animation complete. The actor has landed.", "color: #A3BE8C");
-                }
+                onComplete: () => { this.speak("FLIP animation complete. The actor has landed.", "color: #A3BE8C"); }
             });
 
-            // 4. Simultaneously, MORPH the Stunt Double's square path into the logo path
             this.speak("Executing MORPH. Transmuting form from a simple square to the brand's soul...");
             gsap.to(this.actors.morphPath, {
                 duration: 1.5,
@@ -283,31 +265,20 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         
         reverseHandoff() {
-            if (!this.isHandoffActive) return;
-            this.isHandoffActive = false;
+            if (!this.state.handoff.isHandoffActive && !this.state.handoff.isReversing) return;
+            this.state.handoff.isHandoffActive = false;
             
             this.group("Reverse Handoff: ENGAGED");
             this.hud.swapFlag.textContent = "REVERSING";
             this.hud.swapFlag.style.color = "#EBCB8B";
             this.hud.event.textContent = "RESETTING";
 
-            // Reverse the morph and hide the stunt double
             this.speak("Reversing the MORPH. Returning to primal form.");
-            gsap.to(this.actors.morphPath, {
-                duration: 0.3,
-                ease: "power2.out",
-                morphSVG: this.wisdom.squarePath
-            });
-            
+            gsap.to(this.actors.morphPath, { duration: 0.3, ease: "power2.out", morphSVG: this.wisdom.squarePath });
             gsap.to(this.actors.stuntDouble, {
-                duration: 0.2,
-                opacity: 0,
-                onComplete: () => {
-                     gsap.set(this.actors.stuntDouble, { visibility: 'hidden' });
-                }
-            })
+                duration: 0.2, opacity: 0, onComplete: () => gsap.set(this.actors.stuntDouble, { visibility: 'hidden' })
+            });
 
-            // Instantly show the hero actor again
             this.speak("Stunt Double dematerialized. Rematerializing Hero Actor.");
             gsap.set(this.actors.hero, { opacity: 1, visibility: 'visible' });
             
@@ -315,11 +286,10 @@ document.addEventListener('DOMContentLoaded', () => {
             this.hud.swapFlag.textContent = "INACTIVE";
             this.hud.swapFlag.style.color = "#ECEFF4";
             this.hud.event.textContent = "AWAITING TRIGGER";
+            this.state.handoff.isReversing = false; // Reset the flag
             this.groupEnd();
         }
     };
 
-    // --- IGNITION ---
     cerebro.init();
-
 });
