@@ -293,14 +293,16 @@
     </div>
 </footer>
 
-<!-- ESSENTIAL GSAP LIBRARIES (Corrected Order and Inclusion) -->
+<!-- CORE LIBRARIES (Three.js must come first) -->
+<script src="js/three.min.js"></script> 
+
+<!-- ESSENTIAL GSAP LIBRARIES -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Flip.min.js"></script>
-<!-- MorphSVGPlugin is critical for the absorption effect -->
 <script src="https://unpkg.com/gsap@3/dist/MorphSVGPlugin.min.js"></script>
 
-<!-- The Sovereign Protocol Script -->
+<!-- YOUR APPLICATION SCRIPT (runs last) -->
 <script defer src="js/main.js"></script>
 
 </body>
