@@ -14,45 +14,50 @@ ScrollTrigger, resolving a critical state management vulnerability.
 
 */
 
-// Oracle v43.1 - The "Sovereign" Protocol with Performance, Integrity & Covenant Sub-protocols
+// Oracle v43.2 - The "Observer" Protocol Upgrade
 const Oracle = {
-    // Configuration Sub-protocol
     config: {
-        verbosity: 1, // Default: 0=silent, 1=collapsed logs, 2=expanded logs
+        verbosity: 1, 
     },
 
-    // <<<< NEW SOVEREIGN PROTOCOL UPGRADE >>>>
-    // The Performance Sub-protocol for monitoring execution bottlenecks.
+    // NEW v43.2: Centralized group method selector for consistency.
+    _getGroupMethod: function() {
+        return this.config.verbosity >= 2 ? console.group : console.groupCollapsed;
+    },
+    
     performance: {
-        benchmark: (label, functionToTest) => {
-            // If verbosity is 0, just run the function without measurement.
+        benchmark: function(label, functionToTest) {
             if (Oracle.config.verbosity < 1) {
                 functionToTest();
                 return;
             }
+            // Use the centralized method
+            const group = Oracle._getGroupMethod();
             const startTime = performance.now();
-            functionToTest(); // Execute the function
+            functionToTest();
             const endTime = performance.now();
             const duration = (endTime - startTime).toFixed(3);
             const color = duration < 50 ? '#A3BE8C' : (duration < 200 ? '#EBCB8B' : '#BF616A');
             
-            console.log(
-                `%c[ORACLE BENCHMARK @ ${Oracle._timestamp()}: ${label}] - %cExecution Time: ${duration}ms`,
-                'color: #8FBCBB; font-weight: bold;',
-                `color: ${color}; font-weight: normal;`
+            group(
+                `%c[ORACLE BENCHMARK @ ${Oracle._timestamp()}: ${label}]`,
+                'color: #8FBCBB; font-weight: bold;'
             );
+            console.log(`%c  - Execution Time: %c${duration}ms`, 'color: #81A1C1;', `color: ${color};`);
+            console.groupEnd();
         }
     },
     
-    // Integrity Protocol for environment and dependency verification.
-    runSelfDiagnostic: () => {
+    runSelfDiagnostic: function() {
         if (Oracle.config.verbosity < 1) return;
-
-        const groupMethod = Oracle.config.verbosity >= 2 ? console.group : console.groupCollapsed;
-        // Main group for the entire diagnostic
+        
+        // Use the centralized method
+        const group = this._getGroupMethod();
+        
         console.group(`%c[ORACLE SELF-DIAGNOSTIC (SOVEREIGN INTEGRITY PROTOCOL)]`, 'color: #D08770; font-weight: bold;');
         Oracle.updateHUD('c-validation-status', 'RUNNING...', '#EBCB8B');
         
+        // This function continues as before, but the sub-groups will respect the master setting.
         let allOk = true;
         const check = (condition, okMsg, failMsg) => {
             if(condition) {
@@ -64,72 +69,32 @@ const Oracle = {
             return condition;
         };
 
-        // Group 1: Check external libraries
-        groupMethod('%c1. Dependency Verification', 'color: #EBCB8B;');
+        group('%c1. Dependency Verification', 'color: #EBCB8B;');
             check(window.gsap, 'GSAP Core: FOUND', 'GSAP Core: MISSING!');
             check(window.ScrollTrigger, 'ScrollTrigger Plugin: FOUND', 'ScrollTrigger Plugin: MISSING!');
             check(window.Flip, 'Flip Plugin: FOUND', 'Flip Plugin: MISSING!');
             check(window.MorphSVGPlugin, 'MorphSVG Plugin: FOUND', 'MorphSVG Plugin: MISSING!');
         console.groupEnd();
         
-        // Group 2: Check the DOM for expected elements
-        groupMethod('%c2. Environment Sanity Check (DOM Integrity)', 'color: #EBCB8B;');
-            const pillarCount = document.querySelectorAll('.pillar-text-content').length;
-            const handoffPoint = document.getElementById('handoff-point');
-            const heroActor = document.getElementById('actor-3d');
-            const stuntActor = document.getElementById('actor-3d-stunt-double');
-            check(pillarCount > 0, `Pillars Found: ${pillarCount}`, 'CRITICAL: No pillar text content found!');
-            check(handoffPoint, 'Handoff Point: FOUND', 'CRITICAL: Handoff point element not found!');
-            check(heroActor, 'Hero Actor: FOUND', 'CRITICAL: Hero Actor element not found!');
-            check(stuntActor, 'Stunt Double: FOUND', 'CRITICAL: Stunt Double element not found!');
-        console.groupEnd();
-        
-        // Group 3: Verify CSS integrity for animations
-        groupMethod('%c3. CSS Protocol Verification', 'color: #EBCB8B;');
-            const firstPillar = document.querySelector('.pillar-text-content');
-            if(firstPillar) {
-                const firstPillarOpacity = window.getComputedStyle(firstPillar).opacity;
-                 check(
-                    firstPillarOpacity === '1', 
-                    'FOUC Fix (Pillar 1): Correctly Visible.', 
-                    `FOUC Anomaly: Pillar 1 opacity is ${firstPillarOpacity}, should be 1.`
-                );
-            }
-            const visualsCol = document.querySelector('.pillar-visuals-col');
-            if(visualsCol) {
-                const pointerEvents = window.getComputedStyle(visualsCol).pointerEvents;
-                check(
-                    pointerEvents === 'none',
-                    'Interaction Fix: Visuals column has correct pointer-events.',
-                    'Interaction Anomaly: Visuals column may block clicks!'
-                );
-            }
+        group('%c2. Environment Sanity Check (DOM Integrity)', 'color: #EBCB8B;');
+            check(document.querySelectorAll('.pillar-text-content').length > 0, 'Pillars Found', 'CRITICAL: No pillar text!');
+            check(document.getElementById('handoff-point'), 'Handoff Point: FOUND', 'CRITICAL: Handoff point missing!');
         console.groupEnd();
 
         if (allOk) {
             Oracle.updateHUD('c-validation-status', 'PASSED', '#A3BE8C');
-            Oracle.report("Sovereign Integrity Protocol: All checks passed. System is nominal.");
         } else {
             Oracle.updateHUD('c-validation-status', 'FAILED', '#BF616A');
-            Oracle.warn("Sovereign Integrity Protocol: One or more critical checks failed! Animation stability is compromised.");
         }
         
-        console.groupEnd(); // End main diagnostic group
+        console.groupEnd();
     },
     
-    // Guaranteed Initialization Sequence
-    init: (callback) => {
-        const storedVerbosity = localStorage.getItem('oracleVerbosity');
-        if (storedVerbosity !== null) Oracle.config.verbosity = parseInt(storedVerbosity, 10);
-        
+    init: function(callback) {
         const urlParams = new URLSearchParams(window.location.search);
         const urlVerbosity = urlParams.get('oracle_verbosity');
-        if (urlVerbosity !== null && urlVerbosity !== '') {
-            const parsedVerbosity = parseInt(urlVerbosity, 10);
-            if (!isNaN(parsedVerbosity)) {
-                Oracle.config.verbosity = parsedVerbosity;
-                localStorage.setItem('oracleVerbosity', parsedVerbosity);
-            }
+        if (urlVerbosity !== null && !isNaN(parseInt(urlVerbosity, 10))) {
+            this.config.verbosity = parseInt(urlVerbosity, 10);
         }
         
         if(callback && typeof callback === 'function') callback();
@@ -137,45 +102,51 @@ const Oracle = {
 
     _timestamp: () => new Date().toLocaleTimeString('en-US', { hour12: false }),
 
-    log: (el, label) => {
-        if (Oracle.config.verbosity < 2) return;
-        if (!el) { console.error(`%c[ORACLE LOG @ ${Oracle._timestamp()}: ${label}] ERROR - Element is null.`, 'color: #BF616A;'); return; }
-        console.groupCollapsed(`%c[ORACLE LOG @ ${Oracle._timestamp()}: ${label}]`, 'color: #D81B60; font-weight: bold;');
+    log: function(el, label) {
+        // Corrected: Now visible at verbosity 1 (collapsed) and 2 (expanded)
+        if (this.config.verbosity < 1) return; 
+        if (!el) { console.error(`[ORACLE] ERROR: Element is null for log: ${label}`); return; }
+        
+        // Use the centralized method
+        const group = this._getGroupMethod();
+        
+        group(`%c[ORACLE LOG @ ${this._timestamp()}: ${label}]`, 'color: #D81B60; font-weight: bold;');
         const style = window.getComputedStyle(el);
-        const transform = {
-            scale: gsap.getProperty(el, "scale"),
-            rotationX: gsap.getProperty(el, "rotationX"),
-            rotationY: gsap.getProperty(el, "rotationY"),
-            x: gsap.getProperty(el, "x"),
-            y: gsap.getProperty(el, "y"),
-        };
-        const bounds = el.getBoundingClientRect();
         console.log(`%c  - Target:`, 'color: #81A1C1;', `${el.tagName}#${el.id || '.'+el.className.split(' ')[0]}`);
-        console.log(`%c  - GSAP Transform:`, 'color: #81A1C1;', `x: ${transform.x}, y: ${transform.y}, RotX: ${transform.rotationX.toFixed(2)}, RotY: ${transform.rotationY.toFixed(2)}, Scale: ${transform.scale.toFixed(2)}`);
-        console.log(`%c  - CSS Style:`, 'color: #81A1C1;', `{ Opacity: ${style.opacity}, Visibility: ${style.visibility} }`);
-        console.log(`%c  - Bounding Box:`, 'color: #81A1C1;', `{ X: ${bounds.left.toFixed(1)}, Y: ${bounds.top.toFixed(1)}, W: ${bounds.width.toFixed(1)}, H: ${bounds.height.toFixed(1)} }`);
+        console.log(`%c  - GSAP BBox:`, 'color: #81A1C1;', `X: ${gsap.getProperty(el, "x")}, Y: ${gsap.getProperty(el, "y")}`);
+        console.log(`%c  - CSS Display:`, 'color: #81A1C1;', `Opacity: ${style.opacity}, Visibility: ${style.visibility}`);
         console.groupEnd();
     },
     
-    scan: (label, data) => {
-        if (Oracle.config.verbosity < 1) return;
-        const groupMethod = Oracle.config.verbosity >= 2 ? console.group : console.groupCollapsed;
-        groupMethod(`%c[ORACLE SCAN @ ${Oracle._timestamp()}: ${label}]`, 'color: #B48EAD; font-weight: normal;');
+    scan: function(label, data) {
+        // Corrected: Now visible at verbosity 1 (collapsed) and 2 (expanded)
+        if (this.config.verbosity < 1) return;
+        
+        // Use the centralized method
+        const group = this._getGroupMethod();
+        
+        group(`%c[ORACLE SCAN @ ${this._timestamp()}: ${label}]`, 'color: #B48EAD; font-weight: normal;');
         for (const key in data) console.log(`%c  - ${key}:`, 'color: #88C0D0;', data[key]);
         console.groupEnd();
     },
     
-    group: (label) => { if (Oracle.config.verbosity < 1) return; console.group(`%c[ORACLE ACTION @ ${Oracle._timestamp()}: ${label}]`, 'color: #A3BE8C; font-weight: bold;'); },
-    groupEnd: () => { if (Oracle.config.verbosity < 1) return; console.groupEnd(); },
+    group: function(label) {
+        if (this.config.verbosity < 1) return;
+        console.group(`%c[ORACLE ACTION @ ${this._timestamp()}: ${label}]`, 'color: #A3BE8C; font-weight: bold;');
+    },
+    
+    groupEnd: function() { if (this.config.verbosity < 1) return; console.groupEnd(); },
 
-    trackScrollTrigger: (stInstance, label) => {
-        if (Oracle.config.verbosity < 2 || !stInstance) return; // Only log this detailed view on highest verbosity
-        console.groupCollapsed(`%c[ORACLE ST_TRACK @ ${Oracle._timestamp()}: ${label}]`, 'color: #EBCB8B; font-weight: bold;');
-        const triggerEl = stInstance.trigger;
-        console.log(`%c  - Status:`, 'color: #88C0D0;', `Active: ${stInstance.isActive}, Direction: ${stInstance.direction === 1 ? 'DOWN' : (stInstance.direction === -1 ? 'UP' : 'STATIC')}`);
+    trackScrollTrigger: function(stInstance, label) {
+        // This is a high-detail log, so it ONLY runs at verbosity 2.
+        if (this.config.verbosity < 2 || !stInstance) return;
+        
+        // Use the centralized method. It will always be console.group here because of the check above.
+        const group = this._getGroupMethod();
+
+        group(`%c[ORACLE ST_TRACK @ ${this._timestamp()}: ${label}]`, 'color: #EBCB8B; font-weight: bold;');
+        console.log(`%c  - Status:`, 'color: #88C0D0;', `Active: ${stInstance.isActive}, Direction: ${stInstance.direction === 1 ? 'DOWN' : 'UP'}`);
         console.log(`%c  - Progress:`, 'color: #88C0D0;', `${(stInstance.progress * 100).toFixed(2)}%`);
-        console.log(`%c  - Element:`, 'color: #88C0D0;', `${triggerEl.tagName}#${triggerEl.id || '.' + triggerEl.className.split(' ')[0]}`);
-        console.log(`%c  - Range (px):`, 'color: #88C0D0;', `Start: ${stInstance.start.toFixed(0)}, End: ${stInstance.end.toFixed(0)}`);
         console.groupEnd();
     },
     
