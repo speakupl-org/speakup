@@ -124,11 +124,25 @@ const setupHeroActor = (elements, masterTl) => {
 };
 
 // Text pillars animation with OMNISCIENT ORACLE (v37.9 - Blueprint Version)
-// THE DEFINITIVE BLUEPRINT for Text Pillars (v38.1 - Final)
+// THE DEFINITIVE BLUEPRINT v39 - INDESTRUCTIBLE & OMNISCIENT
 const setupTextPillars = (elements) => {
+
+    // 1. Establish the clean starting state. This is correct.
     gsap.set(elements.textWrappers, { autoAlpha: 0, y: 40, rotationX: -15 });
     gsap.set(elements.textWrappers[0], { autoAlpha: 1, y: 0, rotationX: 0 });
 
+    // === OVERKILL TRACKER 1: INITIAL STATE VERIFICATION ===
+    Oracle.group("Initial Text Pillar States");
+    elements.textWrappers.forEach((wrapper, index) => {
+        Oracle.scan(`Wrapper #${index + 1}`, {
+            'Initial Opacity': gsap.getProperty(wrapper, "autoAlpha"),
+            'Initial Y': gsap.getProperty(wrapper, "y").toFixed(1) + 'px'
+        });
+    });
+    Oracle.groupEnd();
+    // ========================================================
+
+    // 2. Build the ONE master timeline. This architecture is correct.
     const textMasterTl = gsap.timeline({
         scrollTrigger: {
             trigger: elements.textCol,
@@ -137,41 +151,51 @@ const setupTextPillars = (elements) => {
             scrub: 1.5,
             markers: Oracle.config.verbosity > 1,
 
+            // === OVERKILL TRACKER 2: COMPUTED STYLE TELEMETRY ===
             onUpdate: (self) => {
-                const numSections = elements.textWrappers.length;
-                const sectionProgress = self.progress * (numSections - 1);
-                const activeIndex = Math.floor(sectionProgress);
-                const subProgress = sectionProgress - activeIndex;
-
-                const wrapper = elements.textWrappers[activeIndex];
-                const nextWrapper = elements.textWrappers[activeIndex + 1]; // This can be undefined on the last element
-
                 const data = {
-                    'Master Progress': `${(self.progress * 100).toFixed(1)}%`,
-                    'Active Index': activeIndex,
-                    'Sub-Progress': `${(subProgress * 100).toFixed(1)}%`,
+                    'Master Progress': `${(self.progress * 100).toFixed(1)}%`
                 };
-
-                try {
-                    // Always log the current wrapper
-                    data[`W#${activeIndex+1} (Current)`] = `${gsap.getProperty(wrapper, 'autoAlpha').toFixed(2)}`;
-
-                    // --- THE FINAL LOGICAL FIX ---
-                    // ONLY try to log the next wrapper IF it actually exists.
-                    if (nextWrapper) {
-                        data[`W#${activeIndex+2} (Next)`] = `${gsap.getProperty(nextWrapper, 'autoAlpha').toFixed(2)}`;
-                    } else {
-                        data[`W#${activeIndex+2} (Next)`] = 'N/A';
-                    }
-
-                } catch (e) {
-                    data['ORACLE_FAILURE'] = e.message;
-                }
                 
-                Oracle.scan('Master Text Timeline', data);
+                // For each wrapper, get its undeniable, browser-rendered style.
+                elements.textWrappers.forEach((wrapper, index) => {
+                    const style = window.getComputedStyle(wrapper);
+                    data[`W#${index + 1}_Opacity`] = parseFloat(style.opacity).toFixed(2);
+                    // The 'transform' property is a matrix, harder to read, but proves if an animation is active.
+                    data[`W#${index + 1}_Transform`] = style.transform === "none" ? "none" : "ACTIVE";
+                });
+                Oracle.scan('Master Timeline (Computed Styles)', data);
             }
         }
     });
+
+    // 3. The Definitive Animation Logic: Positional Tweens. This is the fix.
+    // Instead of chaining `.to().to()`, we explicitly place tweens on the timeline.
+    const numTransitions = elements.textWrappers.length - 1;
+    const segmentDuration = 1; // Each transition gets its own "1 second" block of time.
+    
+    for (let i = 0; i < numTransitions; i++) {
+        const outWrapper = elements.textWrappers[i];
+        const inWrapper = elements.textWrappers[i + 1];
+
+        // The starting point for this segment in the master timeline
+        const position = i * segmentDuration;
+
+        // Animate the outgoing wrapper from its defaults to its "out" state.
+        textMasterTl.fromTo(outWrapper, 
+            { autoAlpha: 1, y: 0, rotationX: 0 },
+            { autoAlpha: 0, y: -40, rotationX: 15, ease: "power2.in", duration: segmentDuration },
+            position // Position this tween at the calculated start time
+        );
+        
+        // Animate the incoming wrapper from its "in" state to its default state.
+        textMasterTl.fromTo(inWrapper,
+            { autoAlpha: 0, y: 40, rotationX: -15 },
+            { autoAlpha: 1, y: 0, rotationX: 0, ease: "power2.out", duration: segmentDuration },
+            position // Position this tween at the SAME start time (<)
+        );
+    }
+};
 
     elements.textWrappers.forEach((wrapper, index) => {
         if (index > 0) {
