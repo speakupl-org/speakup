@@ -1,12 +1,5 @@
 /* Main CSS file - Importer */
 
-/* 1. Base styles */
-@import url('base/_reset.css');
-
-/* 2. Components */
-@import url('components/_scrollytelling.css');
-
-
 /* ======================================= */
 /*   Main Stylesheet - Imports All Parts   */
 /* ======================================= */
@@ -20,183 +13,17 @@
 /* 2. Reusable components */
 @import url('components/_buttons.css');
 @import url('components/_header.css');
-@import url('components/_fullscreen-menu.css'); /* Added this line */
+@import url('components/_fullscreen-menu.css');
+@import url('components/_footer.css'); /* Added this line */
+
+/* 3. Page-specific or larger components */
 @import url('components/_scrollytelling.css');
+@import url('components/_homepage.css'); /* Added this line */
 
 /* Add other component imports here as we create them */
 
 
-/* --- The Hamburger & Close Menu Toggle Buttons --- */
-.menu-toggle-button {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    width: 30px;
-    height: 24px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    position: relative;
-    padding: 0;
-    z-index: 1200; /* Ensure it's on top */
-}
 
-.hamburger-line {
-    width: 100%;
-    height: 3px;
-    background-color: var(--color-heading);
-    border-radius: 2px;
-    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-}
-
-/* --- Part 2: The "Speak Up Brand World" Menu Screen --- */
-.fullscreen-menu {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1100;
-    
-    /* The Background */
-    background-color: var(--color-background-dark);
-    
-    /* The Brand Asset - Subtle flowing pathway effect */
-    background-image: 
-        radial-gradient(circle at 10% 90%, rgba(var(--rgb-primary), 0.1) 0%, transparent 40%),
-        radial-gradient(circle at 90% 10%, rgba(var(--rgb-primary), 0.1) 0%, transparent 40%);
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    
-    /* Hidden by default, controls visibility and animation */
-    opacity: 0;
-    pointer-events: none;
-    visibility: hidden;
-    transform: translateY(20px);
-    transition: opacity 0.4s ease, transform 0.4s ease, visibility 0s 0.4s;
-}
-
-/* State when menu is open (toggled by JS) */
-body.menu-open .fullscreen-menu {
-    opacity: 1;
-    pointer-events: auto;
-    visibility: visible;
-    transform: translateY(0);
-    transition: opacity 0.4s ease, transform 0.4s ease, visibility 0s 0s;
-}
-/* Prevent 
-
-
-
-
-/* Social Icons */
-.footer-socials {
-    margin-top: 20px;
-    display: flex;
-    gap: 15px;
-}
-
-.footer-socials a {
-    color: var(--color-text-muted); /* Initial color for the icon */
-    display: inline-block;
-    transition: color 0.3s ease, transform 0.3s ease;
-}
-
-.footer-socials a:hover {
-    color: var(--color-accent); /* The warm amber color on hover */
-    transform: translateY(-3px); /* A slight lift effect */
-}
-
-
-/* The Bottom Bar */
-.footer-bottom-bar {
-    text-align: center;
-}
-.footer-bottom-bar p {
-    font-size: 0.9rem;
-    color: var(--color-text-muted);
-    max-width: none; /* Override default paragraph max-width */
-    margin: 0 auto;
-}
-.footer-bottom-bar a {
-    color: var(--color-text-muted);
-    text-decoration: underline;
-    transition: color 0.3s ease;
-}
-.footer-bottom-bar a:hover {
-    color: var(--color-primary-vibrant);
-}
-/* =========================================================================
-   9. Story Page Styles (minha-jornada.html)
-   ========================================================================= */
-
-.story-container {
-    padding: 100px 0;
-}
-
-/* The header of the story page, for the main title and intro */
-.story-header {
-    text-align: center;
-    padding-bottom: 60px;
-}
-.story-header .container {
-    max-width: 800px; /* Wider container for the intro */
-}
-.story-title {
-    font-size: clamp(2.5rem, 6vw, 4rem);
-    margin-bottom: 1.5rem;
-}
-.story-intro {
-    font-size: clamp(1.2rem, 3vw, 1.5rem);
-    color: var(--color-text-muted);
-    line-height: 1.6;
-    max-width: 65ch;
-    margin: 0 auto;
-}
-
-/* The main body of text, optimized for reading */
-.story-body .container {
-    max-width: 75ch; /* Optimal line length for long-form reading */
-}
-.story-body p {
-    font-size: 1.1rem;
-    line-height: 1.8;
-    margin-bottom: 1.5rem;
-}
-.story-body p + p {
-    margin-top: -0.5rem; /* Tighten up consecutive paragraphs a bit */
-}
-.story-heading {
-    text-align: left; /* Different from homepage */
-    font-size: 2rem;
-    margin-top: 3rem;
-    margin-bottom: 1.5rem;
-    border-bottom: 2px solid rgba(var(--rgb-primary), 0.2);
-    padding-bottom: 0.5rem;
-}
-.pull-quote {
-    font-size: clamp(1.2rem, 2.5vw, 1.5rem);
-    font-style: italic;
-    color: var(--color-heading);
-    border-left: 3px solid var(--color-accent);
-    padding-left: 2rem;
-    margin: 3rem 0;
-    line-height: 1.6;
-}
-
-/* Responsive adjustments for the story page */
-@media (max-width: 768px) {
-    .story-body .container {
-        max-width: 90%; /* Use more of the screen on mobile */
-    }
-    .pull-quote { margin: 2rem 0; }
-}
 /*
 ==========================================================
   DEFINITIVE SCROLLYTELLING LAYOUT (CORRECTED)
