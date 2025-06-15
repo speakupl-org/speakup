@@ -1,4 +1,6 @@
 // js/modules/actors.js
+const gsap = window.gsap;
+
 function createCubeActor(cube, appState) {
   function update() {
     const progress = appState.scrolly.progress;
