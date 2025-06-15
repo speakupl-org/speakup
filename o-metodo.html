@@ -8,53 +8,27 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
-    
-    <style>
-        /* ===================== CEREBRO HUD v43.1 STYLES ===================== */
-        #cerebro-hud {
-            position: fixed; top: 10px; right: 10px; z-index: 10000;
-            background: rgba(10, 20, 35, 0.9); color: #ECEFF4;
-            border: 1px solid #4C566A; border-radius: 8px;
-            padding: 12px; font-family: monospace; font-size: 13px;
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            width: 290px; pointer-events: none;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-        #cerebro-hud h4 {
-            margin: 0 0 10px; padding-bottom: 8px; border-bottom: 1px solid #4C566A;
-            color: #88C0D0; font-weight: bold; letter-spacing: 1px;
-        }
-        #cerebro-hud div { display: flex; justify-content: space-between; margin-bottom: 4px; }
-        #cerebro-hud .label { color: #81A1C1; width: 170px; }
-        #cerebro-hud .divider { height: 1px; background: #4C566A; margin: 8px 0; }
-        #cerebro-hud span:not(.label) { font-weight: bold; color: #E5E9F0; }
+        <!-- ==== ORGANIZED CSS FILES (This replaces style.css) ==== -->
+    <!-- 1. Base files first -->
+    <link rel="stylesheet" href="css/base/_reset.css">
+    <link rel="stylesheet" href="css/base/_variables.css">
+    <link rel="stylesheet" href="css/base/_typography.css">
+    <link rel="stylesheet" href="css/base/_layout.css">
+    <link rel="stylesheet" href="css/base/_utilities.css">
 
-        /* ========= NEW MORPH/ABSORPTION STYLES ========== */
-        /* CRUCIAL FIX: Allows interaction with content that scrolls under the pinned visuals */
-        .pillar-visuals-col {
-            pointer-events: none;
-        }
-        #actor-3d-stunt-double .face.front {
-            background: transparent !important;
-            border: 1px solid rgba(255, 255, 255, 0.3); 
-        }
-        #morph-path {
-            fill: #E5E9F0;
-            stroke: none;
-        }
-        /* Make all text invisible by default to prevent Flash of Unstyled Content (FOUC) */
-        .pillar-text-content {
-            opacity: 0;
-            visibility: hidden;
-        }
-        /* Make the first one visible on page load */
-        .pillar-text-content:first-of-type {
-            opacity: 1;
-            visibility: visible;
-        }
-    </style>
-</head>
+    <!-- 2. Reusable Component files -->
+    <link rel="stylesheet" href="css/components/_buttons.css">
+    <link rel="stylesheet" href="css/components/_header.css">
+    <link rel="stylesheet" href="css/components/_fullscreen-menu.css">
+    <link rel="stylesheet" href="css/components/_footer.css">
+
+    <!-- 3. Page-specific or larger components -->
+    <link rel="stylesheet" href="css/components/_scrollytelling.css">
+    <link rel="stylesheet" href="css/components/_homepage.css">
+    <link rel="stylesheet" href="css/components/_story-page.css">
+    <link rel="stylesheet" href="css/components/_contact-page.css">
+    <link rel="stylesheet" href="css/components/_resources-page.css">
+    
 <body>
     <!-- ======================= CEREBRO ORACLE HUD v43.1 "SOVEREIGN" ======================= -->
     <div id="cerebro-hud">
