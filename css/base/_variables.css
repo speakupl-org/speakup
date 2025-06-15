@@ -1,1 +1,24 @@
+/* --- 1. Global & Variables --- */
+:root {
+    --color-background-dark: #112024; /* Deep, focused, calm */
+    --color-surface-dark: #1A2C30;   /* A slightly lighter surface for cards and sections */
+    --color-primary-vibrant: #00A09A; /* Clarity, Insight, "Aha!" moments */
+    --color-accent: #FDB813;         /* Warmth, encouragement, humanity */
+    --color-text-main: #E2E8F0;       /* Main text - soft and readable */
+    --color-text-muted: #94A3B8;      /* Secondary text - less prominent */
+    --color-heading: #FFFFFF;        /* Headings - crisp and clear */
 
+    --font-primary: 'Inter', -apple-system, sans-serif;
+    --font-heading: 'Poppins', var(--font-primary);
+    
+    --shadow-glow-lg: 0 0 30px -8px rgba(253, 184, 19, 0.4);
+    --shadow-subtle: 0 4px 12px rgba(0, 0, 0, 0.2);
+
+    --border-radius: 12px;
+    --header-height: 75px;
+    --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    
+    /* RGB values for gradient alpha */
+    --rgb-primary: 0, 160, 154;
+    --rgb-accent: 253, 184, 19;
+}
