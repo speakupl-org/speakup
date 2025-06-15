@@ -32,8 +32,11 @@ function initSite() {
     finalLogoSvg: document.querySelector('#final-logo-svg'),
     morphPath: document.querySelector('#morph-path'),
   };
+
+// ADD THIS LINE:
+gsap.set(DOM_ELEMENTS.finalLogoSvg, { autoAlpha: 0 }); // Hide the SVG on load
   
-  const { cube } = threeModule.setup(DOM_ELEMENTS.canvas);
+const { cube } = threeModule.setup(DOM_ELEMENTS.canvas);
   
   createScrollEngine(DOM_ELEMENTS.masterTrigger, (progress) => {
     APP_STATE.scrolly.progress = progress;
