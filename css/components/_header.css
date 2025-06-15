@@ -1,1 +1,54 @@
+/* This body rule is here because it's required by the fixed header */
+body {
+    padding-top: 110px; /* = header height + top margin + extra space */
+}
+
+/* Part 1: The "Floating Pill" Header */
+.site-header-pill {
+    position: fixed; /* Fixed position stays on screen while scrolling */
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%); /* Centers the header perfectly */
+    width: 95%;
+    max-width: 980px; /* Limits width on very large screens */
+    height: 70px;
+    padding: 0 25px;
+    z-index: 1000;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    /* Shape & Float */
+    border-radius: 50px; /* Generously rounded corners for the "pill" shape */
+    
+    /* Color & "Frosted Glass" Effect */
+    background-color: rgba(17, 32, 36, 0.75); /* --color-background-dark with transparency */
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px); /* Safari support */
+    box-shadow: var(--shadow-subtle);
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border for definition */
+    
+    transition: var(--transition-smooth);
+}
+
+/* Header Contents */
+.site-header-pill .logo-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+}
+.site-header-pill .logo-icon { 
+    width: 35px; 
+}
+.site-header-pill .logo-text { 
+    font-size: 1.4rem; 
+    font-weight: 600; 
+    color: var(--color-heading); 
+}
+.site-header-pill .logo-text .up { 
+    color: var(--color-primary-vibrant); 
+}
+
 
