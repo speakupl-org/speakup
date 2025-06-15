@@ -1,3 +1,4 @@
+// js/main.js find its variables. It only knows about the things it explicitly `import`s.
 // js/main.js
 import { threeModule } from './modules/three-module.js';
 import { createScrollEngine } from './modules/scroll-engine.js';
