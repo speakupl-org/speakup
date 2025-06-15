@@ -8,6 +8,7 @@
 @import url('base/_variables.css');
 @import url('base/_typography.css');
 @import url('base/_layout.css');
+@import url('base/_utilities.css'); /* Added this line */
 
 /* 2. Reusable components */
 @import url('components/_buttons.css');
@@ -19,5 +20,5 @@
 @import url('components/_scrollytelling.css');
 @import url('components/_homepage.css');
 @import url('components/_story-page.css');
-@import url('components/_contact-page.css');  /* Added this line */
-@import url('components/_resources-page.css');/* Added this line */
+@import url('components/_contact-page.css');
+@import url('components/_resources-page.css');
