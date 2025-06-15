@@ -225,3 +225,55 @@ body.menu-open .fullscreen-menu {
     transform: translateY(0);
     transition: opacity 0.4s ease, transform 0.4s ease, visibility 0s 0s;
 }
+
+/* =========================================================================
+   13. Alternative Mobile Navigation System
+   ========================================================================= */
+
+/* Hides content visually while keeping it available for screen readers */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* This targets an older header implementation and can be added for completeness */
+@media (max-width: 1024px) {
+    .mobile-nav-toggle {
+        display: block;
+        z-index: 1001;
+    }
+    .main-nav {
+        display: none; 
+    }
+    .header-cta {
+        display: none;
+    }
+    .main-nav[data-visible="true"] {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        position: fixed;
+        inset: var(--header-height, 75px) 0 0 0;
+        background-color: var(--color-background-dark);
+    }
+    .main-nav[data-visible="true"] ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        text-align: center;
+    }
+    .main-nav[data-visible="true"] ul a {
+        display: block;
+        color: var(--color-heading);
+        font-size: 1.5rem;
+        font-weight: 600;
+        padding: 1rem 2rem;
+    }
+}
