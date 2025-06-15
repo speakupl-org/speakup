@@ -1,6 +1,11 @@
 // js/main.js find its variables. It only knows about the things it explicitly `import`s.
+const gsap = window.gsap;
 const THREE = window.THREE;
+const { ScrollTrigger, Flip, MorphSVGPlugin } = window; // Also get the plugins
 
+// ADD THIS LINE TO REGISTER THE PLUGINS:
+gsap.registerPlugin(ScrollTrigger, Flip, MorphSVGPlugi
+                    
 // Get the globally loaded libraries so our module can see them.
 import { threeModule } from './modules/three-module.js';
 import { createScrollEngine } from './modules/scroll-engine.js';
