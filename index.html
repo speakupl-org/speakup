@@ -16,24 +16,33 @@
 <body>
 
     <!-- =========================================================================
-       HEADER - The consistent navigation for all pages
+       PART 1: THE SPEAK UP "FLOATING PILL" HEADER (NOW FULLY RESPONSIVE)
        ========================================================================= -->
-    <header class="sticky-header">
-        <div class="container">
-            <a href="index.html" class="logo-area" aria-label="Speak Up Homepage">
-                <img src="images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon">
-                <span class="logo-text">Speak <span class="up">Up</span></span>
-            </a>
-            <nav class="main-nav"> <!-- Using a proper NAV element -->
+    <header class="site-header-pill">
+        <a href="index.html" class="logo-area" aria-label="Speak Up Homepage">
+            <img src="images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon">
+            <span class="logo-text">Speak <span class="up">Up</span></span>
+        </a>
+    
+        <!-- This container holds the desktop navigation and will be hidden on mobile -->
+        <div class="header-desktop-nav-container">
+            <nav class="desktop-nav">
                 <ul>
                     <li><a href="o-metodo.html">O Método</a></li>
                     <li><a href="minha-jornada.html">Minha Jornada</a></li>
                     <li><a href="recursos.html">Recursos</a></li>
-                    <li><a href="contato.html">Contato</a></li>
+                    <!-- We can omit Contact here since it's the main CTA -->
                 </ul>
             </nav>
-            <a href="contato.html" class="cta-button header-cta">Agende uma Conversa</a>
+            <a href="contato.html" class="cta-button header-cta-desktop">Agende uma Conversa</a>
         </div>
+    
+        <!-- This is the hamburger button, which will now only be visible on mobile -->
+        <button class="menu-toggle-button" id="menu-open-button" aria-label="Open menu" aria-expanded="false">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+        </button>
     </header>
 
     <main>
