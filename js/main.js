@@ -52,7 +52,7 @@ function initSite() {
   createScrollEngine(DOM_ELEMENTS.masterTrigger, (progress) => {
     APP_STATE.scrolly.progress = progress;
   });
-  createActors(cube, DOM_ELEMENTS.textPillars, APP_STATE);
+  createActors(cube, DOM_ELEMENTS.textPillars, APP_STATE, gsap);
   setupHandoffAnimation(DOM_ELEMENTS, cube);
 }
 
