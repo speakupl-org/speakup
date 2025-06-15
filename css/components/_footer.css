@@ -88,3 +88,41 @@
 .footer-contact .footer-contact-link:hover {
     color: var(--color-accent);
 }
+
+/* Social Icons */
+.footer-socials {
+    margin-top: 20px;
+    display: flex;
+    gap: 15px;
+}
+
+.footer-socials a {
+    color: var(--color-text-muted); /* Initial color for the icon */
+    display: inline-block;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.footer-socials a:hover {
+    color: var(--color-accent); /* The warm amber color on hover */
+    transform: translateY(-3px); /* A slight lift effect */
+}
+
+
+/* The Bottom Bar */
+.footer-bottom-bar {
+    text-align: center;
+}
+.footer-bottom-bar p {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    max-width: none; /* Override default paragraph max-width */
+    margin: 0 auto;
+}
+.footer-bottom-bar a {
+    color: var(--color-text-muted);
+    text-decoration: underline;
+    transition: color 0.3s ease;
+}
+.footer-bottom-bar a:hover {
+    color: var(--color-primary-vibrant);
+}
