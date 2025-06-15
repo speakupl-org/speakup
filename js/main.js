@@ -1,5 +1,5 @@
 // js/main.js
-import { threeModule } from './modules/three-module.js';
+import { threeModule } from './modules/abc-module.js';
 import { createScrollEngine } from './modules/scroll-engine.js';
 import { createActors } from './modules/actors.js';
 import { setupHandoffAnimation } from './modules/handoff-animation.js';
