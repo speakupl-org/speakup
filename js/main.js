@@ -42,6 +42,17 @@ function initSite() {
     finalLogoSvg: document.querySelector('#final-logo-svg'),
     morphPath: document.querySelector('#morph-path'),
   };
+
+    
+  // PROBE 1: Let's see if we are finding the element.
+  console.log("Is the finalLogoSvg element found?", DOM_ELEMENTS.finalLogoSvg);
+  
+  // Hide the SVG placeholder on load.
+  gsap.set(DOM_ELEMENTS.finalLogoSvg, { autoAlpha: 0 });
+
+  // PROBE 2: Let's confirm this line actually ran.
+  console.log("Attempted to hide the SVG.");
+
   
   // Hide the SVG placeholder on load.
   gsap.set(DOM_ELEMENTS.finalLogoSvg, { autoAlpha: 0 });
