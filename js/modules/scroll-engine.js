@@ -1,4 +1,6 @@
 // js/modules/scroll-engine.js
+const gsap = window.gsap;
+
 export function createScrollEngine(triggerElement, onProgressUpdate) {
   gsap.timeline({
     scrollTrigger: {
