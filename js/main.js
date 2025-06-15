@@ -1,5 +1,10 @@
 // js/main.js find its variables. It only knows about the things it explicitly `import`s.
 // js/main.js
+
+// Make the globally loaded libraries available inside our module
+const { gsap } = window;
+const { THREE } = window;
+
 import { threeModule } from './modules/three-module.js';
 import { createScrollEngine } from './modules/scroll-engine.js';
 import { createActors } from './modules/actors.js';
