@@ -1,33 +1,38 @@
-// js/main.js find its variables. It only knows about the things it explicitly `import`s.
+// js/main.js
+
+// --- SETUP PHASE ---
+// Get the globally loaded libraries so our module can see them.
 const gsap = window.gsap;
 const THREE = window.THREE;
-const { ScrollTrigger, Flip, MorphSVGPlugin } = window; // Also get the plugins
+const { ScrollTrigger, Flip, MorphSVGPlugin } = window;
 
-// ADD THIS LINE TO REGISTER THE PLUGINS:
-gsap.registerPlugin(ScrollTrigger, Flip, MorphSVGPlugi
-                    
-// Get the globally loaded libraries so our module can see them.
+// Register the GSAP plugins so they can be used. This is CRITICAL.
+gsap.registerPlugin(ScrollTrigger, Flip, MorphSVGPlugin);
+
+// Import our custom, separated modules.
 import { threeModule } from './modules/three-module.js';
 import { createScrollEngine } from './modules/scroll-engine.js';
 import { createActors } from './modules/actors.js';
 import { setupHandoffAnimation } from './modules/handoff-animation.js';
 
-
-// This is the one place we define the shared "state" of our app
+// --- STATE MANAGEMENT ---
+// A single, simple object to hold the shared state of our animation.
 const APP_STATE = {
   scrolly: { progress: 0 }
 };
 
+// --- INITIALIZATION ---
+// The main function that starts everything.
 function initSite() {
-  // Check if we are on a page that actually has the scrollytelling animation
+  // First, check if the necessary container exists on this page.
   const masterTrigger = document.querySelector('.scrolly-container');
   if (!masterTrigger) {
-    console.log("Scrollytelling section not found on this page. Skipping animation setup.");
-    return; // Exit if not on the right page
+    console.log("Scrollytelling section not found. Skipping animations.");
+    return; 
   }
-
   console.log("Scrollytelling section found. Initializing Sovereign System...");
   
+  // Collect all necessary DOM elements into one object for clarity.
   const DOM_ELEMENTS = {
     canvas: document.querySelector('#threejs-canvas'),
     masterTrigger: masterTrigger,
@@ -37,19 +42,19 @@ function initSite() {
     finalLogoSvg: document.querySelector('#final-logo-svg'),
     morphPath: document.querySelector('#morph-path'),
   };
+  
+  // Hide the SVG placeholder on load.
+  gsap.set(DOM_ELEMENTS.finalLogoSvg, { autoAlpha: 0 });
 
-// ADD THIS LINE:
-gsap.set(DOM_ELEMENTS.finalLogoSvg, { autoAlpha: 0 }); // Hide the SVG on load
-  
-const { cube } = threeModule.setup(DOM_ELEMENTS.canvas);
-  
+  // --- EXECUTION ---
+  // Start the various parts of our system.
+  const { cube } = threeModule.setup(DOM_ELEMENTS.canvas);
   createScrollEngine(DOM_ELEMENTS.masterTrigger, (progress) => {
     APP_STATE.scrolly.progress = progress;
   });
-  
   createActors(cube, DOM_ELEMENTS.textPillars, APP_STATE);
-  
   setupHandoffAnimation(DOM_ELEMENTS, cube);
 }
 
+// Wait for the page to fully load before running our initialization.
 window.addEventListener('load', initSite);
