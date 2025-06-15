@@ -1,5 +1,5 @@
 // js/modules/three-module.js
-
+const { THREE } = window;
 // IMPORTANT: Make sure it has an 'export' statement.
 export const threeModule = {
     scene: null,
