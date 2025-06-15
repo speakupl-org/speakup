@@ -3,22 +3,24 @@
 /*   Main Stylesheet - Imports All Parts   */
 /* ======================================= */
 
+/* Change all paths to be absolute from the site root */
+
 /* 1. Base styles, variables, and resets */
-@import url('base/_reset.css');
-@import url('base/_variables.css');
-@import url('base/_typography.css');
-@import url('base/_layout.css');
-@import url('base/_utilities.css'); /* Added this line */
+@import url('/css/base/_reset.css');
+@import url('/css/base/_variables.css');
+@import url('/css/base/_typography.css');
+@import url('/css/base/_layout.css');
+@import url('/css/base/_utilities.css');
 
 /* 2. Reusable components */
-@import url('components/_buttons.css');
-@import url('components/_header.css');
-@import url('components/_fullscreen-menu.css');
-@import url('components/_footer.css');
+@import url('/css/components/_buttons.css');
+@import url('/css/components/_header.css');
+@import url('/css/components/_fullscreen-menu.css');
+@import url('/css/components/_footer.css');
 
 /* 3. Page-specific or larger components */
-@import url('components/_scrollytelling.css');
-@import url('components/_homepage.css');
-@import url('components/_story-page.css');
-@import url('components/_contact-page.css');
-@import url('components/_resources-page.css');
+@import url('/css/components/_scrollytelling.css');
+@import url('/css/components/_homepage.css');
+@import url('/css/components/_story-page.css');
+@import url('/css/components/_contact-page.css');
+@import url('/css/components/_resources-page.css');
