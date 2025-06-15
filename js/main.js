@@ -56,5 +56,14 @@ createScrollEngine(DOM_ELEMENTS.masterTrigger, (progress) => {
   setupHandoffAnimation(DOM_ELEMENTS, cube);
 }
 
-// Wait for the page to fully load before running our initialization.
-window.addEventListener('load', initSite);
+// ... the rest of your initSite function ...
+
+// This function will wait until the entire page, including all scripts, is truly ready.
+async function run() {
+  // Wait for the next "tick" of the browser's event loop to ensure everything is settled.
+  await new Promise(resolve => setTimeout(resolve, 0));
+  initSite();
+}
+
+// Start the process.
+run();
