@@ -248,6 +248,33 @@
 <!-- CORE LIBRARIES (Three.js must come first) -->
 <script src="js/vendor/three.min.js"></script> 
 
+    <!-- ... other head tags like meta, title ... -->
+
+    <!-- ==== ORGANIZED CSS FILES ==== -->
+    <!-- The order here is important! -->
+
+    <!-- 1. Base files first -->
+    <link rel="stylesheet" href="css/base/_reset.css">
+    <link rel="stylesheet" href="css/base/_variables.css">
+    <link rel="stylesheet" href="css/base/_typography.css">
+    <link rel="stylesheet" href="css/base/_layout.css">
+    <link rel="stylesheet" href="css/base/_utilities.css">
+
+    <!-- 2. Reusable Component files -->
+    <link rel="stylesheet" href="css/components/_buttons.css">
+    <link rel="stylesheet" href="css/components/_header.css">
+    <link rel="stylesheet" href="css/components/_fullscreen-menu.css">
+    <link rel="stylesheet" href="css/components/_footer.css">
+
+    <!-- 3. Page-specific or larger components -->
+    <link rel="stylesheet" href="css/components/_scrollytelling.css">
+    <link rel="stylesheet" href="css/components/_homepage.css">
+    <link rel="stylesheet" href="css/components/_story-page.css">
+    <link rel="stylesheet" href="css/components/_contact-page.css">
+    <link rel="stylesheet" href="css/components/_resources-page.css">
+    
+    <!-- ... other head tags ... -->
+
 <!-- ESSENTIAL GSAP LIBRARIES -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
