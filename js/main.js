@@ -1,14 +1,12 @@
 // js/main.js find its variables. It only knows about the things it explicitly `import`s.
-// js/main.js
+const THREE = window.THREE;
 
-// Make the globally loaded libraries available inside our module
-const { gsap } = window;
-const { THREE } = window;
-
+// Get the globally loaded libraries so our module can see them.
 import { threeModule } from './modules/three-module.js';
 import { createScrollEngine } from './modules/scroll-engine.js';
 import { createActors } from './modules/actors.js';
 import { setupHandoffAnimation } from './modules/handoff-animation.js';
+
 
 // This is the one place we define the shared "state" of our app
 const APP_STATE = {
