@@ -49,9 +49,9 @@ function initSite() {
   // --- EXECUTION ---
   // Start the various parts of our system.
   const { cube } = threeModule.setup(DOM_ELEMENTS.canvas);
-  createScrollEngine(DOM_ELEMENTS.masterTrigger, (progress) => {
-    APP_STATE.scrolly.progress = progress;
-  });
+createScrollEngine(DOM_ELEMENTS.masterTrigger, (progress) => {
+  APP_STATE.scrolly.progress = progress;
+}, gsap);
   createActors(cube, DOM_ELEMENTS.textPillars, APP_STATE, gsap);
   setupHandoffAnimation(DOM_ELEMENTS, cube);
 }
