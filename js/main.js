@@ -1,14 +1,14 @@
 
-/*
-THE DEFINITIVE COVENANT BUILD v44.1 - "Sovereign" Hybrid Protocol (Corrected)
+THE DEFINITIVE COVENANT BUILD v44.2 - "Sovereign" Hybrid Protocol (with Integrated Diagnostics)
 This version resolves initialization race conditions and fixes internal function calls.
+It now includes the Sovereign Diagnostic Suite v2.0 for holistic environment analysis.
 */
 
 // =========================================================================
 //         ORACLE v44.1 - GRANULAR TELEMETRY ENGINE (CORRECTED)
 // =========================================================================
 const Oracle = {
-    config: { verbosity: 1, logToConsole: true }, // Comma is here
+    config: { verbosity: 1, logToConsole: true },
     state: {
         log_timestamp: null, log_type: "INITIAL_STATE", session_id: `sid-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         scroll_progress: 0, scroll_direction: "NONE", scroll_velocity: 0, animation_phase: "IDLE",
@@ -18,7 +18,7 @@ const Oracle = {
         error_message_text: null, error_stack_trace: null,
         last_network_request: { network_request_url: null, network_request_status_code: null, network_request_response_time: null },
         dom_element_bounding_rect: {}, threejs_renderer_info: {}, gpu_adapter_info: "Unavailable"
-    }, // Comma is here
+    },
     
     init: function(callback) {
         const urlParams = new URLSearchParams(window.location.search);
@@ -28,13 +28,10 @@ const Oracle = {
         this.state.is_touch_device = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
         this.state.viewport_width = window.innerWidth;
         this.state.viewport_height = window.innerHeight;
-        this.initPerformanceObserver();
         this.initGlobalErrorHandler();
         if (callback) callback();
-    }, // Comma is here
+    },
 
-    initPerformanceObserver: function() { /* (Listeners for network resources) */ }, // Comma is here
-    
     initGlobalErrorHandler: function() {
         window.onerror = (message, source, lineno, colno, error) => {
             this.state.log_type = "ERROR";
@@ -43,64 +40,48 @@ const Oracle = {
             this.updateAndLog(null, null); 
             return false;
         };
-    }, // Comma is here
+    },
     
     updateAndLog: function(three_cube, scroll_trigger) {
-    // Stop if logging is turned off
-    if (this.config.verbosity < 1) return;
-    
-    // --- Update State ---
-    const s = this.state;
-    s.log_timestamp = new Date().toISOString();
-    
-    if (s.log_type !== "ERROR") {
-        s.log_type = "STATE_UPDATE";
-    }
-
-    if (scroll_trigger) {
-        s.scroll_progress = scroll_trigger.progress.toFixed(4);
-        s.scroll_direction = scroll_trigger.direction === 1 ? 'DOWN' : 'UP';
-        s.scroll_velocity = scroll_trigger.getVelocity().toFixed(2);
-    }
-    if (three_cube && three_cube.userData.canvas) {
-        s.object_position = { x: three_cube.position.x.toFixed(2), y: three_cube.position.y.toFixed(2), z: three_cube.position.z.toFixed(2) };
-        s.object_scale = { x: three_cube.scale.x.toFixed(2), y: three_cube.scale.y.toFixed(2), z: three_cube.scale.z.toFixed(2) };
-        s.object_rotation = { x: three_cube.rotation.x.toFixed(2), y: three_cube.rotation.y.toFixed(2), z: three_cube.rotation.z.toFixed(2) };
-        s.dom_element_bounding_rect = three_cube.userData.canvas.getBoundingClientRect().toJSON();
-    }
-    if (performance.memory) s.javascript_heap_size = performance.memory.jsHeapSizeLimit;
-    
-    // --- Log to Console ---
-    if(this.config.logToConsole) {
-        const logTitle = `%c[ORACLE @ ${s.log_timestamp.split('T')[1].slice(0, -1)}] Phase: ${s.animation_phase}`;
-        const logStyle = 'color: #8FBCBB;';
-        
-        // =========================================================
-        //  THE FIX IS HERE: Check verbosity to decide how to log.
-        // =========================================================
-        if (this.config.verbosity > 1) {
-            // Verbosity 2 or higher: Log is EXPANDED by default.
-            console.group(logTitle, logStyle);
-        } else {
-            // Verbosity 1: Log is COLLAPSED by default.
-            console.groupCollapsed(logTitle, logStyle);
+        if (this.config.verbosity < 1) return;
+        const s = this.state;
+        s.log_timestamp = new Date().toISOString();
+        if (s.log_type !== "ERROR") s.log_type = "STATE_UPDATE";
+        if (scroll_trigger) {
+            s.scroll_progress = scroll_trigger.progress.toFixed(4);
+            s.scroll_direction = scroll_trigger.direction === 1 ? 'DOWN' : 'UP';
+            s.scroll_velocity = scroll_trigger.getVelocity().toFixed(2);
         }
+        if (three_cube && three_cube.userData.canvas) {
+            s.object_position = { x: three_cube.position.x.toFixed(2), y: three_cube.position.y.toFixed(2), z: three_cube.position.z.toFixed(2) };
+            s.object_scale = { x: three_cube.scale.x.toFixed(2), y: three_cube.scale.y.toFixed(2), z: three_cube.scale.z.toFixed(2) };
+            s.object_rotation = { x: three_cube.rotation.x.toFixed(2), y: three_cube.rotation.y.toFixed(2), z: three_cube.rotation.z.toFixed(2) };
+            s.dom_element_bounding_rect = three_cube.userData.canvas.getBoundingClientRect().toJSON();
+        }
+        if (performance.memory) s.javascript_heap_size = performance.memory.jsHeapSizeLimit;
         
-        // This part stays the same
-        console.log(JSON.stringify(this.state, null, 2));
-        console.groupEnd();
-    }
-}, // <<<<<<<<<<<<< THIS WAS THE MISSING COMMA <<<<<<<<<<<<<
+        if(this.config.logToConsole) {
+            const logTitle = `%c[ORACLE @ ${s.log_timestamp.split('T')[1].slice(0, -1)}] Phase: ${s.animation_phase}`;
+            const logStyle = 'color: #8FBCBB;';
+            if (this.config.verbosity > 1) {
+                console.group(logTitle, logStyle);
+            } else {
+                console.groupCollapsed(logTitle, logStyle);
+            }
+            console.log(JSON.stringify(this.state, null, 2));
+            console.groupEnd();
+        }
+    },
 
     updateHUD: (id, value, color = '#E5E9F0') => {
         const el = document.getElementById(id);
         if (el) { el.textContent = value; if(color) el.style.color = color; }
-    }, // Comma is here
+    },
 
-    report: (message) => console.log(`%c[SOVEREIGN REPORT]:`, 'color: #5E81AC; font-weight: bold;', message), // Comma is here
+    report: (message) => console.log(`%c[SOVEREIGN REPORT]:`, 'color: #5E81AC; font-weight: bold;', message),
 
-    warn: (message) => console.warn(`%c[SOVEREIGN WARNING]:`, 'color: #D08770;', message) // NO comma on the last item
-}; // End of Oracle object
+    warn: (message) => console.warn(`%c[SOVEREIGN WARNING]:`, 'color: #D08770;', message)
+};
 
 
 // =========================================================================
@@ -109,7 +90,6 @@ const Oracle = {
 const threeJsModule = {
     scene: null, camera: null, renderer: null, cube: null, lastFrameTime: 0,
     setup: function(canvas) {
-        // ... (The rest of the Three.js setup module remains the same as it was correct)
         this.scene = new THREE.Scene();
         const sizes = { width: canvas.offsetWidth, height: canvas.offsetHeight };
         this.camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100);
@@ -165,103 +145,153 @@ const threeJsModule = {
 };
 
 // =========================================================================
-//         ENHANCED SCROLLYTELLING DIAGNOSTICS (THE "FILTER")
 // =========================================================================
-function runEnhancedDiagnostics(elements) {
+//
+//              SOVEREIGN DIAGNOSTIC SUITE v2.0
+//
+//   A comprehensive, multi-tool analysis engine for complex
+//   scrollytelling and pinning animations. Run this before your
+//   animation code to get a complete picture of the environment.
+//
+// =========================================================================
+// =========================================================================
+
+const runSovereignDiagnostics = (elements, options = {}) => {
+    const defaults = {
+        checkLayout: true,
+        checkPinningContext: true,
+        checkGSAP: true,
+        checkPerformance: true
+    };
+    const settings = { ...defaults, ...options };
+
+    console.group("%c[SOVEREIGN DIAGNOSTIC SUITE v2.0]", "background: #2E3440; color: #8FBCBB; font-size: 16px; padding: 4px 8px; border-radius: 4px; font-weight: bold;");
+    Oracle.report("Beginning holistic environment analysis...");
+
+    if (settings.checkLayout) _diagnoseLayoutAndStructure(elements);
+    if (settings.checkPinningContext) _diagnosePinningContext(elements.visualsCol);
+    if (settings.checkGSAP) _diagnoseGSAPIntegrity(elements);
+    if (settings.checkPerformance) _enhanceOracleWithPerformanceObserver();
+    
+    Oracle.report("Diagnostic suite concluded. Review reports above.");
+    console.groupEnd();
+};
+
+/** TOOL #1: THE CSS LAYOUT & STRUCTURE DOCTOR */
+function _diagnoseLayoutAndStructure(elements) {
+    console.groupCollapsed("%c[Inspector 1] Layout & Structure Analysis", "color: #5E81AC; font-weight: bold;");
     if (!elements.masterTrigger || !elements.visualsCol || !elements.textCol) {
-        console.error("❌ DIAGNOSTICS ABORTED: One or more critical elements for scrollytelling are missing.");
+        console.error("❌ CRITICAL FAILURE: One or more core layout elements (.scrolly-container, .pillar-visuals-col, .pillar-text-col) are MISSING. Analysis aborted.");
+        console.groupEnd();
         return;
     }
-
-    console.group("%c[SOVEREIGN SCROLLYTELLING ANALYSIS]", "color: #BF616A; font-weight: bold; font-size: 14px;");
-    
-    let allChecksPassed = true;
     const report = (message, status, details = '') => {
-        let icon = '✅';
-        if (status === 'FAIL') {
-            icon = '❌';
-            allChecksPassed = false;
-        } else if (status === 'WARN') {
-            icon = '⚠️';
-        }
+        let icon = status === 'OK' ? '✅' : status === 'WARN' ? '⚠️' : '❌';
         console.log(`${icon} ${message}`, details);
     };
-
-    // --- CHECK 1: The Visuals Column (The element that should stick) ---
-    console.groupCollapsed("1. Visuals Column (.pillar-visuals-col) Analysis");
-    const visualStyle = window.getComputedStyle(elements.visualsCol);
-    if (visualStyle.position === 'sticky') {
-        report("CSS 'position' is 'sticky'.", "OK");
-    } else {
-        report(`CSS 'position' is '${visualStyle.position}', NOT 'sticky'. This is the #1 cause of failure for CSS-based pinning. If using GSAP's 'pin', this is OK.`, "WARN");
-    }
-    
-    // --- CHECK 2: The Scrolling Container (The trigger) ---
-    console.groupCollapsed("2. Scrolling Container (.scrolly-container) Analysis");
+    const textColHeight = elements.textCol.scrollHeight;
+    const viewportHeight = window.innerHeight;
+    if (textColHeight > viewportHeight * 1.2) report(`Scroll container is sufficiently tall (Text Column: ${textColHeight}px vs Viewport: ${viewportHeight}px).`, 'OK');
+    else report(`Container is NOT TALL ENOUGH to scroll effectively (Text Column: ${textColHeight}px vs Viewport: ${viewportHeight}px).`, 'FAIL', "FIX: Increase `min-height` of `.pillar-text-content` elements.");
     const containerStyle = window.getComputedStyle(elements.masterTrigger);
     if (containerStyle.display === 'flex') {
-        report("Layout is 'flex'. This is correct.", "OK");
-        if (containerStyle.alignItems === 'flex-start') {
-            report("'align-items' is 'flex-start'. This is CRITICAL for sticky positioning in a flex container.", "OK");
-        } else {
-            report(`'align-items' is '${containerStyle.alignItems}', NOT 'flex-start'. This will break 'position: sticky' in a flex layout.`, "FAIL");
-        }
-    } else {
-        report(`Layout is '${containerStyle.display}', not 'flex'. The provided CSS assumes a flex layout.`, "FAIL");
-    }
-
-    const scrollHeight = elements.masterTrigger.scrollHeight;
-    const viewportHeight = window.innerHeight;
-    if (scrollHeight > viewportHeight * 1.5) {
-        report(`Container is scrollable (Height: ${scrollHeight}px vs Viewport: ${viewportHeight}px).`, "OK");
-    } else {
-        report(`Container is NOT TALL ENOUGH to scroll effectively (Height: ${scrollHeight}px vs Viewport: ${viewportHeight}px). The text column needs more height (e.g., min-height on pillars).`, "FAIL");
-    }
-    console.groupEnd();
-    
-
-    // --- CHECK 3: Ancestor Overflow (The "Hidden Killer") ---
-    console.groupCollapsed("3. Ancestor 'overflow' Property Check");
-    let problemFound = false;
+        report("Parent container uses 'display: flex'.", "OK");
+        if (containerStyle.alignItems === 'flex-start') report("'align-items' is 'flex-start'. REQUIRED for `position: sticky`.", 'OK');
+        else report(`'align-items' is '${containerStyle.alignItems}', NOT 'flex-start'. This will break pinning.`, 'FAIL');
+    } else report(`Parent container layout is '${containerStyle.display}', not 'flex'.`, 'WARN');
+    let overflowProblemFound = false;
     let currentElement = elements.visualsCol.parentElement;
-    while (currentElement) {
-        const parentStyle = window.getComputedStyle(currentElement);
-        if (parentStyle.overflow !== 'visible' || parentStyle.overflowX !== 'visible' || parentStyle.overflowY !== 'visible') {
-            report(`CONFLICT FOUND on ancestor:`, "FAIL", currentElement);
-            console.log(`- Element has 'overflow: ${parentStyle.overflow}', 'overflow-x: ${parentStyle.overflowX}', 'overflow-y: ${parentStyle.overflowY}'.`);
-            console.log("- For 'position: sticky' to work, all ancestors must have 'overflow: visible'. This is a very common cause of failure.");
-            problemFound = true;
+    while (currentElement && currentElement.tagName !== 'BODY') {
+        const style = window.getComputedStyle(currentElement);
+        if (style.overflow !== 'visible' || style.overflowX !== 'visible' || style.overflowY !== 'visible') {
+            report(`CONFLICT FOUND on ancestor: <${currentElement.tagName.toLowerCase()}>. It has a restrictive 'overflow'.`, "FAIL", currentElement);
+            console.log("For 'position: sticky' to work, ALL ancestors must have 'overflow: visible'.");
+            overflowProblemFound = true;
         }
-        if (currentElement.tagName === 'BODY') break;
         currentElement = currentElement.parentElement;
     }
-    if (!problemFound) {
-        report("No conflicting 'overflow' properties found on ancestors.", "OK");
-    }
-    console.groupEnd();
-
-
-    // --- CHECK 4: Breathing Room (The Spacing Problem) ---
-    console.groupCollapsed("4. Text Column (.pillar-text-col) Spacing Analysis");
-    const textColStyle = window.getComputedStyle(elements.textCol);
-    const paddingLeft = parseInt(textColStyle.paddingLeft, 10);
-    const paddingRight = parseInt(textColStyle.paddingRight, 10);
-    if (paddingLeft > 10 && paddingRight > 10) {
-        report(`Text column has horizontal padding (${paddingLeft}px / ${paddingRight}px).`, "OK");
-    } else {
-        report(`Text column has little or no horizontal padding (${paddingLeft}px / ${paddingRight}px). Text will be too close to the visual element.`, "WARN");
-    }
-    console.groupEnd();
-
-    console.log("\n"); // Add a blank line for readability
-    if (allChecksPassed) {
-        console.log("%cCONCLUSION: All primary checks passed. The layout should be working correctly. If it's still failing, the issue may be in the GSAP timeline's 'end' calculation.", 'color: #A3BE8C; font-weight: bold;');
-    } else {
-        console.log("%cCONCLUSION: One or more critical checks failed. Please review the '❌ FAIL' messages above to pinpoint the exact problem.", 'color: #D08770; font-weight: bold;');
-    }
-
+    if (!overflowProblemFound) report("No conflicting 'overflow' properties found on ancestors.", 'OK');
+    if (window.getComputedStyle(elements.visualsCol).boxSizing === 'border-box') report("Elements use 'box-sizing: border-box'.", 'OK');
+    else report("An element is not using 'box-sizing: border-box', a high-risk practice.", 'WARN', "FIX: Set `*, *::before, *::after { box-sizing: border-box; }` globally.");
     console.groupEnd();
 }
+
+/** TOOL #2: THE PIN TRAP INSPECTOR */
+function _diagnosePinningContext(elementToInspect) {
+    console.groupCollapsed("%c[Inspector 2] GSAP Pinning Context Analysis", "color: #D08770; font-weight: bold;");
+    if (!elementToInspect) {
+        console.warn("⚠️ Pinning Context Inspector: No element provided. Skipping.");
+        console.groupEnd();
+        return;
+    }
+    console.log("Inspecting ancestors of:", elementToInspect);
+    console.log("Searching for CSS properties that 'trap' a `position: fixed` element (`transform`, `perspective`, `filter`).");
+    let trapFound = false;
+    let currentElement = elementToInspect.parentElement;
+    while (currentElement && currentElement.tagName !== 'BODY') {
+        const style = window.getComputedStyle(currentElement);
+        const props = { transform: style.transform, perspective: style.perspective, filter: style.filter, 'backdrop-filter': style.backdropFilter, contain: style.contain };
+        for (const prop in props) {
+            const value = props[prop];
+            if (value && value !== 'none' && value !== 'normal') {
+                trapFound = true;
+                console.group(`❌ CRITICAL TRAP FOUND on ancestor: <${currentElement.tagName.toLowerCase()} class="${currentElement.className}">`);
+                console.error(`This element has a CSS property that creates a new coordinate system, trapping the GSAP pin.`);
+                console.log(`- Problem Element:`, currentElement);
+                console.log(`- Problem Property: %c${prop}: ${value}`, 'font-weight: bold; color: #BF616A;');
+                console.groupEnd();
+            }
+        }
+        currentElement = currentElement.parentElement;
+    }
+    if (trapFound) console.log("%cCONCLUSION: Critical pinning conflict detected. The element(s) marked ❌ must have the conflicting properties removed.", 'color: #BF616A; font-weight: bold;');
+    else console.log("%cCONCLUSION: Pinning context is clean. No trapping properties found.", 'color: #A3BE8C; font-weight: bold;');
+    console.groupEnd();
+}
+
+/** TOOL #3: GSAP & SELECTOR INTEGRITY CHECK */
+function _diagnoseGSAPIntegrity(elements) {
+    console.groupCollapsed("%c[Inspector 3] GSAP & Selector Integrity", "color: #EBCB8B; font-weight: bold;");
+    const report = (lib, status) => console.log(`${status ? '✅' : '❌'} ${lib}: ${status ? 'Detected' : 'MISSING!'}`);
+    report("GSAP Core", typeof gsap !== 'undefined');
+    report("ScrollTrigger", typeof ScrollTrigger !== 'undefined');
+    report("Flip Plugin", typeof Flip !== 'undefined');
+    report("MorphSVG Plugin", typeof MorphSVGPlugin !== 'undefined');
+    report("THREE.js", typeof THREE !== 'undefined');
+    console.log("\n--- Checking Element Selectors ---");
+    let allSelectorsFound = true;
+    for (const key in elements) {
+        const element = elements[key];
+        if (Array.isArray(element) ? element.length === 0 : element === null) {
+            console.error(`❌ Selector Failed: The selector for '${key}' found no elements.`);
+            allSelectorsFound = false;
+        } else console.log(`✅ Selector OK: '${key}' found ${Array.isArray(element) ? element.length : 1} element(s).`);
+    }
+    if (allSelectorsFound) console.log("\n%cCONCLUSION: All libraries and selectors are valid.", 'color: #A3BE8C; font-weight: bold;');
+    else console.log("\n%cCONCLUSION: One or more libraries or selectors FAILED. The animation cannot run.", 'color: #BF616A; font-weight: bold;');
+    console.groupEnd();
+}
+
+/** TOOL #4: ADVANCED PERFORMANCE MONITORING */
+function _enhanceOracleWithPerformanceObserver() {
+    if (typeof PerformanceObserver === 'undefined' || Oracle.isPerformanceObserverActive) return;
+    try {
+        const observer = new PerformanceObserver((list) => {
+            for (const entry of list.getEntries()) {
+                console.groupCollapsed(`%c[SOVEREIGN PERF] Long Task Detected: ${entry.duration.toFixed(2)}ms`, 'color: #D08770;');
+                console.warn(`A task blocked the main thread, which can cause animation stutter.`);
+                console.log('Details:', entry);
+                console.groupEnd();
+            }
+        });
+        observer.observe({ type: 'longtask', buffered: true });
+        Oracle.isPerformanceObserverActive = true;
+        console.log("✅ [Inspector 4] Advanced Performance Monitor (Long Task Observer) is active.");
+    } catch (e) {
+        console.error("⚠️ Failed to initialize the Long Task Performance Observer.", e);
+    }
+}
+
 
 // =========================================================================
 //         SOVEREIGN ARCHITECTURE & ANIMATION SETUP
@@ -269,12 +299,9 @@ function runEnhancedDiagnostics(elements) {
 let gsapCtx;
 function setupSite() {
     Oracle.init(() => {
-        // Now checks for THREE.js as well
         if (gsap && ScrollTrigger && Flip && MorphSVGPlugin && typeof THREE !== 'undefined') {
-            gsap.registerPlugin(ScrollTrigger, Flip, MorphSVGPlugin); // Ensure plugins are registered
-            if (gsapCtx) {
-                gsapCtx.revert(); // Clean up previous animations if resizing
-            }
+            gsap.registerPlugin(ScrollTrigger, Flip, MorphSVGPlugin);
+            if (gsapCtx) gsapCtx.revert();
             gsapCtx = setupAnimations();
         } else {
             const missing = !gsap ? 'GSAP Core' : !ScrollTrigger ? 'ScrollTrigger' : !Flip ? 'Flip' : !MorphSVGPlugin ? 'MorphSVG' : 'THREE.js';
@@ -377,8 +404,7 @@ function runEnhancedDiagnostics(elements) {
 
 
 // =========================================================================
-//         DEFINITIVE setupAnimations FUNCTION
-// This version uses GSAP's robust 'pin' feature and includes all diagnostics.
+//         DEFINITIVE setupAnimations FUNCTION (with integrated diagnostics)
 // =========================================================================
 function setupAnimations() {
     if (gsapCtx) gsapCtx.revert();
@@ -397,9 +423,15 @@ function setupAnimations() {
             textPillars: gsap.utils.toArray('.pillar-text-content'),
         };
 
-        // --- Step 1: Run All Diagnostics First ---
-        runEnhancedDiagnostics(elements);
-        inspectPinningContext(elements.visualsCol);
+        // ===================================================================
+        //            >>>>> RUNNING SOVEREIGN DIAGNOSTIC SUITE <<<<<
+        // This command executes all built-in diagnostic tools and reports
+        // its findings to the developer console. It analyzes CSS layout,
+        // pin-trapping conditions, library loading, and selector validity
+        // before any animation code runs.
+        // ===================================================================
+        runSovereignDiagnostics(elements);
+
 
         if (!elements.canvas || !elements.masterTrigger || elements.textPillars.length === 0) {
             Oracle.warn('ABORT: A critical animation element was not found in the DOM.');
@@ -457,7 +489,10 @@ function setupAnimations() {
             },
             '(max-width: 1024px)': () => {
                 Oracle.report("Mobile layout active. Scrollytelling animations disabled.");
-                gsap.set([cube.rotation, cube.scale], { clearProps: true });
+                // Ensure the cube exists before trying to access its properties
+                if (cube) {
+                    gsap.set([cube.rotation, cube.scale], { clearProps: true });
+                }
             }
         });
     });
@@ -468,10 +503,9 @@ function setupAnimations() {
 
 // This function now ONLY handles the handoff, making the code cleaner.
 function setupHandoffAnimation(elements, cube) {
-    // --- FIX: Correct HUD IDs to match your HTML ---
     const hudIds = {
-        handoffState: 'c-swap-flag', // Changed from c-handoff-state
-        handoffEvent: 'c-event'      // This one was correct
+        handoffState: 'c-swap-flag',
+        handoffEvent: 'c-event'
     };
 
     const logoPath = "M81.5,1.5 C37.2,1.5 1.5,37.2 1.5,81.5 C1.5,125.8 37.2,161.5 81.5,161.5 C125.8,161.5 161.5,125.8 161.5,81.5 C161.5,37.2 125.8,1.5 81.5,1.5 Z M81.5,116.5 C81.5,125.1 74.6,132 66,132 C57.4,132 50.5,125.1 50.5,116.5 L50.5,74 C50.5,65.4 57.4,58.5 66,58.5 C74.6,58.5 81.5,65.4 81.5,74 L81.5,116.5 Z M112.5,74 C112.5,65.4 105.6,58.5 97,58.5 C88.4,58.5 81.5,65.4 81.5,74 L81.5,89 C81.5,97.6 88.4,104.5 97,104.5 C105.6,104.5 112.5,97.6 112.5,89 L112.5,74 Z";
@@ -479,31 +513,21 @@ function setupHandoffAnimation(elements, cube) {
     ScrollTrigger.create({
         trigger: elements.handoffPoint,
         start: 'top center',
-        // --- FIX: The `toggleActions` property is cleaner for this on/off behavior ---
         toggleActions: "play none none reverse",
 
         onEnter: () => {
             Oracle.state.animation_phase = 'HANDOFF_INITIATED';
             Oracle.updateHUD(hudIds.handoffState, 'ENGAGED', '#EBCB8B');
             Oracle.updateHUD(hudIds.handoffEvent, 'FLIP > MORPH');
-
-            // Set a higher z-index to ensure the canvas animates OVER the summary text
             gsap.set(elements.visualsCol, { zIndex: 20 });
-
-            // 1. Get the state of the canvas in its original, sticky position
             const state = Flip.getState(elements.canvas);
-            
-            // 2. Move the canvas in the DOM to its new parent
             elements.summaryPlaceholder.appendChild(elements.canvas);
-
-            // 3. Animate from the original state to the new one
             Flip.from(state, {
                 duration: 1.2,
                 ease: 'power3.inOut',
                 onComplete: () => {
                     Oracle.state.animation_phase = 'HANDOFF_MORPH';
                     const tl = gsap.timeline();
-                    // Morph transition
                     tl.to(elements.canvas, { autoAlpha: 0, duration: 0.4 })
                       .to(elements.finalLogoSvg, { autoAlpha: 1, duration: 0.4 }, "<")
                       .fromTo(elements.morphPath, 
@@ -517,33 +541,21 @@ function setupHandoffAnimation(elements, cube) {
             Oracle.state.animation_phase = 'HANDOFF_REVERSED';
             Oracle.updateHUD(hudIds.handoffState, 'DISENGAGED', '#BF616A');
             Oracle.updateHUD(hudIds.handoffEvent, 'REVERTING...');
-
-            // --- THIS IS THE CORRECTED REVERSAL LOGIC ---
-            // 1. Create a timeline to reverse the visual transition
             const tl = gsap.timeline({
                 onComplete: () => {
-                    // 3. AFTER visuals are reset, move the canvas back to its original parent
                     elements.visualsCol.appendChild(elements.canvas);
-                     // 4. IMPORTANT: Clear the z-index so it returns to its normal stacking order
                     gsap.set(elements.visualsCol, { clearProps: "zIndex" });
                     Oracle.updateHUD(hudIds.handoffEvent, 'AWAITING TRIGGER');
                 }
             });
-
-            // 2. Animate the SVG out and the Canvas back in
             tl.to(elements.finalLogoSvg, { autoAlpha: 0, duration: 0.3 })
               .to(elements.canvas, { autoAlpha: 1, duration: 0.3 }, 0);
-            
-            // By NOT using clearProps on the canvas, we allow the master scroll
-            // timeline to smoothly resume control of its properties (rotation/scale)
-            // without a visual jump.
         }
     });
 }
 
 
 // --- INITIALIZATION ---
-// Your existing initialization logic is perfect.
 window.addEventListener('load', setupSite);
 ScrollTrigger.addEventListener('resize', () => {
     gsap.delayedCall(0.2, setupSite);
