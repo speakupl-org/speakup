@@ -1,4 +1,4 @@
-
+/*
 THE DEFINITIVE COVENANT BUILD v44.2 - "Sovereign" Hybrid Protocol (with Integrated Diagnostics)
 This version resolves initialization race conditions and fixes internal function calls.
 It now includes the Sovereign Diagnostic Suite v2.0 for holistic environment analysis.
