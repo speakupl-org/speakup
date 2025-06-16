@@ -1,0 +1,141 @@
+/* ======================================= */
+/*   Component: Fullscreen Mobile Menu     */
+/* ======================================= */
+
+/* The Hamburger Button */
+.menu-toggle-button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    width: 30px;
+    height: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    padding: 0;
+    z-index: 1200; /* Must be above the menu overlay */
+}
+
+.hamburger-line {
+    width: 100%;
+    height: 3px;
+    background-color: var(--color-heading);
+    border-radius: 2px;
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+/* The Fullscreen Overlay */
+.fullscreen-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1100;
+    background-color: var(--color-background-dark);
+    background-image: 
+        radial-gradient(circle at 10% 90%, rgba(var(--rgb-primary), 0.1) 0%, transparent 40%),
+        radial-gradient(circle at 90% 10%, rgba(var(--rgb-primary), 0.1) 0%, transparent 40%);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: opacity 0.4s ease, transform 0.4s ease, visibility 0s 0.4s;
+}
+
+/* State when menu is open */
+html.menu-open {
+    overflow: hidden; /* Prevent body scroll */
+}
+body.menu-open .fullscreen-menu {
+    opacity: 1;
+    pointer-events: auto;
+    visibility: visible;
+    transform: translateY(0);
+    transition: opacity 0.4s ease, transform 0.4s ease, visibility 0s 0s;
+}
+
+/* Contents of the Menu */
+.fullscreen-menu-header {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 95%;
+    max-width: 980px;
+    height: 70px;
+    padding: 0 25px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.fullscreen-menu-header .logo-area { text-decoration: none; }
+.fullscreen-menu-header .logo-icon { width: 35px; }
+.fullscreen-menu-header .menu-toggle-button {
+    width: 28px;
+    height: 28px;
+    justify-content: center;
+}
+.close-line {
+    position: absolute;
+    width: 100%;
+    height: 3px;
+    background-color: var(--color-heading);
+    border-radius: 2px;
+}
+.close-line:first-child { transform: rotate(45deg); }
+.close-line:last-child { transform: rotate(-45deg); }
+
+.fullscreen-menu-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.fullscreen-menu-nav li {
+    margin: 15px 0;
+}
+.fullscreen-menu-nav a {
+    font-family: var(--font-heading);
+    font-size: clamp(1.8rem, 5vw, 2.5rem);
+    font-weight: 600;
+    color: var(--color-heading);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+.fullscreen-menu-nav a:hover {
+    color: var(--color-primary-vibrant);
+}
+
+.fullscreen-menu-action-box {
+    margin-top: 50px;
+    padding: 30px;
+    background-color: var(--color-surface-dark);
+    border-radius: var(--border-radius);
+    text-align: center;
+    width: 90%;
+    max-width: 380px;
+}
+.fullscreen-menu-action-box .cta-button {
+    width: 100%;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-glow-lg);
+}
+.fullscreen-menu-action-box .whatsapp-link {
+    color: var(--color-text-main);
+}
+.fullscreen-menu-action-box .whatsapp-link:hover {
+    color: var(--color-accent);
+}
+
+@media (max-width: 480px) {
+    .site-header-pill .logo-text { display: none; }
+    .site-header-pill { padding: 0 20px; }
+}

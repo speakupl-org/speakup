@@ -1,0 +1,62 @@
+/* ======================================= */
+/*   Base: Utilities                       */
+/* ======================================= */
+
+/* Hides content visually while keeping it available for screen readers */
+.sr-only:not(:focus):not(:active) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Styles for the JavaScript debug HUD */
+#cerebro-hud {
+    position: fixed; 
+    top: 10px; 
+    right: 10px; 
+    z-index: 10000;
+    background: rgba(10, 20, 35, 0.9); 
+    color: #ECEFF4;
+    border: 1px solid #4C566A; 
+    border-radius: 8px;
+    padding: 12px; 
+    font-family: monospace; 
+    font-size: 13px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    width: 290px; 
+    pointer-events: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+#cerebro-hud h4 {
+    margin: 0 0 10px; 
+    padding-bottom: 8px; 
+    border-bottom: 1px solid #4C566A;
+    color: #88C0D0; 
+    font-weight: bold; 
+    letter-spacing: 1px;
+}
+#cerebro-hud div { 
+    display: flex; 
+    justify-content: space-between; 
+    margin-bottom: 4px; 
+}
+#cerebro-hud .label { 
+    color: #81A1C1; 
+    width: 170px; /* Adjusted width for new labels */
+}
+#cerebro-hud .divider { 
+    height: 1px; 
+    background: #4C566A; 
+    margin: 8px 0; 
+}
+#cerebro-hud span:not(.label) { 
+    font-weight: bold; 
+    color: #E5E9F0; 
+}

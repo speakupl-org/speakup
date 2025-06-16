@@ -1,0 +1,66 @@
+/* ======================================= */
+/*   Component: Scrollytelling Section     */
+/* ======================================= */
+
+.method-pillars {
+    /* This section should not have horizontal padding
+       so its children can span the full width. */
+    padding: 0;
+}
+
+.scrolly-container {
+    display: flex;
+    align-items: flex-start;
+    width: 100vw; /* Force it to take the full viewport width */
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.pillar-visuals-col {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    flex: 1 1 50%; /* Use flex-grow and flex-shrink */
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pillar-text-col {
+    flex: 1 1 50%;
+    position: relative;
+    z-index: 2;
+    padding: 10vh 10vw; /* Use viewport units for responsive padding */
+}
+
+/* --- Responsive Fallback --- */
+@media (max-width: 1024px) {
+    .scrolly-container {
+        flex-direction: column;
+    }
+    .pillar-visuals-col, 
+    .pillar-text-col {
+        width: 100%;
+        position: relative; /* Un-stick it on mobile */
+        top: auto;
+        padding: 0 1rem; /* Adjust padding for mobile */
+    }
+    .pillar-visuals-col {
+        height: 50vh;
+    }
+    .pillar-text-content {
+        min-height: auto;
+        padding: 4rem 0;
+    }
+}
+
+#final-logo-svg {
+  /* This hides the SVG by default, preventing the flash.
+     GSAP will override this when it's time to animate. */
+  display: none;
+  opacity: 0;
+  visibility: hidden;
+}
