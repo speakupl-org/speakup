@@ -1,55 +1,51 @@
 // js/modules/scroll-engine.js
 
-export function createScrollEngine(cube, gsap) {
+// 1. MODERN IMPORTS
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+// 2. REGISTER THE PLUGIN
+// This must be done inside any module that uses the plugin.
+gsap.registerPlugin(ScrollTrigger);
+
+// 3. THE FUNCTION (simpler signature)
+// It no longer needs gsap passed in, because it imports it directly.
+export function createScrollEngine(cube) {
+  
   const pillars = gsap.utils.toArray('.pillar-text-content');
   if (!pillars.length) return;
 
-  // The master timeline that will control everything.
   const tl = gsap.timeline({
     scrollTrigger: {
       trigger: '.scrolly-container',
       start: 'top top',
-      // CRITICAL FIX: The animation must span the entire height
-      // of the text column to feel correct.
-      end: 'bottom bottom',
+      end: 'bottom bottom', // Animate over the entire height
       scrub: 1.2,
     },
   });
 
-  // --- CUBE'S MAIN ROTATION ---
+  // Cube's main rotation throughout the scroll
   tl.to(cube.rotation, {
     y: Math.PI * 4,
     x: Math.PI * 2,
-    ease: "power1.inOut",
-  }, 0); // Start at the beginning (time 0)
+    ease: "none",
+  }, 0);
 
-  // --- TEXT PILLAR FADES ---
+  // --- DEFINITIVE TEXT PILLAR ANIMATION ---
   pillars.forEach((pillar, index) => {
     const textWrapper = pillar.querySelector('.text-anim-wrapper');
     if (textWrapper) {
-      // We position the animations along the timeline based on index
-      // This is simpler and more robust than trying to calculate start/end.
-      const startTime = index / pillars.length;
-      const endTime = (index + 0.5) / pillars.length;
-      
-      tl.from(textWrapper, {
-        opacity: 0,
-        y: 50,
-        ease: 'power2.out'
-      }, startTime); // Animate IN at its start time
+      // Each pillar gets its own 'in' and 'out' animation on the timeline
+      const totalDuration = 1.0; // The total time on the timeline for each pillar
+      const startTime = index * totalDuration;
 
-      // Don't fade out the last pillar
+      // Fade IN
+      tl.from(textWrapper, { autoAlpha: 0, y: 50 }, startTime);
+      
+      // Fade OUT (but not the last one)
       if (index < pillars.length - 1) {
-        tl.to(textWrapper, {
-          opacity: 0,
-          y: -50,
-          ease: 'power2.in'
-        }, endTime); // Animate OUT at its end time
+        tl.to(textWrapper, { autoAlpha: 0, y: -50 }, startTime + totalDuration * 0.7);
       }
     }
   });
-
-  // --- MORPH TRIGGER (will be handled by handoff-animation.js) ---
-  // We just need to make sure the scroll trigger ends correctly,
-  // which it now does with `end: 'bottom bottom'`.
 }

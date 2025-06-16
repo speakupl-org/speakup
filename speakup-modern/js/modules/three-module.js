@@ -1,84 +1,67 @@
 // js/modules/three-module.js
 
+// MODERN IMPORT: This file now imports its own tools.
 import * as THREE from 'three';
 
+// The object we export is just the module itself.
 export const threeModule = {
-    renderer: null,
-    camera: null,
-    scene: null,
-    cube: null,
-    
-    // The setup function now accepts THREE as an argument.
-    setup: function(canvas, THREE) {
-        // --- Set up scene, camera, and renderer ---
+    setup: function(canvas) {
         this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(50, canvas.offsetWidth / canvas.offsetHeight, 0.1, 100);
-        this.camera.position.set(0, 0, 5);
-        this.scene.add(this.camera);
-  
-        this.renderer = new THREE.WebGLRenderer({
-            canvas: canvas,
-            antialias: true,
-            alpha: true
-        });
+
+        this.camera = new THREE.PerspectiveCamera(50, canvas.clientWidth / canvas.clientHeight, 0.1, 100);
+        this.camera.position.z = 3.5; // We'll keep the camera here for now.
+
+        this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+        this.renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        this.renderer.setSize(canvas.offsetWidth, canvas.offsetHeight);
-  
-        // --- The "Crystal" Cube ---
-        const geometry = new THREE.BoxGeometry(1.5, 1.5, 1.5);
-  
-        // Create a reflective environment
-        const cubeRenderTarget = new THREE.WebGLCubeRenderTarget(256);
-        const cubeCamera = new THREE.CubeCamera(1, 1000, cubeRenderTarget);
-        this.scene.add(cubeCamera);
-  
+
+        // --- AESTHETIC FIX ---
+        // 1. Reduce the size of the cube's geometry.
+        const geometry = new THREE.BoxGeometry(1.2, 1.2, 1.2); // Was 1.5, now smaller.
+
+        // 2. Build the definitive "Crystal Glass" material.
         const material = new THREE.MeshPhysicalMaterial({
             metalness: 0,
             roughness: 0,
-            transmission: 1.0,
-            ior: 2.33,
-            // Use the scene's reflective texture
-            envMap: cubeRenderTarget.texture,
+            transmission: 1.0,  // Full transparency
+            ior: 1.7,           // IOR for glass is ~1.5; for crystal a bit higher.
+            thickness: 1.2,     // Corresponds to the new geometry size
+            specularIntensity: 1.0,
+            // Subtle color tint from your palette to match the site.
+            color: 0xE5F5F5, 
+            specularColor: 0xFFFFFF, // Pure white highlights
         });
-  
+
         this.cube = new THREE.Mesh(geometry, material);
         this.scene.add(this.cube);
-  
-        // Ensure the reflective camera follows the cube
-        cubeCamera.position.copy(this.cube.position);
-  
-        // --- The Animate Loop ---
-        // Update the environment map and render the scene in each frame.
-        this.animate = () => {
-            if (this.renderer && this.cube) {
-                // Hide the cube and update the cubeCamera for accurate reflections.
-                this.cube.visible = false;
-                cubeCamera.update(this.renderer, this.scene);
-                this.cube.visible = true;
-  
-                this.renderer.render(this.scene, this.camera);
-            }
-            requestAnimationFrame(this.animate.bind(this));
-        };
-  
-        // --- Lighting ---
-        this.scene.add(new THREE.AmbientLight(0xffffff, 0.5));
-        const dirLight = new THREE.DirectionalLight(0xffffff, 2);
-        dirLight.position.set(10, 10, 10);
-        this.scene.add(dirLight);
-  
-        // --- Resize Handler ---
-        this.handleResize = () => {
-            this.camera.aspect = canvas.offsetWidth / canvas.offsetHeight;
+
+        // 3. Improve the lighting to make the glass "pop".
+        this.scene.add(new THREE.AmbientLight(0xffffff, 0.5)); // Softer ambient light
+        
+        // A strong, white key light from the top-right.
+        const keyLight = new THREE.DirectionalLight(0xffffff, 2);
+        keyLight.position.set(1, 1, 1);
+        this.scene.add(keyLight);
+        
+        // A colored rim light from the bottom-left to give it shape and match your palette.
+        const rimLight = new THREE.PointLight(0x00A09A, 2); // Your primary accent color
+        rimLight.position.set(-2, -2, -2);
+        this.scene.add(rimLight);
+
+        const onResize = () => {
+            this.camera.aspect = canvas.clientWidth / canvas.clientHeight;
             this.camera.updateProjectionMatrix();
-            this.renderer.setSize(canvas.offsetWidth, canvas.offsetHeight);
+            this.renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
         };
-        window.addEventListener('resize', this.handleResize.bind(this));
-        this.handleResize();
-  
-        // Start the animation
-        this.animate();
-  
+        window.addEventListener('resize', onResize);
+        onResize();
+
+        const animate = () => {
+            this.renderer.render(this.scene, this.camera);
+            requestAnimationFrame(animate);
+        }
+        animate();
+
         return { cube: this.cube };
     }
 };

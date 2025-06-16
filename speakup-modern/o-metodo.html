@@ -145,27 +145,20 @@
         <header class="page-header">
             <div class="container">
                 <h1 class="page-title">Um Método Para Quem Fala</h1>
-                <p class="page-subtitle">Não se trata de aprender mais regras. Trata-se de destravar a confiança para usar o inglês que já existe em você. Vamos focar no que realmente importa: a sua voz.</p>
+                <p class="page-subtitle">
+                    Não se trata de aprender mais regras. Trata-se de destravar a confiança para usar o inglês que já existe em você. Vamos focar no que realmente importa: a sua voz.
+                </p>
             </div>
         </header>
 
-<!-- ========================================================== -->
-<!--     CORRECTED `method-pillars` SECTION                   -->
-<!-- ========================================================== -->
-<section class="method-pillars">
-    <div class="container">
-        <div class="scrolly-container">
-
-            <div class="pillar-visuals-col">
-                <!-- 
-                    FIX #1: Replaced the CSS 3D object 'div' with the required '<canvas>'.
-                    This is the element Three.js will render into.
-                -->
-                <canvas id="threejs-canvas"></canvas>
-            </div>
+        <!-- THE SCROLLYTELLING SECTION (FULL-BLEED) -->
+        <section class="method-pillars">
+            <div class="scrolly-container">
+                <div class="pillar-visuals-col">
+                    <canvas id="threejs-canvas"></canvas>
+                </div>
 
                 <div class="pillar-text-col">
-                    <!-- Pillar 1 -->
                     <div class="pillar-text-content" data-pillar="1">
                         <div class="text-anim-wrapper">
                             <span class="pillar-number">Pilar 1</span>
@@ -174,7 +167,6 @@
                             <p class="pillar-paragraph">Primeiro, eu escuto. Entendemos suas metas, barreiras e o que te move. A partir daqui, criamos um plano de imersão focado, feito unicamente para você.</p>
                         </div>
                     </div>
-                    <!-- Pillar 2 -->
                     <div class="pillar-text-content" data-pillar="2">
                          <div class="text-anim-wrapper">
                             <span class="pillar-number">Pilar 2</span>
@@ -183,7 +175,6 @@
                             <p class="pillar-paragraph">A prática é a prioridade. Desde o primeiro dia, focamos em conversas reais sobre temas do seu universo, transformando teoria em confiança prática.</p>
                         </div>
                     </div>
-                    <!-- Pillar 3 -->
                     <div class="pillar-text-content" data-pillar="3">
                         <div class="text-anim-wrapper">
                             <span class="pillar-number">Pilar 3</span>
@@ -192,36 +183,25 @@
                             <p class="pillar-paragraph">Cada aula é um passo à frente. Meu feedback é constante e construtivo. Juntos, ajustamos o plano para garantir que sua evolução nunca pare.</p>
                         </div>
                     </div>
-                    <!-- THE HANDOFF POINT - Correctly placed as the final child -->
                     <div id="handoff-point" style="height: 1px; width: 100%;"></div>
                 </div>
-                <!-- THE HANDOFF POINT - Correctly placed as the final child -->
-                <div id="handoff-point" style="height: 1px; width: 100%;"></div>
-            </div> 
-        </div>
-    </div>
-</section>
+            </div>
+        </section>
 
-<!-- ========================================================== -->
-<!--     CORRECTED `method-summary` SECTION                   -->
-<!-- ========================================================== -->
-<section class="method-summary">
-    <div class="container">
-        <div class="summary-thumbnail-placeholder" id="summary-placeholder">
-            <!-- 
-                FIX #2: Added an ID to the SVG element itself.
-                This is what we will fade in as the canvas fades out.
-                It is initially hidden with `autoAlpha: 0` by GSAP.
-             -->
-            <svg id="final-logo-svg" viewBox="0 0 163 163" preserveAspectRatio="xMidYMid meet" style="width: 100%; height: 100%; position: absolute; top:0; left: 0;">
-                <path id="morph-path" d="M0,0 H163 V163 H0 Z" />
-            </svg>
-        </div>
-        <h3 class="summary-title">Confiança, Clareza e Conexão.</h3>
-        <p>Estes três pilares formam uma jornada que não apenas ensina inglês, mas te devolve a segurança para se expressar no mundo.</p>
-    </div>
-</section>
-    
+        <!-- THE SUMMARY SECTION (BACK INSIDE A CONTAINER) -->
+        <section class="method-summary">
+            <div class="container">
+                <div class="summary-thumbnail-placeholder" id="summary-placeholder">
+                    <svg id="final-logo-svg" viewBox="0 0 163 163" preserveAspectRatio="xMidYMid meet" style="width: 100%; height: 100%; position: absolute; top:0; left: 0;">
+                        <path id="morph-path" d="M0,0 H163 V163 H0 Z" />
+                    </svg>
+                </div>
+                <h3 class="summary-title">Confiança, Clareza e Conexão.</h3>
+                <p>
+                    Estes três pilares formam uma jornada que não apenas ensina inglês, mas te devolve a segurança para se expressar no mundo.
+                </p>
+            </div>
+        </section>
     </main>
 
 <footer class="site-footer">

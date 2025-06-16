@@ -2,38 +2,57 @@
 /*   Component: Scrollytelling Section     */
 /* ======================================= */
 
-.method-pillars {
-    /* This section should not have horizontal padding
-       so its children can span the full width. */
-    padding: 0;
-}
-
 .scrolly-container {
     display: flex;
     align-items: flex-start;
-    width: 100vw; /* Force it to take the full viewport width */
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
 }
 
+/* --- The Visuals Column (The Cube) --- */
 .pillar-visuals-col {
+    /* Use flex-basis to ensure it claims its half of the space */
+    flex: 1 1 50%;
     position: -webkit-sticky;
     position: sticky;
     top: 0;
-    z-index: 1;
-    flex: 1 1 50%; /* Use flex-grow and flex-shrink */
     height: 100vh;
+    /* Give the canvas itself some breathing room */
+    padding: 2rem;
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 1; /* Behind the text */
 }
 
+#threejs-canvas {
+    width: 100%;
+    height: 100%;
+}
+
+/* --- The Text Column (The Pillars) --- */
 .pillar-text-col {
     flex: 1 1 50%;
     position: relative;
-    z-index: 2;
-    padding: 10vh 10vw; /* Use viewport units for responsive padding */
+    z-index: 2; /* In front of the visuals */
+    
+    /* CRITICAL FIX: Generous padding to push the text block to the right
+       and give it vertical space. Using viewport units for responsiveness. */
+    padding: 20vh 12vw 20vh 6vw; /* top/bottom, right, left */
+}
+
+/* This is the container for the text that fades in/out */
+.text-anim-wrapper {
+    /* This ensures the text block itself doesn't become too wide */
+    max-width: 550px; 
+    /* This aligns the text to the left within its padded column */
+    margin: 0; 
+}
+
+/* This container ensures there's enough scroll distance */
+.pillar-text-content {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 /* --- Responsive Fallback --- */
