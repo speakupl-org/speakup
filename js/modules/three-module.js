@@ -1,6 +1,5 @@
 // js/modules/three-module.js
 
-// IMPORTANT: Make sure it has an 'export' statement.
 export const threeModule = {
     scene: null,
     camera: null,
@@ -8,7 +7,8 @@ export const threeModule = {
     cube: null,
     lastFrameTime: 0,
     
-    setup: function(canvas) {
+    // The setup function now accepts `THREE` as its second argument.
+    setup: function(canvas, THREE) {
         this.scene = new THREE.Scene();
         const sizes = { width: canvas.offsetWidth, height: canvas.offsetHeight };
         this.camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100);
@@ -31,12 +31,14 @@ export const threeModule = {
         directionalLight.position.set(3, 3, 3);
         this.scene.add(directionalLight);
 
-        window.addEventListener('resize', () => this.handleResize(canvas));
+        window.addEventListener('resize', () => this.handleResize(canvas, THREE));
         this.animate();
         
         return { cube: this.cube };
     },
     
+    // We don't need to pass THREE to handleResize because it doesn't use it.
+    // Kept the signature simple.
     handleResize(canvas) {
         const sizes = { width: canvas.offsetWidth, height: canvas.offsetHeight };
         if (sizes.width > 0 && sizes.height > 0) {
@@ -48,8 +50,7 @@ export const threeModule = {
     },
     
     animate: function() {
-        // Your animate logic here...
-        if(this.renderer) {
+        if(this.renderer && this.scene && this.camera) {
             this.renderer.render(this.scene, this.camera);
         }
         window.requestAnimationFrame(this.animate.bind(this));
