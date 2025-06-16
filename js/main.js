@@ -5,7 +5,7 @@
 import { threeModule } from './modules/three-module.js';
 import { createScrollEngine } from './modules/scroll-engine.js';
 import { createActors } from './modules/actors.js';
-import { setupHandoffAnimation } from './modules/handoff-animation.js';
+import { setupHandoffAnimation } from './modules/handoff-animation.js'; // Semicolon added here
 
 // --- 2. LAUNCH FUNCTION ---
 // We wrap our entire application in a function that we call later.
@@ -34,7 +34,7 @@ function runApplication() {
     function initSite() {
       const masterTrigger = document.querySelector('.scrolly-container');
       if (!masterTrigger) {
-        console.log("Scrollytelling section not found. Skipping animations.");
+        console.log("Scrollytelling section not found on this page. Skipping animations.");
         return; 
       }
       console.log("Scrollytelling section found. Initializing Sovereign System...");
