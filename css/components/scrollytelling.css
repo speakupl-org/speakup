@@ -2,6 +2,25 @@
 /*   Component: Scrollytelling Section     */
 /* ======================================= */
 
+/* This is the section AFTER the scrollytelling */
+.method-summary {
+    /* Give it some space and center its content */
+    padding: 100px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+/* This is the div where the canvas and then the SVG will live */
+.summary-thumbnail-placeholder {
+    width: 300px;  /* Give it a defined size */
+    height: 300px; /* Give it a defined size */
+    position: relative; /* Needed for the absolutely positioned SVG inside it */
+    margin-bottom: 40px;
+}
+
 /* Main container for the two-column effect */
 .scrolly-container {
     display: flex;

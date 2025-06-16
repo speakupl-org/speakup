@@ -18,26 +18,29 @@ function createCubeActor(cube, appState, gsap) {
 }
 
 // This internal function also now receives `gsap` as its third argument.
+// Replace your existing createTextPillarActor function with this one
+
 function createTextPillarActor(pillars, appState, gsap) {
     function update() {
         const progress = appState.scrolly.progress;
         const numPillars = pillars.length;
         
+        // This is a more robust way to calculate which pillar should be active
+        const stepSize = 1 / numPillars;
+
         pillars.forEach((pillar, i) => {
-            const start = i / numPillars;
-            const end = (i + 1) / numPillars;
-            const fadeInProgress = gsap.utils.mapRange(start, start + ((end - start) * 0.5), 0, 1, progress, true);
-            const fadeOutProgress = gsap.utils.mapRange(start + ((end - start) * 0.5), end, 1, 0, progress, true);
+            const pillarStart = i * stepSize;
+            const pillarEnd = pillarStart + stepSize;
+
+            // Calculate how "into" this specific pillar's section we are (0 to 1)
+            const pillarProgress = gsap.utils.mapRange(pillarStart, pillarEnd, 0, 1, progress);
+
+            // Use a simple sine wave for a smooth fade in and out
+            // Math.sin(0) = 0, Math.sin(PI/2) = 1, Math.sin(PI) = 0
+            const opacity = Math.sin(pillarProgress * Math.PI);
             
-            gsap.set(pillar.querySelector('.text-anim-wrapper'), { autoAlpha: Math.min(fadeInProgress, fadeOutProgress), y: (0.5 - fadeInProgress) * -40 });
+            gsap.set(pillar, { autoAlpha: opacity });
         });
     }
     gsap.ticker.add(update);
-}
-
-// The main exported function now ACCEPTS `gsap` as the fourth argument...
-export function createActors(cube, pillars, appState, gsap) {
-  // ...and PASSES `gsap` down to the internal functions that need it.
-  createCubeActor(cube, appState, gsap);
-  createTextPillarActor(pillars, appState, gsap);
 }

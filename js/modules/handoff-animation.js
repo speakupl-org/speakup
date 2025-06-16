@@ -30,6 +30,7 @@ export function setupHandoffAnimation(elements, cube, { gsap, Flip, MorphSVGPlug
                               { morphSVG: "M81.5 81.5 L 81.5 81.5 L 81.5 81.5 L 81.5 81.5 Z" }, 
                               { duration: 1, morphSVG: logoPath, ease: 'expo.out' }
                           );
+                        gsap.ScrollTrigger.refresh();
                     }
                 });
             },
