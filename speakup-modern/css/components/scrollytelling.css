@@ -76,10 +76,65 @@
     }
 }
 
+/* Find the old #final-logo-svg rule and replace it with this one */
+
 #final-logo-svg {
-  /* This hides the SVG by default, preventing the flash.
-     GSAP will override this when it's time to animate. */
-  display: none;
-  opacity: 0;
-  visibility: hidden;
+    /* This not only hides the SVG, but REMOVES it from the layout flow,
+       preventing it from creating extra empty space. */
+    display: none;
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* Find these rules in your scrollytelling.css and replace them */
+
+/* Find this rule in your scrollytelling.css and adjust the padding */
+
+.method-summary {
+    /* Use less top padding, since the transition is now tighter */
+    padding: 5rem 5vw 8rem; /* top, left/right, bottom */
+    text-align: center;
+}
+
+.summary-thumbnail-placeholder {
+    width: 180px; /* Slightly smaller placeholder for better balance */
+    height: 180px;
+    margin: 0 auto 3.5rem; /* Center it and add 3.5rem of space below */
+    position: relative;
+}
+
+.summary-title {
+    font-size: clamp(1.8rem, 4vw, 2.5rem); /* Slightly smaller title */
+    max-width: 600px;
+    margin: 0 auto 1.5rem; /* Center it and add 1.5rem of space below */
+}
+
+.method-summary p {
+    max-width: 55ch;
+    margin: 0 auto;
+    font-size: 1.1rem; /* Slightly smaller paragraph text */
+    color: var(--color-text-muted);
+    line-height: 1.7; /* A bit more line spacing for readability */
+}
+
+/* Add these rules to the BOTTOM of your scrollytelling.css file */
+
+.summary-thumbnail-placeholder {
+    width: 180px;
+    height: 180px;
+    margin: 0 auto 3.5rem;
+    position: relative;
+    /* 
+      THIS IS THE KEY:
+      By default, the placeholder itself should NOT take up any space
+      until the animation begins.
+    */
+    display: none; 
+}
+
+#final-logo-svg {
+    /* The SVG inside should also be completely hidden */
+    display: none;
+    opacity: 0;
+    visibility: hidden;
 }
