@@ -1,0 +1,87 @@
+/* ======================================= */
+/*   Component: Scrollytelling Section     */
+/* ======================================= */
+
+/* Main container for the two-column effect */
+.scrolly-container {
+    display: flex;
+    align-items: flex-start; /* CRITICAL for sticky positioning */
+}
+
+/* Left column (visuals), which will be STICKY */
+.pillar-visuals-col {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    width: 50%;             
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1; /* Keep it behind the text */
+}
+
+/* The 3D canvas element */
+#threejs-canvas {
+    width: 500px;
+    height: 500px;
+    max-width: 100%;
+}
+
+/* Right column (text), which scrolls */
+.pillar-text-col {
+    width: 50%;
+    position: relative; 
+    z-index: 2; /* Bring text in front of visuals */
+    padding: 0 5%;
+}
+
+/* Each text section that creates scroll distance */
+.pillar-text-content {
+    min-height: 100vh; /* CRITICAL to provide scroll distance */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Wrapper for the text inside each pillar */
+.text-anim-wrapper {
+    max-width: 550px;
+    margin: 0 auto;
+}
+
+/* The SVG placeholder for the final morph animation */
+#final-logo-svg {
+    opacity: 0; /* Hide it with CSS to prevent flashing */
+    visibility: hidden;
+}
+#morph-path {
+    fill: #E5E9F0;
+    stroke: none;
+}
+
+/* --- Responsive Fallback --- */
+@media (max-width: 1024px) {
+    .scrolly-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .pillar-visuals-col, 
+    .pillar-text-col {
+        width: 100%;
+        position: relative; /* Reset sticky positioning */
+        top: auto;
+    }
+
+    .pillar-visuals-col {
+        height: 50vh;
+        margin-bottom: 2rem;
+    }
+
+    .pillar-text-content {
+        min-height: auto; /* Let content define height */
+        padding-top: 4rem;
+        padding-bottom: 4rem;
+    }
+}
