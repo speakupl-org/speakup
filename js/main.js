@@ -1,40 +1,44 @@
 // js/main.js
 
-// --- 1. SETUP PHASE ---
-// Get all necessary libraries from the global window object.
-const { gsap, ScrollTrigger, Flip, MorphSVGPlugin } = window;
-const { THREE } = window;
+// --- 1. MODULE IMPORTS ---
+// All imports MUST be at the top level of the file.
+import { threeModule } from './modules/three-module.js';
+import { createScrollEngine } from './modules/scroll-engine.js';
+import { createActors } from './modules/actors.js';
+import { setupHandoffAnimation } from './modules/handoff-animation.js';
 
-// Check if the core libraries loaded. If not, stop everything.
-if (!gsap || !THREE) {
-    console.error("CRITICAL ERROR: GSAP or THREE.js failed to load. Aborting script.");
-} else {
-    // Register the GSAP plugins so they can be used.
+// --- 2. LAUNCH FUNCTION ---
+// We wrap our entire application in a function that we call later.
+function runApplication() {
+
+    // --- 3. SETUP & VALIDATION ---
+    // Get the globally loaded libraries.
+    const { gsap, ScrollTrigger, Flip, MorphSVGPlugin } = window;
+    const { THREE } = window;
+
+    // Check if the libraries were actually loaded before we use them.
+    if (!gsap || !THREE || !ScrollTrigger || !Flip || !MorphSVGPlugin) {
+        console.error("CRITICAL ERROR: One or more essential libraries (GSAP, THREE.js, or GSAP plugins) failed to load. Aborting script.");
+        return; // Stop everything.
+    }
+    
+    // Register the GSAP plugins.
     gsap.registerPlugin(ScrollTrigger, Flip, MorphSVGPlugin);
 
-    // --- 2. MODULE IMPORTS ---
-    import { threeModule } from './modules/three-module.js';
-    import { createScrollEngine } from './modules/scroll-engine.js';
-    import { createActors } from './modules/actors.js';
-    import { setupHandoffAnimation } from './modules/handoff-animation.js';
-
-    // --- 3. STATE MANAGEMENT ---
+    // --- 4. STATE MANAGEMENT ---
     const APP_STATE = {
       scrolly: { progress: 0 }
     };
 
-    // --- 4. INITIALIZATION ---
+    // --- 5. INITIALIZATION ---
     function initSite() {
-      // Find the main trigger element for the animation.
       const masterTrigger = document.querySelector('.scrolly-container');
       if (!masterTrigger) {
-        // If it's not on this page, do nothing.
-        console.log("Scrollytelling section not found on this page. Skipping animations.");
+        console.log("Scrollytelling section not found. Skipping animations.");
         return; 
       }
       console.log("Scrollytelling section found. Initializing Sovereign System...");
       
-      // Collect all necessary DOM elements.
       const DOM_ELEMENTS = {
         canvas: document.querySelector('#threejs-canvas'),
         masterTrigger: masterTrigger,
@@ -45,32 +49,25 @@ if (!gsap || !THREE) {
         morphPath: document.querySelector('#morph-path'),
       };
 
-      // Hide the final SVG on page load.
-      if (DOM_ELEMENTS.finalLogoSvg) {
-        gsap.set(DOM_ELEMENTS.finalLogoSvg, { autoAlpha: 0 });
+      if (!DOM_ELEMENTS.finalLogoSvg) {
+        console.warn("Warning: The #final-logo-svg element was not found in the HTML. Morph animation will not work.");
       } else {
-          console.warn("Could not find #final-logo-svg to hide.");
+        gsap.set(DOM_ELEMENTS.finalLogoSvg, { autoAlpha: 0 });
       }
 
-      // --- 5. EXECUTION (Passing dependencies) ---
-      // Start all the systems and give them the tools they need.
-      
-      // Pass THREE to the three.js module.
+      // --- 6. EXECUTION ---
       const { cube } = threeModule.setup(DOM_ELEMENTS.canvas, THREE);
-      
-      // Pass gsap to the scroll engine module.
       createScrollEngine(DOM_ELEMENTS.masterTrigger, (progress) => {
         APP_STATE.scrolly.progress = progress;
       }, gsap);
-      
-      // Pass gsap to the actors module.
       createActors(cube, DOM_ELEMENTS.textPillars, APP_STATE, gsap);
-      
-      // Pass the necessary GSAP plugins to the handoff animation module.
       setupHandoffAnimation(DOM_ELEMENTS, cube, { gsap, Flip, MorphSVGPlugin });
     }
 
-    // --- 6. LAUNCH ---
-    // Wait for the entire page to load before starting the animations.
-    window.addEventListener('load', initSite);
+    // Call the main initialization function.
+    initSite();
 }
+
+// --- 7. START ---
+// Wait for the entire page to be fully loaded, then run our application.
+window.addEventListener('load', runApplication);
