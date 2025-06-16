@@ -1,58 +1,49 @@
-// js/main.js
+// main.js
 
-// --- 1. MODERN IMPORTS ---
-// Libraries are imported directly from node_modules.
-import * as THREE from 'three';
+// 1. Import all necessary libraries from node_modules
 import gsap from 'gsap';
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Flip } from "gsap/Flip";
-import { MorphSVGPlugin } from "gsap/MorphSVGPlugin";
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Flip } from 'gsap/Flip';
+import { MorphSVGPlugin } from 'gsap/MorphSVGPlugin';
+import * as THREE from 'three';
 
-// Your custom modules, with the full correct paths from the root.
-// All custom modules live inside 'js/modules/'.
-import { threeModule } from './js/modules/three-module.js';
+// 2. Import your custom modules
+import { setup3DScene } from './js/modules/three-module.js';
 import { setupScrollytelling } from './js/modules/animation-controller.js';
 import { setupHandoffAnimation } from './js/modules/handoff-animation.js';
 
-// --- 2. SETUP & EXECUTION ---
-// Register GSAP plugins immediately after import.
+// 3. Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger, Flip, MorphSVGPlugin);
 
-console.log("Modern modules loaded. Initializing application...");
-
+// 4. Main Application Logic
 function runApplication() {
-    const scrollyContainer = document.querySelector('.scrolly-container');
+    console.log("Application starting...");
+    const canvas = document.querySelector('#threejs-canvas');
+    if (!canvas) {
+        console.log("Scrollytelling canvas not found on this page. Exiting.");
+        return;
+    }
 
-    // Only run the animation on pages that have the scrolly-container.
-    if (scrollyContainer) {
-        console.log("Scrollytelling section found, setting up scene.");
+    // A. Setup the 3D Scene and get the cube
+    const { cube } = setup3DScene(canvas, THREE);
 
-        const DOM_ELEMENTS = {
-            canvas: document.querySelector('#threejs-canvas'),
-            textPillars: gsap.utils.toArray('.pillar-text-content'),
+    if (cube) {
+        // B. Setup the main scroll-driven animations for the cube and text
+        setupScrollytelling(cube, gsap);
+
+        // C. Setup the final handoff animation
+        const handoffElements = {
+            canvas,
             handoffPoint: document.querySelector('#handoff-point'),
             summaryPlaceholder: document.querySelector('#summary-placeholder'),
             finalLogoSvg: document.querySelector('#final-logo-svg'),
             morphPath: document.querySelector('#morph-path'),
         };
-
-        const { cube } = threeModule.setup(DOM_ELEMENTS.canvas);
-
-        if (cube) {
-            setupScrollytelling(cube, DOM_ELEMENTS.textPillars);
-            setupHandoffAnimation(DOM_ELEMENTS, cube);
-
-            // Hide the logo initially. GSAP will reveal it.
-            if (DOM_ELEMENTS.finalLogoSvg) {
-                gsap.set(DOM_ELEMENTS.finalLogoSvg, { autoAlpha: 0 });
-            }
+        if (handoffElements.handoffPoint) {
+            setupHandoffAnimation(handoffElements, cube, gsap);
         }
     }
 }
 
-// Wait for the DOM to be fully parsed before running the application.
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', runApplication);
-} else {
-    runApplication();
-}
+// 5. Run the app
+runApplication();
