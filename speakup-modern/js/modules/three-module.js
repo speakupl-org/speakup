@@ -2,65 +2,61 @@
 
 // MODERN IMPORT: This file now imports its own tools.
 import * as THREE from 'three';
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
 
-// The object we export is just the module itself.
 export const threeModule = {
     setup: function(canvas) {
+        // Scene, camera, and renderer setup
         this.scene = new THREE.Scene();
-
         this.camera = new THREE.PerspectiveCamera(50, canvas.clientWidth / canvas.clientHeight, 0.1, 100);
-        this.camera.position.z = 3.5; // We'll keep the camera here for now.
+        this.camera.position.z = 4;
 
         this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-        this.renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-        // --- AESTHETIC FIX ---
-        // 1. Reduce the size of the cube's geometry.
-        const geometry = new THREE.BoxGeometry(1.2, 1.2, 1.2); // Was 1.5, now smaller.
-
-        // 2. Build the definitive "Crystal Glass" material.
+        // --- DEFINITIVE GLASSY CUBE ---
+        const geometry = new THREE.BoxGeometry(1.2, 1.2, 1.2); // A bit smaller for optimal appearance
         const material = new THREE.MeshPhysicalMaterial({
             metalness: 0,
             roughness: 0,
-            transmission: 1.0,  // Full transparency
-            ior: 1.7,           // IOR for glass is ~1.5; for crystal a bit higher.
-            thickness: 1.2,     // Corresponds to the new geometry size
-            specularIntensity: 1.0,
-            // Subtle color tint from your palette to match the site.
-            color: 0xE5F5F5, 
-            specularColor: 0xFFFFFF, // Pure white highlights
+            transmission: 1.0, // 100% transparent
+            ior: 2.33,
+            thickness: 2.0, // Thicker glass for more refraction
         });
-
         this.cube = new THREE.Mesh(geometry, material);
         this.scene.add(this.cube);
 
-        // 3. Improve the lighting to make the glass "pop".
-        this.scene.add(new THREE.AmbientLight(0xffffff, 0.5)); // Softer ambient light
-        
-        // A strong, white key light from the top-right.
-        const keyLight = new THREE.DirectionalLight(0xffffff, 2);
-        keyLight.position.set(1, 1, 1);
-        this.scene.add(keyLight);
-        
-        // A colored rim light from the bottom-left to give it shape and match your palette.
-        const rimLight = new THREE.PointLight(0x00A09A, 2); // Your primary accent color
-        rimLight.position.set(-2, -2, -2);
-        this.scene.add(rimLight);
+        // --- ENVIRONMENT & LIGHTING ---
+        // This is the secret to making glass look good.
+        const loader = new RGBELoader();
+        // Ensure you have an .hdr file in your /public/images/ folder.
+        loader.load('/images/your-studio-environment.hdr', (texture) => {
+            texture.mapping = THREE.EquirectangularReflectionMapping;
+            this.scene.background = texture; // Optional: display the environment as a background
+            this.scene.environment = texture;  // CRUCIAL: use for reflections
+        });
+
+        // Add a simple directional light to illuminate the scene
+        const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
+        dirLight.position.set(5, 10, 7.5);
+        this.scene.add(dirLight);
+
+        // Animation and resize handling
+        const animate = () => {
+            if (!this.renderer) return; // Guard against missing renderer
+            requestAnimationFrame(animate);
+            this.renderer.render(this.scene, this.camera);
+        };
+        animate();
 
         const onResize = () => {
+            if (!this.renderer) return; // Guard against missing renderer
             this.camera.aspect = canvas.clientWidth / canvas.clientHeight;
             this.camera.updateProjectionMatrix();
             this.renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
         };
         window.addEventListener('resize', onResize);
-        onResize();
-
-        const animate = () => {
-            this.renderer.render(this.scene, this.camera);
-            requestAnimationFrame(animate);
-        }
-        animate();
+        onResize(); // Initial call
 
         return { cube: this.cube };
     }

@@ -1,62 +1,58 @@
 // js/main.js
 
 // --- 1. MODERN IMPORTS ---
-// In a Vite project, we import libraries directly from node_modules.
-import './css/style.css'; 
+// Libraries are imported directly from node_modules.
 import * as THREE from 'three';
 import gsap from 'gsap';
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Flip } from "gsap/Flip";
+import { MorphSVGPlugin } from "gsap/MorphSVGPlugin";
 
-// We will handle the premium MorphSVG plugin separately if needed.
-
-// Import our own custom modules using the CORRECT file paths.
+// Your custom modules, with the full correct paths from the root.
+// All custom modules live inside 'js/modules/'.
 import { threeModule } from './js/modules/three-module.js';
-import { setupAnimationController } from './js/modules/animation-controller.js';
+import { setupScrollytelling } from './js/modules/animation-controller.js';
 import { setupHandoffAnimation } from './js/modules/handoff-animation.js';
 
-// --- 2. WRAPPER FUNCTION ---
-// It's good practice to wrap the main execution in a function.
+// --- 2. SETUP & EXECUTION ---
+// Register GSAP plugins immediately after import.
+gsap.registerPlugin(ScrollTrigger, Flip, MorphSVGPlugin);
+
+console.log("Modern modules loaded. Initializing application...");
+
 function runApplication() {
-    
-    // --- 3. SETUP & VALIDATION ---
-    // Register the GSAP plugins so they are available to use. This is critical.
-    gsap.registerPlugin(ScrollTrigger, Flip);
+    const scrollyContainer = document.querySelector('.scrolly-container');
 
-    // Check if the page has the scrollytelling animation container.
-    // This allows the script to run on all pages without breaking.
-    if (!document.querySelector('.scrolly-container')) {
-        console.log("Scrollytelling section not found on this page. Skipping animations.");
-        return; // Exit gracefully if the animation isn't needed.
+    // Only run the animation on pages that have the scrolly-container.
+    if (scrollyContainer) {
+        console.log("Scrollytelling section found, setting up scene.");
+
+        const DOM_ELEMENTS = {
+            canvas: document.querySelector('#threejs-canvas'),
+            textPillars: gsap.utils.toArray('.pillar-text-content'),
+            handoffPoint: document.querySelector('#handoff-point'),
+            summaryPlaceholder: document.querySelector('#summary-placeholder'),
+            finalLogoSvg: document.querySelector('#final-logo-svg'),
+            morphPath: document.querySelector('#morph-path'),
+        };
+
+        const { cube } = threeModule.setup(DOM_ELEMENTS.canvas);
+
+        if (cube) {
+            setupScrollytelling(cube, DOM_ELEMENTS.textPillars);
+            setupHandoffAnimation(DOM_ELEMENTS, cube);
+
+            // Hide the logo initially. GSAP will reveal it.
+            if (DOM_ELEMENTS.finalLogoSvg) {
+                gsap.set(DOM_ELEMENTS.finalLogoSvg, { autoAlpha: 0 });
+            }
+        }
     }
-
-    console.log("Scrollytelling section found. Initializing animations...");
-
-    // --- 4. DOM ELEMENT SELECTION ---
-    // Collect all the HTML elements our animation needs.
-    const DOM_ELEMENTS = {
-        canvas: document.querySelector('#threejs-canvas'),
-        textPillars: gsap.utils.toArray('.pillar-text-content'),
-        handoffPoint: document.querySelector('#handoff-point'),
-        summaryPlaceholder: document.querySelector('#summary-placeholder'),
-        finalLogoSvg: document.querySelector('#final-logo-svg'),
-        morphPath: document.querySelector('#morph-path'),
-    };
-
-    // --- 5. EXECUTION ---
-    // Now we call our modules to set up their parts of the experience.
-    // Since our modules will also use modern 'import', we no longer need to pass libraries as arguments.
-    
-    const { cube } = threeModule.setup(DOM_ELEMENTS.canvas);
-
-    // The animation controller will handle the cube and text animations.
-    setupAnimationController(cube, DOM_ELEMENTS.textPillars);
-    
-    // The handoff animation handles the final morph.
-    // Note: This may throw an error if the premium MorphSVGPlugin is not set up correctly for Vite. We can fix that next.
-    setupHandoffAnimation(DOM_ELEMENTS, cube);
 }
 
-// --- 6. START ---
-// Wait for the entire page to be fully loaded, then run our application.
-window.addEventListener('load', runApplication);
+// Wait for the DOM to be fully parsed before running the application.
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', runApplication);
+} else {
+    runApplication();
+}
