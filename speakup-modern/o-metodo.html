@@ -75,6 +75,7 @@
     </div>
 
     <main>
+        <!-- === THE FIX: Move the header HERE, before the animation wrapper === -->
         <header class="page-header">
             <div class="container">
                 <h1 class="page-title">Um Método Para Quem Fala</h1>
@@ -83,53 +84,56 @@
                 </p>
             </div>
         </header>
+        <div class="scrolly-experience-wrapper" id="scrolly-experience-wrapper">
 
-        <!-- THE SCROLLYTELLING SECTION -->
-        <section class="method-pillars">
-            <div class="scrolly-container">
-                <div class="pillar-visuals-col">
-                    <canvas id="threejs-canvas"></canvas>
-                </div>
+             <!-- Column 1: The Visuals. This will be pinned. 
+              It ONLY contains the canvas.
+            -->
+             <div class="scrolly-visuals">
+                 <canvas id="threejs-canvas"></canvas>
+             </div>
 
-                <div class="pillar-text-col">
-                    <div class="pillar-text-content" data-pillar="1">
-                        <div class="text-anim-wrapper">
-                            <span class="pillar-number">Pilar 1</span>
-                            <div class="pillar-line"></div>
-                            <h2 class="pillar-title">Diagnóstico e Imersão</h2>
-                            <p class="pillar-paragraph">Primeiro, eu escuto. Entendemos suas metas, barreiras e o que te move. A partir daqui, criamos um plano de imersão focado, feito unicamente para você.</p>
-                        </div>
+             <!-- Column 2: The Text. This will scroll normally.
+               It contains all the pillar text content.
+            -->
+            <div class="scrolly-text">
+             <section class="scrolly-section" data-index="1">
+                 <div class="pillar-text-content" data-pillar="1">
+                     <div class="text-anim-wrapper">
+                         <span class="pillar-number">Pilar 1</span>
+                         <div class="pillar-line"></div>
+                         <h2 class="pillar-title">Diagnóstico e Imersão</h2>
+                         <p class="pillar-paragraph">Primeiro, eu escuto. Entendemos suas metas, barreiras e o que te move. A partir daqui, criamos um plano de imersão focado, feito unicamente para você.</p>
+                     </div>
                     </div>
+                </section>
+
+                <section class="scrolly-section" data-index="2">
                     <div class="pillar-text-content" data-pillar="2">
-                         <div class="text-anim-wrapper">
-                            <span class="pillar-number">Pilar 2</span>
-                            <div class="pillar-line"></div>
-                            <h2 class="pillar-title">Conexão e Conversação</h2>
-                            <p class="pillar-paragraph">A prática é a prioridade. Desde o primeiro dia, focamos em conversas reais sobre temas do seu universo, transformando teoria em confiança prática.</p>
-                        </div>
+                     <div class="text-anim-wrapper">
+                         <span class="pillar-number">Pilar 2</span>
+                         <div class="pillar-line"></div>
+                         <h2 class="pillar-title">Conexão e Conversação</h2>
+                         <p class="pillar-paragraph">A prática é a prioridade. Desde o primeiro dia, focamos em conversas reais sobre temas do seu universo, transformando teoria em confiança prática.</p>
+                     </div>
                     </div>
-                    <div class="pillar-text-content" data-pillar="3" id="handoff-point">
-                        <div class="text-anim-wrapper">
-                            <span class="pillar-number">Pilar 3</span>
-                            <div class="pillar-line"></div>
-                            <h2 class="pillar-title">Feedback e Evolução</h2>
-                            <p class="pillar-paragraph">
-                                Cada aula é um passo à frente. Meu feedback é constante e construtivo. Juntos, ajustamos o plano para garantir que sua evolução nunca pare.
-                            </p>
-                        </div>
+                </section>
+
+                <section class="scrolly-section" data-index="3">
+                    <div class="pillar-text-content" data-pillar="3">
+                     <div class="text-anim-wrapper">
+                         <span class="pillar-number">Pilar 3</span>
+                         <div class="pillar-line"></div>
+                         <h2 class="pillar-title">Feedback e Evolução</h2>
+                         <p class="pillar-paragraph">Cada aula é um passo à frente. Meu feedback é constante e construtivo. Juntos, ajustamos o plano para garantir que sua evolução nunca pare.</p>
+                     </div>
                     </div>
-                </div>
-            </div>
-        </section>
+                </section>
+             </div> <!-- .scrolly-text -->
 
-        <!--
-          THIS IS THE FIX:
-          The trigger element now sits between the two sections,
-          unaffected by any padding.
-        -->
-        <div id="handoff-point" style="height: 1px;"></div>
+         </div> <!-- .scrolly-experience-wrapper -->
 
-        <!-- THE SUMMARY SECTION -->
+        <!-- The summary section remains outside and after everything -->
         <section class="method-summary">
             <div class="container">
                 <div class="summary-thumbnail-placeholder" id="summary-placeholder">
@@ -143,6 +147,7 @@
                 </p>
             </div>
         </section>
+
     </main>
 
 <footer class="site-footer">
@@ -186,6 +191,7 @@
     </div>
 </footer>
 
+<script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
 <script type="module" src="/main.js"></script>
 
 </body>

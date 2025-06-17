@@ -20,3 +20,14 @@
     text-align: center; 
     margin-top: 60px; 
 }
+
+/* Lenis smooth scroll tweaks */
+html.lenis {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}

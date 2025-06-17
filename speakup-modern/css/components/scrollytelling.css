@@ -2,57 +2,55 @@
 /*   Component: Scrollytelling Section     */
 /* ======================================= */
 
-.scrolly-container {
-    display: flex;
-    align-items: flex-start;
+/* --- New layout for scrollytelling structure --- */
+
+html, body {
+  overflow-x: hidden;
 }
 
-/* --- The Visuals Column (The Cube) --- */
-.pillar-visuals-col {
-    /* Use flex-basis to ensure it claims its half of the space */
-    flex: 1 1 50%;
-    position: -webkit-sticky;
-    position: sticky;
-    top: 0;
-    height: 100vh;
-    /* Give the canvas itself some breathing room */
-    padding: 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1; /* Behind the text */
+/* The new master container */
+.scrolly-experience-wrapper {
+  position: relative;
+  width: 100%;
+  overflow-x: hidden; /* prevent horizontal blips */
+}
+
+/* The visuals column that gets pinned */
+.scrolly-visuals {
+  position: sticky;
+  top: 0;
+  left: 0; width: 50%;
+  height: 100vh;
+  z-index: 1;
+  overflow: hidden; /* Prevent any overflow bleed from the 3D canvas */
 }
 
 #threejs-canvas {
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  height: 100%;
 }
 
-/* --- The Text Column (The Pillars) --- */
-.pillar-text-col {
-    flex: 1 1 50%;
-    position: relative;
-    z-index: 2; /* In front of the visuals */
-    
-    /* CRITICAL FIX: Generous padding to push the text block to the right
-       and give it vertical space. Using viewport units for responsiveness. */
-    padding: 20vh 12vw 20vh 6vw; /* top/bottom, right, left */
+/* The text column that scrolls */
+.scrolly-text {
+  position: relative;
+  width: 50%;
+  margin-left: 50%;
+  z-index: 2;
 }
 
-/* This is the container for the text that fades in/out */
-.text-anim-wrapper {
-    /* This ensures the text block itself doesn't become too wide */
-    max-width: 550px; 
-    /* This aligns the text to the left within its padded column */
-    margin: 0; 
+/* New section wrapper for each scroll step */
+.scrolly-section {
+  min-height: 100vh;
+  outline: 1px dotted magenta;
 }
 
-/* This container ensures there's enough scroll distance */
+/* Updated pillar text spacing */
 .pillar-text-content {
-    min-height: 100vh;
+    min-height: 80vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    padding: 2rem 5vw;
 }
 
 /* --- Responsive Fallback --- */
@@ -138,3 +136,42 @@
     opacity: 0;
     visibility: hidden;
 }
+
+/* ========== Debugging Helpers ========== */
+
+/* Prevent any overflow bleed from the 3D canvas */
+.scrolly-visuals {
+    overflow: hidden;
+    /* Optional semi-transparent background to see boundaries */
+    background-color: rgba(0, 0, 0, 0);
+}
+
+/* Debug outlines to visualize layout and boundaries */
+.scrolly-visuals.debug-outline,
+.scrolly-text.debug-outline {
+    outline: 2px dashed magenta !important;
+}
+
+.pillar-text-content.debug-outline {
+    outline: 2px dashed cyan !important;
+}
+
+#threejs-canvas.debug-outline {
+    outline: 2px dashed yellow !important;
+}
+
+/* Debug background colors */
+.scrolly-visuals.debug-bg {
+    background-color: rgba(255, 0, 0, 0.1) !important;
+}
+
+.scrolly-text.debug-bg {
+    background-color: rgba(0, 255, 0, 0.1) !important;
+}
+
+.pillar-text-content.debug-bg {
+    background-color: rgba(0, 0, 255, 0.1) !important;
+}
+
+/* Usage: add classes .debug-outline or .debug-bg to elements in HTML or via JS */
+
