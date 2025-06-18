@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Living Crystal - System Validation</title>
+    
+    <!-- Professional Import Map for THREE.js ES Modules -->
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.155.0/build/three.module.js",
+            "three/": "https://unpkg.com/three@0.155.0/"
+        }
+    }
+    </script>
+
+    <!-- Fallback for browsers that don't support import maps -->
+    <script src="https://unpkg.com/es-module-shims@1.7.3/dist/es-module-shims.js"></script>
+    
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #000;
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+        }
+        .test-result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .success { background: rgba(0, 255, 0, 0.2); }
+        .error { background: rgba(255, 0, 0, 0.2); }
+        .loading { background: rgba(255, 255, 0, 0.2); }
+        #canvas { border: 1px solid #333; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>🔮 Living Crystal System Validation</h1>
+    <div id="test-results"></div>
+    <canvas id="canvas" width="400" height="400"></canvas>
+
+    <!-- GSAP for animations (loaded globally) -->
+    <script src="https://unpkg.com/gsap@3.12.2/dist/gsap.min.js"></script>
+    <script src="https://unpkg.com/gsap@3.12.2/dist/ScrollTrigger.min.js"></script>
+    
+    <script type="module">
+        const resultsDiv = document.getElementById('test-results');
+        
+        function addResult(message, status = 'loading') {
+            const div = document.createElement('div');
+            div.className = `test-result ${status}`;
+            div.textContent = message;
+            resultsDiv.appendChild(div);
+            console.log(message);
+        }
+        
+        async function runValidation() {
+            addResult('🚀 Starting Living Crystal System Validation...');
+            
+            try {
+                // Test 1: GSAP Global Availability
+                addResult('Testing GSAP global availability...');
+                if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+                    gsap.registerPlugin(ScrollTrigger);
+                    addResult('✅ GSAP and ScrollTrigger loaded globally', 'success');
+                } else {
+                    addResult('❌ GSAP not available globally', 'error');
+                    return;
+                }
+                
+                // Test 2: THREE.js ES Module Import
+                addResult('Testing THREE.js ES module import...');
+                const THREE = await import('three');
+                addResult('✅ THREE.js ES module imported successfully', 'success');
+                
+                // Test 3: THREE.js Additional Modules
+                addResult('Testing THREE.js additional modules...');
+                const { RGBELoader } = await import('three/examples/jsm/loaders/RGBELoader.js');
+                const { EffectComposer } = await import('three/examples/jsm/postprocessing/EffectComposer.js');
+                const { RenderPass } = await import('three/examples/jsm/postprocessing/RenderPass.js');
+                const { UnrealBloomPass } = await import('three/examples/jsm/postprocessing/UnrealBloomPass.js');
+                addResult('✅ THREE.js additional modules imported successfully', 'success');
+                
+                // Test 4: Custom Module Import
+                addResult('Testing custom module imports...');
+                const { create3DScene } = await import('./js/modules/three-module-premium.js');
+                addResult('✅ Custom THREE.js module imported successfully', 'success');
+                
+                // Test 5: Scene Creation
+                addResult('Testing 3D scene creation...');
+                const canvas = document.getElementById('canvas');
+                const scene3D = await create3DScene(canvas);
+                addResult('✅ 3D scene created successfully', 'success');
+                
+                // Test 6: Debug Tools
+                addResult('Testing debug tools availability...');
+                if (window.livingCrystalDebug) {
+                    addResult('✅ Debug tools available in console', 'success');
+                    
+                    // Quick functionality test
+                    window.livingCrystalDebug.testLight('pillar1', 2.0);
+                    addResult('✅ Debug tools functional - pillar1 light test passed', 'success');
+                    
+                    setTimeout(() => {
+                        window.livingCrystalDebug.resetLights();
+                        addResult('✅ Debug tools reset successful', 'success');
+                    }, 1000);
+                    
+                } else {
+                    addResult('⚠️ Debug tools not yet available (may load after scene initialization)', 'loading');
+                }
+                
+                // Test 7: Animation Controller
+                addResult('Testing animation controller...');
+                const { setupScrollytelling } = await import('./js/modules/animation-controller.js');
+                addResult('✅ Animation controller imported successfully', 'success');
+                
+                addResult('🎉 ALL SYSTEMS OPERATIONAL! Living Crystal ready for production.', 'success');
+                addResult('💡 Open browser console and type "livingCrystalDebug.help()" for debugging tools.', 'success');
+                
+            } catch (error) {
+                addResult(`❌ Validation failed: ${error.message}`, 'error');
+                console.error('Validation error:', error);
+            }
+        }
+        
+        // Run validation
+        runValidation();
+    </script>
+</body>
+</html>

@@ -23,11 +23,51 @@ html, body {
   height: 100vh;
   z-index: 1;
   overflow: hidden; /* Prevent any overflow bleed from the 3D canvas */
+  /* Match the main body background for seamless visual unity */
+  background-color: var(--color-background-dark);
+  background-image: 
+      radial-gradient(circle at 90% 95%, rgba(var(--rgb-accent), 0.08) 0%, transparent 35%),
+      radial-gradient(circle at 10% 5%, rgba(var(--rgb-primary), 0.1) 0%, transparent 30%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* Style the placeholder to be a visually pleasing loading state */
+.canvas-placeholder {
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(74, 144, 226, 0.08) 0%, rgba(74, 144, 226, 0.02) 50%, rgba(255,255,255,0) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    /* The transition for the fade-out */
+    transition: opacity 0.5s ease-in-out;
+}
+
+.placeholder-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(74, 144, 226, 0.2);
+    border-top-color: rgba(74, 144, 226, 0.8);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
 }
 
 #threejs-canvas {
   width: 100%;
   height: 100%;
+  background: transparent !important; /* Force transparent background */
+  opacity: 0; /* Start invisible to prevent flash */
+  visibility: hidden; /* Completely hidden until ready */
+  will-change: opacity; /* Optimize for animations */
 }
 
 /* The text column that scrolls */
@@ -41,7 +81,7 @@ html, body {
 /* New section wrapper for each scroll step */
 .scrolly-section {
   min-height: 100vh;
-  outline: 1px dotted magenta;
+  /* Remove debug outline: outline: 1px dotted magenta; */
 }
 
 /* Updated pillar text spacing */
@@ -51,6 +91,7 @@ html, body {
     flex-direction: column;
     justify-content: center;
     padding: 2rem 5vw;
+    will-change: transform, opacity; /* Optimize for scroll animations */
 }
 
 /* --- Responsive Fallback --- */
