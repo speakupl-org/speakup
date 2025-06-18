@@ -74,22 +74,22 @@ export function setup3DScene(canvas) {
     scene.add(cube);
 
     // Cinematic Dynamic Lighting System
-    const pillar1 = new THREE.PointLight(0xFFB800, 0, 12, 1.5); // Primary brand color - warm gold
+    const pillar1 = new THREE.PointLight(0xFFB800, 0.3, 12, 1.5); // Primary brand color - warm gold (base intensity)
     pillar1.position.set(4, 2, 3); // Positioned to simulate light from text
     scene.add(pillar1);
     
-    const pillar2 = new THREE.PointLight(0x87CEEB, 0, 12, 1.5); // Cool complementary blue
+    const pillar2 = new THREE.PointLight(0x87CEEB, 0.2, 12, 1.5); // Cool complementary blue (base intensity)
     pillar2.position.set(4, 0, 3); // Center position
     scene.add(pillar2);
     
-    const pillar3 = new THREE.PointLight(0xFFFFFF, 0, 12, 1.5); // Clean bright white
+    const pillar3 = new THREE.PointLight(0xFFFFFF, 0.4, 12, 1.5); // Clean bright white (base intensity)
     pillar3.position.set(4, -2, 3); // Lower position
     scene.add(pillar3);
     
     const lights = { pillar1, pillar2, pillar3 };
 
-    // Minimal ambient - environment will provide base lighting
-    scene.add(new THREE.AmbientLight(0x404040, 0.02));
+    // Enhanced ambient lighting for better base visibility
+    scene.add(new THREE.AmbientLight(0x404040, 0.15));
 
     // MANDATORY: Environment Lighting - citrus_orchard_puresky_1k.hdr
     const rgbeLoader = new RGBELoader();
@@ -218,6 +218,14 @@ export function setup3DScene(canvas) {
         cube.visible = true;
         enableInteraction();
     }, 300);
+
+    // Make everything transparent
+    material.transparent = true;
+
+    // Advanced version
+    function goFullyTransparent() {
+        material.opacity = 0;
+    }
 
     // Return complete scene object for animation-controller
     return { 
