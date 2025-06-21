@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 64" class="shift-icon">
+  <!-- Modern bridge design -->
+  <!-- Bridge towers -->
+  <rect x="15" y="8" width="4" height="48" fill="#00A09A"/>
+  <rect x="61" y="8" width="4" height="48" fill="#00A09A"/>
+  
+  <!-- Bridge deck -->
+  <rect x="8" y="32" width="64" height="6" fill="#FDB813" rx="3"/>
+  
+  <!-- Support cables -->
+  <line x1="17" y1="8" x2="10" y2="32" stroke="#E2E8F0" stroke-width="1.5" opacity="0.8"/>
+  <line x1="17" y1="8" x2="25" y2="32" stroke="#E2E8F0" stroke-width="1.5" opacity="0.8"/>
+  <line x1="17" y1="8" x2="40" y2="32" stroke="#E2E8F0" stroke-width="1.5" opacity="0.8"/>
+  <line x1="17" y1="8" x2="55" y2="32" stroke="#E2E8F0" stroke-width="1.5" opacity="0.8"/>
+  <line x1="17" y1="8" x2="70" y2="32" stroke="#E2E8F0" stroke-width="1.5" opacity="0.8"/>
+  
+  <line x1="63" y1="8" x2="70" y2="32" stroke="#E2E8F0" stroke-width="1.5" opacity="0.8"/>
+  <line x1="63" y1="8" x2="55" y2="32" stroke="#E2E8F0" stroke-width="1.5" opacity="0.8"/>
+  <line x1="63" y1="8" x2="40" y2="32" stroke="#E2E8F0" stroke-width="1.5" opacity="0.8"/>
+  <line x1="63" y1="8" x2="25" y2="32" stroke="#E2E8F0" stroke-width="1.5" opacity="0.8"/>
+  <line x1="63" y1="8" x2="10" y2="32" stroke="#E2E8F0" stroke-width="1.5" opacity="0.8"/>
+  
+  <!-- Tower tops -->
+  <circle cx="17" cy="8" r="3" fill="#FDB813"/>
+  <circle cx="63" cy="8" r="3" fill="#FDB813"/>
+  
+  <!-- Bridge foundations -->
+  <rect x="12" y="52" width="10" height="8" fill="#1A2C30" rx="2"/>
+  <rect x="58" y="52" width="10" height="8" fill="#1A2C30" rx="2"/>
+</svg>

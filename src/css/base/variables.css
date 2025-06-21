@@ -1,0 +1,101 @@
+/* ======================================= */
+/*   Base: Variables (Design Tokens)       */
+/* ======================================= */
+
+:root {
+    --color-background-dark: #112024;
+    --color-surface-dark: #1A2C30;
+    --color-primary-vibrant: #00A09A;
+    --color-accent: #FDB813;
+    --color-text-main: #E2E8F0;
+    --color-text-muted: #94A3B8;
+    --color-heading: #FFFFFF;
+
+    --font-primary: 'Inter', -apple-system, sans-serif;
+    --font-heading: 'Poppins', var(--font-primary);
+    
+    --shadow-glow-lg: 0 0 30px -8px rgba(253, 184, 19, 0.4);
+    --shadow-subtle: 0 4px 12px rgba(0, 0, 0, 0.2);
+
+    --border-radius: 12px;
+    --header-height: 75px;
+    --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    
+    /* RGB values for gradient alpha */
+    --rgb-primary: 0, 160, 154;
+    --rgb-accent: 253, 184, 19;
+    
+    /* Mobile-specific variables */
+    --mobile-transition-duration: 0.3s;
+    --mobile-touch-target: 44px;
+    --mobile-safe-area-top: env(safe-area-inset-top);
+    --mobile-safe-area-bottom: env(safe-area-inset-bottom);
+    --mobile-safe-area-left: env(safe-area-inset-left);
+    --mobile-safe-area-right: env(safe-area-inset-right);
+    
+    /* Viewport units for mobile */
+    --viewport-height: 100vh;
+    --vh: 1vh;
+}
+
+/* Mobile-specific CSS custom properties */
+@media (max-width: 767px) {
+    :root {
+        --transition-smooth: all var(--mobile-transition-duration) cubic-bezier(0.25, 0.8, 0.25, 1);
+        --shadow-glow-lg: 0 0 20px -8px rgba(253, 184, 19, 0.3);
+    }
+}
+
+/* Device-specific optimizations */
+.device-mobile {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.device-ios {
+    /* iOS-specific styles */
+    height: var(--viewport-height);
+}
+
+.device-android {
+    /* Android-specific styles */
+    height: calc(var(--vh, 1vh) * 100);
+}
+
+.no-hover .card--desktop:hover {
+    /* Remove hover effects on touch devices */
+    transform: none;
+    box-shadow: none;
+    border-color: rgba(0, 160, 154, 0.1);
+}
+
+/* Touch target optimization */
+.device-mobile button,
+.device-mobile .card,
+.device-mobile .cta-button {
+    min-height: var(--mobile-touch-target);
+    min-width: var(--mobile-touch-target);
+}
+
+/* Safe area handling for notched devices */
+.device-ios .site-header-pill {
+    padding-top: max(1rem, var(--mobile-safe-area-top));
+}
+
+/* Viewport size classes */
+.viewport-small .card {
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.viewport-medium .card {
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
+}
+
+.viewport-large .card {
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}

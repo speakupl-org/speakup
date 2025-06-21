@@ -1,0 +1,158 @@
+/* ======================================= */
+/*   Base: Utilities                       */
+/* ======================================= */
+
+/* Hides content visually while keeping it available for screen readers */
+.sr-only:not(:focus):not(:active) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Mobile-specific utilities */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Touch target utilities for accessibility */
+.touch-target--large {
+    min-height: 44px !important;
+    min-width: 44px !important;
+    touch-action: manipulation;
+}
+
+/* Styles for the JavaScript debug HUD */
+#cerebro-hud {
+    position: fixed; 
+    top: 10px; 
+    right: 10px; 
+    z-index: 10000;
+    background: rgba(10, 20, 35, 0.9); 
+    color: #ECEFF4;
+    border: 1px solid #4C566A; 
+    border-radius: 8px;
+    padding: 12px; 
+    font-family: monospace; 
+    font-size: 13px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    width: 290px; 
+    pointer-events: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+#cerebro-hud h4 {
+    margin: 0 0 10px; 
+    padding-bottom: 8px; 
+    border-bottom: 1px solid #4C566A;
+    color: #88C0D0; 
+    font-weight: bold; 
+    letter-spacing: 1px;
+}
+#cerebro-hud div { 
+    display: flex; 
+    justify-content: space-between; 
+    margin-bottom: 4px; 
+}
+#cerebro-hud .label { 
+    color: #81A1C1; 
+    width: 170px; /* Adjusted width for new labels */
+}
+#cerebro-hud .divider { 
+    height: 1px; 
+    background: #4C566A; 
+    margin: 8px 0; 
+}
+#cerebro-hud span:not(.label) { 
+    font-weight: bold; 
+    color: #E5E9F0; 
+}
+
+/* Touch device optimizations */
+.touch-device .card:hover {
+    transform: none !important;
+}
+
+.touch-device .card--desktop:hover::before {
+    opacity: 0 !important;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .card,
+    .card::before,
+    .card--touching,
+    .card--animated {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .card {
+        border-color: ButtonText;
+        background: ButtonFace;
+    }
+    
+    .card__title {
+        color: ButtonText;
+    }
+    
+    .card--highlighted {
+        border-width: 3px;
+        border-style: solid;
+    }
+}
+
+/* Mobile viewport optimizations */
+@media (max-width: 480px) {
+    .testimonial-grid {
+        gap: 0.75rem;
+    }
+    
+    .card--mobile {
+        font-size: 0.9rem;
+    }
+    
+    .card--mobile .card__title {
+        font-size: 1.1rem;
+        line-height: 1.2;
+    }
+}
+
+/* Focus management for accessibility */
+.card:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+/* Loading state for better perceived performance */
+.card--loading::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    animation: cardShimmer 1.5s infinite;
+}
+
+@keyframes cardShimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}

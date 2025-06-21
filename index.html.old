@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpeakUp - Fluência e Confiança em Inglês</title>
+    <link rel="icon" type="image/svg+xml" href="/public/favicon.ico" />
+    
+    <!-- CSS will be automatically imported by Vite from main.js -->
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="/">SpeakUp</a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/o-metodo.html">O Método</a></li>
+                    <li><a href="/minha-jornada.html">Minha Jornada</a></li>
+                    <li><a href="/recursos.html">Recursos</a></li>
+                    <li><a href="/contato.html">Contato</a></li>
+                </ul>
+            </nav>
+            <button id="menu-toggle" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+    
+    <main>
+        <section id="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1>Domine o inglês com confiança</h1>
+                    <p>Metodologia comprovada para alcançar a fluência que você sempre desejou</p>
+                    <a href="/contato.html" class="btn btn-primary">Comece Agora</a>
+                </div>
+                <div id="crystal-container" class="hero-visual">
+                    <canvas id="crystal-canvas"></canvas>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Other sections will be added here -->
+    </main>
+    
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <a href="/">SpeakUp</a>
+                </div>
+                <div class="footer-links">
+                    <ul>
+                        <li><a href="/politica-de-privacidade.html">Política de Privacidade</a></li>
+                        <li><a href="/contato.html">Contato</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 SpeakUp. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Vite will process and bundle our JavaScript -->
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html>

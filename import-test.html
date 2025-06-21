@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Import Test</title>
+    
+    <!-- Professional Import Map for ES Modules -->
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.155.0/build/three.module.js",
+            "three/": "https://unpkg.com/three@0.155.0/",
+            "gsap": "https://unpkg.com/gsap@3.12.2/index.js",
+            "gsap/": "https://unpkg.com/gsap@3.12.2/"
+        }
+    }
+    </script>
+
+    <!-- Fallback for browsers that don't support import maps -->
+    <script src="https://unpkg.com/es-module-shims@1.7.3/dist/es-module-shims.js"></script>
+</head>
+<body>
+    <h1>Import Test</h1>
+    <div id="status">Testing imports...</div>
+    
+    <script type="module">
+        try {
+            // Test THREE.js import
+            console.log('Testing THREE.js import...');
+            const THREE = await import('three');
+            console.log('✅ THREE.js imported:', THREE);
+            
+            // Test GSAP import
+            console.log('Testing GSAP import...');
+            const { gsap } = await import('gsap');
+            const { ScrollTrigger } = await import('gsap/ScrollTrigger');
+            console.log('✅ GSAP imported:', gsap);
+            console.log('✅ ScrollTrigger imported:', ScrollTrigger);
+            
+            document.getElementById('status').innerHTML = '✅ All imports successful!';
+            
+        } catch (error) {
+            console.error('❌ Import failed:', error);
+            document.getElementById('status').innerHTML = '❌ Import failed: ' + error.message;
+        }
+    </script>
+</body>
+</html>

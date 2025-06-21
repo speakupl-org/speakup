@@ -1,0 +1,53 @@
+/* ======================================= */
+/*   Component: Buttons & Links            */
+/* ======================================= */
+
+.cta-button {
+    display: inline-block;
+    padding: 14px 32px;
+    background-color: var(--color-accent);
+    color: #112024;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.05rem;
+    border-radius: var(--border-radius);
+    border: 2px solid var(--color-accent);
+    transition: var(--transition-smooth);
+    box-shadow: 0 4px 15px -3px rgba(var(--rgb-accent), 0.2);
+    cursor: pointer;
+}
+
+.cta-button:hover, .cta-button:focus {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px -5px rgba(var(--rgb-accent), 0.35);
+}
+
+.cta-button-large { 
+    padding: 18px 44px; 
+    font-size: 1.15rem; 
+}
+
+.secondary-button {
+    display: inline-block;
+    padding: 12px 30px;
+    background-color: transparent;
+    color: var(--color-accent);
+    border: 2px solid var(--color-accent);
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    transition: var(--transition-smooth);
+}
+
+.secondary-button:hover { 
+    background-color: rgba(var(--rgb-accent), 0.1); 
+    transform: translateY(-3px); 
+}
+
+.link-subtle { 
+    color: var(--color-accent); 
+    font-weight: 600; 
+}
+
+.link-subtle:hover { 
+    text-decoration: underline; 
+}

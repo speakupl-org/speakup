@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" class="shift-icon">
+  <!-- Speech bubble with heart representing authentic communication -->
+  <!-- Main speech bubble -->
+  <path d="M12 8h40c4.4 0 8 3.6 8 8v20c0 4.4-3.6 8-8 8H32l-8 8v-8h-4c-4.4 0-8-3.6-8-8V16c0-4.4 3.6-8 8-8z" 
+        fill="#00A09A" 
+        stroke="#FDB813" 
+        stroke-width="2"/>
+  
+  <!-- Heart inside speech bubble -->
+  <path d="M32 40c-4-4-12-8-12-16 0-4 4-8 8-8 2 0 4 1 4 4 0-3 2-4 4-4 4 0 8 4 8 8 0 8-8 12-12 16z" 
+        fill="#FDB813"/>
+  
+  <!-- Small accent dots for emphasis -->
+  <circle cx="24" cy="18" r="1.5" fill="#E2E8F0" opacity="0.6"/>
+  <circle cx="32" cy="18" r="1.5" fill="#E2E8F0" opacity="0.6"/>
+  <circle cx="40" cy="18" r="1.5" fill="#E2E8F0" opacity="0.6"/>
+  
+  <!-- Gentle glow effect around bubble -->
+  <path d="M12 8h40c4.4 0 8 3.6 8 8v20c0 4.4-3.6 8-8 8H32l-8 8v-8h-4c-4.4 0-8-3.6-8-8V16c0-4.4 3.6-8 8-8z" 
+        fill="none" 
+        stroke="#FDB813" 
+        stroke-width="1" 
+        opacity="0.3"/>
+</svg>

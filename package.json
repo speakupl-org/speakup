@@ -1,5 +1,5 @@
 {
-  "name": "my-web-app",
+  "name": "speakup-1",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -9,6 +9,12 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "terser": "^5.43.1",
     "vite": "^6.3.5"
+  },
+  "dependencies": {
+    "@studio-freight/lenis": "^1.0.42",
+    "gsap": "^3.13.0",
+    "three": "^0.177.0"
   }
 }

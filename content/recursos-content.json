@@ -1,0 +1,70 @@
+{
+  "meta": {
+    "title": "Recursos Gratuitos - Speak Up",
+    "description": "Materiais, dicas e recursos gratuitos para começar a transformar sua relação com o inglês hoje mesmo."
+  },
+  "hero": {
+    "title": "Recursos Gratuitos",
+    "subtitle": "Comece sua transformação hoje",
+    "description": "Materiais cuidadosamente selecionados para ajudar você a dar os primeiros passos rumo à fluência confiante."
+  },
+  "categories": [
+    {
+      "title": "Mindset e Confiança",
+      "description": "Recursos para transformar sua relação emocional com o inglês",
+      "resources": [
+        {
+          "title": "Guia: 5 Crenças que Travam seu Inglês",
+          "description": "Identifique e transforme os bloqueios mentais mais comuns entre brasileiros.",
+          "type": "PDF",
+          "link": "#",
+          "featured": true
+        },
+        {
+          "title": "Meditação Guiada: Confiança para Falar",
+          "description": "Áudio de 10 minutos para preparar sua mente antes de situações importantes.",
+          "type": "Áudio",
+          "link": "#"
+        }
+      ]
+    },
+    {
+      "title": "Prática e Comunicação",
+      "description": "Exercícios práticos para desenvolver fluência natural",
+      "resources": [
+        {
+          "title": "50 Frases para Situações Profissionais",
+          "description": "Expressões autênticas para reuniões, apresentações e networking.",
+          "type": "PDF",
+          "link": "#"
+        },
+        {
+          "title": "Checklist: Preparação para Reuniões em Inglês",
+          "description": "Passo a passo para se sentir seguro(a) em qualquer meeting.",
+          "type": "Checklist",
+          "link": "#"
+        }
+      ]
+    },
+    {
+      "title": "Dicas Semanais",
+      "description": "Conteúdo regular para manter seu progresso",
+      "resources": [
+        {
+          "title": "Newsletter Semanal",
+          "description": "Dicas práticas, histórias de sucesso e insights sobre aprendizado.",
+          "type": "Email",
+          "link": "#"
+        }
+      ]
+    }
+  ],
+  "cta": {
+    "title": "Quer um plano personalizado?",
+    "description": "Estes recursos são um ótimo começo, mas que tal criarmos uma estratégia específica para seus objetivos?",
+    "button": {
+      "text": "Conversar com Luiz",
+      "href": "contato.html"
+    }
+  }
+}

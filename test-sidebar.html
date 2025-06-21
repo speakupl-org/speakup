@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sidebar Test</title>
+    <link rel="stylesheet" href="css/components/sidebar-nav.css">
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 2rem;
+            background: #1A2C30;
+            color: white;
+        }
+        .debug { 
+            background: rgba(253, 184, 19, 0.1); 
+            padding: 1rem; 
+            margin: 1rem 0; 
+            border-radius: 8px;
+        }
+        section {
+            height: 400px;
+            margin: 2rem 0;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="debug">
+        <h1>Sidebar Navigation Debug Test</h1>
+        <p>This page tests the sidebar navigation. Check the console for logs and look for dots on the left side.</p>
+    </div>
+
+    <section id="hero">
+        <h2>Hero Section</h2>
+        <p>This is the hero section. The sidebar should show this as the first item.</p>
+    </section>
+
+    <section id="the-block">
+        <h2>The Block Section</h2>
+        <p>This is the block section. The sidebar should show this as the second item.</p>
+    </section>
+
+    <section id="the-shift">
+        <h2>The Shift Section</h2>
+        <p>This is the shift section. The sidebar should show this as the third item.</p>
+    </section>
+
+    <section id="the-guide">
+        <h2>The Guide Section</h2>
+        <p>This is the guide section. The sidebar should show this as the fourth item.</p>
+    </section>
+
+    <section id="testimonials">
+        <h2>Testimonials Section</h2>
+        <p>This is the testimonials section. The sidebar should show this as the fifth item.</p>
+    </section>
+
+    <section id="final-cta">
+        <h2>Final CTA Section</h2>
+        <p>This is the final CTA section. The sidebar should show this as the sixth item.</p>
+    </section>
+
+    <script>
+        console.log('🔧 Debug test page loaded');
+        console.log('📍 Window size:', window.innerWidth, 'x', window.innerHeight);
+    </script>
+    <script src="js/components/sidebar-navigation.js"></script>
+    <script>
+        // Additional debugging after sidebar script loads
+        setTimeout(() => {
+            console.log('🔍 Checking if sidebar was created...');
+            const sidebar = document.getElementById('sectionNav');
+            if (sidebar) {
+                console.log('✅ Sidebar found!', sidebar);
+                console.log('📊 Sidebar styles:', {
+                    display: window.getComputedStyle(sidebar).display,
+                    visibility: window.getComputedStyle(sidebar).visibility,
+                    opacity: window.getComputedStyle(sidebar).opacity,
+                    position: window.getComputedStyle(sidebar).position,
+                    left: window.getComputedStyle(sidebar).left,
+                    top: window.getComputedStyle(sidebar).top,
+                    width: window.getComputedStyle(sidebar).width,
+                    height: window.getComputedStyle(sidebar).height
+                });
+            } else {
+                console.error('❌ Sidebar NOT found in DOM');
+                console.log('🔍 Available elements:', document.querySelectorAll('*'));
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

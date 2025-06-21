@@ -1,0 +1,48 @@
+{
+  "meta": {
+    "title": "Minha Jornada - Luiz Angelo | Speak Up",
+    "description": "A história por trás do método Speak Up: como transformei minha própria relação com o inglês e decidi ajudar outros brasileiros a fazer o mesmo."
+  },
+  "hero": {
+    "title": "Minha Jornada",
+    "subtitle": "De Bloqueado a Facilitador",
+    "description": "A história de como descobri que o maior obstáculo não era o idioma, mas a forma como nos relacionamos com ele."
+  },
+  "story": {
+    "sections": [
+      {
+        "title": "O Início: O Mesmo Bloqueio que Você",
+        "content": "Como muitos brasileiros, eu 'sabia' inglês na teoria. Lia textos técnicos, entendia filmes, mas quando chegava a hora de falar... travava. A insegurança era maior que o conhecimento."
+      },
+      {
+        "title": "A Descoberta: Conexão > Perfeição", 
+        "content": "Morando fora, percebi que os nativos cometiam 'erros' o tempo todo. O que importava não era a gramática perfeita, mas a capacidade de conectar, de transmitir ideias de forma clara e humana."
+      },
+      {
+        "title": "A Transformação: Abraçando a Identidade",
+        "content": "Parei de tentar soar como um americano e comecei a falar como um brasileiro fluente em inglês. Minha comunicação se tornou mais autêntica, confiante e eficaz."
+      },
+      {
+        "title": "A Missão: Compartilhar a Liberdade",
+        "content": "Decidi dedicar minha carreira a ajudar outros brasileiros a vivenciar essa mesma transformação: de ansiosos para confiantes, de travados para fluentes."
+      }
+    ]
+  },
+  "credentials": {
+    "title": "Experiência e Formação",
+    "items": [
+      "Certificação em Teaching English as a Foreign Language (TEFL)",
+      "Especialização em Psicologia da Aprendizagem",
+      "10+ anos ajudando profissionais brasileiros",
+      "Vivência internacional em 3 países"
+    ]
+  },
+  "cta": {
+    "title": "Vamos escrever sua história de transformação?",
+    "description": "Se minha jornada ressoa com você, que tal começarmos a sua?",
+    "button": {
+      "text": "Iniciar Minha Jornada",
+      "href": "contato.html"
+    }
+  }
+}

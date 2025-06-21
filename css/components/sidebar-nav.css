@@ -1,0 +1,207 @@
+/* ===============================================
+   SOPHISTICATED SECTION NAVIGATION
+   Minimal, elegant, always accessible
+   =============================================== */
+
+.sidebar-nav {
+    position: fixed;
+    left: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.sidebar-nav:hover {
+    opacity: 1;
+}
+
+.sidebar-nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    position: relative;
+}
+
+.sidebar-nav-item {
+    position: relative;
+}
+
+.sidebar-nav-link {
+    display: block;
+    text-decoration: none;
+    position: relative;
+    transition: transform 0.2s ease;
+}
+
+.sidebar-nav-link:hover {
+    transform: translateX(3px);
+}
+
+.sidebar-nav-dot {
+    display: block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+}
+
+/* Elegant tooltip */
+.sidebar-nav-text {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(12, 20, 26, 0.95);
+    color: #fdf8f0;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(253, 184, 19, 0.15);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar-nav-text::before {
+    content: '';
+    position: absolute;
+    left: -4px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    border-right: 4px solid rgba(12, 20, 26, 0.95);
+}
+
+/* Interaction states */
+.sidebar-nav-link:hover .sidebar-nav-dot {
+    background: rgba(253, 184, 19, 0.8);
+    border-color: rgba(253, 184, 19, 0.4);
+    transform: scale(1.25);
+    box-shadow: 0 0 16px rgba(253, 184, 19, 0.3);
+}
+
+.sidebar-nav-link:hover .sidebar-nav-text {
+    opacity: 1;
+    transform: translateY(-50%) translateX(2px);
+}
+
+/* Active state - refined glow */
+.sidebar-nav-link.active .sidebar-nav-dot {
+    background: var(--color-accent, #fdb813);
+    border-color: rgba(253, 184, 19, 0.6);
+    box-shadow: 
+        0 0 12px rgba(253, 184, 19, 0.4),
+        0 2px 8px rgba(0, 0, 0, 0.15);
+    transform: scale(1.1);
+}
+
+@keyframes subtlePulse {
+    0%, 100% { 
+        box-shadow: 
+            0 0 12px rgba(253, 184, 19, 0.4),
+            0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+    50% { 
+        box-shadow: 
+            0 0 16px rgba(253, 184, 19, 0.6),
+            0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+}
+
+.sidebar-nav-link.active .sidebar-nav-dot {
+    animation: subtlePulse 4s ease-in-out infinite;
+}
+
+/* Accessibility & Focus */
+.sidebar-nav-link:focus {
+    outline: none;
+}
+
+.sidebar-nav-link:focus .sidebar-nav-dot {
+    outline: 2px solid rgba(253, 184, 19, 0.8);
+    outline-offset: 2px;
+}
+
+/* Refined progress indicator */
+.sidebar-progress {
+    position: absolute;
+    left: -8px;
+    top: 0;
+    width: 1px;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 0.5px;
+}
+
+.sidebar-progress::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: var(--progress, 0%);
+    background: linear-gradient(
+        to bottom,
+        rgba(253, 184, 19, 0.8),
+        rgba(253, 184, 19, 0.4)
+    );
+    border-radius: 0.5px;
+    transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .sidebar-nav {
+        left: 1rem;
+        opacity: 0.6;
+    }
+    
+    .sidebar-nav-dot {
+        width: 6px;
+        height: 6px;
+    }
+    
+    .sidebar-nav-text {
+        left: 16px;
+        font-size: 0.75rem;
+        padding: 0.3rem 0.6rem;
+    }
+    
+    .sidebar-nav-list {
+        gap: 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebar-nav {
+        left: 0.5rem;
+        opacity: 0.5;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .sidebar-nav-dot,
+    .sidebar-nav-text,
+    .sidebar-nav-link,
+    .sidebar-progress::after {
+        transition: none;
+        animation: none;
+    }
+}

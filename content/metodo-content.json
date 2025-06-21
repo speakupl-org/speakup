@@ -1,0 +1,65 @@
+{
+  "meta": {
+    "title": "Fluência e Confiança: O Método Speak Up",
+    "description": "Descubra como o método Speak Up transforma a ansiedade em confiança através de um approach centrado na comunicação humana."
+  },
+  "hero": {
+    "title": "O Método Speak Up",
+    "subtitle": "Da Ansiedade à Confiança",
+    "description": "Um approach humanizado que coloca a conexão no centro do aprendizado, transformando o inglês de barreira em ponte."
+  },
+  "sections": {
+    "philosophy": {
+      "title": "Nossa Filosofia",
+      "subtitle": "Três princípios que guiam cada interação:",
+      "principles": [
+        {
+          "title": "Zona de Segurança Psicológica",
+          "description": "Criamos um ambiente onde erros são dados, não falhas. Onde o foco está na mensagem, não na forma."
+        },
+        {
+          "title": "Comunicação Primeira, Gramática Depois",
+          "description": "Priorizamos expressar ideias de forma clara e natural. A correção técnica vem como um complemento, nunca como obstáculo."
+        },
+        {
+          "title": "Identidade Brasileira como Força",
+          "description": "Seu jeito brasileiro de pensar e se expressar não é um problema a ser corrigido, mas uma perspectiva única a ser celebrada."
+        }
+      ]
+    },
+    "process": {
+      "title": "Como Funciona",
+      "subtitle": "Um processo personalizado em 4 etapas:",
+      "steps": [
+        {
+          "number": "01",
+          "title": "Conversa Inicial",
+          "description": "Entendemos suas necessidades, objetivos e bloqueios específicos. Nada de testes padronizados."
+        },
+        {
+          "number": "02", 
+          "title": "Mapeamento Pessoal",
+          "description": "Identificamos seus pontos fortes e áreas de desenvolvimento, sempre respeitando seu ritmo e estilo."
+        },
+        {
+          "number": "03",
+          "title": "Prática Contextualizada", 
+          "description": "Simulamos situações reais do seu dia a dia profissional, construindo confiança através da repetição consciente."
+        },
+        {
+          "number": "04",
+          "title": "Evolução Contínua",
+          "description": "Acompanhamos seu progresso e ajustamos a abordagem conforme você ganha segurança e fluência."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Pronto para experimentar uma abordagem diferente?",
+      "description": "Vamos conversar sobre seus objetivos e como o método pode ser personalizado para você.",
+      "button": {
+        "text": "Agendar Conversa",
+        "href": "contato.html"
+      }
+    }
+  }
+}

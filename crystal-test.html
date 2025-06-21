@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Living Crystal - Light Testing</title>
+    
+    <!-- Professional Import Map for THREE.js ES Modules -->
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.155.0/build/three.module.js",
+            "three/": "https://unpkg.com/three@0.155.0/"
+        }
+    }
+    </script>
+
+    <!-- Fallback for browsers that don't support import maps -->
+    <script src="https://unpkg.com/es-module-shims@1.7.3/dist/es-module-shims.js"></script>
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: white;
+            overflow: hidden;
+        }
+
+        #three-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .control-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #333;
+            z-index: 10;
+            min-width: 300px;
+        }
+
+        .control-panel h3 {
+            margin: 0 0 15px 0;
+            color: #fff;
+            font-size: 18px;
+        }
+
+        .light-control {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+        }
+
+        .light-control label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .light-control input[type="range"] {
+            width: 100%;
+            margin: 5px 0;
+        }
+
+        .light-control .color-indicator {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 10px;
+            border: 2px solid #fff;
+        }
+
+        .test-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 15px;
+        }
+
+        .test-buttons button {
+            padding: 8px 12px;
+            background: #444;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .test-buttons button:hover {
+            background: #666;
+        }
+
+        .status-display {
+            margin-top: 15px;
+            padding: 10px;
+            background: rgba(0, 100, 0, 0.2);
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+
+        .pillar1 { border-left: 4px solid #FFE0B8; }
+        .pillar2 { border-left: 4px solid #B8D8FF; }
+        .pillar3 { border-left: 4px solid #FFFFFF; }
+    </style>
+</head>
+<body>
+    <div id="three-container"></div>
+
+    <div class="control-panel">
+        <h3>🔮 Living Crystal Light Tester</h3>
+        
+        <div class="light-control pillar1">
+            <label>
+                <span class="color-indicator" style="background-color: #FFE0B8;"></span>
+                Pillar 1 (Gold) - Warm & Inviting
+            </label>
+            <input type="range" id="pillar1-intensity" min="0" max="10" step="0.1" value="0">
+            <span id="pillar1-value">0.0</span>
+        </div>
+
+        <div class="light-control pillar2">
+            <label>
+                <span class="color-indicator" style="background-color: #B8D8FF;"></span>
+                Pillar 2 (Blue) - Cool & Intellectual
+            </label>
+            <input type="range" id="pillar2-intensity" min="0" max="10" step="0.1" value="0">
+            <span id="pillar2-value">0.0</span>
+        </div>
+
+        <div class="light-control pillar3">
+            <label>
+                <span class="color-indicator" style="background-color: #FFFFFF;"></span>
+                Pillar 3 (White) - Pure & Clarifying
+            </label>
+            <input type="range" id="pillar3-intensity" min="0" max="10" step="0.1" value="0">
+            <span id="pillar3-value">0.0</span>
+        </div>
+
+        <div class="test-buttons">
+            <button onclick="testSequence()">🎬 Test Sequence</button>
+            <button onclick="resetLights()">🔄 Reset</button>
+            <button onclick="toggleHelpers()">👁️ Show Helpers</button>
+            <button onclick="testAllLights()">🌈 All Lights</button>
+        </div>
+
+        <div class="status-display" id="status-display">
+            Waiting for crystal to load...
+        </div>
+    </div>
+
+    <!-- GSAP for animations (loaded globally) -->
+    <script src="https://unpkg.com/gsap@3.12.2/dist/gsap.min.js"></script>
+    <script src="https://unpkg.com/gsap@3.12.2/dist/ScrollTrigger.min.js"></script>
+
+    <!-- Import the Three.js module system -->
+    <script type="module">
+        import { initThreeScene } from './js/modules/three-module-premium.js';
+        
+        let debugTools = null;
+        let helpersVisible = false;
+
+        // Initialize the scene
+        initThreeScene().then(() => {
+            debugTools = window.livingCrystalDebug;
+            updateStatus('✅ Living Crystal loaded and ready for testing');
+            
+            // Set up slider controls
+            setupSliderControls();
+        }).catch(error => {
+            console.error('Failed to initialize scene:', error);
+            updateStatus('❌ Failed to load Living Crystal');
+        });
+
+        function setupSliderControls() {
+            ['pillar1', 'pillar2', 'pillar3'].forEach(pillar => {
+                const slider = document.getElementById(`${pillar}-intensity`);
+                const valueDisplay = document.getElementById(`${pillar}-value`);
+                
+                slider.addEventListener('input', (e) => {
+                    const intensity = parseFloat(e.target.value);
+                    valueDisplay.textContent = intensity.toFixed(1);
+                    
+                    if (debugTools) {
+                        debugTools.lights[pillar].intensity = intensity;
+                        updateStatus(`${pillar} light: ${intensity.toFixed(1)}`);
+                    }
+                });
+            });
+        }
+
+        function updateStatus(message) {
+            document.getElementById('status-display').textContent = message;
+        }
+
+        // Global functions for buttons
+        window.testSequence = function() {
+            if (debugTools) {
+                debugTools.testSequence();
+                updateStatus('🎬 Running narrative sequence...');
+            }
+        };
+
+        window.resetLights = function() {
+            if (debugTools) {
+                debugTools.resetLights();
+                // Reset sliders
+                ['pillar1', 'pillar2', 'pillar3'].forEach(pillar => {
+                    document.getElementById(`${pillar}-intensity`).value = 0;
+                    document.getElementById(`${pillar}-value`).textContent = '0.0';
+                });
+                updateStatus('🔄 All lights reset');
+            }
+        };
+
+        window.toggleHelpers = function() {
+            if (debugTools) {
+                helpersVisible = !helpersVisible;
+                debugTools.showHelpers(helpersVisible);
+                updateStatus(`👁️ Light helpers ${helpersVisible ? 'shown' : 'hidden'}`);
+            }
+        };
+
+        window.testAllLights = function() {
+            if (debugTools) {
+                const intensity = 3.0;
+                debugTools.testAllLights(intensity);
+                // Update sliders
+                ['pillar1', 'pillar2', 'pillar3'].forEach(pillar => {
+                    document.getElementById(`${pillar}-intensity`).value = intensity;
+                    document.getElementById(`${pillar}-value`).textContent = intensity.toFixed(1);
+                });
+                updateStatus('🌈 All lights activated');
+            }
+        };
+    </script>
+</body>
+</html>

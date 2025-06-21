@@ -1,0 +1,10 @@
+# Redirects for Cloudflare Pages
+
+# Redirect old paths to new ones (if needed)
+# /old-path/* /new-path/:splat 301
+
+# Force HTTPS
+# http://speakup.com/* https://speakup.com/:splat 301
+
+# Handle SPA routing (if needed in the future)
+# /* /index.html 200

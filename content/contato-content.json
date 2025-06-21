@@ -1,0 +1,74 @@
+{
+  "meta": {
+    "title": "Contato - Speak Up",
+    "description": "Entre em contato para uma conversa sem compromisso sobre seus objetivos com o inglês."
+  },
+  "hero": {
+    "title": "Vamos Conversar?",
+    "subtitle": "Sem pressão, sem compromisso",
+    "description": "Uma conversa inicial para nos conhecermos, entender seus objetivos e ver se faz sentido trabalharmos juntos."
+  },
+  "contactInfo": {
+    "whatsapp": {
+      "number": "+5511999999999",
+      "text": "Olá! Gostaria de saber mais sobre o método Speak Up."
+    },
+    "email": "luiz@speakup.com.br",
+    "availableTimes": "Segunda a sexta, 9h às 18h"
+  },
+  "process": {
+    "title": "Como funciona nossa primeira conversa:",
+    "steps": [
+      {
+        "number": "01",
+        "title": "Conte sua história",
+        "description": "Quero entender sua relação atual com o inglês, seus objetivos e desafios específicos."
+      },
+      {
+        "number": "02",
+        "title": "Avaliamos juntos",
+        "description": "Vemos se o método faz sentido para você e se há química para trabalharmos juntos."
+      },
+      {
+        "number": "03",
+        "title": "Próximos passos",
+        "description": "Se decidirmos seguir em frente, criamos um plano personalizado para seus objetivos."
+      }
+    ]
+  },
+  "form": {
+    "title": "Prefere enviar uma mensagem?",
+    "fields": [
+      {
+        "name": "name",
+        "label": "Seu nome",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "email", 
+        "label": "Seu email",
+        "type": "email",
+        "required": true
+      },
+      {
+        "name": "phone",
+        "label": "WhatsApp (opcional)",
+        "type": "tel",
+        "required": false
+      },
+      {
+        "name": "message",
+        "label": "Conte um pouco sobre seus objetivos com o inglês",
+        "type": "textarea",
+        "required": true,
+        "placeholder": "Ex: Preciso de confiança para apresentações, quero participar mais ativamente de reuniões, etc."
+      }
+    ],
+    "submitText": "Enviar Mensagem"
+  },
+  "reassurance": {
+    "title": "Sobre privacidade:",
+    "text": "Suas informações são tratadas com total confidencialidade e nunca são compartilhadas com terceiros. Leia nossa política de privacidade para mais detalhes."
+  }
+}

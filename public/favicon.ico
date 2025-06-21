@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Simple but recognizable favicon combining S and speech bubble -->
+  <rect width="32" height="32" rx="6" fill="#112024"/>
+  
+  <!-- Speech bubble shape -->
+  <path d="M6 8h16c2 0 4 2 4 4v8c0 2-2 4-4 4h-6l-4 4v-4h-2c-2 0-4-2-4-4v-8c0-2 2-4 4-4z" 
+        fill="#00A09A"/>
+  
+  <!-- Letter S inside -->
+  <path d="M14 12c-1 0-2 1-2 2h2c0-.5.5-1 1-1h2c.5 0 1 .5 1 1 0 .5-.5 1-1 1h-2c-1.5 0-3 1.5-3 3 0 1.5 1.5 3 3 3h2c1 0 2-1 2-2h-2c0 .5-.5 1-1 1h-2c-.5 0-1-.5-1-1 0-.5.5-1 1-1h2c1.5 0 3-1.5 3-3 0-1.5-1.5-3-3-3h-2z" 
+        fill="#FDB813"/>
+</svg>

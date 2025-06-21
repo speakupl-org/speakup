@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recursos e Dicas - Speak Up</title>
+
+    <!-- CSS will be automatically imported by Vite from main.js -->
+    <link rel="stylesheet" href="css/components/buttons.css">
+    <link rel="stylesheet" href="css/components/header.css">
+    <link rel="stylesheet" href="css/components/fullscreen-menu.css">
+    <link rel="stylesheet" href="css/components/footer.css">
+
+    <!-- 3. Page-specific or larger components -->
+    <link rel="stylesheet" href="css/components/scrollytelling.css">
+    <link rel="stylesheet" href="css/components/homepage.css">
+    <link rel="stylesheet" href="css/components/story-page.css">
+    <link rel="stylesheet" href="css/components/contact-page.css">
+    <link rel="stylesheet" href="css/components/resources-page.css">
+    
+</head>
+<body>
+
+<!-- =========================================================================
+   PART 1: THE SPEAK UP "FLOATING PILL" HEADER (NOW FULLY RESPONSIVE)
+   ========================================================================= -->    <header class="site-header-pill">
+        <a href="index.html" class="logo-area" aria-label="Speak Up Homepage">
+            <img src="public/images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon">
+            <span class="logo-text">Speak <span class="up">Up</span></span>
+        </a>
+
+    <!-- This container holds the desktop navigation and will be hidden on mobile -->
+    <div class="header-desktop-nav-container">
+        <nav class="desktop-nav">
+            <ul>
+                <li><a href="o-metodo.html">O Método</a></li>
+                <li><a href="minha-jornada.html">Minha Jornada</a></li>
+                <li><a href="recursos.html">Recursos</a></li>
+                <!-- We can omit Contact here since it's the main CTA -->
+            </ul>
+        </nav>
+        <a href="contato.html" class="cta-button header-cta-desktop">Agende uma Conversa</a>
+    </div>
+
+    <!-- This is the hamburger button, which will now only be visible on mobile -->
+    <button class="menu-toggle-button" id="menu-open-button" aria-label="Open menu" aria-expanded="false">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+    </button>
+</header>
+
+    <!-- =========================================================================
+       PART 2: THE "SPEAK UP BRAND WORLD" MENU SCREEN
+       This is the full-screen overlay that appears on tap.
+       ========================================================================= -->
+    <div class="fullscreen-menu" id="menu-screen" aria-hidden="true">
+        <div class="fullscreen-menu-header">
+            <a href="index.html" class="logo-area" aria-label="Speak Up Homepage">
+                <img src="public/images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon">
+            </a>
+            <button class="menu-toggle-button" id="menu-close-button" aria-label="Close menu" aria-expanded="true">
+                <span class="close-line"></span>
+                <span class="close-line"></span>
+            </button>
+        </div>
+
+        <nav class="fullscreen-menu-nav">
+            <ul>
+                <li><a href="o-metodo.html">O Método</a></li>
+                <li><a href="minha-jornada.html">Minha Jornada</a></li>
+                <li><a href="recursos.html">Recursos</a></li>
+                <li><a href="contato.html">Contato</a></li>
+            </ul>
+        </nav>
+
+        <div class="fullscreen-menu-action-box">
+            <a href="contato.html" class="cta-button">Agende uma Conversa</a>
+            <a href="https://wa.me/YOURPHONENUMBER" target="_blank" class="link-subtle whatsapp-link">Conversar no WhatsApp</a>
+        </div>
+    </div>
+
+    <main>
+        <!-- =========================================================================
+           PAGE HEADER - Sets the context
+           ========================================================================= -->
+        <header class="page-header">
+            <div class="container">
+                <h1 class="page-title">Recursos para Destravar seu Inglês</h1>
+                <p class="page-subtitle">Algumas dicas e guias rápidos para te ajudar a superar os desafios mais comuns que nós, brasileiros, enfrentamos no caminho para a fluência.</p>
+            </div>
+        </header>
+        
+        <!-- =========================================================================
+           RESOURCES GRID - A scalable library for your articles
+           ========================================================================= -->
+        <section class="resources-section">
+            <div class="container">
+                <div class="resource-grid">
+
+                    <!-- Resource Card 1 -->
+                    <a href="#" class="resource-card">
+                        <img src="https://placehold.co/600x400/1A2C30/FFFFFF?text=Pronúncia" class="resource-image" alt="Ilustração sobre pronúncia">
+                        <div class="resource-text-content">
+                            <h3 class="resource-title">O Guia Definitivo para o Som do "TH"</h3>
+                            <p class="resource-excerpt">Entenda de uma vez por todas como posicionar a língua e o ar para dominar um dos sons mais desafiadores para nós, brasileiros.</p>
+                            <span class="resource-read-more">Leia mais →</span>
+                        </div>
+                    </a>
+
+                    <!-- Resource Card 2 -->
+                     <a href="#" class="resource-card">
+                        <img src="https://placehold.co/600x400/112024/FDB813?text=Vocabulário" class="resource-image" alt="Ilustração sobre vocabulário">
+                        <div class="resource-text-content">
+                            <h3 class="resource-title">Falsos Amigos Comuns: Do "Pretend" ao "Actually"</h3>
+                            <p class="resource-excerpt">Uma lista dos falsos cognatos que mais nos pegam de surpresa e como usá-los corretamente para evitar mal-entendidos.</p>
+                             <span class="resource-read-more">Leia mais →</span>
+                        </div>
+                    </a>
+                    
+                    <!-- Resource Card 3 -->
+                    <a href="#" class="resource-card">
+                        <img src="https://placehold.co/600x400/1A2C30/00A09A?text=Estrutura" class="resource-image" alt="Ilustração sobre estrutura de frases">
+                        <div class="resource-text-content">
+                            <h3 class="resource-title">Onde Colocar o Adjetivo? Uma Regra Simples</h3>
+                            <p class="resource-excerpt">A estrutura das frases em inglês pode ser confusa. Aprenda uma regra fácil para nunca mais errar a posição dos adjetivos.</p>
+                             <span class="resource-read-more">Leia mais →</span>
+                        </div>
+                    </a>
+                    
+                    <!-- Add more <a class="resource-card">...</a> here as you write more articles -->
+
+                </div>
+            </div>
+        </section>
+        
+    </main>
+
+    <!-- FOOTER - Consistent -->
+        <!-- =========================================================================
+       SECTION 7: THE NEW HIGH-CREDIBILITY FOOTER
+       ========================================================================= -->
+    <footer class="site-footer">
+        <div class="container">
+            
+            <!-- THE MAIN "FOUNDATION BLOCK" CONTAINER -->
+            <div class="footer-content-block">
+                <div class="footer-grid">
+
+                    <!-- COLUMN 1: BRAND ANCHOR -->
+                    <div class="footer-column footer-brand">
+                        <a href="index.html" class="logo-area-footer" aria-label="Speak Up Homepage">
+                            <img src="public/images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon-footer">
+                            <span class="logo-text-footer">Speak <span class="up">Up</span></span>
+                        </a>
+                        <p class="footer-tagline">Destravando o inglês de profissionais brasileiros. Foco na conexão, não na perfeição.</p>
+                    </div>
+
+                    <!-- COLUMN 2: NAVIGATION -->
+                    <div class="footer-column footer-nav">
+                        <h4 class="footer-heading">Navegue</h4>
+                        <ul>
+                            <li><a href="o-metodo.html">O Método</a></li>
+                            <li><a href="minha-jornada.html">Minha Jornada</a></li>
+                            <li><a href="recursos.html">Recursos</a></li>
+                            <li><a href="contato.html">Agende uma Conversa</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- COLUMN 3: CONTACT, LEGAL & SOCIALS -->
+                    <div class="footer-column footer-contact">
+                        <h4 class="footer-heading">Contato & Legal</h4>
+                        <p>
+                            CNPJ: 60.423.318/0001-07<br>
+                            E-mail: speakup@speakupl.org<br>
+                            <a href="https://wa.me/5521975046106" target="_blank" class="footer-contact-link">WhatsApp: +55 21 975046106</a>
+                        </p>
+                        <div class="footer-socials">
+                            <a href="#" aria-label="LinkedIn" target="_blank">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                            </a>
+                            <a href="#" aria-label="Instagram" target="_blank">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- THE BOTTOM BAR -->
+            <div class="footer-bottom-bar">
+                <p>© <span id="current-year">2024</span> Speak Up por Luiz. Todos os direitos reservados. | <a href="politica-de-privacidade.html">Política de Privacidade</a></p>
+            </div>
+            
+        </div>
+    </footer>
+    
+    <!-- Vite will process and bundle our JavaScript -->
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html>
