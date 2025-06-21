@@ -1,13 +1,16 @@
-// /js/modules/three-module.js - The Interactive Crystal - FINAL POLISH
+// /js/modules/three-module.js - The Interactive Crystal - VITE OPTIMIZED
 
-// Using global THREE.js to avoid multiple imports warning
-// THREE, RGBELoader, etc. are available via global script tags
+// Using proper ES modules for Vite compatibility
+import * as THREE from 'three';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
+import { RoundedBoxGeometry } from './RoundedBoxGeometry.js';
 
 export async function setup3DScene(canvas) {
-    // Validate THREE.js is available globally
-    if (typeof THREE === 'undefined') {
-        throw new Error('THREE.js not loaded globally. Check script tags.');
-    }
+    // All THREE components available via imports
     
     // Validate required Three.js components
     if (!THREE.EffectComposer || !THREE.RenderPass || !THREE.UnrealBloomPass || !THREE.OutputPass) {
