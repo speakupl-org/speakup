@@ -346,10 +346,5 @@ class ScrollytellingDebugger {
     }
 }
 
-// Export for ES modules
-export { ScrollytellingDebugger };
-
-// Initialize debugger only if not imported as module
-if (typeof window !== 'undefined' && !window.scrollytellingDebug) {
-    window.scrollytellingDebug = new ScrollytellingDebugger();
-}
+// Initialize debugger
+window.scrollytellingDebug = new ScrollytellingDebugger();

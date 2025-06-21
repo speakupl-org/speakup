@@ -1,7 +1,7 @@
 // SpeakUp - VITE OPTIMIZED ENTRY POINT
 
-// Import CSS
-import './style.css';
+// Import CSS (Gennady-Style consolidated)
+import './css/main.css';
 
 // Import essential libraries
 import gsap from 'gsap';
@@ -21,15 +21,10 @@ gsap.registerPlugin(ScrollTrigger);
 // Initialize debug controller (imported as a module now)
 import './js/diagnostics/debug-controller-gennady.js';
 import './js/diagnostics/quick-background-fix.js';
-import { ScrollytellingDebugger } from './js/diagnostics/scrollytelling-debugger-gennady.js';
+import './js/diagnostics/scrollytelling-debugger-gennady.js';
 
 // Debug mode flag
 const DEBUG_MODE = true;
-
-// Initialize scrollytelling debugger
-if (DEBUG_MODE && typeof window !== 'undefined') {
-    window.scrollytellingDebug = new ScrollytellingDebugger();
-}
 
 // DOM Content Loaded Event
 document.addEventListener('DOMContentLoaded', async () => {

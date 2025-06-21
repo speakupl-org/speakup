@@ -1,0 +1,31 @@
+/* Main CSS Entry Point - Gennady Style Organization */
+
+/* ===== BASE STYLES (Foundation) ===== */
+@import './base/reset.css';
+@import './base/variables.css';
+@import './base/typography.css';
+@import './base/layout.css';
+@import './base/utilities.css';
+
+/* ===== COMPONENT STYLES (Building Blocks) ===== */
+@import './components/buttons.css';
+@import './components/header.css';
+@import './components/fullscreen-menu.css';
+@import './components/footer.css';
+
+/* ===== PAGE-SPECIFIC COMPONENTS ===== */
+@import './components/scrollytelling.css';
+@import './components/homepage.css';
+@import './components/story-page.css';
+@import './components/contact-page.css';
+@import './components/resources-page.css';
+
+/* ===== SPECIALIZED COMPONENTS ===== */
+@import './components/card.css';
+@import './components/guide-section.css';
+@import './components/sidebar-nav.css';
+
+/* Legacy sidebar components (consider removing after migration) */
+@import './components/sidebar-nav-advanced.css';
+@import './components/sidebar-nav-clean.css';
+@import './components/sidebar-nav-context-aware.css';

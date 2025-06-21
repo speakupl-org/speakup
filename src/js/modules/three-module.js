@@ -1,16 +1,18 @@
-// /src/js/modules/three-module.js - The Interactive Crystal - VITE OPTIMIZED
+// /js/modules/three-module.js - The Interactive Crystal - FINAL POLISH
 
-// Using proper ES modules for Vite compatibility
-import * as THREE from 'three';
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
-import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
-import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
-import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
-import { RoundedBoxGeometry } from './RoundedBoxGeometry.js';
+// Using global THREE.js to avoid multiple imports warning
+// THREE, RGBELoader, etc. are available via global script tags
 
 export async function setup3DScene(canvas) {
-    // All THREE components available via imports
+    // Validate THREE.js is available globally
+    if (typeof THREE === 'undefined') {
+        throw new Error('THREE.js not loaded globally. Check script tags.');
+    }
+    
+    // Validate required Three.js components
+    if (!THREE.EffectComposer || !THREE.RenderPass || !THREE.UnrealBloomPass || !THREE.OutputPass) {
+        throw new Error('THREE.js postprocessing components not available globally');
+    }
     
     try {
     // Scene setup
@@ -31,11 +33,11 @@ export async function setup3DScene(canvas) {
     renderer.setClearColor(0x000000, 0);
 
     // Post-Processing: UnrealBloomPass for Premium Edge Glow
-    const composer = new EffectComposer(renderer);
-    const renderPass = new RenderPass(scene, camera);
+    const composer = new THREE.EffectComposer(renderer);
+    const renderPass = new THREE.RenderPass(scene, camera);
     composer.addPass(renderPass);
     
-    const bloomPass = new UnrealBloomPass(
+    const bloomPass = new THREE.UnrealBloomPass(
         new THREE.Vector2(canvas.clientWidth, canvas.clientHeight),
         1.2,    // strength
         0.4,    // radius  
@@ -43,11 +45,11 @@ export async function setup3DScene(canvas) {
     );
     composer.addPass(bloomPass);
     
-    const outputPass = new OutputPass();
+    const outputPass = new THREE.OutputPass();
     composer.addPass(outputPass);
 
     // FINAL POLISH: Translucent Smoked Crystal Material
-    const geometry = new RoundedBoxGeometry(2, 2, 2, 8, 0.15);
+    const geometry = new THREE.RoundedBoxGeometry(2, 2, 2, 8, 0.15);
     const material = new THREE.MeshPhysicalMaterial({
         color: 0x222222, // Neutral very dark gray - color comes from lights
         metalness: 0.1,
@@ -97,7 +99,7 @@ export async function setup3DScene(canvas) {
     // MANDATORY: Environment Lighting - citrus_orchard_puresky_1k.hdr (ASYNC)
     try {
         const texture = await new Promise((resolve, reject) => {
-            const rgbeLoader = new RGBELoader();
+            const rgbeLoader = new THREE.RGBELoader();
             rgbeLoader.load(
                 '/public/images/citrus_orchard_puresky_1k.hdr',
                 (texture) => {

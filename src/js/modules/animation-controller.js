@@ -1,11 +1,18 @@
-// src/js/modules/animation-controller.js - VITE OPTIMIZED
+// js/modules/animation-controller.js
 
-// Import GSAP and ScrollTrigger properly for Vite
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-// Register plugins
-gsap.registerPlugin(ScrollTrigger);
+// GSAP loaded globally via script tags (optimized for Cloudflare Pages)
+if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger);
+    if (window.debug && window.debug.enabled) {
+        window.debug.log('ANIM', 'INIT', 'COMPLETE');
+    }
+} else {
+    if (window.debug && window.debug.enabled) {
+        window.debug.error('ANIM', 'INIT', 'FAILED [GSAP not available]');
+    } else {
+        console.error("ERR.ANIM: GSAP not available");
+    }
+}
 
 /**
  * Sets up "Living Crystal" scrollytelling: illuminated narrative with story-driven lighting.
