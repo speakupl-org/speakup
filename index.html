@@ -11,9 +11,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
     
-    <!-- CSS will be automatically imported by Vite from main.js -->
+    <!-- Critical CSS - Prevents FOUC (Flash of Unstyled Content) -->
+    <link rel="stylesheet" href="/src/css/critical.css">
+    
+    <!-- Main CSS will be automatically imported by Vite from main.js -->
 </head>
-<body>
+<body class="content-loading">
 
     <!-- =========================================================================
        PART 1: THE SPEAK UP "FLOATING PILL" HEADER (NOW FULLY RESPONSIVE)

@@ -5,7 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fluência e Confiança: O Método Speak Up</title>
 
-    <!-- CSS will be automatically imported by Vite from main.js -->
+    <!-- Critical CSS - Prevents FOUC (Flash of Unstyled Content) -->
+    <link rel="stylesheet" href="/src/css/critical.css">
+
+    <!-- Main CSS will be automatically imported by Vite from main.js -->
     <!-- Professional Import Map for THREE.js ES Modules -->
     <script type="importmap">
     {
@@ -19,7 +22,7 @@
     <!-- Fallback for browsers that don't support import maps -->
     <script src="https://unpkg.com/es-module-shims@1.7.3/dist/es-module-shims.js"></script>
 </head>
-<body>
+<body class="content-loading">
     <!-- ====================================================================================== -->
     
     <header class="site-header-pill">

@@ -1,7 +1,25 @@
 // SpeakUp - VITE OPTIMIZED ENTRY POINT
 
+// ANTI-FOUC: Immediate setup
+document.addEventListener('DOMContentLoaded', () => {
+    document.body.classList.remove('content-loading');
+    document.body.classList.add('content-loaded');
+});
+
 // Import CSS (Gennady-Style consolidated)
 import './css/main.css';
+
+// ANTI-FOUC: Ensure content loads smoothly after CSS import
+document.documentElement.style.setProperty('--loading-complete', '1');
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        document.body.classList.remove('content-loading');
+        document.body.classList.add('content-loaded');
+    });
+} else {
+    document.body.classList.remove('content-loading');
+    document.body.classList.add('content-loaded');
+}
 
 // Import essential libraries
 import gsap from 'gsap';
