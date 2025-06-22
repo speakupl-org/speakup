@@ -12,11 +12,6 @@ import { RoundedBoxGeometry } from './RoundedBoxGeometry.js';
 export async function setup3DScene(canvas) {
     // All THREE components available via imports
     
-    // Validate required Three.js components
-    if (!THREE.EffectComposer || !THREE.RenderPass || !THREE.UnrealBloomPass || !THREE.OutputPass) {
-        throw new Error('THREE.js postprocessing components not available globally');
-    }
-    
     try {
     // Scene setup
     const scene = new THREE.Scene();
@@ -36,11 +31,11 @@ export async function setup3DScene(canvas) {
     renderer.setClearColor(0x000000, 0);
 
     // Post-Processing: UnrealBloomPass for Premium Edge Glow
-    const composer = new THREE.EffectComposer(renderer);
-    const renderPass = new THREE.RenderPass(scene, camera);
+    const composer = new EffectComposer(renderer);
+    const renderPass = new RenderPass(scene, camera);
     composer.addPass(renderPass);
     
-    const bloomPass = new THREE.UnrealBloomPass(
+    const bloomPass = new UnrealBloomPass(
         new THREE.Vector2(canvas.clientWidth, canvas.clientHeight),
         1.2,    // strength
         0.4,    // radius  
@@ -48,11 +43,11 @@ export async function setup3DScene(canvas) {
     );
     composer.addPass(bloomPass);
     
-    const outputPass = new THREE.OutputPass();
+    const outputPass = new OutputPass();
     composer.addPass(outputPass);
 
     // FINAL POLISH: Translucent Smoked Crystal Material
-    const geometry = new THREE.RoundedBoxGeometry(2, 2, 2, 8, 0.15);
+    const geometry = new RoundedBoxGeometry(2, 2, 2, 8, 0.15);
     const material = new THREE.MeshPhysicalMaterial({
         color: 0x222222, // Neutral very dark gray - color comes from lights
         metalness: 0.1,
@@ -102,7 +97,7 @@ export async function setup3DScene(canvas) {
     // MANDATORY: Environment Lighting - citrus_orchard_puresky_1k.hdr (ASYNC)
     try {
         const texture = await new Promise((resolve, reject) => {
-            const rgbeLoader = new THREE.RGBELoader();
+            const rgbeLoader = new RGBELoader();
             rgbeLoader.load(
                 '/public/images/citrus_orchard_puresky_1k.hdr',
                 (texture) => {

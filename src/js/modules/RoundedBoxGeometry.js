@@ -1,8 +1,8 @@
-/* GENNADY-PHILOSOPHY COMPLIANT
- * RoundedBoxGeometry.js - Using global THREE.js to avoid multiple instances
- * 
- * THREE object must be available via global script tags before this file loads
+/* GENNADY-PHILOSOPHY COMPLIANT - ES MODULE VERSION
+ * RoundedBoxGeometry.js - Using ES module imports for Three.js
  */
+
+import * as THREE from 'three';
 
 // Global temporary variables
 const _tempNormal = new THREE.Vector3();
@@ -174,7 +174,5 @@ class RoundedBoxGeometry extends THREE.BoxGeometry {
 
 }
 
-// Add to global THREE for consistency with other utilities
-if (typeof THREE !== 'undefined') {
-    THREE.RoundedBoxGeometry = RoundedBoxGeometry;
-}
+// Export for ES modules
+export { RoundedBoxGeometry };
