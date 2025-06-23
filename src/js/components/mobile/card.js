@@ -1,5 +1,6 @@
-// Mobile-specific Card Component
-// Future: This will be packages/ui-mobile/src/Card/Card.js
+/**
+ * Mobile Card Component
+ */
 
 import { BaseCard } from '../base/card.js';
 
@@ -143,7 +144,6 @@ class MobileCard extends BaseCard {
 
     handleSwipeLeft() {
         // Swipe left actions (e.g., mark as read, dismiss)
-        console.log('📱 Card swiped left');
         this.trackInteraction('swipe_left');
         
         // Visual feedback
@@ -154,7 +154,6 @@ class MobileCard extends BaseCard {
 
     handleSwipeRight() {
         // Swipe right actions (e.g., save, like)
-        console.log('📱 Card swiped right');
         this.trackInteraction('swipe_right');
         
         // Visual feedback
@@ -242,7 +241,6 @@ class MobileCard extends BaseCard {
             
             // Avoid loading heavy content on slow connections
             if (connection.effectiveType === 'slow-2g' || connection.effectiveType === '2g') {
-                console.log('Skipping content load due to slow connection');
                 return;
             }
         }
@@ -263,7 +261,6 @@ class MobileCard extends BaseCard {
             viewportSize: `${window.innerWidth}x${window.innerHeight}`
         };
 
-        console.log('📱 Mobile Card Interaction:', data);
 
         if (window.performanceMonitor) {
             window.performanceMonitor.trackInteraction('mobile-card', data);

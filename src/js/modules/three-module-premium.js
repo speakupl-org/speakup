@@ -7,7 +7,7 @@ export function create3DScene(canvas) {
     return new Promise((resolve, reject) => {
         // Validate THREE.js is available globally
         if (typeof THREE === 'undefined') {
-            return reject(new Error('SCENE.ERROR: THREE not loaded globally'));
+            return reject(new Error('THREE.js not available'));
         }
         
         const scene = new THREE.Scene();
@@ -46,7 +46,7 @@ export function create3DScene(canvas) {
             };
             animate();
             
-            console.log("✅ Premium animation loop started");
+            // Debug: Operation completed
             
             // Make the dormant crystal visible after everything is loaded
             cube.visible = true;
@@ -69,11 +69,11 @@ export function create3DScene(canvas) {
 
         loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
             const progress = Math.round((itemsLoaded / itemsTotal) * 100);
-            console.log(`📦 Loading progress: ${progress}% (${url})`);
+            // Progress tracking
         };
 
         loadingManager.onError = (url) => {
-            console.error(`❌ Error loading asset: ${url}`);
+            // Error: Operation failed
             reject(new Error(`Asset loading failed: ${url}`));
         };
 
@@ -118,7 +118,7 @@ export function create3DScene(canvas) {
         
         scene.add(cube);
         
-        console.log("✅ Polished Crystal cube created - dormant, awaiting narrative illumination");
+        // Debug: Operation completed
 
         // NARRATIVE LIGHTS - Positioned to project FROM the text INTO the crystal
         // These lights will "project" each pillar's essence onto the crystal
@@ -147,7 +147,7 @@ export function create3DScene(canvas) {
         pillar3Helper.visible = false;
         scene.add(pillar3Helper);
         
-        console.log("✅ Narrative lights positioned to project FROM text INTO crystal");
+        // Debug: Operation completed
 
         // LIGHTING SETUP - Minimal base lighting to prioritize narrative lights
         // Very subtle fill lighting to not overpower the story-driven lights
@@ -158,7 +158,7 @@ export function create3DScene(canvas) {
         fillLight.position.set(-2, 3, 2);
         scene.add(fillLight);
         
-        console.log("✅ Minimal base lighting - narrative lights will completely dominate");
+        // Debug: Operation completed
 
         // 5. Lighting & Rendering - The "Cinematic" look
         // Primary light source: citrus_orchard_puresky_1k.hdr (as specified)
@@ -169,7 +169,7 @@ export function create3DScene(canvas) {
                 scene.environment = texture; // Primary light source
                 // No scene.background to maintain transparency
                 
-                console.log("✅ Citrus orchard HDR environment loaded (primary light source)");
+                // Debug: Operation completed
             }
         );
 
@@ -193,7 +193,7 @@ export function create3DScene(canvas) {
         const outputPass = new OutputPass();
         composer.addPass(outputPass);
         
-        console.log("✅ Cinematic post-processing configured for polished crystal");
+        // Debug: Operation completed
 
         // Premium resize handling
         const onResize = () => {
@@ -260,23 +260,21 @@ export function create3DScene(canvas) {
             camera: camera,
             renderer: renderer,
             showHelpers: (show = true) => {
-                console.log(`${show ? '👁️ Showing' : '🚫 Hiding'} light position helpers`);
+                // Debug: Operation completed
                 Object.values(window.livingCrystalDebug.helpers).forEach(helper => {
                     helper.visible = show;
                 });
                 if (show) {
-                    console.log('💡 Light helpers now visible - you can see light positions');
+                    // Light helpers now visible
                 } else {
-                    console.log('🔍 Light helpers hidden for clean viewing');
+                    // Light helpers hidden for clean viewing
                 }
             },
             testLight: (pillar, intensity = 2.5) => {
-                console.log(`🔍 Testing ${pillar} light with intensity ${intensity}`);
+                // Testing light with specified intensity
                 if (window.livingCrystalDebug.lights[pillar]) {
                     window.livingCrystalDebug.lights[pillar].intensity = intensity;
-                    console.log(`✅ ${pillar} light set to intensity ${intensity}`);
-                    console.log(`Color: #${window.livingCrystalDebug.lights[pillar].color.getHexString()}`);
-                    console.log(`Position: `, window.livingCrystalDebug.lights[pillar].position);
+                    // Debug: Operation completed
                     
                     // Visual feedback in page title
                     document.title = `Living Crystal - ${pillar} active (${intensity})`;
@@ -290,7 +288,7 @@ export function create3DScene(canvas) {
                         thickness: cube.material.thickness
                     });
                 } else {
-                    console.error(`❌ Light ${pillar} not found`);
+                    // Error: Operation failed
                 }
             },
             testAllLights: (intensity = 2.0) => {
@@ -387,7 +385,7 @@ export function create3DScene(canvas) {
                 }, 8500);
             },
             comprehensiveTest: () => {
-                console.log('🧪 Running Comprehensive Living Crystal Test');
+                // Debug: Operation completed
                 console.log('================================================');
                 
                 const debug = window.livingCrystalDebug;
@@ -395,7 +393,7 @@ export function create3DScene(canvas) {
                 // Step 1: Reset and show initial state
                 debug.resetLights();
                 debug.showLightStatus();
-                console.log('✅ Step 1: Initial state verified');
+                // Debug: Operation completed
                 
                 // Step 2: Test each light individually
                 setTimeout(() => {
@@ -442,16 +440,16 @@ export function create3DScene(canvas) {
                     debug.resetLights();
                     debug.showLightStatus();
                     
-                    console.log('\n🎯 COMPREHENSIVE TEST COMPLETE');
+                    // Debug: Operation completed
                     console.log('================================');
-                    console.log('✅ All lighting systems functional');
-                    console.log('✅ Color transmission verified');
-                    console.log('✅ Scroll simulation working');
-                    console.log('✅ Living Crystal ready for production use');
+                    // Debug: Operation completed
+                    // Debug: Operation completed
+                    // Debug: Operation completed
+                    // Debug: Operation completed
                 }, 13500);
             },
             help: () => {
-                console.log('🛠️ Living Crystal Debug Commands:');
+                // Debug: Operation completed
                 console.log('testLight(pillar, intensity) - Test individual light');
                 console.log('testAllLights(intensity) - Test all lights at once');
                 console.log('testLightColors() - Show color swatches');
@@ -470,7 +468,7 @@ export function create3DScene(canvas) {
             }
         };
         
-        console.log('🛠️ Living Crystal Debug Tools Enhanced & Ready:');
+        // Debug: Operation completed
         console.log('Type: livingCrystalDebug.help() for all commands');
         console.log('Quick test: livingCrystalDebug.testSequence()');
         console.log('Full diagnostic: livingCrystalDebug.comprehensiveTest()');

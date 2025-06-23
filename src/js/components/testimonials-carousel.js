@@ -1,6 +1,6 @@
 /**
- * TESTIMONIALS CAROUSEL
- * Sophisticated, accessible carousel with subtle navigation
+ * Testimonials Carousel
+ * Accessible carousel with smooth navigation
  */
 
 class TestimonialsCarousel {
@@ -17,19 +17,14 @@ class TestimonialsCarousel {
     }
     
     init() {
-        console.log('CAROUSEL.INIT_START');
-        
         if (!this.section || !this.testimonials.length) {
-            console.error('CAROUSEL.INIT_FAIL: Missing section or testimonials data', {
-                section: this.section,
-                testimonialsCount: this.testimonials?.length || 0
-            });
+            console.error('Carousel initialization failed: Missing section or testimonials data');
             return;
         }
         
         this.container = this.section.querySelector('.testimonials-carousel-container');
         if (!this.container) {
-            console.error('CAROUSEL.CONTAINER_FAIL: carousel container not found');
+            console.error('Carousel container not found');
             return;
         }
         
@@ -38,18 +33,9 @@ class TestimonialsCarousel {
         this.navPrev = this.container.querySelector('.carousel-nav-prev');
         this.navNext = this.container.querySelector('.carousel-nav-next');
         
-        console.log('CAROUSEL.ELEMENTS_FOUND:', {
-            track: !!this.track,
-            indicators: !!this.indicators,
-            navPrev: !!this.navPrev,
-            navNext: !!this.navNext
-        });
-        
         this.render();
         this.bindEvents();
         this.startAutoPlay();
-        
-        console.log('CAROUSEL.INIT_COMPLETE');
     }
     
     render() {
@@ -233,10 +219,10 @@ class TestimonialsCarousel {
     startAutoPlay() {
         if (!this.isAutoPlaying) return;
         
-        this.pauseAutoPlay(); // Clear any existing interval
+        this.pauseAutoPlay();
         this.autoPlayInterval = setInterval(() => {
             this.nextSlide();
-        }, 6000); // 6 seconds per slide
+        }, 6000);
     }
     
     pauseAutoPlay() {
@@ -248,10 +234,9 @@ class TestimonialsCarousel {
     
     resetAutoPlay() {
         this.pauseAutoPlay();
-        setTimeout(() => this.startAutoPlay(), 1000); // Brief pause after manual navigation
+        setTimeout(() => this.startAutoPlay(), 1000);
     }
     
-    // Public methods for external control
     pause() {
         this.isAutoPlaying = false;
         this.pauseAutoPlay();
@@ -264,7 +249,6 @@ class TestimonialsCarousel {
     
     destroy() {
         this.pauseAutoPlay();
-        // Remove event listeners and clean up
         const liveRegion = document.getElementById('carousel-live-region');
         if (liveRegion) {
             liveRegion.remove();
@@ -272,10 +256,8 @@ class TestimonialsCarousel {
     }
 }
 
-// Export for use in other modules
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = TestimonialsCarousel;
 }
 
-// Make available globally
 window.TestimonialsCarousel = TestimonialsCarousel;

@@ -4,7 +4,7 @@
 function initializeSmoothScroll() {
     // Only run if the Lenis library is present
     if (typeof Lenis === 'undefined') {
-        console.log("Lenis library not found. Skipping smooth scroll setup.");
+        // Lenis library not found, skipping smooth scroll setup
         return;
     }
 
@@ -17,7 +17,7 @@ function initializeSmoothScroll() {
 
     requestAnimationFrame(raf);
 
-    console.log("Global smooth scroll initialized.");
+    // Global smooth scroll initialized
 }
 
 // Run the initialization logic on page load

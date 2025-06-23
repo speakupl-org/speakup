@@ -112,11 +112,7 @@ export async function setup3DScene(canvas) {
         scene.environment = texture;
         
     } catch (error) {
-        if (window.debug && window.debug.enabled) {
-            window.debug.warn('SCENE', 'HDR', `FAILED [${error.message}]`);
-        } else {
-            console.warn("SCENE.HDR: FAILED [Using fallback environment]");
-        }
+        console.warn("HDR environment loading failed, using fallback:", error.message);
         // Fallback to basic environment
         const pmremGenerator = new THREE.PMREMGenerator(renderer);
         const envTexture = pmremGenerator.fromScene(new THREE.Scene()).texture;
@@ -255,11 +251,7 @@ export async function setup3DScene(canvas) {
     };
     
     } catch (error) {
-        if (window.debug && window.debug.enabled) {
-            window.debug.error('SCENE', 'INIT', `FAILED [${error.message}]`);
-        } else {
-            console.error('SCENE.INIT: FAILED [' + error.message + ']');
-        }
+        console.error('3D scene initialization failed:', error.message);
         throw error;
     }
 }

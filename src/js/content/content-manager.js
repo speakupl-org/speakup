@@ -370,7 +370,7 @@ class ContentManager {
         }
         
         // Page-specific rendering logic can be added here
-        console.log('Page content loaded:', pageContent);
+        // Page content loaded
     }
 }
 

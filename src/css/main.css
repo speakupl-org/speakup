@@ -23,9 +23,3 @@
 /* ===== SPECIALIZED COMPONENTS ===== */
 @import './components/card.css';
 @import './components/guide-section.css';
-@import './components/sidebar-nav.css';
-
-/* Legacy sidebar components (consider removing after migration) */
-@import './components/sidebar-nav-advanced.css';
-@import './components/sidebar-nav-clean.css';
-@import './components/sidebar-nav-context-aware.css';

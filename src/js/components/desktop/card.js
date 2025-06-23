@@ -1,5 +1,6 @@
-// Desktop-specific Card Component
-// Future: This will be packages/ui-desktop/src/Card/Card.js
+/**
+ * Desktop Card Component
+ */
 
 import { BaseCard } from '../base/card.js';
 
@@ -109,13 +110,13 @@ class DesktopCard extends BaseCard {
         const menu = this.createElement('div', 'card-context-menu');
         menu.innerHTML = `
             <button class="context-menu-item" data-action="share">
-                <span class="icon">🔗</span> Compartilhar
+                <span class="icon">↗</span> Compartilhar
             </button>
             <button class="context-menu-item" data-action="save">
-                <span class="icon">💾</span> Salvar
+                <span class="icon">+</span> Salvar
             </button>
             <button class="context-menu-item" data-action="copy">
-                <span class="icon">📋</span> Copiar Link
+                <span class="icon">⎘</span> Copiar Link
             </button>
         `;
 
@@ -198,8 +199,6 @@ class DesktopCard extends BaseCard {
     }
 
     saveCard() {
-        // Future: Save to user's collection
-        console.log('💾 Card saved for later reading');
         this.showNotification('Card salvo com sucesso!');
     }
 

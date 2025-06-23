@@ -234,12 +234,6 @@ class MobileOptimizer {
 // Initialize mobile optimizer
 const mobileOptimizer = new MobileOptimizer();
 
-// Make available globally for debugging and edge deployment
 window.mobileOptimizer = mobileOptimizer;
-
-// Log device info only in debug mode
-if (window.debug && window.debug.enabled) {
-    window.debug.log('APP', 'MOBILE', 'READY', mobileOptimizer.getDeviceInfo());
-}
 
 export { MobileOptimizer };

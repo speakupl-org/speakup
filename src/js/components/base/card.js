@@ -143,7 +143,6 @@ class BaseCard {
             await new Promise(resolve => setTimeout(resolve, this.options.loadingDelay));
             
             // This will be replaced with actual content loading
-            console.log(`Loading content for card from: ${contentUrl}`);
             
         } catch (error) {
             console.error('Failed to load card content:', error);
@@ -173,10 +172,6 @@ class BaseCard {
             viewport: window.innerWidth >= 768 ? 'desktop' : 'mobile'
         };
 
-        // Log for now, will send to Edge analytics later
-        console.log('📊 Card Interaction:', data);
-
-        // Future: Send to Cloudflare Analytics
         if (window.performanceMonitor) {
             window.performanceMonitor.trackInteraction('card', data);
         }

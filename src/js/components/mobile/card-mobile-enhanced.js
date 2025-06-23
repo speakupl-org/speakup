@@ -18,7 +18,6 @@ class MobileCardSystem {
         this.setupTouchInteractions();
         this.setupViewportObserver();
         this.setupAccessibility();
-        console.log('📱 Enhanced Mobile Card System initialized');
     }
 
     isMobile() {
@@ -184,7 +183,6 @@ class MobileCardSystem {
             }
         }));
 
-        console.log('📱 Card tapped:', cardData.index);
     }
 
     handleTestimonialTap(cardData) {
@@ -278,7 +276,6 @@ class MobileCardSystem {
             card.removeAttribute('role');
             card.removeAttribute('tabindex');
         });
-        console.log('📱 Mobile Card System destroyed');
     }
 }
 

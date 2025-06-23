@@ -3,15 +3,8 @@
 // GSAP loaded globally via script tags (optimized for Cloudflare Pages)
 if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger);
-    if (window.debug && window.debug.enabled) {
-        window.debug.log('ANIM', 'INIT', 'COMPLETE');
-    }
 } else {
-    if (window.debug && window.debug.enabled) {
-        window.debug.error('ANIM', 'INIT', 'FAILED [GSAP not available]');
-    } else {
-        console.error("ERR.ANIM: GSAP not available");
-    }
+    console.error("GSAP not available");
 }
 
 /**
@@ -21,11 +14,7 @@ if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
  */
 export function setupScrollytelling(cube, scene3D = {}) {
     if (!cube) {
-        if (window.debug && window.debug.enabled) {
-            window.debug.error('ANIM', 'SETUP', 'FAILED [Cube object not found]');
-        } else {
-            console.error("ERR.ANIM.SETUP: FAILED [Cube object not found]");
-        }
+        console.error("Scrollytelling setup failed: Cube object not found");
         return;
     }
     
@@ -57,11 +46,6 @@ export function setupScrollytelling(cube, scene3D = {}) {
         console.warn(`Expected 3 text pillars, found ${textPillars.length}`);
     }
 
-    if (window.debug && window.debug.enabled) {
-        window.debug.log('ANIM', 'SETUP', 'COMPLETE [Narrative lights initialized]');
-    }
-
-    // PIN VISUALS COLUMN
     ScrollTrigger.create({
         trigger: visualsColumn,
         start: 'top top',
@@ -77,28 +61,16 @@ export function setupScrollytelling(cube, scene3D = {}) {
         start: 'top center',
         end: 'bottom center',
         onEnter: () => {
-            if (window.debug && window.debug.enabled) {
-                window.debug.log('ANIM', 'PHASE', 'CINEMATIC [Interaction disabled]');
-            }
             if (scene3D.disableInteraction) scene3D.disableInteraction();
             
-            // Hand-off transition: smoothly animate from current rotation to timeline start
             gsap.to(cube.rotation, {
-                x: 0, // Target start rotation for the timeline
-                y: 0, // Target start rotation for the timeline
+                x: 0,
+                y: 0,
                 duration: 0.8,
-                ease: 'power3.inOut',
-                onComplete: () => {
-                    if (window.debug && window.debug.enabled) {
-                        window.debug.log('ANIM', 'TRANSITION', 'COMPLETE [Hand-off finalized]');
-                    }
-                }
+                ease: 'power3.inOut'
             });
         },
         onLeaveBack: () => {
-            if (window.debug && window.debug.enabled) {
-                window.debug.log('ANIM', 'PHASE', 'INTERACTIVE [Interaction enabled]');
-            }
             if (scene3D.enableInteraction) scene3D.enableInteraction();
         }
     });
@@ -111,11 +83,9 @@ export function setupScrollytelling(cube, scene3D = {}) {
             end: 'bottom bottom',
             scrub: 1.2,
             onStart: () => {
-                // Ensure cube is ready for cinematic control
                 cube.userData.isCinematic = true;
             },
             onComplete: () => {
-                // Mark end of cinematic sequence
                 cube.userData.isCinematic = false;
             }
         }
@@ -128,42 +98,30 @@ export function setupScrollytelling(cube, scene3D = {}) {
         ease: 'none'
     }, 0);
 
-    // Pillar 1: Brand Golden Light (0% to 30%) - Primary brand color illumination
     if (textPillars[0]) {
         tl.fromTo(textPillars[0], { autoAlpha: 0, y: 30 }, { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power2.out' }, '0%');
-        tl.to(scene3D.lights.pillar1, { intensity: 2.0, duration: 0.7, ease: 'power2.out' }, '0%'); // Precise 2.0 intensity
+        tl.to(scene3D.lights.pillar1, { intensity: 2.0, duration: 0.7, ease: 'power2.out' }, '0%');
         tl.to(textPillars[0], { autoAlpha: 0, y: -30, duration: 0.5, ease: 'power2.in' }, '30%');
         tl.to(scene3D.lights.pillar1, { intensity: 0, duration: 0.7, ease: 'power2.in' }, '30%');
     }
     
-    // Pillar 2: Cool Blue Light (34% to 63%) - Complementary blue illumination
     if (textPillars[1]) {
         tl.fromTo(textPillars[1], { autoAlpha: 0, y: 30 }, { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power2.out' }, '34%');
-        tl.to(scene3D.lights.pillar2, { intensity: 2.0, duration: 0.7, ease: 'power2.out' }, '34%'); // Precise 2.0 intensity
+        tl.to(scene3D.lights.pillar2, { intensity: 2.0, duration: 0.7, ease: 'power2.out' }, '34%');
         tl.to(textPillars[1], { autoAlpha: 0, y: -30, duration: 0.5, ease: 'power2.in' }, '63%');
         tl.to(scene3D.lights.pillar2, { intensity: 0, duration: 0.7, ease: 'power2.in' }, '63%');
     }
     
-    // Pillar 3: Clean White Light (67% to 96%) - Pure white illumination
     if (textPillars[2]) {
         tl.fromTo(textPillars[2], { autoAlpha: 0, y: 30 }, { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power2.out' }, '67%');
-        tl.to(scene3D.lights.pillar3, { intensity: 2.0, duration: 0.7, ease: 'power2.out' }, '67%'); // Precise 2.0 intensity
+        tl.to(scene3D.lights.pillar3, { intensity: 2.0, duration: 0.7, ease: 'power2.out' }, '67%');
         tl.to(textPillars[2], { autoAlpha: 0, y: -30, duration: 0.5, ease: 'power2.in' }, '96%');
         tl.to(scene3D.lights.pillar3, { intensity: 0, duration: 0.7, ease: 'power2.in' }, '96%');
     }
 
-    // Delayed ScrollTrigger refresh for final layout
     setTimeout(() => {
         ScrollTrigger.refresh();
-        if (window.debug && window.debug.enabled) {
-            window.debug.log('ANIM', 'SCROLLTRIGGER', 'COMPLETE [Three-act experience initialized]');
-        }
     }, 500);
 
-    if (window.debug && window.debug.enabled) {
-        window.debug.log('ANIM', 'SETUP', 'COMPLETE [Crystal animation implemented]');
-    }
-
-    // Make scene3D globally accessible for verification testing
     window.scene3D = scene3D;
 }
