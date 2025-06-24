@@ -14,7 +14,6 @@
 @import './components/footer.css';
 
 /* ===== PAGE-SPECIFIC COMPONENTS ===== */
-@import './components/scrollytelling.css';
 @import './components/homepage.css';
 @import './components/story-page.css';
 @import './components/contact-page.css';
@@ -23,3 +22,4 @@
 /* ===== SPECIALIZED COMPONENTS ===== */
 @import './components/card.css';
 @import './components/guide-section.css';
+@import './components/section-ring-nav.css';

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contato e Agendamento - Speak Up</title>
+    <title>O Guia Definitivo para o Som do "TH" - Speak Up</title>
 
     <!-- Inline Critical CSS -->
     <style>
@@ -109,14 +109,6 @@
             line-height: 1.2;
         }
 
-        blockquote {
-            background: var(--color-surface-dark);
-            padding: 20px;
-            border-left: 5px solid var(--color-primary-vibrant);
-            margin: 20px 0;
-            font-style: italic;
-        }
-
         /* 7. Essential Button Styles - Immediate Interactivity */
         .btn, button {
             font-family: var(--font-primary);
@@ -145,46 +137,33 @@
             visibility: visible !important;
         }
     </style>
-
-    <!-- Main CSS will be automatically imported by Vite from main.js -->
-
-    <!-- 3. Page-specific or larger components -->
 </head>
 <body>
 
-<!-- =========================================================================
-   PART 1: THE SPEAK UP "FLOATING PILL" HEADER (NOW FULLY RESPONSIVE)
-   ========================================================================= -->    <header class="site-header-pill">
+    <header class="site-header-pill">
         <a href="index.html" class="logo-area" aria-label="Speak Up Homepage">
             <img src="public/images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon">
             <span class="logo-text">Speak <span class="up">Up</span></span>
         </a>
 
-    <!-- This container holds the desktop navigation and will be hidden on mobile -->
-    <div class="header-desktop-nav-container">
-        <nav class="desktop-nav">
-            <ul>
-                <li><a href="o-metodo.html">O Método</a></li>
-                <li><a href="minha-jornada.html">Minha Jornada</a></li>
-                <li><a href="recursos.html">Recursos</a></li>
-                <!-- We can omit Contact here since it's the main CTA -->
-            </ul>
-        </nav>
-        <a href="contato.html" class="cta-button header-cta-desktop">Agende uma Conversa</a>
-    </div>
+        <div class="header-desktop-nav-container">
+            <nav class="desktop-nav">
+                <ul>
+                    <li><a href="o-metodo.html">O Método</a></li>
+                    <li><a href="minha-jornada.html">Minha Jornada</a></li>
+                    <li><a href="recursos.html">Recursos</a></li>
+                </ul>
+            </nav>
+            <a href="contato.html" class="cta-button header-cta-desktop">Agende uma Conversa</a>
+        </div>
 
-    <!-- This is the hamburger button, which will now only be visible on mobile -->
-    <button class="menu-toggle-button" id="menu-open-button" aria-label="Open menu" aria-expanded="false">
-        <span class="hamburger-line"></span>
-        <span class="hamburger-line"></span>
-        <span class="hamburger-line"></span>
-    </button>
-</header>
+        <button class="menu-toggle-button" id="menu-open-button" aria-label="Open menu" aria-expanded="false">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+        </button>
+    </header>
 
-    <!-- =========================================================================
-       PART 2: THE "SPEAK UP BRAND WORLD" MENU SCREEN
-       This is the full-screen overlay that appears on tap.
-       ========================================================================= -->
     <div class="fullscreen-menu" id="menu-screen" aria-hidden="true" style="opacity: 0; visibility: hidden; pointer-events: none;">
         <div class="fullscreen-menu-header">
             <a href="index.html" class="logo-area" aria-label="Speak Up Homepage">
@@ -212,64 +191,98 @@
     </div>
 
     <main>
-        <!-- =========================================================================
-           PAGE HEADER - Sets the tone
-           ========================================================================= -->
-        <header class="page-header">
-            <div class="container">
-                <h1 class="page-title">Vamos Conversar</h1>
-                <p class="page-subtitle">Estou ansioso para conhecer sua história e seus objetivos. Escolha a melhor forma de dar o próximo passo.</p>
-            </div>
-        </header>
-
-        <!-- =========================================================================
-           THE TWO DOORS SECTION - The core of the page
-           ========================================================================= -->
-        <section class="contact-options-section">
-            <div class="container">
-                <div class="contact-options-grid">
-
-                    <!-- Door #1: Primary Action (Schedule a Call) -->
-                    <div class="contact-option primary-action">
-                        <img src="public/images/icons/calendar.svg" alt="Ícone de Calendário" class="contact-icon">
-                        <h2 class="contact-title">Agende Nossa Conversa</h2>
-                        <p class="contact-description">
-                            Este é o melhor caminho. Vamos ter uma conversa de 30 minutos, sem custo e sem compromisso, para eu entender seus desafios e planejarmos juntos seus próximos passos.
-                        </p>
-                        <a href="https://calendar.app.google/cfAPxet4d5KZP3PT9" target="_blank" rel="noopener noreferrer" class="cta-button cta-button-large">
-                            Ver horários disponíveis
-                        </a>
-                    </div>
-
-                    <!-- Door #2: Secondary Action (Quick Question) -->
-                    <div class="contact-option secondary-action">
-                        <img src="public/images/icons/whatsapp.svg" alt="Ícone do WhatsApp" class="contact-icon">
-                         <h2 class="contact-title">Tem uma Pergunta Rápida?</h2>
-                        <p class="contact-description">
-                           Ainda não está pronto para agendar? Sem problemas. Se você tem alguma dúvida sobre o método ou horários, me mande uma mensagem e eu respondo assim que possível.
-                        </p>
-                         <a href="https://wa.me/5521975046106" target="_blank" rel="noopener noreferrer" class="secondary-button">
-                            Conversar no WhatsApp
-                        </a>
-                    </div>
+        <div class="story-container">
+            <div class="story-header">
+                <div class="container">
+                    <h1 class="story-title">O Guia Definitivo para o Som do "TH"</h1>
+                    <p class="story-intro">Dominando um dos sons que mais nos desafia como brasileiros</p>
                 </div>
             </div>
-        </section>
 
+            <div class="story-body">
+                <div class="container">
+                    <p>Se você já se sentiu frustrado tentando pronunciar palavras como "think", "this" ou "three", saiba que não está sozinho. O som do "TH" é universalmente reconhecido como um dos mais desafiadores para falantes não nativos do inglês – especialmente para nós, brasileiros.</p>
+
+                    <p>A boa notícia? Com a técnica certa e um pouco de prática consciente, você pode dominar esse som de uma vez por todas.</p>
+
+                    <h2 class="story-heading">Por que o "TH" nos desafia tanto?</h2>
+
+                    <p>O português brasileiro simplesmente não possui esse som. Nossa língua tem uma estrutura fonética diferente, e nosso cérebro naturalmente tenta "traduzir" o "TH" para sons que conhecemos: /f/, /d/, /t/ ou /z/.</p>
+
+                    <p>Isso significa que quando vemos "think", nosso impulso é pronunciar "fink" ou "tink". Com "this", tendemos a dizer "dis" ou "zis". É completamente natural – mas também completamente evitável.</p>
+
+                    <div class="pull-quote">
+                        "O segredo não está em forçar a pronúncia, mas em entender exatamente onde sua língua precisa estar."
+                    </div>
+
+                    <h2 class="story-heading">Os dois sons do "TH"</h2>
+
+                    <p>Primeiro, é importante entender que existem dois sons distintos representados pelas letras "TH":</p>
+
+                    <p><strong>1. TH surdo (voiceless)</strong> – como em "think", "three", "thank"<br>
+                    <strong>2. TH sonoro (voiced)</strong> – como em "this", "that", "the"</p>
+
+                    <p>A diferença está na vibração das cordas vocais. No TH surdo, elas não vibram. No sonoro, elas vibram. Coloque a mão no pescoço e sinta a diferença entre "think" (sem vibração) e "this" (com vibração).</p>
+
+                    <h2 class="story-heading">A técnica definitiva</h2>
+
+                    <p><strong>Posição da língua:</strong> A ponta da língua deve tocar levemente a parte de trás dos dentes superiores ou ficar entre os dentes superiores e inferiores. Não force – apenas um toque suave.</p>
+
+                    <p><strong>Fluxo de ar:</strong> O ar deve passar pelos lados da língua, criando uma pequena fricção. Imagine que você está soprando uma vela, mas com a língua na posição descrita.</p>
+
+                    <p><strong>Exercício prático:</strong></p>
+                    <ol style="margin-left: 2rem; margin-bottom: 1.5rem;">
+                        <li>Coloque a ponta da língua entre os dentes</li>
+                        <li>Sopre ar gentilmente</li>
+                        <li>Para o TH surdo: apenas ar</li>
+                        <li>Para o TH sonoro: adicione vibração nas cordas vocais</li>
+                    </ol>
+
+                    <h2 class="story-heading">Prática progressiva</h2>
+
+                    <p><strong>Nível 1 - Sons isolados:</strong><br>
+                    Pratique apenas o som, sem palavras. "Th... th... th..."</p>
+
+                    <p><strong>Nível 2 - Palavras simples:</strong><br>
+                    Think, three, thank, this, that, the</p>
+
+                    <p><strong>Nível 3 - Frases curtas:</strong><br>
+                    "I think this is three things."<br>
+                    "Thank you for that."</p>
+
+                    <p><strong>Nível 4 - Conversação natural:</strong><br>
+                    Use o som em contextos reais, sem se preocupar com perfeição.</p>
+
+                    <div class="pull-quote">
+                        "A fluência não vem da perfeição técnica, mas da confiança para usar o que você sabe."
+                    </div>
+
+                    <h2 class="story-heading">Dicas para acelerar o progresso</h2>
+
+                    <p><strong>Pratique em espelho:</strong> Veja sua língua se movendo. O feedback visual acelera o aprendizado motor.</p>
+
+                    <p><strong>Grave-se:</strong> Compare sua pronúncia com falantes nativos. Seu ouvido é seu melhor professor.</p>
+
+                    <p><strong>Vá devagar:</strong> Prefira pronunciar corretamente devagar do que incorretamente rápido. A velocidade vem naturalmente.</p>
+
+                    <p><strong>Seja paciente consigo mesmo:</strong> Mudanças musculares levam tempo. Celebre pequenos progressos.</p>
+
+                    <h2 class="story-heading">O resultado vale a pena</h2>
+
+                    <p>Dominar o som do "TH" não é apenas sobre pronúncia correta – é sobre confiança. Quando você não precisa mais evitar palavras com "TH", sua comunicação se torna mais natural e fluida.</p>
+
+                    <p>Lembre-se: cada brasileiro que dominou esse som passou exatamente pelas mesmas dificuldades que você está passando agora. A diferença está na prática consistente e na técnica correta.</p>
+
+                    <p>Comece hoje. Apenas cinco minutos de prática consciente por dia. Em algumas semanas, você se surpreenderá com o progresso.</p>
+                </div>
+            </div>
+        </div>
     </main>
 
-    <!-- FOOTER - Consistent -->
-        <!-- =========================================================================
-       SECTION 7: THE NEW HIGH-CREDIBILITY FOOTER
-       ========================================================================= -->
     <footer class="site-footer">
         <div class="container">
-            
-            <!-- THE MAIN "FOUNDATION BLOCK" CONTAINER -->
             <div class="footer-content-block">
                 <div class="footer-grid">
-
-                    <!-- COLUMN 1: BRAND ANCHOR -->
                     <div class="footer-column footer-brand">
                         <a href="index.html" class="logo-area-footer" aria-label="Speak Up Homepage">
                             <img src="public/images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon-footer">
@@ -278,7 +291,6 @@
                         <p class="footer-tagline">Destravando o inglês de profissionais brasileiros. Foco na conexão, não na perfeição.</p>
                     </div>
 
-                    <!-- COLUMN 2: NAVIGATION -->
                     <div class="footer-column footer-nav">
                         <h4 class="footer-heading">Navegue</h4>
                         <ul>
@@ -289,7 +301,6 @@
                         </ul>
                     </div>
 
-                    <!-- COLUMN 3: CONTACT, LEGAL & SOCIALS -->
                     <div class="footer-column footer-contact">
                         <h4 class="footer-heading">Contato & Legal</h4>
                         <p>
@@ -306,18 +317,15 @@
                             </a>
                         </div>
                     </div>
-
                 </div>
             </div>
 
-            <!-- THE BOTTOM BAR -->
             <div class="footer-bottom-bar">
                 <p>© <span id="current-year">2024</span> Speak Up por Luiz. Todos os direitos reservados. | <a href="politica-de-privacidade.html">Política de Privacidade</a></p>
             </div>
-            
         </div>
     </footer>
     
-  <script type="module" src="/src/main.js"></script>
+    <script type="module" src="/src/main.js"></script>
 </body>
 </html>

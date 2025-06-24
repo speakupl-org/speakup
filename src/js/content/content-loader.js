@@ -121,29 +121,30 @@ function renderTestimonials(testimonials) {
             window.testimonialsCarousel = new window.TestimonialsCarousel('testimonials', testimonials.testimonials);
             log('TESTIMONIALS_READY');
         } else {
-            // Error case
-        }        } else {
-            // Fallback: render first testimonial only
-            updateElement('#testimonialsTrack', 
-                `<div class="testimonial-slide active">
-                    <article class="card card--testimonial card--desktop card--mobile" 
-                             data-variant="testimonial" 
-                             data-mobile-optimized="true"
-                             role="article" 
-                             aria-label="Testimonial from ${testimonials.testimonials[0].author}"
-                             tabindex="0">
-                        <div class="card__content">
-                            ${testimonials.testimonials[0].content}
-                        </div>
-                        <div class="card__footer">
-                            <p class="card__subtitle">- ${testimonials.testimonials[0].author}</p>
-                            <span class="testimonial-badge">${testimonials.testimonials[0].role}</span>
-                        </div>
-                    </article>
-                </div>`, 
-                true
-            );
+            console.warn('Testimonials carousel container not found');
         }
+    } else {
+        // Fallback: render first testimonial only
+        updateElement('#testimonialsTrack', 
+            `<div class="testimonial-slide active">
+                <article class="card card--testimonial card--desktop card--mobile" 
+                         data-variant="testimonial" 
+                         data-mobile-optimized="true"
+                         role="article" 
+                         aria-label="Testimonial from ${testimonials.testimonials[0].author}"
+                         tabindex="0">
+                    <div class="card__content">
+                        ${testimonials.testimonials[0].content}
+                    </div>
+                    <div class="card__footer">
+                        <p class="card__subtitle">- ${testimonials.testimonials[0].author}</p>
+                        <span class="testimonial-badge">${testimonials.testimonials[0].role}</span>
+                    </div>
+                </article>
+            </div>`, 
+            true
+        );
+    }
 }
 
 /**

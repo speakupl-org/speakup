@@ -54,9 +54,95 @@
     line-height: 1.6;
 }
 
+/* ======================================= */
+/*   Component: Method Pillars             */
+/* ======================================= */
+
+.method-pillars {
+    padding: 6rem 0;
+    background: var(--color-background-dark);
+}
+
+.method-pillars .container {
+    max-width: 800px;
+}
+
+.pillar-item {
+    margin-bottom: 4rem;
+    padding: 2rem 0;
+}
+
+.pillar-item:last-child {
+    margin-bottom: 0;
+}
+
+.pillar-number {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--color-primary-vibrant);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.pillar-line {
+    width: 60px;
+    height: 2px;
+    background: var(--color-accent);
+    margin-bottom: 1.5rem;
+}
+
+.pillar-title {
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    font-weight: 700;
+    color: var(--color-heading);
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+}
+
+.pillar-paragraph {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: var(--color-text-main);
+    max-width: 65ch;
+}
+
+.method-summary {
+    padding: 5rem 5vw 8rem;
+    text-align: center;
+}
+
+.summary-title {
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    max-width: 600px;
+    margin: 0 auto 1.5rem;
+}
+
+.method-summary p {
+    max-width: 55ch;
+    margin: 0 auto;
+    font-size: 1.1rem;
+    color: var(--color-text-muted);
+    line-height: 1.7;
+}
+
 @media (max-width: 768px) {
     .story-body .container {
         max-width: 90%;
     }
     .pull-quote { margin: 2rem 0; }
+    
+    .method-pillars {
+        padding: 4rem 0;
+    }
+    
+    .pillar-item {
+        margin-bottom: 3rem;
+        padding: 1.5rem 0;
+    }
+    
+    .method-summary {
+        padding: 4rem 1rem 6rem;
+    }
 }

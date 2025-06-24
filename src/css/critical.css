@@ -11,10 +11,6 @@
   padding: 0;
 }
 
-html, body {
-  height: 100%;
-}
-
 /* 2. Essential Variables */
 :root {
     --color-background-dark: #112024;
@@ -40,6 +36,8 @@ body {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 /* 4. Essential Header Styles - Immediate Visibility */
@@ -80,12 +78,12 @@ body {
 }
 
 .logo-text .up {
-    color: var(--color-accent);
+    color: var(--color-primary-vibrant);
 }
 
 /* 5. Essential Layout - Prevent Content Jump */
 main {
-    min-height: 100vh;
+    flex: 1 0 auto;
     padding-top: var(--header-height);
 }
 
@@ -94,6 +92,14 @@ h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
     color: var(--color-heading);
     line-height: 1.2;
+}
+
+blockquote {
+    background: var(--color-surface-dark);
+    padding: 20px;
+    border-left: 5px solid var(--color-primary-vibrant);
+    margin: 20px 0;
+    font-style: italic;
 }
 
 /* 7. Anti-FOUC: Hide content until fully styled */

@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onde Colocar o Adjetivo? Uma Regra Simples - Speak Up</title>
+
+    <!-- Inline Critical CSS -->
+    <style>
+        /* CRITICAL CSS - Prevents FOUC (Flash of Unstyled Content) */
+        /* This CSS loads immediately via HTML <style> tag, preventing any styling flash */
+
+        /* 1. Essential Reset */
+        *, *::before, *::after {
+          box-sizing: border-box;
+        }
+
+        * {
+          margin: 0;
+          padding: 0;
+        }
+
+        /* 2. Essential Variables */
+        :root {
+            --color-background-dark: #112024;
+            --color-surface-dark: #1A2C30;
+            --color-primary-vibrant: #00A09A;
+            --color-accent: #FDB813;
+            --color-text-main: #E2E8F0;
+            --color-text-muted: #94A3B8;
+            --color-heading: #FFFFFF;
+            --font-primary: 'Inter', -apple-system, sans-serif;
+            --font-heading: 'Poppins', var(--font-primary);
+            --header-height: 75px;
+            --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        /* 3. Essential Body/Background Styles - NO FLASH */
+        body {
+            background: var(--color-background-dark);
+            color: var(--color-text-main);
+            font-family: var(--font-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            transition: opacity 0.4s ease-out;
+        }
+
+        body.page-revealed {
+            opacity: 1;
+        }
+
+        /* 4. Essential Header Styles - Immediate Visibility */
+        .site-header-pill {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background: rgba(26, 44, 48, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--color-text-main);
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+        }
+
+        .logo-text {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            font-size: 18px;
+            color: var(--color-heading);
+        }
+
+        .logo-text .up {
+            color: var(--color-primary-vibrant);
+        }
+
+        /* 5. Essential Layout - Prevent Content Jump */
+        main {
+            flex: 1 0 auto;
+            padding-top: var(--header-height);
+        }
+
+        /* 6. Essential Typography - Immediate Font Loading */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            color: var(--color-heading);
+            line-height: 1.2;
+        }
+
+        /* 7. Essential Button Styles - Immediate Interactivity */
+        .btn, button {
+            font-family: var(--font-primary);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--color-primary-vibrant);
+            color: white;
+            padding: 12px 24px;
+            font-weight: 500;
+        }
+
+        .btn-primary:hover {
+            background: #008A84;
+            transform: translateY(-2px);
+        }
+
+        /* 8. Immediate display for critical elements */
+        .site-header-pill {
+            visibility: visible !important;
+        }
+
+        .rule-box {
+            background: linear-gradient(135deg, var(--color-primary-vibrant), #008A84);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+            color: white;
+        }
+
+        .rule-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .rule-formula {
+            font-size: 1.25rem;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 1px;
+        }
+
+        .example-card {
+            background: var(--color-surface-dark);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-left: 4px solid var(--color-primary-vibrant);
+        }
+
+        .example-sentence {
+            font-size: 1.2rem;
+            color: var(--color-heading);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .example-breakdown {
+            display: grid;
+            grid-template-columns: auto auto auto;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            align-items: center;
+            justify-content: start;
+        }
+
+        .word-type {
+            font-size: 0.85rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .adjective {
+            background: rgba(253, 184, 19, 0.2);
+            color: var(--color-accent);
+            border: 1px solid var(--color-accent);
+        }
+
+        .noun {
+            background: rgba(0, 160, 154, 0.2);
+            color: var(--color-primary-vibrant);
+            border: 1px solid var(--color-primary-vibrant);
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .comparison-card {
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .wrong-example {
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 3px solid #ef4444;
+        }
+
+        .correct-example {
+            background: rgba(34, 197, 94, 0.1);
+            border-left: 3px solid #22c55e;
+        }
+
+        .comparison-label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .wrong-example .comparison-label {
+            color: #ef4444;
+        }
+
+        .correct-example .comparison-label {
+            color: #22c55e;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .example-breakdown {
+                grid-template-columns: 1fr;
+                gap: 0.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="site-header-pill">
+        <a href="index.html" class="logo-area" aria-label="Speak Up Homepage">
+            <img src="public/images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon">
+            <span class="logo-text">Speak <span class="up">Up</span></span>
+        </a>
+
+        <div class="header-desktop-nav-container">
+            <nav class="desktop-nav">
+                <ul>
+                    <li><a href="o-metodo.html">O Método</a></li>
+                    <li><a href="minha-jornada.html">Minha Jornada</a></li>
+                    <li><a href="recursos.html">Recursos</a></li>
+                </ul>
+            </nav>
+            <a href="contato.html" class="cta-button header-cta-desktop">Agende uma Conversa</a>
+        </div>
+
+        <button class="menu-toggle-button" id="menu-open-button" aria-label="Open menu" aria-expanded="false">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+        </button>
+    </header>
+
+    <div class="fullscreen-menu" id="menu-screen" aria-hidden="true" style="opacity: 0; visibility: hidden; pointer-events: none;">
+        <div class="fullscreen-menu-header">
+            <a href="index.html" class="logo-area" aria-label="Speak Up Homepage">
+                <img src="public/images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon">
+            </a>
+            <button class="menu-toggle-button" id="menu-close-button" aria-label="Close menu" aria-expanded="true">
+                <span class="close-line"></span>
+                <span class="close-line"></span>
+            </button>
+        </div>
+
+        <nav class="fullscreen-menu-nav">
+            <ul>
+                <li><a href="o-metodo.html">O Método</a></li>
+                <li><a href="minha-jornada.html">Minha Jornada</a></li>
+                <li><a href="recursos.html">Recursos</a></li>
+                <li><a href="contato.html">Contato</a></li>
+            </ul>
+        </nav>
+
+        <div class="fullscreen-menu-action-box">
+            <a href="contato.html" class="cta-button">Agende uma Conversa</a>
+            <a href="https://wa.me/YOURPHONENUMBER" target="_blank" class="link-subtle whatsapp-link">Conversar no WhatsApp</a>
+        </div>
+    </div>
+
+    <main>
+        <div class="story-container">
+            <div class="story-header">
+                <div class="container">
+                    <h1 class="story-title">Onde Colocar o Adjetivo? Uma Regra Simples</h1>
+                    <p class="story-intro">Dominando a ordem das palavras que todo brasileiro precisa saber</p>
+                </div>
+            </div>
+
+            <div class="story-body">
+                <div class="container">
+                    <p>Se você já parou na frente do espelho e disse "beautiful woman" em vez de "woman beautiful", parabéns – você instintivamente aplicou uma das regras mais fundamentais do inglês. Mas se você já hesitou sobre onde colocar o adjetivo, não se preocupe. Você não está sozinho.</p>
+
+                    <p>A posição dos adjetivos em inglês confunde muitos brasileiros porque nossa intuição em português nem sempre se aplica. Mas existe uma regra simples que resolve 95% dos casos.</p>
+
+                    <div class="rule-box">
+                        <div class="rule-title">A Regra de Ouro</div>
+                        <div class="rule-formula">ADJETIVO + SUBSTANTIVO</div>
+                        <p style="margin-top: 1rem; font-size: 1.1rem;">Na maioria dos casos, o adjetivo vem ANTES do substantivo em inglês.</p>
+                    </div>
+
+                    <h2 class="story-heading">Por que isso é diferente do português?</h2>
+
+                    <p>Em português, tendemos a colocar o adjetivo depois: "casa grande", "carro novo", "mulher bonita". Em inglês, é o contrário: "big house", "new car", "beautiful woman".</p>
+
+                    <p>Essa diferença acontece porque as línguas evoluíram de formas diferentes. O inglês herdou essa característica das línguas germânicas, enquanto o português, como língua latina, desenvolve o padrão contrário.</p>
+
+                    <div class="comparison-grid">
+                        <div class="comparison-card wrong-example">
+                            <div class="comparison-label">❌ Pensamento em português</div>
+                            <p>"House big"</p>
+                            <p>"Car new"</p>
+                            <p>"Woman beautiful"</p>
+                        </div>
+                        <div class="comparison-card correct-example">
+                            <div class="comparison-label">✅ Ordem correta em inglês</div>
+                            <p>"Big house"</p>
+                            <p>"New car"</p>
+                            <p>"Beautiful woman"</p>
+                        </div>
+                    </div>
+
+                    <h2 class="story-heading">Exemplos práticos</h2>
+
+                    <div class="example-card">
+                        <div class="example-sentence">"I bought a <strong>red</strong> <strong>car</strong>."</div>
+                        <p>Comprei um carro vermelho.</p>
+                        <div class="example-breakdown">
+                            <span class="word-type adjective">Red</span>
+                            <span>+</span>
+                            <span class="word-type noun">Car</span>
+                        </div>
+                    </div>
+
+                    <div class="example-card">
+                        <div class="example-sentence">"She lives in a <strong>small</strong> <strong>apartment</strong>."</div>
+                        <p>Ela mora em um apartamento pequeno.</p>
+                        <div class="example-breakdown">
+                            <span class="word-type adjective">Small</span>
+                            <span>+</span>
+                            <span class="word-type noun">Apartment</span>
+                        </div>
+                    </div>
+
+                    <div class="example-card">
+                        <div class="example-sentence">"We need <strong>fresh</strong> <strong>ideas</strong>."</div>
+                        <p>Precisamos de ideias frescas.</p>
+                        <div class="example-breakdown">
+                            <span class="word-type adjective">Fresh</span>
+                            <span>+</span>
+                            <span class="word-type noun">Ideas</span>
+                        </div>
+                    </div>
+
+                    <div class="pull-quote">
+                        "A fluência não vem de decorar regras complexas, mas de automatizar os padrões mais frequentes."
+                    </div>
+
+                    <h2 class="story-heading">E quando há múltiplos adjetivos?</h2>
+
+                    <p>Quando você tem mais de um adjetivo, existe uma ordem preferencial (que exploraremos em outro guia), mas a regra principal continua: adjetivos vêm antes do substantivo.</p>
+
+                    <div class="example-card">
+                        <div class="example-sentence">"A <strong>beautiful, old</strong> <strong>house</strong>"</div>
+                        <p>Uma casa velha e bonita</p>
+                        <div class="example-breakdown">
+                            <span class="word-type adjective">Beautiful, old</span>
+                            <span>+</span>
+                            <span class="word-type noun">House</span>
+                        </div>
+                    </div>
+
+                    <h2 class="story-heading">As exceções (sim, elas existem)</h2>
+
+                    <p><strong>Com verbos de ligação:</strong><br>
+                    "The house is <em>big</em>" (A casa é grande)<br>
+                    "She looks <em>tired</em>" (Ela parece cansada)</p>
+
+                    <p>Nestes casos, o adjetivo vem depois do verbo, não do substantivo. Mas isso não quebra nossa regra principal – apenas mostra que a gramática tem contextos diferentes.</p>
+
+                    <p><strong>Expressões fixas em francês:</strong><br>
+                    Algumas expressões que o inglês "emprestou" do francês mantêm a ordem francesa:<br>
+                    "Attorney general" (Procurador geral)<br>
+                    "Court martial" (Corte marcial)</p>
+
+                    <p>Mas essas são exceções raras que você aprenderá naturalmente com o tempo.</p>
+
+                    <h2 class="story-heading">Como treinar essa ordem natural</h2>
+
+                    <p><strong>1. Pratique com objetos ao seu redor</strong><br>
+                    Olhe ao redor e descreva: "white wall", "wooden table", "comfortable chair". Torne isso um hábito.</p>
+
+                    <p><strong>2. Pense em inglês desde o início</strong><br>
+                    Em vez de traduzir "mesa grande" para "big table", treine seu cérebro a pensar diretamente "big table".</p>
+
+                    <p><strong>3. Use a técnica do espelho</strong><br>
+                    Descreva-se: "tired person", "happy student", "busy professional". Fale em voz alta.</p>
+
+                    <p><strong>4. Leia observando a ordem</strong><br>
+                    Quando ler em inglês, note como os adjetivos sempre precedem os substantivos. Seu cérebro absorverá o padrão.</p>
+
+                    <div class="pull-quote">
+                        "Cada vez que você usa a ordem correta, você fortalece o caminho neural que leva à fluência natural."
+                    </div>
+
+                    <h2 class="story-heading">Por que isso importa tanto</h2>
+
+                    <p>Dominar a posição dos adjetivos não é apenas uma questão de correção gramatical. É sobre soar natural. Quando você diz "big house" em vez de "house big", você soa como alguém que pensa em inglês, não como alguém traduzindo do português.</p>
+
+                    <p>Essa naturalidade constrói confiança. E confiança gera fluência.</p>
+
+                    <p>Comece hoje: escolha cinco objetos ao seu redor e os descreva em voz alta usando a ordem adjetivo + substantivo. "Blue pen. Comfortable chair. Cold coffee. Bright light. Quiet room."</p>
+
+                    <p>Em poucos dias, essa ordem se tornará automática. E você terá dominado uma das estruturas mais fundamentais do inglês.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content-block">
+                <div class="footer-grid">
+                    <div class="footer-column footer-brand">
+                        <a href="index.html" class="logo-area-footer" aria-label="Speak Up Homepage">
+                            <img src="public/images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon-footer">
+                            <span class="logo-text-footer">Speak <span class="up">Up</span></span>
+                        </a>
+                        <p class="footer-tagline">Destravando o inglês de profissionais brasileiros. Foco na conexão, não na perfeição.</p>
+                    </div>
+
+                    <div class="footer-column footer-nav">
+                        <h4 class="footer-heading">Navegue</h4>
+                        <ul>
+                            <li><a href="o-metodo.html">O Método</a></li>
+                            <li><a href="minha-jornada.html">Minha Jornada</a></li>
+                            <li><a href="recursos.html">Recursos</a></li>
+                            <li><a href="contato.html">Agende uma Conversa</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-column footer-contact">
+                        <h4 class="footer-heading">Contato & Legal</h4>
+                        <p>
+                            CNPJ: 60.423.318/0001-07<br>
+                            E-mail: speakup@speakupl.org<br>
+                            <a href="https://wa.me/5521975046106" target="_blank" class="footer-contact-link">WhatsApp: +55 21 975046106</a>
+                        </p>
+                        <div class="footer-socials">
+                            <a href="#" aria-label="LinkedIn" target="_blank">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                            </a>
+                            <a href="#" aria-label="Instagram" target="_blank">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom-bar">
+                <p>© <span id="current-year">2024</span> Speak Up por Luiz. Todos os direitos reservados. | <a href="politica-de-privacidade.html">Política de Privacidade</a></p>
+            </div>
+        </div>
+    </footer>
+    
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html>

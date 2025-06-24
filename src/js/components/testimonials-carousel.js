@@ -58,6 +58,16 @@ class TestimonialsCarousel {
         
         // Set initial active slide
         this.updateActiveSlide();
+        
+        // Add subtle mobile hint after a delay (mobile only)
+        if (window.innerWidth <= 768) {
+            setTimeout(() => {
+                const carousel = this.container.querySelector('.testimonials-carousel');
+                if (carousel) {
+                    carousel.classList.add('loaded');
+                }
+            }, 2000); // Show hint after 2 seconds
+        }
     }
     
     createTestimonialSlide(testimonial, index) {
@@ -107,15 +117,38 @@ class TestimonialsCarousel {
         this.container.addEventListener('mouseenter', () => this.pauseAutoPlay());
         this.container.addEventListener('mouseleave', () => this.startAutoPlay());
         
-        // Touch events for mobile swipe
+        // Touch events for mobile swipe with visual feedback
         this.track.addEventListener('touchstart', (e) => {
             this.touchStartX = e.changedTouches[0].screenX;
             this.pauseAutoPlay();
+            
+            // Add touching class to hide swipe hints
+            const carousel = this.container.querySelector('.testimonials-carousel');
+            if (carousel) {
+                carousel.classList.add('touching');
+            }
         });
         
         this.track.addEventListener('touchend', (e) => {
             this.touchEndX = e.changedTouches[0].screenX;
             this.handleSwipe();
+            this.startAutoPlay();
+            
+            // Remove touching class to restore swipe hints
+            const carousel = this.container.querySelector('.testimonials-carousel');
+            if (carousel) {
+                setTimeout(() => {
+                    carousel.classList.remove('touching');
+                }, 300); // Brief delay to avoid flicker
+            }
+        });
+        
+        // Handle touch cancel (when user moves finger off screen)
+        this.track.addEventListener('touchcancel', (e) => {
+            const carousel = this.container.querySelector('.testimonials-carousel');
+            if (carousel) {
+                carousel.classList.remove('touching');
+            }
             this.startAutoPlay();
         });
         

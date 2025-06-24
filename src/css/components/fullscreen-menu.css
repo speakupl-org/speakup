@@ -25,6 +25,19 @@
     transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
 }
 
+/* Hamburger animation when menu is open */
+body.menu-open .site-header-pill .hamburger-line:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+}
+
+body.menu-open .site-header-pill .hamburger-line:nth-child(2) {
+    opacity: 0;
+}
+
+body.menu-open .site-header-pill .hamburger-line:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+}
+
 /* The Fullscreen Overlay */
 .fullscreen-menu {
     position: fixed;
@@ -44,6 +57,7 @@
     align-items: center;
     justify-content: center;
     padding: 20px;
+    /* Ensure menu is hidden by default */
     opacity: 0;
     pointer-events: none;
     visibility: hidden;
@@ -52,7 +66,7 @@
 }
 
 /* State when menu is open */
-html.menu-open {
+body.menu-open {
     overflow: hidden; /* Prevent body scroll */
 }
 body.menu-open .fullscreen-menu {

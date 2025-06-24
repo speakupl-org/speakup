@@ -319,103 +319,79 @@
     opacity: 1;
 }
 
-/* Navigation - Subtle Side Areas */
-.carousel-nav-area {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 60px;
-    background: transparent;
-    cursor: pointer;
-    z-index: 10;
+/* Testimonials Carousel Navigation - 2000s Minimal Style */
+.carousel-navigation {
+    position: relative;
     display: flex;
     align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+    gap: 1rem;
 }
 
-.carousel-nav-area::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg, 
-        rgba(var(--rgb-primary), 0.02), 
-        transparent 80%);
-    border-radius: var(--border-radius);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.carousel-nav-area:hover::before {
-    opacity: 1;
-}
-
-.carousel-nav-area:hover {
-    opacity: 1;
-}
-
-.carousel-nav-prev {
-    left: 0;
-}
-
-.carousel-nav-next {
-    right: 0;
-}
-
-.carousel-nav-next::before {
-    background: linear-gradient(-90deg, 
-        rgba(var(--rgb-primary), 0.02), 
-        transparent 80%);
-}
-
-/* Navigation Icons - Minimal */
-.carousel-nav-icon {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background: rgba(var(--rgb-primary), 0.1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.carousel-nav {
+    width: 32px;
+    height: 32px;
+    border: 1px solid rgba(var(--rgb-primary), 0.25);
+    background: rgba(var(--rgb-background-dark), 0.8);
     color: var(--color-primary);
-    font-size: 12px;
-    opacity: 0;
-    transform: scale(0.8);
-    transition: all 0.3s ease;
+    border-radius: 3px; /* Sharp corners for 2000s feel */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    font-size: 14px;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
 }
 
-.carousel-nav-area:hover .carousel-nav-icon {
-    opacity: 1;
-    transform: scale(1);
-    background: rgba(var(--rgb-primary), 0.15);
+.carousel-nav:hover {
+    border-color: var(--color-primary);
+    background: rgba(var(--rgb-primary), 0.1);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Progress Indicators - Elegant Dots */
+.carousel-nav:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.carousel-nav svg {
+    width: 16px;
+    height: 16px;
+    stroke-width: 2;
+}
+
+/* 2000s Style Dot Indicators */
 .carousel-indicators {
     display: flex;
-    justify-content: center;
-    gap: 8px;
-    margin-top: 2rem;
+    gap: 6px;
+    align-items: center;
 }
 
 .carousel-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: rgba(var(--rgb-primary), 0.2);
+    width: 6px;
+    height: 6px;
+    border: 1px solid rgba(var(--rgb-primary), 0.3);
+    background: transparent;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.15s ease;
+    border-radius: 1px; /* Slightly rounded, very 2000s */
+}
+
+.carousel-dot:hover {
+    border-color: var(--color-primary);
+    background: rgba(var(--rgb-primary), 0.2);
+    transform: scale(1.2);
 }
 
 .carousel-dot.active {
     background: var(--color-primary);
-    transform: scale(1.2);
-}
-
-.carousel-dot:hover {
-    background: rgba(var(--rgb-primary), 0.4);
-    transform: scale(1.1);
+    border-color: var(--color-primary);
+    transform: scale(1.3);
+    box-shadow: 0 0 4px rgba(var(--rgb-primary), 0.4);
 }
 
 /* Enhanced testimonial card for carousel */
@@ -477,6 +453,18 @@
     }
 }
 
+/* Subtle swipe hint animation for mobile */
+@keyframes subtleSwipeHint {
+    0%, 90%, 100% {
+        opacity: 0.3;
+        transform: translateY(-50%) translateX(0);
+    }
+    45% {
+        opacity: 0.6;
+        transform: translateY(-50%) translateX(-3px);
+    }
+}
+
 /* Carousel Auto-play pause on hover */
 .testimonials-carousel-container:hover .testimonials-track {
     animation-play-state: paused;
@@ -485,6 +473,88 @@
 /* Loading state for carousel */
 .testimonials-carousel--loading .testimonial-slide {
     opacity: 0.6;
+}
+
+/* Enhanced touch interaction for mobile */
+@media (max-width: 768px) {
+    .testimonials-track {
+        touch-action: pan-x;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;
+    }
+    
+    /* Improve touch responsiveness */
+    .testimonial-slide {
+        touch-action: pan-x;
+    }
+    
+    /* Hide swipe hint during active touch */
+    .testimonials-carousel.touching::after,
+    .testimonials-carousel.touching::before {
+        opacity: 0;
+        transition: opacity 0.2s ease;
+    }
+}
+
+/* Mobile responsiveness for new navigation */
+@media (max-width: 768px) {
+    .carousel-navigation {
+        margin-top: 1rem;
+        gap: 0.5rem;
+        justify-content: center; /* Center indicators when buttons are hidden */
+    }
+    
+    /* Hide navigation buttons on mobile */
+    .carousel-nav {
+        display: none;
+    }
+    
+    .carousel-indicators {
+        gap: 4px;
+    }
+    
+    .carousel-dot {
+        width: 5px;
+        height: 5px;
+    }
+    
+    /* Subtle swipe hint effect - only when loaded */
+    .testimonials-carousel {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .testimonials-carousel.loaded::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        right: 0;
+        width: 20px;
+        height: 60%;
+        background: linear-gradient(to left, 
+            rgba(0, 160, 154, 0.05) 0%, 
+            transparent 100%);
+        transform: translateY(-50%);
+        pointer-events: none;
+        animation: subtleSwipeHint 3s ease-in-out infinite;
+        z-index: 5;
+    }
+    
+    .testimonials-carousel.loaded::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 20px;
+        height: 60%;
+        background: linear-gradient(to right, 
+            rgba(0, 160, 154, 0.05) 0%, 
+            transparent 100%);
+        transform: translateY(-50%);
+        pointer-events: none;
+        z-index: 5;
+    }
 }
 
 /* Reduced motion support */
@@ -497,7 +567,7 @@
         transition: none;
     }
     
-    .carousel-nav-area,
+    .carousel-nav,
     .carousel-dot {
         transition: none;
     }

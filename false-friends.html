@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Falsos Amigos Comuns: Do "Pretend" ao "Actually" - Speak Up</title>
+
+    <!-- Inline Critical CSS -->
+    <style>
+        /* CRITICAL CSS - Prevents FOUC (Flash of Unstyled Content) */
+        /* This CSS loads immediately via HTML <style> tag, preventing any styling flash */
+
+        /* 1. Essential Reset */
+        *, *::before, *::after {
+          box-sizing: border-box;
+        }
+
+        * {
+          margin: 0;
+          padding: 0;
+        }
+
+        /* 2. Essential Variables */
+        :root {
+            --color-background-dark: #112024;
+            --color-surface-dark: #1A2C30;
+            --color-primary-vibrant: #00A09A;
+            --color-accent: #FDB813;
+            --color-text-main: #E2E8F0;
+            --color-text-muted: #94A3B8;
+            --color-heading: #FFFFFF;
+            --font-primary: 'Inter', -apple-system, sans-serif;
+            --font-heading: 'Poppins', var(--font-primary);
+            --header-height: 75px;
+            --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        /* 3. Essential Body/Background Styles - NO FLASH */
+        body {
+            background: var(--color-background-dark);
+            color: var(--color-text-main);
+            font-family: var(--font-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            transition: opacity 0.4s ease-out;
+        }
+
+        body.page-revealed {
+            opacity: 1;
+        }
+
+        /* 4. Essential Header Styles - Immediate Visibility */
+        .site-header-pill {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background: rgba(26, 44, 48, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--color-text-main);
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+        }
+
+        .logo-text {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            font-size: 18px;
+            color: var(--color-heading);
+        }
+
+        .logo-text .up {
+            color: var(--color-primary-vibrant);
+        }
+
+        /* 5. Essential Layout - Prevent Content Jump */
+        main {
+            flex: 1 0 auto;
+            padding-top: var(--header-height);
+        }
+
+        /* 6. Essential Typography - Immediate Font Loading */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            color: var(--color-heading);
+            line-height: 1.2;
+        }
+
+        /* 7. Essential Button Styles - Immediate Interactivity */
+        .btn, button {
+            font-family: var(--font-primary);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--color-primary-vibrant);
+            color: white;
+            padding: 12px 24px;
+            font-weight: 500;
+        }
+
+        .btn-primary:hover {
+            background: #008A84;
+            transform: translateY(-2px);
+        }
+
+        /* 8. Immediate display for critical elements */
+        .site-header-pill {
+            visibility: visible !important;
+        }
+
+        .false-friend-card {
+            background: var(--color-surface-dark);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-left: 4px solid var(--color-accent);
+        }
+
+        .false-friend-word {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--color-accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .false-friend-meaning {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .wrong-meaning, .correct-meaning {
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .wrong-meaning {
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 3px solid #ef4444;
+        }
+
+        .correct-meaning {
+            background: rgba(34, 197, 94, 0.1);
+            border-left: 3px solid #22c55e;
+        }
+
+        .meaning-label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .wrong-meaning .meaning-label {
+            color: #ef4444;
+        }
+
+        .correct-meaning .meaning-label {
+            color: #22c55e;
+        }
+
+        @media (max-width: 768px) {
+            .false-friend-meaning {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="site-header-pill">
+        <a href="index.html" class="logo-area" aria-label="Speak Up Homepage">
+            <img src="public/images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon">
+            <span class="logo-text">Speak <span class="up">Up</span></span>
+        </a>
+
+        <div class="header-desktop-nav-container">
+            <nav class="desktop-nav">
+                <ul>
+                    <li><a href="o-metodo.html">O Método</a></li>
+                    <li><a href="minha-jornada.html">Minha Jornada</a></li>
+                    <li><a href="recursos.html">Recursos</a></li>
+                </ul>
+            </nav>
+            <a href="contato.html" class="cta-button header-cta-desktop">Agende uma Conversa</a>
+        </div>
+
+        <button class="menu-toggle-button" id="menu-open-button" aria-label="Open menu" aria-expanded="false">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+        </button>
+    </header>
+
+    <div class="fullscreen-menu" id="menu-screen" aria-hidden="true" style="opacity: 0; visibility: hidden; pointer-events: none;">
+        <div class="fullscreen-menu-header">
+            <a href="index.html" class="logo-area" aria-label="Speak Up Homepage">
+                <img src="public/images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon">
+            </a>
+            <button class="menu-toggle-button" id="menu-close-button" aria-label="Close menu" aria-expanded="true">
+                <span class="close-line"></span>
+                <span class="close-line"></span>
+            </button>
+        </div>
+
+        <nav class="fullscreen-menu-nav">
+            <ul>
+                <li><a href="o-metodo.html">O Método</a></li>
+                <li><a href="minha-jornada.html">Minha Jornada</a></li>
+                <li><a href="recursos.html">Recursos</a></li>
+                <li><a href="contato.html">Contato</a></li>
+            </ul>
+        </nav>
+
+        <div class="fullscreen-menu-action-box">
+            <a href="contato.html" class="cta-button">Agende uma Conversa</a>
+            <a href="https://wa.me/YOURPHONENUMBER" target="_blank" class="link-subtle whatsapp-link">Conversar no WhatsApp</a>
+        </div>
+    </div>
+
+    <main>
+        <div class="story-container">
+            <div class="story-header">
+                <div class="container">
+                    <h1 class="story-title">Falsos Amigos Comuns: Do "Pretend" ao "Actually"</h1>
+                    <p class="story-intro">Evitando os mal-entendidos mais comuns entre brasileiros</p>
+                </div>
+            </div>
+
+            <div class="story-body">
+                <div class="container">
+                    <p>Eles parecem nossos conhecidos, mas são verdadeiros traidores. Os falsos cognatos – ou "falsos amigos" – são palavras que se parecem com o português, mas têm significados completamente diferentes em inglês.</p>
+
+                    <p>Como brasileiros, somos especialmente vulneráveis a essas pegadinhas linguísticas. Nossa tendência natural é assumir que palavras similares têm o mesmo significado, e isso pode gerar situações embaraçosas ou confusas.</p>
+
+                    <div class="pull-quote">
+                        "Conhecer os falsos amigos não é apenas evitar erros – é ganhar confiança para se expressar sem medo."
+                    </div>
+
+                    <h2 class="story-heading">Os campeões de mal-entendidos</h2>
+
+                    <div class="false-friend-card">
+                        <div class="false-friend-word">PRETEND</div>
+                        <p><em>"I pretend to understand, but I'm totally lost."</em></p>
+                        <div class="false-friend-meaning">
+                            <div class="wrong-meaning">
+                                <div class="meaning-label">❌ O que brasileiros pensam</div>
+                                <p>Pretender (ter intenção)</p>
+                                <p><em>"Eu pretendo entender"</em></p>
+                            </div>
+                            <div class="correct-meaning">
+                                <div class="meaning-label">✅ Significado real</div>
+                                <p>Fingir, fazer de conta</p>
+                                <p><em>"Eu finjo entender, mas estou perdido"</em></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="false-friend-card">
+                        <div class="false-friend-word">ACTUALLY</div>
+                        <p><em>"Actually, I disagree with you."</em></p>
+                        <div class="false-friend-meaning">
+                            <div class="wrong-meaning">
+                                <div class="meaning-label">❌ O que brasileiros pensam</div>
+                                <p>Atualmente (no presente)</p>
+                                <p><em>"Atualmente, eu discordo"</em></p>
+                            </div>
+                            <div class="correct-meaning">
+                                <div class="meaning-label">✅ Significado real</div>
+                                <p>Na verdade, na realidade</p>
+                                <p><em>"Na verdade, eu discordo"</em></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="false-friend-card">
+                        <div class="false-friend-word">REALIZE</div>
+                        <p><em>"I just realized what you meant."</em></p>
+                        <div class="false-friend-meaning">
+                            <div class="wrong-meaning">
+                                <div class="meaning-label">❌ O que brasileiros pensam</div>
+                                <p>Realizar (fazer acontecer)</p>
+                                <p><em>"Eu realizei o que você quis dizer"</em></p>
+                            </div>
+                            <div class="correct-meaning">
+                                <div class="meaning-label">✅ Significado real</div>
+                                <p>Perceber, dar-se conta</p>
+                                <p><em>"Acabei de perceber o que você quis dizer"</em></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="false-friend-card">
+                        <div class="false-friend-word">EVENTUALLY</div>
+                        <p><em>"She'll eventually understand."</em></p>
+                        <div class="false-friend-meaning">
+                            <div class="wrong-meaning">
+                                <div class="meaning-label">❌ O que brasileiros pensam</div>
+                                <p>Eventualmente (ocasionalmente)</p>
+                                <p><em>"Ela ocasionalmente entenderá"</em></p>
+                            </div>
+                            <div class="correct-meaning">
+                                <div class="meaning-label">✅ Significado real</div>
+                                <p>Finalmente, no final</p>
+                                <p><em>"Ela finalmente entenderá"</em></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="story-heading">Outros falsos amigos que pegam brasileiros</h2>
+
+                    <div class="false-friend-card">
+                        <div class="false-friend-word">EXQUISITE</div>
+                        <div class="false-friend-meaning">
+                            <div class="wrong-meaning">
+                                <div class="meaning-label">❌ Brasileiro pensa</div>
+                                <p>Esquisito (estranho)</p>
+                            </div>
+                            <div class="correct-meaning">
+                                <div class="meaning-label">✅ Significa</div>
+                                <p>Requintado, belíssimo</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="false-friend-card">
+                        <div class="false-friend-word">COMPREHENSIVE</div>
+                        <div class="false-friend-meaning">
+                            <div class="wrong-meaning">
+                                <div class="meaning-label">❌ Brasileiro pensa</div>
+                                <p>Compreensivo (tolerante)</p>
+                            </div>
+                            <div class="correct-meaning">
+                                <div class="meaning-label">✅ Significa</div>
+                                <p>Abrangente, completo</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="false-friend-card">
+                        <div class="false-friend-word">COLLEGE</div>
+                        <div class="false-friend-meaning">
+                            <div class="wrong-meaning">
+                                <div class="meaning-label">❌ Brasileiro pensa</div>
+                                <p>Colégio (ensino médio)</p>
+                            </div>
+                            <div class="correct-meaning">
+                                <div class="meaning-label">✅ Significa</div>
+                                <p>Faculdade (ensino superior)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="false-friend-card">
+                        <div class="false-friend-word">FABRIC</div>
+                        <div class="false-friend-meaning">
+                            <div class="wrong-meaning">
+                                <div class="meaning-label">❌ Brasileiro pensa</div>
+                                <p>Fábrica (local de produção)</p>
+                            </div>
+                            <div class="correct-meaning">
+                                <div class="meaning-label">✅ Significa</div>
+                                <p>Tecido, pano</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="story-heading">Como evitar as armadilhas</h2>
+
+                    <p><strong>1. Suspeite das similaridades</strong><br>
+                    Quando uma palavra em inglês parece muito com o português, pare e verifique. Essa suspeita saudável pode evitar muitos mal-entendidos.</p>
+
+                    <p><strong>2. Contexto é rei</strong><br>
+                    Mesmo que você não saiba o significado exato, o contexto da frase geralmente deixa pistas claras. Pratique deduzir significados através do contexto.</p>
+
+                    <p><strong>3. Crie associações visuais</strong><br>
+                    Para "pretend", imagine alguém fingindo. Para "actually", imagine alguém revelando a verdade. Associações visuais grudam na memória.</p>
+
+                    <p><strong>4. Use em frases próprias</strong><br>
+                    Não apenas memorize o significado – crie suas próprias frases usando cada palavra corretamente. A prática ativa solidifica o aprendizado.</p>
+
+                    <div class="pull-quote">
+                        "A diferença entre saber inglês e comunicar-se efetivamente está nos detalhes que só brasileiros enfrentam."
+                    </div>
+
+                    <h2 class="story-heading">Transformando conhecimento em fluência</h2>
+
+                    <p>Conhecer esses falsos amigos é apenas o primeiro passo. O verdadeiro domínio vem quando você consegue usá-los naturalmente em conversas reais, sem precisar parar para pensar.</p>
+
+                    <p>Comece incorporando uma ou duas dessas palavras por semana em suas conversas. Use "actually" para expressar opiniões. Pratique "realize" quando contar descobertas. Deixe que "eventually" substitua seu "no final".</p>
+
+                    <p>Lembre-se: cada falso amigo que você domina é um nível a mais de confiança para se expressar em inglês. Você não está apenas evitando erros – está refinando sua comunicação.</p>
+
+                    <p>A fluência está nos detalhes que fazem a diferença entre soar como alguém traduzindo do português e alguém realmente pensando em inglês.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content-block">
+                <div class="footer-grid">
+                    <div class="footer-column footer-brand">
+                        <a href="index.html" class="logo-area-footer" aria-label="Speak Up Homepage">
+                            <img src="public/images/logo.svg" alt="Speak Up Logo Icon" class="logo-icon-footer">
+                            <span class="logo-text-footer">Speak <span class="up">Up</span></span>
+                        </a>
+                        <p class="footer-tagline">Destravando o inglês de profissionais brasileiros. Foco na conexão, não na perfeição.</p>
+                    </div>
+
+                    <div class="footer-column footer-nav">
+                        <h4 class="footer-heading">Navegue</h4>
+                        <ul>
+                            <li><a href="o-metodo.html">O Método</a></li>
+                            <li><a href="minha-jornada.html">Minha Jornada</a></li>
+                            <li><a href="recursos.html">Recursos</a></li>
+                            <li><a href="contato.html">Agende uma Conversa</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-column footer-contact">
+                        <h4 class="footer-heading">Contato & Legal</h4>
+                        <p>
+                            CNPJ: 60.423.318/0001-07<br>
+                            E-mail: speakup@speakupl.org<br>
+                            <a href="https://wa.me/5521975046106" target="_blank" class="footer-contact-link">WhatsApp: +55 21 975046106</a>
+                        </p>
+                        <div class="footer-socials">
+                            <a href="#" aria-label="LinkedIn" target="_blank">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                            </a>
+                            <a href="#" aria-label="Instagram" target="_blank">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom-bar">
+                <p>© <span id="current-year">2024</span> Speak Up por Luiz. Todos os direitos reservados. | <a href="politica-de-privacidade.html">Política de Privacidade</a></p>
+            </div>
+        </div>
+    </footer>
+    
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html>
